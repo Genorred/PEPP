@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  pepp:
+    container_name: pepp
+    restart: always
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    env_file:
+      - ./client/.env
+    ports:
+      - "${CLIENT_PORT}:${CLIENT_PORT}"
+    volumes:
+      - ./client:/core
+      - /core/node_modules
+
+  server:
+    container_name: server
+    restart: always
+    depends_on:
+      - db
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    env_file:
+      - ./server/.env
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+#    environment:
+#      - NODE_ENV=production
+    volumes:
+      - ./server:/core
+      - /core/node_modules
+
+  db:
+    container_name: "${POSTGRES_HOST}"
+    image: postgres
+    restart: always
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    env_file:
+      - ./server/.env
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
