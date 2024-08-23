@@ -12,8 +12,8 @@ up: merge-env
 
 
 merge-env:
-	cat client/.env server/.env > .env
-
+	cat client/.env.development server/.env.development > .env.development
+	#cat client/.env.production server/.env.production > .env.development.production
 
 
 dev:
