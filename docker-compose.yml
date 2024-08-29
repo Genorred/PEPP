@@ -25,6 +25,8 @@ services:
       dockerfile: Dockerfile
     env_file:
       - server/.env.development
+    environment:
+      - DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public"
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
 #    environment:
