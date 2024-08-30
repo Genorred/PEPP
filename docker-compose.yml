@@ -11,9 +11,12 @@ services:
       - client/.env.development
     ports:
       - "${CLIENT_PORT}:${CLIENT_PORT}"
+    environment:
+      - WATCHPACK_POLLING=true
     volumes:
       - ./client:/core
       - /core/node_modules
+      - /app/.next
 
   server:
     container_name: server
