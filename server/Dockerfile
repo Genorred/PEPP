@@ -12,6 +12,11 @@ COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm install
 
+COPY prisma prisma
+
+RUN pnpm dlx prisma generate
+
 COPY . .
+
 
 CMD ["pnpm", "run", "start:dev"]
