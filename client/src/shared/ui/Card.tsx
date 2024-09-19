@@ -1,17 +1,17 @@
 import React, { HTMLAttributes } from "react";
-import { cn } from "@/shared/lib/utils";
 import { CardVariants, CardVariantsEnum } from "@/shared/consts/CardVariants";
+import { cn } from "@/shared/lib/utils";
 
-const MaxWidthWrapper = ({className, children, variant, ...props}: {
+const Card = ({className, children, variant = 'subSection', ...props}: {
     className?: string,
     children?: React.ReactNode,
     variant?: CardVariantsEnum
 } & HTMLAttributes<HTMLDivElement>) => {
     return (
-        <section className={cn("mx-auto w-full max-w-screen-xl px-2.5 md:px-20 py-4", variant ? CardVariants(variant) : '', className)} {...props}>
+        <section className={cn("mx-auto w-full px-2.5 py-4 flex flex-col", variant ? CardVariants(variant) : '', className)} {...props}>
             {children}
         </section>
     );
 };
 
-export default MaxWidthWrapper;
+export default Card;

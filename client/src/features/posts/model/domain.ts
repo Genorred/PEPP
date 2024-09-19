@@ -1,5 +1,9 @@
+export type Topic = Record<number, true>
+
 export interface FiltersI {
-    topics: string[]
-    input: string
+  topics: Topic;
+  title: string;
+  isDateDirDesc: boolean | null;
 }
+
 export type PostId = string

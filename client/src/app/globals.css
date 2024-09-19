@@ -3,6 +3,16 @@
   @tailwind utilities;
 
   @layer base {
+    .font-outline {
+      text-shadow:
+              -1px -1px 0 #ffffff, /* Верхний левый угол */
+              1px -1px 0 #ffffff,  /* Верхний правый угол */
+              -1px 1px 0 #ffffff,  /* Нижний левый угол */
+              1px 1px 0 #ffffff;   /* Нижний правый угол */
+    }
+    .font-outline-4 {
+      -webkit-text-stroke: 4px black;
+    }
     :root {
       --background: 0 0% 100%;
       --foreground: 222.2 84% 4.9%;

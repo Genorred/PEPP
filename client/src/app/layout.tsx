@@ -7,6 +7,7 @@ import React from "react";
 import Navbar from "@/widgets/Navbar";
 import { Provider } from "react-redux";
 import {store} from "@/app/store";
+import Providers from "@/widgets/Providers/ui";
 
 const fontSans = FontSans({
     subsets: ["latin"],
@@ -24,20 +25,20 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-        <Provider store={store}>
-            <body className={cn(
-                "bg-background font-sans antialiased",
-                fontSans.variable
-            )}>
-            <main className="flex flex-col items-center">
-                <Navbar/>
-                <div className="w-full flex-1 flex-grow min-h-screen">
-                    {children}
-                </div>
-            </main>
-            </body>
-        </Provider>
+        <Providers>
+          <body className={cn(
+            "bg-background font-sans antialiased",
+            fontSans.variable
+          )}>
+          <main className="flex flex-col items-center">
+            <Navbar />
+            <div className="w-full flex56 flex-grow min-h-screen">
+              {children}
+            </div>
+          </main>
+          </body>
 
+        </Providers>
         </html>
     );
 }

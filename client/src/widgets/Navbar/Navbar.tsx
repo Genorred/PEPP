@@ -2,10 +2,11 @@ import React from 'react';
 import MaxWidthWrapper from "@/shared/ui/MaxWidthWrapper";
 import Link from "next/link";
 import NavItem from "@/widgets/Navbar/NavItem";
+import { CardVariants } from "@/shared/consts/CardVariants";
 
 const Navbar = () => {
     return (
-        <MaxWidthWrapper className="my-4" role={"navigation"} variant={"section"}>
+        <MaxWidthWrapper className="my-4" role={"navigation"} variant={'section'}>
                 <ul className="flex gap-3">
                     <NavItem title="Topics" href="/topics"/>
                     <NavItem title="Posts" href="/posts"/>
