@@ -1,8 +1,6 @@
-import React from 'react';
+import React from "react";
 import MaxWidthWrapper from "@/shared/ui/MaxWidthWrapper";
-import Link from "next/link";
-import NavItem from "@/widgets/Navbar/NavItem";
-import { CardVariants } from "@/shared/consts/CardVariants";
+import NavItem from "@/widgets/Navbar/ui/NavItem";
 
 const Navbar = () => {
     return (

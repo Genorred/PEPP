@@ -1,6 +1,5 @@
 import React from "react";
 import { Star } from "lucide-react";
-import { StarOff } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 
 const Rating = ({ stars, className }: {

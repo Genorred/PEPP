@@ -1,7 +1,7 @@
 import { baseFetch } from "@/shared/api/base";
 import { z } from "zod";
 import { queryOptions } from "@tanstack/react-query";
-import {PostId} from "@/features/posts/model/domain";
+import { PostId } from "@/widgets/PostsFilter/model/domain";
 
 const UserDtoSchema = z.object({
     id: z.string(),

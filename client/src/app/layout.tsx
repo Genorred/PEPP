@@ -1,13 +1,11 @@
-import type {Metadata} from "next";
+import type { Metadata } from "next";
 import "./globals.css";
-import {Inter as FontSans} from "next/font/google"
+import { Inter as FontSans } from "next/font/google";
 
-import {cn} from "@/shared/lib/utils"
+import { cn } from "@/shared/lib/utils";
 import React from "react";
 import Navbar from "@/widgets/Navbar";
-import { Provider } from "react-redux";
-import {store} from "@/app/store";
-import Providers from "@/widgets/Providers/ui";
+import Providers from "@/widgets/Providers";
 
 const fontSans = FontSans({
     subsets: ["latin"],

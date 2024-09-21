@@ -1,7 +1,7 @@
 import React from "react";
 import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 import { useDispatch, useSelector } from "react-redux";
-import { usersSlice } from "@/features/posts/model/posts.slice";
+import { usersSlice } from "@/widgets/PostsFilter/model/posts.slice";
 
 const TopicsFilter = () => {
   const dispatch = useDispatch();

@@ -1,14 +1,14 @@
 import {
-    asyncThunkCreator,
-    buildCreateSlice,
-    combineSlices,
-    createAsyncThunk,
-    createSelector,
-    ThunkAction,
-    UnknownAction,
+  asyncThunkCreator,
+  buildCreateSlice,
+  combineSlices,
+  createAsyncThunk,
+  createSelector,
+  ThunkAction,
+  UnknownAction
 } from "@reduxjs/toolkit";
 import { useDispatch, useSelector, useStore } from "react-redux";
-import type { store, extraArgument } from "@/app/store";
+import type { extraArgument, store } from "@/app/store";
 
 export const rootReducer = combineSlices();
 

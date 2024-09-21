@@ -1,8 +1,8 @@
-"use client"
-import React, {FC} from 'react';
+"use client";
+import React, { FC } from "react";
 import MaxWidthWrapper from "@/shared/ui/MaxWidthWrapper";
-import {FiltersI} from "@/features/posts/model/domain";
-import TopicsFilter from "@/features/posts/TopicsFilter";
+import TopicsFilter from "@/widgets/PostsFilter/ui/TopicsFilter";
+
 interface Props {
 }
 const PostsFilter: FC<Props> = () => {

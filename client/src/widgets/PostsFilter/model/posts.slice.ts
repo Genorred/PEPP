@@ -1,4 +1,4 @@
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FiltersI } from "./domain";
 import { rootReducer } from "@/shared/lib/redux";
 

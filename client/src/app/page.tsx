@@ -1,5 +1,4 @@
 import MaxWidthWrapper from "@/shared/ui/MaxWidthWrapper";
-import Image from "next/image";
 
 export default function Home() {
   return (
