@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { createEditor, BaseEditor, Descendant } from 'slate'
 import { Slate, withReact, ReactEditor } from 'slate-react'
 import withEmbeds from "./withEmbeds";
-import CustomEditor from "@/app/(pages)/post/[id]/CustomEditor";
+import CustomEditor from "@/features/PostEditor/ui/CustomEditor";
 export const defaultEditorValue = [
   {
     type: 'paragraph',

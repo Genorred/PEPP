@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { imageFileExtensions } from "@/app/(pages)/post/[id]/asset";
+import { imageFileExtensions } from "@/shared/utils/asset";
 
 type AttachmentEmbedProps = {
   children: React.ReactNode,

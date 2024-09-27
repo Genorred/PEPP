@@ -14,7 +14,7 @@ const Navbar = () => {
                     <NavItem title="Drafts" href="/drafts" className="mr-auto"/>
                     <NavItem title="Analityc" href="/analityc"/>
 
-                    <NavItem title="Friends" href="/friends"/>
+                    <NavItem title="Freund" href="/friends"/>
                     <NavItem title="Notifications" href="/notifications"/>
                     <NavItem title="Settings" href="/settings"/>
                     <NavItem title="Profile" href="/profile"/>

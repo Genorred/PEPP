@@ -1,5 +1,5 @@
 import { useSlate } from 'slate-react'
-import CustomEditor from "@/app/(pages)/post/[id]/CustomEditor";
+import CustomEditor from "@/features/PostEditor/ui/CustomEditor";
 import { Button } from "@/shared/ui/button";
 
 type MarkButtonProps = {

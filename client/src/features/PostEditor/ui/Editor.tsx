@@ -1,9 +1,9 @@
 import React from 'react'
 import { createEditor, BaseEditor, Descendant } from 'slate'
 import { Slate, withReact, ReactEditor } from 'slate-react'
-import withEmbeds from "@/app/(pages)/post/[id]/withEmbeds";
-import EditorInput from "@/app/(pages)/post/[id]/EditorInput";
-import ToolBar from "@/app/(pages)/post/[id]/ToolBar";
+import withEmbeds from "@/features/PostEditor/lib/withEmbeds";
+import EditorInput from "@/features/PostEditor/ui/EditorInput";
+import ToolBar from "@/features/PostEditor/ui/ToolBar";
 
 
 

@@ -1,5 +1,5 @@
-import asyncSome from "@/app/(pages)/post/[id]/asyncSome";
-import { Transforms } from "slate";
+import asyncSome from "@/shared/utils/asyncSome";
+import { Editor, Transforms } from "slate";
 const LIST_TYPES = ['ordered-list', 'unordered-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 

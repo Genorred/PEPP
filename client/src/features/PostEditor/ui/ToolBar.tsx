@@ -1,5 +1,5 @@
 import React from "react";
-import MarkButton from "@/app/(pages)/post/[id]/MarkButton";
+import MarkButton from "@/features/PostEditor/ui/MarkButton";
 import MaxWidthWrapper from "@/shared/ui/MaxWidthWrapper";
 
 const ToolBar = () => (

@@ -2,19 +2,19 @@ import { useCallback } from 'react'
 import { Editable } from 'slate-react'
 
 import { Heading } from "lucide-react";
-import ImageEmbed from "@/app/(pages)/post/[id]/Elements/ImageEmbed";
-import Link from "@/app/(pages)/post/[id]/Elements/Link";
-import ListItem from "@/app/(pages)/post/[id]/Elements/ListItem";
-import AttachmentEmbed from "@/app/(pages)/post/[id]/Elements/AttachmentEmbed";
-import ManufacturerEmbed from "@/app/(pages)/post/[id]/Elements/ManufacturerEmbed";
-import ManufacturerModelEmbed from "@/app/(pages)/post/[id]/Elements/ManufacturerModelEmbed";
-import ManufacturerPartEmbed from "@/app/(pages)/post/[id]/Elements/ManufacturerPartEmbed";
-import ProjectEmbed from "@/app/(pages)/post/[id]/Elements/ProjectEmbed";
-import List from "@/app/(pages)/post/[id]/Elements/List";
-import YouTubeVideo from "@/app/(pages)/post/[id]/Elements/YouTubeVideo";
-import DefaultElement from "@/app/(pages)/post/[id]/Elements/DefaultElement";
-import Leaf from "@/app/(pages)/post/[id]/Leaves/Leaf";
-import CustomEditor from "@/app/(pages)/post/[id]/CustomEditor";
+import ImageEmbed from "./Elements/ImageEmbed";
+import Link from "./Elements/Link";
+import ListItem from "./Elements/ListItem";
+import AttachmentEmbed from "./Elements/AttachmentEmbed";
+import ManufacturerEmbed from "./Elements/ManufacturerEmbed";
+import ManufacturerModelEmbed from "./Elements/ManufacturerModelEmbed";
+import ManufacturerPartEmbed from "./Elements/ManufacturerPartEmbed";
+import ProjectEmbed from "./Elements/ProjectEmbed";
+import List from "./Elements/List";
+import YouTubeVideo from "./Elements/YouTubeVideo";
+import DefaultElement from "./Elements/DefaultElement";
+import Leaf from "./Leafs/Leaf";
+import CustomEditor from "@/features/PostEditor/ui/CustomEditor";
 
 type EditorInputProps = {
   editor?: any,

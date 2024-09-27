@@ -1,4 +1,4 @@
-import { defaultEditorValue, RelatedEntity } from "@/app/(pages)/post/[id]/usePostForm";
+import { defaultEditorValue, RelatedEntity } from "@/features/PostEditor/lib/usePostForm";
 
 type SetupInitialEntityStateOptions = {
   additionalSetupFn?: (state: object, entity: object) => object,
