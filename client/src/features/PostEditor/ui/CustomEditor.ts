@@ -1,5 +1,5 @@
 import asyncSome from "@/shared/utils/asyncSome";
-import { Editor, Transforms } from "slate";
+import { Editor, Transforms, Element as SlateElement } from "slate";
 const LIST_TYPES = ['ordered-list', 'unordered-list']
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 

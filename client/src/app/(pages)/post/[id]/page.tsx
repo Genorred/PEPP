@@ -6,9 +6,10 @@ import { PostDetailsI } from "@/entities/Post/model";
 import { cn } from "@/shared/lib/utils";
 import Editor, { createWrappedEditor } from "../../../../features/PostEditor/ui/Editor";
 import usePostForm from "@/features/PostEditor/lib/usePostForm";
+import useModeChanger from "@/app/(pages)/post/[id]/useModeChanger";
+import ModeChanger from "@/app/(pages)/post/[id]/ModeChanger";
 
 const Page = () => {
-  const [isReadonly, setIsReadonly] = useState(true);
   const post: PostDetailsI = {
     title: "sdf",
     content: [
@@ -27,10 +28,6 @@ const Page = () => {
       }
     ]
   };
-  const parent = useRef<HTMLDivElement>(null);
-  const maxWidth = parent?.current?.clientWidth;
-  const ribbon = useRef<HTMLDivElement>(null);
-  const postFormPayload = usePostForm();
   // const {
   //   callbacks: {
   //     //   createPost: createFn,
@@ -56,52 +53,19 @@ const Page = () => {
   //   // shouldUsePostEditor,
   // } = postFormPayload
   const editor = usePostForm().editor;
-  console.log(editor);
-  const ModeChanger = isReadonly ? PenOff : Pen;
-  const readOnlyMargin = useRef('');
-  const setPadding = () => {
-    const element = parent?.current;
-    console.log('xd', element, isReadonly)
-    if (element) {
-      if (isReadonly) {
-        element.style.marginLeft = "0"
-      } else {
-        if (readOnlyMargin?.current){
-          element.style.marginLeft = readOnlyMargin.current.toString();
-        } else {
-          const marginLeft = window.getComputedStyle(element).marginLeft;
-          element.style.marginLeft = marginLeft.toString();
-          readOnlyMargin.current = marginLeft.toString();
-        }
-      }
-    }
-  };
-  useEffect(() => {
-    const element = parent?.current;
-    window.addEventListener("resize", () => {
-      if (element) {
-        element.style.marginLeft = ''
-      }
-    })
-    if (element) {
-      const marginLeft = window.getComputedStyle(element).marginLeft;
-      element.style.marginLeft = marginLeft.toString();
-      readOnlyMargin.current = marginLeft.toString();
-    }
-  }, []);
+  const {parent, isReadonly, setIsReadonly, setPadding} = useModeChanger()
   return (
-    <div className="relative">
-      <ModeChanger className="absolute top-4 right-4" onClick={() => {
-        setPadding()
-        setIsReadonly(prev => !prev);
-      }} />
-      <MaxWidthWrapper className={cn({"ml-0": !isReadonly}, "transition-all")} ref={parent}>
-        <Editor editor={editor}>
-          <Editor.ToolBar />
+    <Editor editor={editor}>
+      <div className={cn("relative flex flex-wrap", { "flex-col-reverse": isReadonly })}>
+        <ModeChanger isReadonly={isReadonly} setIsReadonly={setIsReadonly} setPadding={setPadding}/>
+        <MaxWidthWrapper className={cn({ "mx-0": !isReadonly }, "transition-all min-w-[640px]")} ref={parent}>
           <Editor.Input />
-        </Editor>
-      </MaxWidthWrapper>
-    </div>
+        </MaxWidthWrapper>
+        <MaxWidthWrapper className="min-w-40 flex-1">
+          <Editor.ToolBar />
+        </MaxWidthWrapper>
+      </div>
+    </Editor>
   );
 };
 

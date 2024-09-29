@@ -1,18 +1,17 @@
 import { useSlate } from 'slate-react'
 import CustomEditor from "@/features/PostEditor/ui/CustomEditor";
 import { Button } from "@/shared/ui/button";
-
-type MarkButtonProps = {
+type BlockButtonProps = {
   children: React.ReactElement,
-  format: 'bold' | 'italic' | 'underline',
+  format: 'heading-one' | 'heading-two' | 'ordered-list' | 'unordered-list',
 }
 
-const MarkButton = (props: MarkButtonProps) => {
+const BlockButton = (props: BlockButtonProps) => {
   const { children, format } = props
 
   const editor = useSlate()
 
-  const isActive = CustomEditor.isMarkActive(editor, format)
+  const isActive = CustomEditor.isBlockActive(editor, format)
 
   return (
     <Button
@@ -31,4 +30,4 @@ const MarkButton = (props: MarkButtonProps) => {
   )
 }
 
-export default MarkButton
+export default BlockButton
