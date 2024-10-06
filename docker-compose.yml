@@ -16,7 +16,7 @@ services:
     volumes:
       - ./client:/core
       - /core/node_modules
-      - /app/.next
+      - /core/.next
 
   server:
     container_name: server

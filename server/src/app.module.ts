@@ -5,25 +5,22 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 // import {ConfigModule} from "@nestjs/config";
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
+import { UsersModule } from './users/users.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    // ConfigModule.forRoot({
-    //   envFilePath: '../.env.development'
-    // }),
-  //   TypeOrmModule.forRoot({
-  //   type: 'postgres',
-  //   host: process.env.POSTGRES_HOST,
-  //   port: Number(process.env.DB_PORT),
-  //   username: process.env.POSTGRES_USER,
-  //   password: process.env.POSTGRES_PASSWORD,
-  //   database: process.env.POSTGRES_DB,
-  //   entities: [],
-  //   synchronize: process.env.NODE_ENV!=='production',
-  //   autoLoadEntities: process.env.NODE_ENV!=='production'
-  // }),],
-  // controllers: [AppController],
-  // providers: [AppService],
-PrismaModule],
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),  // Code-first approach
+    }),
+    ConfigModule.forRoot({
+      envFilePath: '../.env'
+    }),
+PrismaModule,
+    UsersModule],
   providers: [PrismaService]})
 export class AppModule {}

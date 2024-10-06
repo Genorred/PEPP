@@ -1,10 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 
 async function bootstrap() {
   const port = process.env.SERVER_PORT || 5000
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+  });
 
   const config = new DocumentBuilder()
       .setTitle('Median')
