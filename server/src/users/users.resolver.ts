@@ -3,25 +3,31 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { FindManyUserInput } from './dto/findMany-user.input';
+import { FindOneUserInput } from './dto/find-one-user.input';
+import { LoginInput } from '../auth/dto/login.input';
+import { FindManyUserInput } from './dto/find-many-user.input';
+import { JwtStrategy } from '../auth/jwt.strategy';
+import { UseGuards } from '@nestjs/common';
+import { JwtGqlAuthGuard } from '../auth/gql-auth-guard/jwt-gql-auth-guard';
 
 @Resolver(() => User)
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
-  @Mutation(() => User)
-  createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return this.usersService.create(createUserInput);
-  }
+  // @Mutation(() => User)
+  // createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
+  //   return this.usersService.create(createUserInput);
+  // }
 
+  @UseGuards(JwtGqlAuthGuard)
   @Query(() => [User], { name: 'users' })
-  findAll(@Args('findManyInput') findManyInput: FindManyUserInput) {
+  findMany(@Args('findManyInput') findManyInput: FindManyUserInput) {
     return this.usersService.findMany(findManyInput);
   }
 
   @Query(() => User, { name: 'user' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.usersService.findOne(id);
+  findOne(@Args('loginInput') findOneUserInput: FindOneUserInput) {
+    return this.usersService.findOne(findOneUserInput);
   }
 
   @Mutation(() => User)

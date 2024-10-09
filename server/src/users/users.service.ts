@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { PrismaService } from '../prisma/prisma.service';
-import { FindManyUserInput } from './dto/findMany-user.input';
+import { FindOneUserInput } from './dto/find-one-user.input';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -12,12 +13,16 @@ export class UsersService {
     return this.prisma.user.create({data: createUserInput});
   }
 
-  findMany(fields: FindManyUserInput) {
+  findMany(fields: Partial<User>) {
     return this.prisma.user.findMany({where: fields});
   }
 
-  findOne(id: number) {
-    return this.prisma.user.findFirst({where: {id}});
+  findOne(searchOptions: {id?: number, username?: string, email?: string}) {
+    const {id, username, email} = searchOptions;
+    if (! (id || username || email)) {
+      return null
+    }
+    return this.prisma.user.findUnique({where: searchOptions as User});
   }
 
   update(id: number, updateUserInput: UpdateUserInput) {

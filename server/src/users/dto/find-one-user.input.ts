@@ -1,7 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class FindManyUserInput {
+export class FindOneUserInput {
   @Field({ nullable: true })
   username?: string;
 
