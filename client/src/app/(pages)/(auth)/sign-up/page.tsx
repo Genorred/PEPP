@@ -1,4 +1,5 @@
 "use client"
+import { graphql } from '@/graphql'
 import React from "react";
 import MaxWidthWrapper from "@/shared/ui/MaxWidthWrapper";
 import { z } from "zod";
@@ -16,6 +17,17 @@ const formSchema = z.object({
   }),
   email: z.string().email("Invalid email address."),
 })
+const RegisterUser = graphql(`
+    query GetUser($email: String!, $username: String!, $isActive: Boolean!) {
+        user(loginInput: {
+            email: $email,
+            isActive: $isActive,
+            username: $username
+        }) {
+            username
+        }
+    }
+`)
 const Page = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
