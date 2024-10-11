@@ -11,6 +11,8 @@ export class User {
   @Field()
   username: string;
   @Field()
+  roles: string[];
+  @Field()
   createdAt: Date;
   @Field()
   updatedAt: Date;

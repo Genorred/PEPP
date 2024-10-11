@@ -7,7 +7,4 @@ export class FindOneUserInput {
 
   @Field({ nullable: true })
   email?: string;
-
-  @Field({ nullable: true })
-  isActive?: boolean;
 }

@@ -41,8 +41,8 @@ export class AuthService {
 
 
   private async getToken(user: Partial<User>) {
-    const { id, username } = user;
-    const payload = { username, sub: id };
+    const { id, username, roles } = user;
+    const payload = { username, sub: id, roles };
     return {
       access_token: this.jwtService.sign(payload),
     };
