@@ -1,19 +1,28 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field, Int, Directive, ID } from "@nestjs/graphql";
+import { RolesT } from "src/auth/entities/roles.model";
+import { User as UserPrisma, Roles } from ".prisma/client";
+
 
 @ObjectType()
-export class User {
+@Directive("@key(fields: \"id\")")
+@Directive("@extends")
+export class User implements UserPrisma {
+  @Field((type) => ID)
+  @Directive("@external")
+  id: number;
   @Field()
-  id: number
+  email: string;
   @Field()
-  email: string
-  @Field()
-  password: string
+  password: string;
   @Field()
   username: string;
   @Field()
-  roles: string[];
+  role: Roles;
   @Field()
   createdAt: Date;
   @Field()
   updatedAt: Date;
+
+  // @Field((type) => [Post])
+  // posts: Post[];
 }

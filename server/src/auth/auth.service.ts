@@ -41,24 +41,18 @@ export class AuthService {
 
 
   private async getToken(user: Partial<User>) {
-    const { id, username, roles } = user;
-    const payload = { username, sub: id, roles };
+    const { id, username, role } = user;
+    const payload = { username, sub: id, role };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
 
   private async validateUser(loginInput: LoginInput) {
-    const { password, emailOrUsername } = loginInput;
+    const { password, email } = loginInput;
 
-    if (!emailOrUsername) {
-      throw new Error('No username or email provided');
-    }
-    const isEmail = emailOrUsername.includes('@');
-    const field = isEmail ? 'email' : 'username';
-
-    const user = await this.usersService.findOne({ [field]: emailOrUsername });
-    if (user && user.password === password) {
+    const user = await this.usersService.findOne({ email });
+    if (user && bcrypt.compareSync(password, user.password)) {
       const { password, ...result } = user;
       return result;
     }

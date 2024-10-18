@@ -15,13 +15,13 @@ import * as types from './graphql';
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 const documents = {
-    "\n    query GetUser($email: String!, $username: String!, $isActive: Boolean!) {\n        user(loginInput: {\n            email: $email,\n            isActive: $isActive,\n            username: $username\n        }) {\n            username\n        }\n    }\n": types.GetUserDocument,
+    "\n    query GetUser($email: String!, $username: String!, $isActive: Boolean!) {\n        user(loginInput: {\n            email: $email,\n            username: $username\n        }) {\n            username\n        }\n    }\n": types.GetUserDocument,
 };
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    query GetUser($email: String!, $username: String!, $isActive: Boolean!) {\n        user(loginInput: {\n            email: $email,\n            isActive: $isActive,\n            username: $username\n        }) {\n            username\n        }\n    }\n"): typeof import('./graphql').GetUserDocument;
+export function graphql(source: "\n    query GetUser($email: String!, $username: String!, $isActive: Boolean!) {\n        user(loginInput: {\n            email: $email,\n            username: $username\n        }) {\n            username\n        }\n    }\n"): typeof import('./graphql').GetUserDocument;
 
 
 export function graphql(source: string) {

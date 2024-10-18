@@ -3,10 +3,11 @@
 # ------------------------------------------------------
 
 type User {
-  id: Float!
+  id: ID!
   email: String!
   password: String!
   username: String!
+  role: String!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -20,9 +21,16 @@ type Token {
   access_token: String!
 }
 
+type Post {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Query {
   users(findManyInput: FindManyUserInput!): [User!]!
   user(loginInput: FindOneUserInput!): User!
+  posts: [Post!]!
+  post(id: Int!): Post!
 }
 
 input FindManyUserInput {
@@ -34,7 +42,6 @@ input FindManyUserInput {
 input FindOneUserInput {
   username: String
   email: String
-  isActive: Boolean
 }
 
 type Mutation {
@@ -42,6 +49,9 @@ type Mutation {
   removeUser(id: Int!): User!
   login(loginInput: LoginInput!): Token!
   register(registerInput: CreateUserInput!): Token!
+  createPost(createPostInput: CreatePostInput!): Post!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
+  removePost(id: Int!): Post!
 }
 
 input UpdateUserInput {
@@ -52,7 +62,7 @@ input UpdateUserInput {
 }
 
 input LoginInput {
-  emailOrUsername: String!
+  email: String!
   password: String!
 }
 
@@ -60,4 +70,15 @@ input CreateUserInput {
   email: String!
   password: String!
   username: String!
+}
+
+input CreatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }

@@ -21,7 +21,6 @@ const RegisterUser = graphql(`
     query GetUser($email: String!, $username: String!, $isActive: Boolean!) {
         user(loginInput: {
             email: $email,
-            isActive: $isActive,
             username: $username
         }) {
             username

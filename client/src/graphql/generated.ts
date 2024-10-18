@@ -26,6 +26,11 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type CreatePostInput = {
+  /** Example field (placeholder) */
+  exampleField: Scalars['Int']['input'];
+};
+
 export type CreateUserInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -40,21 +45,28 @@ export type FindManyUserInput = {
 
 export type FindOneUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type LoginInput = {
-  emailOrUsername: Scalars['String']['input'];
+  email: Scalars['String']['input'];
   password: Scalars['String']['input'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createPost: Post;
   login: Token;
   register: Token;
+  removePost: Post;
   removeUser: User;
+  updatePost: Post;
   updateUser: User;
+};
+
+
+export type MutationCreatePostArgs = {
+  createPostInput: CreatePostInput;
 };
 
 
@@ -68,8 +80,18 @@ export type MutationRegisterArgs = {
 };
 
 
+export type MutationRemovePostArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type MutationRemoveUserArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdatePostArgs = {
+  updatePostInput: UpdatePostInput;
 };
 
 
@@ -77,10 +99,23 @@ export type MutationUpdateUserArgs = {
   updateUserInput: UpdateUserInput;
 };
 
+export type Post = {
+  __typename?: 'Post';
+  /** Example field (placeholder) */
+  exampleField: Scalars['Int']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  post: Post;
+  posts: Array<Post>;
   user: User;
   users: Array<User>;
+};
+
+
+export type QueryPostArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -98,6 +133,12 @@ export type Token = {
   access_token: Scalars['String']['output'];
 };
 
+export type UpdatePostInput = {
+  /** Example field (placeholder) */
+  exampleField?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
+};
+
 export type UpdateUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
@@ -109,8 +150,9 @@ export type User = {
   __typename?: 'User';
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
-  id: Scalars['Float']['output'];
+  id: Scalars['ID']['output'];
   password: Scalars['String']['output'];
+  role: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   username: Scalars['String']['output'];
 };
@@ -128,7 +170,7 @@ export type GetUserQuery = { __typename?: 'Query', user: { __typename?: 'User', 
 
 export const GetUserDocument = `
     query GetUser($email: String!, $username: String!, $isActive: Boolean!) {
-  user(loginInput: {email: $email, isActive: $isActive, username: $username}) {
+  user(loginInput: {email: $email, username: $username}) {
     username
   }
 }

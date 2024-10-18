@@ -18,6 +18,11 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type CreatePostInput = {
+  /** Example field (placeholder) */
+  exampleField: Scalars['Int']['input'];
+};
+
 export type CreateUserInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -32,13 +37,18 @@ export type FindManyUserInput = {
 
 export type FindOneUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
-  isActive?: InputMaybe<Scalars['Boolean']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type LoginInput = {
-  emailOrUsername: Scalars['String']['input'];
+  email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type UpdatePostInput = {
+  /** Example field (placeholder) */
+  exampleField?: InputMaybe<Scalars['Int']['input']>;
+  id: Scalars['Int']['input'];
 };
 
 export type UpdateUserInput = {
@@ -74,7 +84,7 @@ export class TypedDocumentString<TResult, TVariables>
 
 export const GetUserDocument = new TypedDocumentString(`
     query GetUser($email: String!, $username: String!, $isActive: Boolean!) {
-  user(loginInput: {email: $email, isActive: $isActive, username: $username}) {
+  user(loginInput: {email: $email, username: $username}) {
     username
   }
 }
