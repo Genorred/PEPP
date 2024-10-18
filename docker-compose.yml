@@ -8,7 +8,7 @@ services:
       context: ./client
       dockerfile: Dockerfile
     env_file:
-      - client/.env.development
+      - client/.env.local
     ports:
       - "${CLIENT_PORT}:${CLIENT_PORT}"
     environment:
@@ -27,9 +27,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
     env_file:
-      - server/.env.development
-    environment:
-      - DATABASE_URL="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public"
+      - server/.env.local
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
 #    environment:
@@ -45,7 +43,7 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     env_file:
-      - server/.env.development
+      - server/.env.example
     volumes:
       - db-data:/var/lib/postgresql/data
 volumes:
