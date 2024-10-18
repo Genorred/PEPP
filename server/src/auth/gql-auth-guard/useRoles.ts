@@ -9,7 +9,7 @@ const UseRoles = (...roles: RolesT[]) => {
   console.log('Setting roles:', roles);
   return applyDecorators(
     SetMetadata(Meta.Roles, roles),
-    UseGuards(JwtGuard, RolesGuard)
+    UseGuards(RolesGuard)
   )
 }
 export default UseRoles
