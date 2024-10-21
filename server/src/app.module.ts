@@ -17,10 +17,6 @@ import googleConfig from "./config/google.config";
 
 @Module({
   imports: [
-    // GraphQLModule.forRoot<ApolloDriverConfig>({
-    //   driver: ApolloDriver,
-    //   autoSchemaFile: join(process.cwd(), 'src/schema.gql'),  // Code-first approach
-    // }),
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
       autoSchemaFile: {
@@ -32,7 +28,7 @@ import googleConfig from "./config/google.config";
       expandVariables: true,
       cache: true,
       isGlobal: true,
-      // envFilePath: '../.env.local.local'
+      envFilePath: '.env.local'
     }),
 PrismaModule,
     UsersModule,

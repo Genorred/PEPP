@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { CreateUserInput } from "./dto/create-user.input";
 import { UpdateUserInput } from "./dto/update-user.input";
 import { PrismaService } from "../prisma/prisma.service";
@@ -11,12 +11,23 @@ export class UsersService {
   }
 
   create(createUserInput: CreateUserInput) {
-    return this.prisma.user.create({
-      data: {
-        ...createUserInput,
-        role: "USER"
-      }
-    });
+    try {
+      return this.prisma.user.create({
+        data: {
+          ...createUserInput,
+          role: "USER"
+        }
+      });
+    } catch (e) {
+      const { message } = e;
+      if (message.includes("username"))
+        throw new ConflictException("Username");
+      if (message.includes("google_id"))
+        throw new ConflictException("Google id");
+      if (message.includes("email"))
+        throw new ConflictException("Email");
+      throw e;
+    }
   }
 
   findMany(fields: Partial<User>) {

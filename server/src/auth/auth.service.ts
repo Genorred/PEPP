@@ -1,33 +1,24 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { JwtService } from '@nestjs/jwt';
-import { LoginInput } from './dto/login.input';
-import * as bcrypt from 'bcrypt';
-import { CreateUserInput } from '../users/dto/create-user.input';
-import { User } from '../users/entities/user.entity';
+import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { UsersService } from "../users/users.service";
+import { JwtService } from "@nestjs/jwt";
+import { LoginInput } from "./dto/login.input";
+import * as bcrypt from "bcrypt";
+import { CreateUserInput } from "../users/dto/create-user.input";
+import { User } from "../users/entities/user.entity";
+import { GoogleInput } from "./dto/google.dto";
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService,
+    private jwtService: JwtService
   ) {
   }
 
-  async register(registerInput: CreateUserInput) {
+  register(registerInput: CreateUserInput) {
     const { password } = registerInput;
     const hashedPassword = bcrypt.hashSync(password, 12);
-    try {
-      const user = await this.usersService.create({ ...registerInput, password: hashedPassword });
-      return this.getToken(user);
-    } catch (e) {
-      const { message } = e;
-      if (message.includes('username'))
-        throw new ConflictException('Username');
-      if (message.includes('email'))
-        throw new ConflictException('Email');
-      throw e;
-    }
+    return this.usersService.create({ ...registerInput, password: hashedPassword });
   }
 
   async login(loginInput: LoginInput) {
@@ -36,16 +27,7 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException();
     }
-    return this.getToken(user);
-  }
-
-
-  private async getToken(user: Partial<User>) {
-    const { id, username, role } = user;
-    const payload = { username, sub: id, role };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    return user
   }
 
   private async validateUser(loginInput: LoginInput) {
@@ -58,5 +40,6 @@ export class AuthService {
     }
     return null;
   }
+
 
 }

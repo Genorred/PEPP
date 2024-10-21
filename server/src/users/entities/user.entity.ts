@@ -6,7 +6,7 @@ import { User as UserPrisma, Roles } from ".prisma/client";
 @ObjectType()
 @Directive("@key(fields: \"id\")")
 @Directive("@extends")
-export class User implements UserPrisma {
+export class User {
   @Field((type) => ID)
   @Directive("@external")
   id: number;
@@ -23,6 +23,10 @@ export class User implements UserPrisma {
   @Field()
   updatedAt: Date;
 
+  @Field()
+  picture?: string
+  @Field()
+  google_id?: string
   // @Field((type) => [Post])
   // posts: Post[];
 }

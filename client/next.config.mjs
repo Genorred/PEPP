@@ -5,7 +5,15 @@ const nextConfig = {
             poll: 800,
             aggregateTimeout: 300,
         }
-    }
+    },
+    async rewrites() {
+        return [
+            {
+                source: '/api/:path*',
+                destination: 'http://localhost:1488/:path*', // Прокси на внешний API
+            },
+        ];
+    },
 };
 
 export default nextConfig;

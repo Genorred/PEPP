@@ -3,18 +3,20 @@ import { LoginInput } from './dto/login.input';
 import { AuthService } from './auth.service';
 import { Token } from './entities/token.entity';
 import { CreateUserInput } from '../users/dto/create-user.input';
-import { GoogleGuard } from "./gql-auth-guard/google-guard";
-import { UseGuards } from '@nestjs/common';
+import { UseTokens } from "./gql-auth-guard/UseTokens";
 
 @Resolver()
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
   @Mutation(returns => Token)
+  @UseTokens()
   login(@Args('loginInput') loginInput: LoginInput) {
     return this.authService.login(loginInput)
   }
+
   @Mutation(returns => Token)
+  @UseTokens()
   register(@Args('registerInput') registerInput: CreateUserInput) {
     return this.authService.register(registerInput)
   }

@@ -8,6 +8,9 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { useForm } from "react-hook-form";
+import { useGoogleLogin } from "@react-oauth/google";
+import { usePathname, useRouter } from "next/navigation";
+import { Search } from "lucide-react";
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -37,9 +40,46 @@ const Page = () => {
     },
   })
 
+  // const googleLogin = useGoogleLogin({
+  //   flow: 'auth-code',
+  //   onSuccess: async (codeResponse) => {
+  //     console.log(codeResponse);
+  //     const tokens =  fetch('http://localhost:1488/auth/google',
+  //       {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({ code: codeResponse.code }),
+  //       }
+  //     )
+  //
+  //     console.log(tokens);
+  //   },
+  //   onError: errorResponse => console.log(errorResponse),
+  // });
+  const router = useRouter()
+  const pathname = usePathname()
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
+    // googleLogin()
+
+    const url = new URL('http://localhost:1488/auth/google')
+    url.searchParams.set("returnUrl", pathname)
+    router.push(url.href)
+        // const tokens =  fetch('/api/auth/google',
+        //   {
+        //     method: 'GET',
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //     },
+        //   }
+        // )
+        //
+        // console.log(tokens);
   }
+
+
   return (
     <MaxWidthWrapper className='max-w-screen-md'>
       <Form {...form}>
