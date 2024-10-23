@@ -1,22 +1,24 @@
-.PHONY: up
+SHELL := /bin/bash
+ifneq (,$(wildcard ./.env))
+    include config/.env
+    export
+endif
 
-build: merge-env
-	docker compose down
-	docker compose up -d db
-	docker compose build
-	docker-compose up
+build-all: setup_env
+	node tools/build.js | tee build.log
 
-up: merge-env
-	docker-compose up
+setup_env:
+	set -a
+	source config/.env
 
+docker-compose-prod-up: setup_env
+	docker-compose -f deploy/docker/docker-compose.yml up --build
 
+docker-compose-dev-up: setup_env
+	docker-compose -f deploy/docker/docker-compose.test.yml up --build
 
-merge-env:
-	cat client/.env.development server/.env.development > .env
-	#cat client/.env.local.local.production server/.env.local.local.production > .env.local.local.development.production
+docker-compose-prod-down: setup_env
+	docker-compose -f deploy/docker/docker-compose.yml down --remove-orphans
 
-
-dev:
-	docker compose up -d db
-	cd client & pnpm run dev
-	cd server & pnpm run start:dev --prefix /server
+docker-compose-dev-down: setup_env
+	docker-compose -f deploy/docker/docker-compose.test.yml down --remove-orphans

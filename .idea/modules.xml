@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../nestjs-kubernetes-template/.idea/nestjs-kubernetes-template.iml" filepath="$PROJECT_DIR$/../nestjs-kubernetes-template/.idea/nestjs-kubernetes-template.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/paromov.iml" filepath="$PROJECT_DIR$/.idea/paromov.iml" />
     </modules>
   </component>

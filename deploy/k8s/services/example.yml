@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example
+  template:
+    metadata:
+      labels:
+        app: example
+    spec:
+      containers:
+      - name: example
+        image: "reg.suchanecki.me/example:latest"
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+        env:
+          - name: NODE_ENV
+            value: "production"
+          - name: API_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: global-configmap
+                key: API_PORT
+          - name: EXAMPLE_SERVICE_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: global-configmap
+                key: EXAMPLE_SERVICE_HOST
+      imagePullSecrets:
+      - name: dpr-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-service
+spec:
+  selector:
+    app: example
+  ports:
+  - port: 8080
+    targetPort: 8080
+

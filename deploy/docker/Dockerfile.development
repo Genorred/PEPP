@@ -1,0 +1,24 @@
+FROM node:20.16.0-alpine AS base
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+
+
+FROM base
+
+ARG SERVICE_NAME
+ENV NODE_ENV=development
+WORKDIR /usr/app
+COPY ./${SERVICE_NAME} ./${SERVICE_NAME}
+COPY ./shared ./shared
+RUN pnpm --prefix ${SERVICE_NAME} install --frozen-lockfile
+RUN pnpm --prefix shared install --frozen-lockfile
+
+VOLUME [ "/usr/app/${SERVICE_NAME}/node_modules", "/usr/app/shared/node_modules" ]
+
+EXPOSE 8080
+
+WORKDIR /usr/app/${SERVICE_NAME}
+
+CMD npm run start:dev

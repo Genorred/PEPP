@@ -1,0 +1,116 @@
+version: "3.9"
+
+networks:
+  backend:
+    driver: bridge
+  frontend:
+    name: infrastructure
+    driver: bridge
+
+services:
+  gateway:
+    container_name: ${GATEWAY_SERVICE_HOST}
+    build:
+      context: ../../production
+      dockerfile: ../deploy/docker/Dockerfile.development
+      args:
+        SERVICE_NAME: gateway
+    restart: always
+    hostname: ${GATEWAY_SERVICE_HOST}
+    env_file:
+      - ../../config/.env.test
+    networks:
+      - backend
+      - frontend
+    ports:
+      - "8080:8080"
+    volumes:
+      - "../../production/gateway/:/usr/app/gateway/"
+      - "../../production/shared/:/usr/app/shared/"
+    depends_on:
+      - users
+
+  users:
+    container_name: ${USERS_SERVICE_HOST}
+    build:
+      context: ../../production
+      dockerfile: ../deploy/docker/Dockerfile.development
+      args:
+        SERVICE_NAME: users
+    restart: always
+    hostname: ${USERS_SERVICE_HOST}
+    env_file:
+      - ../../config/.env.test
+    networks:
+      - backend
+    volumes:
+      - "../../production/users/:/usr/app/users/"
+      - "../../production/shared/:/usr/app/shared/"
+    depends_on:
+      - db
+  db:
+    container_name: "${USERS_POSTGRES_HOST}"
+    image: postgres
+    restart: always
+    networks:
+      - backend
+    environment:
+      - POSTGRES_USER=${USERS_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${USERS_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${USERS_POSTGRES_DB}
+      - POSTGRES_HOST=${USERS_POSTGRES_HOST}
+    ports:
+      - "${USERS_POSTGRES_PORT}:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
+  # Uncomment to enable MongoDB
+  # db:
+  #   image: "mongo"
+  #   restart: always
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+  #     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+  #     MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
+  #     MONGO_USER: ${MONGO_USER}
+  #     MONGO_PASSWORD: ${MONGO_PASSWORD}
+  #     TZ: "Europe/Warsaw"
+  #   volumes:
+  #     - "./db/data/db-files:/data/db"
+  #     - "./db/init/:/docker-entrypoint-initdb.d/"
+  #   ports:
+  #     - 27017:27017
+  #   networks:
+  #     - backend
+
+  # Uncomment to enable redis
+  # redis:
+  #   image: redis
+  #   restart: always
+  #   hostname: redis
+  #   networks:
+  #     - backend
+  #   env_file:
+  #     - .env
+
+  # Uncomment to enable RabbitMQ
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   restart: always
+  #   hostname: rabbitmq
+  #   networks:
+  #     - frontend
+  #     - backend
+  #   env_file:
+  #     - .env
+  #   # Uncomment to initialize RabbitMQ with predefined configuration
+  #   # volumes:
+  #   #  - './configs/rabbitmq-init.json:/tmp/rabbitmq-init.json'
+  #   # environment:
+  #   #  - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbitmq_management load_definitions "/tmp/rabbitmq-init.json"
+
+  #   # Uncomment to expose RabbitMQ Management service port
+  #   # ports:
+  #   #  - "15672:15672"
+
