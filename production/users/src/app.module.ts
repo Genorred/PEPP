@@ -22,6 +22,7 @@ import googleConfig from "./config/google.config";
       autoSchemaFile: {
         federation: 2,
       },
+      context: ({ req, res }) => ({ req, res })
     }),
     ConfigModule.forRoot({
       load: [databaseConfig, googleConfig],

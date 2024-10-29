@@ -7,6 +7,7 @@ import { AuthResolver } from './auth.resolver';
 import { GoogleController } from "./google.controller";
 import { PassportModule } from "@nestjs/passport";
 import { GoogleStrategy } from "./google.strategy";
+import { SetAuthCookieService } from "./set-auth-cookie.service";
 
 @Module({
   imports: [UsersModule, PassportModule,
@@ -15,6 +16,6 @@ import { GoogleStrategy } from "./google.strategy";
       signOptions: { expiresIn: '60000s' },
     }),],
   controllers: [GoogleController],
-  providers: [AuthService, AuthResolver, GoogleStrategy],
+  providers: [AuthService, AuthResolver, GoogleStrategy, SetAuthCookieService],
 })
 export class AuthModule {}

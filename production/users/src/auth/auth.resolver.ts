@@ -1,41 +1,35 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { LoginInput } from './dto/login.input';
-import { AuthService } from './auth.service';
-import { Token } from './entities/token.entity';
-import { CreateUserInput } from '../users/dto/create-user.input';
+import { Args, Context, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { LoginInput } from "./dto/login.input";
+import { AuthService } from "./auth.service";
+import { CreateUserInput } from "../users/dto/create-user.input";
 import { UseTokens } from "./gql-auth-guard/UseTokens";
+import { Req, Res } from "@nestjs/common";
+import { User } from "../users/entities/user.entity";
 
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) {}
-
-  @Mutation(returns => Token)
-  @UseTokens()
-  login(@Args('loginInput') loginInput: LoginInput) {
-    return this.authService.login(loginInput)
+  constructor(private readonly authService: AuthService) {
   }
 
-  @Mutation(returns => Token)
+  @Query(returns => User)
   @UseTokens()
-  register(@Args('registerInput') registerInput: CreateUserInput) {
-    return this.authService.register(registerInput)
+  async login(@Context() context, @Args("loginInput") loginInput: LoginInput) {
+    const user = await this.authService.login(loginInput);
+    const request = context.switchToHttp().getRequest();
+    request.user = user;
+    console.log(user)
+    return user;
   }
-  // @Get('google')
-  // @UseGuards(GoogleGuard)
-  // // eslint-disable-next-line @typescript-eslint/no-empty-function
-  // async auth() {}
-  //
-  // @Get('google/callback')
-  // @UseGuards(GoogleOauthGuard)
-  // async googleAuthCallback(@Req() req, @Res() res: Response) {
-  //   const token = await this.authService.signIn(req.user);
-  //
-  //   res.cookie('access_token', token, {
-  //     maxAge: 2592000000,
-  //     sameSite: true,
-  //     secure: false,
-  //   });
-  //
-  //   return res.status(HttpStatus.OK);
-  // }
+
+  @Mutation(returns => User)
+  @UseTokens()
+  async register(@Context() context, @Args("registerInput") registerInput: CreateUserInput) {
+    const user = await this.authService.register(registerInput);
+    console.log("user", user);
+    if (context.req) {
+      context.req.user = user;
+    }
+    console.log(user)
+    return user;
+  }
 }

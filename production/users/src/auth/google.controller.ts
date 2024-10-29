@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UseGuards, UseInterceptors } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { UseTokens } from "./gql-auth-guard/UseTokens";
 import { GoogleGuard } from "./gql-auth-guard/google.guard";
+import { RedirectToGoogleSuccess } from "./gql-auth-guard/redirectToGoogleSuccess";
 
 @Controller('auth')
 export class GoogleController {
@@ -13,12 +14,8 @@ export class GoogleController {
 
   @Get('google/callback')
   @UseGuards(GoogleGuard)
-  @UseTokens()
+  @UseInterceptors(RedirectToGoogleSuccess)
   async googleAuthRedirect(@Req() req) {
     // Обрабатывает callback после авторизации
-    return {
-      message: 'Успешная авторизация через Google',
-      user: req.user
-    };
   }
 }

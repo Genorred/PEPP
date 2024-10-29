@@ -1,5 +1,3 @@
-version: "3.9"
-
 networks:
   backend:
     driver: bridge
@@ -43,6 +41,8 @@ services:
       - ../../config/.env.test
     networks:
       - backend
+    ports:
+      - "${USERS_SERVER_PORT}:${USERS_SERVER_PORT}"
     volumes:
       - "../../production/users/:/usr/app/users/"
       - "../../production/shared/:/usr/app/shared/"
@@ -63,6 +63,23 @@ services:
       - "${USERS_POSTGRES_PORT}:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
+  pepp:
+    container_name: pepp
+    restart: always
+    build:
+      context: ../../production
+      dockerfile: ../deploy/docker/Dockerfile.client.development
+    env_file:
+      - ../../config/.env.test
+    ports:
+      - "${CLIENT_PORT}:3000"
+    networks:
+      - frontend
+    environment:
+      - WATCHPACK_POLLING=true
+    volumes:
+      - "../../production/client/:/usr/app/client/"
+
 volumes:
   db-data:
   # Uncomment to enable MongoDB

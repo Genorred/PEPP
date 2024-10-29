@@ -11,23 +11,21 @@ export class UsersService {
   }
 
   create(createUserInput: CreateUserInput) {
-    try {
-      return this.prisma.user.create({
-        data: {
-          ...createUserInput,
-          role: "USER"
-        }
-      });
-    } catch (e) {
+    return this.prisma.user.create({
+      data: {
+        ...createUserInput,
+        role: "USER"
+      }
+    }).catch(e => {
+      console.log(e);
       const { message } = e;
       if (message.includes("username"))
-        throw new ConflictException("Username");
+        throw new ConflictException("Username already in use");
       if (message.includes("google_id"))
-        throw new ConflictException("Google id");
+        throw new ConflictException("Google id already in use");
       if (message.includes("email"))
-        throw new ConflictException("Email");
-      throw e;
-    }
+        throw new ConflictException("Email already in use");
+    });
   }
 
   findMany(fields: Partial<User>) {

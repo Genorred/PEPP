@@ -10,8 +10,12 @@ const nextConfig = {
         return [
             {
                 source: '/api/:path*',
-                destination: 'http://localhost:1488/:path*', // Прокси на внешний API
+                destination: 'http://localhost:8080/:path*', // Прокси на внешний API
             },
+            {
+                source: '/auth/google',
+                destination: 'http://localhost:5591/auth/google', // users microservice
+            }
         ];
     },
 };

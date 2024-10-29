@@ -12,8 +12,8 @@ ENV NODE_ENV=development
 WORKDIR /usr/app
 COPY ./${SERVICE_NAME} ./${SERVICE_NAME}
 COPY ./shared ./shared
-RUN pnpm --prefix ${SERVICE_NAME} install --frozen-lockfile
-RUN pnpm --prefix shared install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --prefix ${SERVICE_NAME} install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --prefix shared install --frozen-lockfile
 
 VOLUME [ "/usr/app/${SERVICE_NAME}/node_modules", "/usr/app/shared/node_modules" ]
 

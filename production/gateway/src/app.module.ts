@@ -48,7 +48,7 @@ import { AuthModule } from "./config/auth.module";
               subgraphs: [
                 {
                   name: "users",
-                  url: "http://docker-users-1:1488/graphql"
+                  url: "http://users:5991/graphql"
                 },
                 // {
                 //   name: "posts",

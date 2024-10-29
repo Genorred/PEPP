@@ -3,9 +3,16 @@ schema {
   mutation: Mutation
 }
 
+input CreatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 input CreateUserInput {
   email: String!
-  password: String!
+  google_id: String
+  password: String
+  picture: String
   username: String!
 }
 
@@ -16,49 +23,67 @@ scalar DateTime
 
 input FindManyUserInput {
   email: String
+  google_id: String
   password: String
+  picture: String
   username: String
 }
 
 input FindOneUserInput {
   email: String
-  isActive: Boolean
   username: String
 }
 
 input LoginInput {
-  emailOrUsername: String!
+  email: String!
   password: String!
 }
 
 type Mutation {
-  login(loginInput: LoginInput!): Token!
-  register(registerInput: CreateUserInput!): Token!
+  createPost(createPostInput: CreatePostInput!): Post!
+  register(registerInput: CreateUserInput!): User!
+  removePost(id: Int!): Post!
   removeUser(id: Int!): User!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
+type Post {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Query {
+  login(loginInput: LoginInput!): User!
+  post(id: Int!): Post!
+  posts: [Post!]!
   user(loginInput: FindOneUserInput!): User!
   users(findManyInput: FindManyUserInput!): [User!]!
 }
 
-type Token {
-  access_token: String!
+input UpdatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 input UpdateUserInput {
   email: String
+  google_id: String
   id: Int!
   password: String
+  picture: String
   username: String
 }
 
 type User {
   createdAt: DateTime!
   email: String!
-  id: Float!
+  google_id: String!
+  id: ID!
   password: String!
+  picture: String!
+  role: String!
   updatedAt: DateTime!
   username: String!
 }

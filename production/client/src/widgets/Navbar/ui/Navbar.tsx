@@ -1,39 +1,29 @@
-"use client"
-import React, { useState } from "react";
-import MaxWidthWrapper from "@/shared/ui/MaxWidthWrapper";
-import NavItem from "@/widgets/Navbar/ui/NavItem";
+"use client";
+import React from "react";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Container from "@mui/material/Container";
+import { UserTooltip } from "@/widgets/Navbar/ui/UserTooltip";
+import { NavDrawer } from "@/widgets/Navbar/ui/NavDrawer";
+import { NavPages } from "@/widgets/Navbar/ui/NavPages";
+import LogoIcons from "./LogoIcons";
 
-const Navbar = () => {
 
-  const [isAuth, setIsAuth] = useState(false);
+function Navbar() {
   return (
-    <MaxWidthWrapper className="my-4" role={"navigation"} variant={"section"}>
-      <ul className="flex gap-3">
-        <NavItem title="Topics" href="/topics" />
-        <NavItem title="Posts" href="/posts" />
-        <NavItem title="Saved" href="/saved" />
-        <NavItem title="My Posts" href="/my-posts" />
-        <NavItem title="Create" href="/create-post" />
-        <NavItem title="Drafts" href="/drafts" className="mr-auto" />
-        <NavItem title="Analityc" href="/analityc" />
-
-        <NavItem title="Notifications" href="/notifications" />
-        <NavItem title="Settings" href="/settings" />
-        {isAuth
-          ?
-          <>
-            <NavItem title="Freund" href="/friends" />
-            <NavItem title="Profile" href="/profile" />
-          </>
-          :
-          <>
-            <NavItem title="Sign up" href="/sign-up" />
-            <NavItem title="Sign in" href="/sign-in" />
-          </>
-        }
-      </ul>
-    </MaxWidthWrapper>
+    <>
+      <AppBar position="static" component={"nav"}>
+        <Container maxWidth="xl">
+          <Toolbar>
+            <NavDrawer />
+            <LogoIcons />
+            <NavPages />
+            <UserTooltip />
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </>
   );
-};
+}
 
 export default Navbar;
