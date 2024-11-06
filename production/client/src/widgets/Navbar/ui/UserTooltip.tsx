@@ -1,18 +1,24 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import Link from "next/link";
-import MenuItem from "@mui/material/MenuItem";
-import Typography from "@mui/material/Typography";
-import { settings } from "../consts";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/shared/ui/dropdown-menu'
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/ui/tooltip'
 import { useDispatch, useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
-import Button from "@mui/material/Button";
-import { Divider } from "@mui/material";
 import { usePathname } from "next/navigation";
+import { LogOut, Settings, User, Users, LogIn } from "lucide-react";
+import { Button } from "@/shared/ui/button";
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, navigationMenuTriggerStyle } from "@/shared/ui/navigation-menu";
 
 export const UserTooltip = () => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -31,63 +37,66 @@ export const UserTooltip = () => {
   const pathname = usePathname();
   console.log(user, 'user')
   return (
-    <>
-
+    <div className="ml-auto flex items-center space-x-4">
       { user
       ?
-        <Box sx={{ flexGrow: 0, marginLeft: "auto" }}>
-          <Tooltip title="Open settings">
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt={user.username} src={user.picture} />
-            </IconButton>
-          </Tooltip>
-          <Menu
-            sx={{ mt: "45px" }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right"
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right"
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            {settings.map((setting) => (
-              <Link href={`/${setting.toLowerCase()}`} key={setting}>
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>{setting}</Typography>
-                </MenuItem>
-              </Link>
-            ))}
-            <Divider />
-            <MenuItem onClick={logout}>
-              Logout
-            </MenuItem>
-          </Menu>
-        </Box>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src="/avatars/01.png" alt="@shadcn" />
+                          <AvatarFallback>SC</AvatarFallback>
+                        </Avatar>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" align="end" forceMount>
+                      <DropdownMenuItem>
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Settings</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Users className="mr-2 h-4 w-4" />
+                        <span>Friends</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={logout}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Log out</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Account settings</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
       :
-        <Box sx={{ marginLeft: 'auto', display: { xs: "none", sm: "flex" } }}>
-          <Link href={`/sign-up${pathname ? '?returnUrl=' + pathname : ''}`}>
-            <Button
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              Sign up
-            </Button>
+        <NavigationMenu>
+          <NavigationMenuItem >
+            <Link href={`/sign-up${pathname ? '?returnUrl=' + pathname : ''}`} legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <span>Sign up</span>
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem >
+          <Link href={`/sign-in${pathname ? '?returnUrl=' + pathname : ''}`} legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <LogIn className="mr-2 h-4 w-4" />
+              <span>Sign in</span>
+            </NavigationMenuLink>
           </Link>
-          <Link href={`/sign-in${pathname ? '?returnUrl=' + pathname : ''}`}>
-            <Button
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              Sign in
-            </Button>
-          </Link>
-        </Box>
+        </NavigationMenuItem>
+        </NavigationMenu>
       }
-    </>
+    </div>
   );
 };

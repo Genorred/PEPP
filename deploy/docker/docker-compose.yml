@@ -3,41 +3,109 @@ networks:
     driver: bridge
   frontend:
     name: infrastructure
-    external: true
+    driver: bridge
 
 services:
   gateway:
+    container_name: ${GATEWAY_SERVICE_HOST}
     build:
       context: ../../production
       dockerfile: ../deploy/docker/Dockerfile
       args:
-        NODE_VERSION: 14.8.0-alpine
         SERVICE_NAME: gateway
-    restart: always
-    hostname: gateway
     env_file:
-      - ../../config/.env
+      - ../../config/.env.test
+    restart: always
+    hostname: ${GATEWAY_SERVICE_HOST}
+    networks:
+      - backend
+      - frontend
     ports:
       - "8080:8080"
-    networks:
-      - frontend
-      - backend
     depends_on:
-      - example
+      - users
 
-  example:
+  users:
+    container_name: ${USERS_SERVICE_HOST}
     build:
       context: ../../production
       dockerfile: ../deploy/docker/Dockerfile
       args:
-        NODE_VERSION: 14.8.0-alpine
-        SERVICE_NAME: example
-    restart: always
-    hostname: example
+        SERVICE_NAME: users
     env_file:
-      - ../../config/.env
+      - ../../config/.env.test
+    restart: always
+    hostname: ${USERS_SERVICE_HOST}
     networks:
       - backend
+    ports:
+      - "${USERS_SERVICE_PORT}:${USERS_SERVICE_PORT}"
+    depends_on:
+      - users_db
+  users_db:
+    container_name: "${USERS_POSTGRES_HOST}"
+    image: postgres:16.2-alpine
+    restart: always
+    networks:
+      - backend
+    environment:
+      - POSTGRES_USER=${USERS_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${USERS_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${USERS_POSTGRES_DB}
+      - POSTGRES_HOST=${USERS_POSTGRES_HOST}
+    ports:
+      - "${USERS_POSTGRES_PORT}:5432"
+    volumes:
+      - db-data-users:/var/lib/postgresql/data
+  pepp:
+    container_name: pepp
+    restart: always
+    env_file:
+      - ../../config/.env.test
+    build:
+      context: ../../production
+      dockerfile: ../deploy/docker/Dockerfile.client
+    ports:
+      - "${CLIENT_PORT}:3000"
+    networks:
+      - frontend
+  posts:
+    container_name: ${POSTS_SERVICE_HOST}
+    build:
+      context: ../../production
+      dockerfile: ../deploy/docker/Dockerfile
+      args:
+        SERVICE_NAME: posts
+    env_file:
+      - ../../config/.env
+    restart: always
+    hostname: ${POSTS_SERVICE_HOST}
+    networks:
+      - backend
+    ports:
+      - "${POSTS_SERVICE_PORT}:${POSTS_SERVICE_PORT}"
+    depends_on:
+      - posts_db
+  posts_db:
+    container_name: "${POSTS_POSTGRES_HOST}"
+    image: postgres:16.2-alpine
+    restart: always
+    networks:
+      - backend
+    environment:
+      - POSTGRES_USER=${POSTS_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTS_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTS_POSTGRES_DB}
+      - POSTGRES_HOST=${POSTS_POSTGRES_HOST}
+    ports:
+      - "${POSTS_POSTGRES_PORT}:5432"
+    volumes:
+      - db-data-posts:/var/lib/postgresql/data
+
+volumes:
+  db-data-users:
+  db-data-posts:
+
     # links:
     #  - db
 

@@ -11,14 +11,16 @@ ARG SERVICE_NAME
 ENV NODE_ENV=development
 WORKDIR /usr/app
 COPY ./${SERVICE_NAME} ./${SERVICE_NAME}
-COPY ./shared ./shared
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --prefix ${SERVICE_NAME} install --frozen-lockfile
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --prefix shared install --frozen-lockfile
+COPY ./tsconfig.run.json ./tsconfig.json
 
-VOLUME [ "/usr/app/${SERVICE_NAME}/node_modules", "/usr/app/shared/node_modules" ]
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --prefix ${SERVICE_NAME} install --frozen-lockfile
+
+VOLUME [ "/usr/app/${SERVICE_NAME}/node_modules" ]
 
 EXPOSE 8080
 
 WORKDIR /usr/app/${SERVICE_NAME}
 
-CMD npm run start:dev
+COPY ./shared/scripts ./scripts
+
+CMD ["./scripts/dev.sh"]

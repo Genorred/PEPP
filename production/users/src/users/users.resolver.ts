@@ -1,10 +1,10 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, ResolveReference } from "@nestjs/graphql";
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { FindOneUserInput } from './dto/find-one-user.input';
 import { FindManyUserInput } from './dto/find-many-user.input';
-import UseRoles from "../auth/gql-auth-guard/useRoles";
+import UseRoles from "@shared/auth-guard/useRoles";
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -29,5 +29,10 @@ export class UsersResolver {
   @Mutation(() => User)
   removeUser(@Args('id', { type: () => Int }) id: number) {
     return this.usersService.remove(id);
+  }
+
+  @ResolveReference()
+  async resolveReference(reference: { __typename: string; id: number }): Promise<User> {
+    return this.usersService.findOne({id: reference.id});
   }
 }

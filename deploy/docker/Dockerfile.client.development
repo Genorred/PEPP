@@ -16,8 +16,6 @@ RUN pnpm config set store-dir /pnpm/store
 
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-RUN #pnpm run build
-
 VOLUME [ "/usr/app/client/node_modules", "/usr/app/client/.next" ]
 
 EXPOSE 3000

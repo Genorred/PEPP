@@ -1,6 +1,6 @@
 "use client"
 import { userSlice } from "@/entities/User/model/user.slice";
-import { User } from "@/graphql/generated";
+import { User } from "@/shared/api/graphql/generated";
 import { useDispatch, useSelector } from "react-redux";
 import React from "react";
 import { useRouter } from "next/navigation";

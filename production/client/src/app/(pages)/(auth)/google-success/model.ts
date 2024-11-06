@@ -1,4 +1,4 @@
-import { User } from "@/graphql/generated";
+import { User } from "@/shared/api/graphql/generated";
 
 export interface SetGoogleUserSearchParams{
   user: User,

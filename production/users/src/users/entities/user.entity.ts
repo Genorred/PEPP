@@ -1,14 +1,12 @@
 import { ObjectType, Field, Int, Directive, ID } from "@nestjs/graphql";
-import { RolesT } from "src/auth/entities/roles.model";
-import { User as UserPrisma, Roles } from ".prisma/client";
+import { Roles } from ".prisma/client";
+import { User as SharedUser } from "@shared/entities/user.entity"
 
 
 @ObjectType()
-@Directive("@key(fields: \"id\")")
-@Directive("@extends")
-export class User {
+@Directive('@key(fields: "id")')
+export class User implements SharedUser{
   @Field((type) => ID)
-  @Directive("@external")
   id: number;
   @Field()
   email: string;

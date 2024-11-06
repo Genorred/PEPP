@@ -11,14 +11,15 @@ setup_env:
 	set -a
 	source config/.env
 
-docker-compose-prod-up: setup_env
-	docker-compose -f deploy/docker/docker-compose.yml up --build
-
-docker-compose-dev-up: setup_env
+dev-up: setup_env
 	docker-compose -f deploy/docker/docker-compose.test.yml --env-file ./config/.env.test up --build
 
-docker-compose-prod-down: setup_env
-	docker-compose -f deploy/docker/docker-compose.yml down --remove-orphans
+dev-down: setup_env
+	docker-compose -f deploy/docker/docker-compose.test.yml --env-file ./config/.env.test down -v --remove-orphans
 
-docker-compose-dev-down: setup_env
-	docker-compose -f deploy/docker/docker-compose.test.yml down --remove-orphans
+prod-up: setup_env
+	docker-compose -f deploy/docker/docker-compose.yml --env-file ./config/.env up --build
+
+prod-down: setup_env
+	docker-compose -f deploy/docker/docker-compose.yml --env-file ./config/.env down --remove-orphans
+

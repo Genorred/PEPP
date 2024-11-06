@@ -1,13 +1,13 @@
 "use client";
-import { Pen, PenOff } from "lucide-react";
 import React, { createElement, useEffect, useMemo, useRef, useState } from "react";
-import MaxWidthWrapper from "@/shared/ui/MaxWidthWrapper";
+import Container from "@/shared/ui/Container";
 import { PostDetailsI } from "@/entities/Post/model";
 import { cn } from "@/shared/lib/utils";
-import Editor, { createWrappedEditor } from "../../../../features/PostEditor/ui/Editor";
 import usePostForm from "@/features/PostEditor/lib/usePostForm";
-import useModeChanger from "@/app/(pages)/post/[id]/useModeChanger";
 import ModeChanger from "@/app/(pages)/post/[id]/ModeChanger";
+import { Box, Container, Stack } from "@mui/material";
+import { Editor, EditorInput } from "@/features/PostEditor";
+import ToolBar from "@/features/PostEditor/ui/ToolBar";
 
 const Page = () => {
   const post: PostDetailsI = {
@@ -53,19 +53,33 @@ const Page = () => {
   //   // shouldUsePostEditor,
   // } = postFormPayload
   const editor = usePostForm().editor;
-  const {parent, isReadonly, setIsReadonly, setPadding} = useModeChanger()
+  const [isReadonly, setIsReadonly] = useState(false);
   return (
-    <Editor editor={editor}>
-      <div className={cn("relative flex flex-wrap", { "flex-col-reverse": isReadonly })}>
-        <ModeChanger isReadonly={isReadonly} setIsReadonly={setIsReadonly} setPadding={setPadding}/>
-        <MaxWidthWrapper className={cn({ "mx-0": !isReadonly }, "transition-all min-w-[640px]")} ref={parent}>
-          <Editor.Input />
-        </MaxWidthWrapper>
-        <MaxWidthWrapper className="min-w-40 flex-1">
-          <Editor.ToolBar />
-        </MaxWidthWrapper>
-      </div>
-    </Editor>
+    <Box sx={{
+      marginTop: 4
+    }}>
+      <Editor editor={editor}>
+        <Stack  justifyContent={'center'} sx={{position: 'relative'}} direction={'row'}
+        >
+          <ModeChanger isReadonly={isReadonly} setIsReadonly={setIsReadonly} />
+          <Container component={'div'} sx={{
+            maxWidth: 'fit-content',
+            marginX: 0,
+            minWidth: 640
+          }} >
+            <EditorInput />
+          </Container>
+          <Stack sx={{
+            overflow: 'hidden',
+            transitionProperty: 'all',
+            transitionDuration: '300ms',
+            transitionTimingFunction: 'ease-in-out',
+            flex: isReadonly ? 0 : 'auto'}} direction={'row'}>
+            <ToolBar />
+          </Stack>
+        </Stack>
+      </Editor>
+    </Box>
   );
 };
 

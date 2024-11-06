@@ -1,5 +1,5 @@
 import React from "react";
-import MaxWidthWrapper from "@/shared/ui/MaxWidthWrapper";
+import Container from "@/shared/ui/Container";
 import { PostI, Post } from "@/entities/Post";
 
 
@@ -30,11 +30,11 @@ const PostsList = () => {
     }
   ];
   return (
-    <MaxWidthWrapper variant={"section"}>
+    <Container variant={"section"}>
       {posts.map(post =>
         <Post {...post}/>
       )}
-    </MaxWidthWrapper>
+    </Container>
   );
 };
 

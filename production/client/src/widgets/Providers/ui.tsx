@@ -4,11 +4,9 @@ import { ClientProviders } from "@/widgets/Providers/clientProviders";
 
 const Providers = ({ children }: PropsWithChildren) => {
   return (
-    <AppRouterCacheProvider>
         <ClientProviders>
           {children}
         </ClientProviders>
-    </AppRouterCacheProvider>
   );
 };
 

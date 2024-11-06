@@ -1,4 +1,4 @@
-import { User } from "@/graphql/generated";
+import { User } from "@/shared/api/graphql/generated";
 import React from "react";
 import SetGoogleUser from "./SetGoogleUser";
 import { SetGoogleUserSearchParams } from "@/app/(pages)/(auth)/google-success/model";

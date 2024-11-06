@@ -35,20 +35,20 @@ services:
       dockerfile: ../deploy/docker/Dockerfile.development
       args:
         SERVICE_NAME: users
-    restart: always
-    hostname: ${USERS_SERVICE_HOST}
     env_file:
       - ../../config/.env.test
+    restart: always
+    hostname: ${USERS_SERVICE_HOST}
     networks:
       - backend
     ports:
-      - "${USERS_SERVER_PORT}:${USERS_SERVER_PORT}"
+      - "${USERS_SERVICE_PORT}:${USERS_SERVICE_PORT}"
     volumes:
       - "../../production/users/:/usr/app/users/"
-      - "../../production/shared/:/usr/app/shared/"
+      - "../../production/shared/src:/usr/app/users/shared/"
     depends_on:
-      - db
-  db:
+      - users_db
+  users_db:
     container_name: "${USERS_POSTGRES_HOST}"
     image: postgres
     restart: always
@@ -59,16 +59,19 @@ services:
       - POSTGRES_PASSWORD=${USERS_POSTGRES_PASSWORD}
       - POSTGRES_DB=${USERS_POSTGRES_DB}
       - POSTGRES_HOST=${USERS_POSTGRES_HOST}
+
     ports:
       - "${USERS_POSTGRES_PORT}:5432"
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-data-users:/var/lib/postgresql/data
   pepp:
     container_name: pepp
     restart: always
     build:
       context: ../../production
       dockerfile: ../deploy/docker/Dockerfile.client.development
+      args:
+        SERVICE_NAME: posts
     env_file:
       - ../../config/.env.test
     ports:
@@ -79,9 +82,45 @@ services:
       - WATCHPACK_POLLING=true
     volumes:
       - "../../production/client/:/usr/app/client/"
+  posts:
+    container_name: ${POSTS_SERVICE_HOST}
+    build:
+      context: ../../production
+      dockerfile: ../deploy/docker/Dockerfile.development
+      args:
+        SERVICE_NAME: posts
+    env_file:
+      - ../../config/.env.test
+    restart: always
+    hostname: ${POSTS_SERVICE_HOST}
+    networks:
+      - backend
+    ports:
+      - "${POSTS_SERVICE_PORT}:${POSTS_SERVICE_PORT}"
+    volumes:
+      - "../../production/posts/:/usr/app/posts/"
+      - "../../production/shared/:/usr/app/shared/"
+    depends_on:
+      - posts_db
+  posts_db:
+    container_name: "${POSTS_POSTGRES_HOST}"
+    image: postgres
+    restart: always
+    networks:
+      - backend
+    environment:
+      - POSTGRES_USER=${POSTS_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTS_POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTS_POSTGRES_DB}
+      - POSTGRES_HOST=${POSTS_POSTGRES_HOST}
+    ports:
+      - "${POSTS_POSTGRES_PORT}:5432"
+    volumes:
+      - db-data-posts:/var/lib/postgresql/data
 
 volumes:
-  db-data:
+  db-data-users:
+  db-data-posts:
   # Uncomment to enable MongoDB
   # db:
   #   image: "mongo"

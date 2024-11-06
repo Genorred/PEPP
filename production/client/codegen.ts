@@ -4,10 +4,10 @@ const gatewayUrl = "http://localhost:8080/graphql"
 const config: CodegenConfig = {
   schema: gatewayUrl,
   watch: true,
-  documents: ['src/**/*.tsx'],
+  documents: ['src/**/*.tsx', 'src/**/*.ts'],
   ignoreNoDocuments: true,
   generates: {
-    './src/graphql/generated.ts': {
+    './src/shared/api/graphql/generated.ts': {
       plugins: ['typescript', 'typescript-operations', 'typescript-react-query', 'fragment-matcher'],
       config: {
         legacyMode: false,
@@ -20,7 +20,7 @@ const config: CodegenConfig = {
         useExplicitTyping: true
       },
       },
-    './src/graphql/': {
+    './src/shared/api/graphql/': {
       preset: 'client',
       config: {
         useExplicitTyping: true,

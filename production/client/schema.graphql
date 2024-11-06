@@ -4,8 +4,9 @@ schema {
 }
 
 input CreatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  body: JSONObject!
+  published: Boolean
+  userId: Int!
 }
 
 input CreateUserInput {
@@ -34,6 +35,16 @@ input FindOneUserInput {
   username: String
 }
 
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
 input LoginInput {
   email: String!
   password: String!
@@ -49,8 +60,13 @@ type Mutation {
 }
 
 type Post {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  body: [JSON!]!
+  createdAt: DateTime!
+  id: ID!
+  published: Boolean!
+  updatedAt: DateTime!
+  user: User!
+  userId: ID!
 }
 
 type Query {
@@ -62,9 +78,10 @@ type Query {
 }
 
 input UpdatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  body: JSONObject
   id: Int!
+  published: Boolean
+  userId: Int
 }
 
 input UpdateUserInput {
@@ -83,6 +100,7 @@ type User {
   id: ID!
   password: String!
   picture: String!
+  posts: [Post!]!
   role: String!
   updatedAt: DateTime!
   username: String!

@@ -1,5 +1,5 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "@/graphql/generated";
+import { User } from "@/shared/api/graphql/generated";
 import { rootReducer } from "@/shared/lib/redux";
 
 type State = {
