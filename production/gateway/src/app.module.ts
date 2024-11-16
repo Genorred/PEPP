@@ -37,7 +37,8 @@ import microservicesConfig from "./config/microservicesConfig";
       useFactory: (subgraphs: ConfigType<typeof microservicesConfig>, authContext: AuthContext) => {
         return {
           server: {
-            context: ({ req }) => authContext.validate({ req }),
+
+            context: ({ req, res }) => authContext.validate({ req, res }),
             // WARNING: IT IS USED TO RUN CONTAINERS ON LOW MEMORY PC SO THAT DEV CONTAINERS DON'T CONSUME ALL MEMORY
             introspection: true
           },

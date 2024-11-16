@@ -14,11 +14,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Topic {
+  title    String @id
+  posts    Post[] @relation(name: "topic")
+  postsSub Post[] @relation(name: "subTopic")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Post {
-  id          Int      @id @default(autoincrement())
-  body        Json[]
-  published   Boolean  @default(false)
+  id         Int     @id @default(autoincrement())
+  version    Int     @default(1)
+  isArchived Boolean @default(false)
+
+  actualPost Post?   @relation(fields: [postId], references: [id], name: "actualPost")
+  versions   Post[]  @relation(name: "actualPost")
+  topics    Topic[]   @relation(name: "topic")
+  subTopics Topic[]   @relation(name: "subTopic")
+  comments  Comment[]
+
+  title            String
+  description      String?
+  rating           Int?
+  img              String?
+  commentsQuantity Int?
+  reviewsQuantity  Int?
+  minutes          Int?
+  body             Json[]
+  published        Boolean  @default(false)
+  userId           Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  postId           Int?
+}
+
+model Comment {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+  rating      Int?
   userId      Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  post        Post    @relation(fields: [postId], references: [id])
+  postId      Int
+  postVersion Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

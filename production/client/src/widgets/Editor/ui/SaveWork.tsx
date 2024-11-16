@@ -1,72 +1,84 @@
 import React from "react";
-import { Form, FormControl, FormField, FormItem } from "@/shared/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/shared/ui/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEditorState } from "@udecode/plate-common/react";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
-
-import { useCreatePostMutation, useRegisterMutation } from "@/shared/api/graphql/generated";
-import { editor } from "@/features/PostEditor/consts/editor";
-import { graphqlClient } from "@/shared/api/base";
-import { userSlice } from "@/entities/User/model/user.slice";
+import useCreatePostSubmit from "@/widgets/Editor/lib/useCreatePostSubmit";
+import useUpdatePostSubmit from "@/widgets/Editor/lib/useUpdatePostSubmit";
+import { PostQuery } from "@/shared/api/graphql/graphql";
+import { buttonNames } from "@/widgets/Editor/consts";
+import TagsInput from "@/shared/ui/TagsInput";
 
 const formSchema = z.object({
-  topic: z.string().min(2, {
-    message: "Topic must be at least 2 characters.",
+  title: z.string().min(3, {
+    message: "Title must be at least 3 characters."
   }),
-  subtopic: z.string().min(8, {
-    message: "Message must be at least 8 characters.",
-  }),
-})
-const SaveWork = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
+  topics: z.array(z.string().min(2, {
+    message: "Topic must be at least 2 characters."
+  })),
+  subTopics: z.array(z.string().min(8, {
+    message: "Message must be at least 8 characters."
+  }))
+});
+export type HandleWorkFormT = z.infer<typeof formSchema>
+const SaveWork = ({ id, versionPost }: {
+  id?: number
+  versionPost?: PostQuery["post"]
+}) => {
+  const form = useForm<HandleWorkFormT>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      topic: "",
-      subtopic: "",
-    },
-  })
-  const { mutate: createPost } = useCreatePostMutation(graphqlClient, {
-    onSuccess: (data) => {
-      console.log(data)
+      title: "",
+      topics: [],
+      subTopics: []
     }
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values, editor.value)
-    createPost({
-      // ...values,
-      body: editor.value as any,
-      userId: 423423
-    })
-  }
+  const onSubmit = useCreatePostSubmit({referenceId: id, versionPost});
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="topic"
+          name="title"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="Enter the title" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
-          name="subtopic"
+          name="topics"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Enter your email" {...field} />
+                <TagsInput name="tags" control={form.control} placeholder="Enter tags..." />
               </FormControl>
+              <FormDescription>Enter tags and press Enter to add them.</FormDescription>
+              <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <FormField
+          control={form.control}
+          name="subTopics"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <TagsInput name="tags" control={form.control} placeholder="Enter tags..." />
+              </FormControl>
+              <FormDescription>Enter tags and press Enter to add them.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" name={buttonNames.save}>Save</Button>
+        <Button type="submit" name={buttonNames.publish}>Publish</Button>
       </form>
     </Form>
   );

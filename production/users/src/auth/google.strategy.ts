@@ -39,10 +39,13 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       google_id: id,
       email: emails[0].value,
       username: `${name.givenName} ${name.familyName}`,
-      picture: photos[0].value,
+      img: photos[0].value,
     };
 
-    await this.usersService.create(user).catch(err => {})
-    done(null, user);
+    let dbUser = await this.usersService.findOne({google_id: id})
+    console.log("dbUser", dbUser)
+    if( !dbUser )
+      dbUser = await this.usersService.create(user).catch(err => null)
+    done(null, dbUser);
   }
 }

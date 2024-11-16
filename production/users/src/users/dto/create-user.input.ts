@@ -9,7 +9,7 @@ export class CreateUserInput {
   @Field({nullable: true})
   google_id?: string
   @Field({nullable: true})
-  picture?: string
+  img?: string
   @Field()
   username: string;
 }

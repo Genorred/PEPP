@@ -14,7 +14,7 @@ services:
       args:
         SERVICE_NAME: gateway
     env_file:
-      - ../../config/.env.test
+      - ../../config/.env
     restart: always
     hostname: ${GATEWAY_SERVICE_HOST}
     networks:
@@ -22,8 +22,9 @@ services:
       - frontend
     ports:
       - "8080:8080"
-    depends_on:
-      - users
+#    depends_on:
+#      - users
+#      - posts
 
   users:
     container_name: ${USERS_SERVICE_HOST}

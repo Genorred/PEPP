@@ -13,29 +13,31 @@ const createNoopStorage = () => {
     },
     removeItem(_key: string) {
       return Promise.resolve();
-    },
+    }
   };
 };
 const storage = typeof window !== "undefined" ? createWebStorage("local") : createNoopStorage();
 
 const persistConfig = {
-    key: 'root',
-    storage,
-}
+  key: "root",
+  storage,
+  whitelist: ["user"]
+};
 
 export const extraArgument = {
-    // router,
+  // router,
 };
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-    reducer: persistedReducer,
-    devTools: {trace: true, traceLimit: 25},
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({ thunk: { extraArgument },
-            serializableCheck: {
-                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
-            }
-        }),
+  reducer: persistedReducer,
+  devTools: { trace: true, traceLimit: 25 },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      thunk: { extraArgument },
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+      }
+    })
 });
-export const persistor = persistStore(store)
+export const persistor = persistStore(store);

@@ -25,22 +25,33 @@ export type Scalars = {
 export type CreatePostInput = {
   body: Scalars['JSONObject']['input'];
   published?: InputMaybe<Scalars['Boolean']['input']>;
-  userId: Scalars['Int']['input'];
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title: Scalars['String']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type CreateUserInput = {
   email: Scalars['String']['input'];
   google_id?: InputMaybe<Scalars['String']['input']>;
+  img?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
-  picture?: InputMaybe<Scalars['String']['input']>;
   username: Scalars['String']['input'];
+};
+
+export type CreateVersionPostInput = {
+  body: Scalars['JSONObject']['input'];
+  postId: Scalars['Float']['input'];
+  published?: InputMaybe<Scalars['Boolean']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title: Scalars['String']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type FindManyUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   google_id?: InputMaybe<Scalars['String']['input']>;
+  img?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
-  picture?: InputMaybe<Scalars['String']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -54,36 +65,81 @@ export type LoginInput = {
   password: Scalars['String']['input'];
 };
 
+export type PartialPostInput = {
+  body?: InputMaybe<Scalars['JSONObject']['input']>;
+  published?: InputMaybe<Scalars['Boolean']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
+  userId?: InputMaybe<Scalars['Float']['input']>;
+};
+
 export type UpdatePostInput = {
   body?: InputMaybe<Scalars['JSONObject']['input']>;
   id: Scalars['Int']['input'];
   published?: InputMaybe<Scalars['Boolean']['input']>;
-  userId?: InputMaybe<Scalars['Int']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type UpdateUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   google_id?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
+  img?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
-  picture?: InputMaybe<Scalars['String']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreatePostMutationVariables = Exact<{
-  userId: Scalars['Int']['input'];
   body: Scalars['JSONObject']['input'];
+  title: Scalars['String']['input'];
+  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: string } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number } };
+
+export type CreateVersionPostMutationVariables = Exact<{
+  body: Scalars['JSONObject']['input'];
+  title: Scalars['String']['input'];
+  postId: Scalars['Float']['input'];
+  published: Scalars['Boolean']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersionPost: { __typename?: 'Post', id: number } };
+
+export type DraftQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type DraftQuery = { __typename?: 'Query', draft: { __typename?: 'Post', id: number, body: Array<any>, createdAt: any, img?: string | null, title: string, updatedAt: any } };
+
+export type DraftsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DraftsQuery = { __typename?: 'Query', userDrafts: Array<{ __typename?: 'Post', id: number, createdAt: any, img?: string | null, title: string, updatedAt: any }> };
 
 export type PostQueryVariables = Exact<{
   id: Scalars['Int']['input'];
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, published: boolean } };
+export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, user: { __typename?: 'User', username: string, img: string, id: number } } };
+
+export type PublishDraftMutationVariables = Exact<{
+  postId: Scalars['Int']['input'];
+}>;
+
+
+export type PublishDraftMutation = { __typename?: 'Mutation', publish: { __typename?: 'Post', id: number } };
 
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String']['input'];
@@ -92,7 +148,16 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', username: string, email: string, id: string, createdAt: any } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', username: string, email: string, id: number, createdAt: any } };
+
+export type UpdatePostMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+  body?: InputMaybe<Scalars['JSONObject']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: number } };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -110,20 +175,66 @@ export class TypedDocumentString<TResult, TVariables>
 }
 
 export const CreatePostDocument = new TypedDocumentString(`
-    mutation createPost($userId: Int!, $body: JSONObject!) {
-  createPost(createPostInput: {body: $body, userId: $userId}) {
+    mutation createPost($body: JSONObject!, $title: String!, $isPublished: Boolean, $topics: [String!], $subTopics: [String!]) {
+  createPost(
+    createPostInput: {body: $body, published: $isPublished, title: $title, topics: $topics, subTopics: $subTopics}
+  ) {
     id
   }
 }
     `) as unknown as TypedDocumentString<CreatePostMutation, CreatePostMutationVariables>;
+export const CreateVersionPostDocument = new TypedDocumentString(`
+    mutation createVersionPost($body: JSONObject!, $title: String!, $postId: Float!, $published: Boolean!, $topics: [String!], $subTopics: [String!]) {
+  createVersionPost(
+    createVersionPostInput: {body: $body, title: $title, postId: $postId, published: $published, topics: $topics, subTopics: $subTopics}
+  ) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<CreateVersionPostMutation, CreateVersionPostMutationVariables>;
+export const DraftDocument = new TypedDocumentString(`
+    query draft($id: Int!) {
+  draft(id: $id) {
+    id
+    body
+    createdAt
+    img
+    title
+    updatedAt
+  }
+}
+    `) as unknown as TypedDocumentString<DraftQuery, DraftQueryVariables>;
+export const DraftsDocument = new TypedDocumentString(`
+    query drafts {
+  userDrafts {
+    id
+    createdAt
+    img
+    title
+    updatedAt
+  }
+}
+    `) as unknown as TypedDocumentString<DraftsQuery, DraftsQueryVariables>;
 export const PostDocument = new TypedDocumentString(`
     query post($id: Int!) {
   post(id: $id) {
     body
-    published
+    createdAt
+    user {
+      username
+      img
+      id
+    }
   }
 }
     `) as unknown as TypedDocumentString<PostQuery, PostQueryVariables>;
+export const PublishDraftDocument = new TypedDocumentString(`
+    mutation publishDraft($postId: Int!) {
+  publish(publishInput: $postId) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<PublishDraftMutation, PublishDraftMutationVariables>;
 export const RegisterDocument = new TypedDocumentString(`
     mutation register($username: String!, $password: String!, $email: String!) {
   register(
@@ -136,3 +247,10 @@ export const RegisterDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<RegisterMutation, RegisterMutationVariables>;
+export const UpdatePostDocument = new TypedDocumentString(`
+    mutation updatePost($id: Int!, $body: JSONObject, $title: String) {
+  updatePost(updatePostInput: {id: $id, body: $body, title: $title}) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<UpdatePostMutation, UpdatePostMutationVariables>;

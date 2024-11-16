@@ -3,34 +3,11 @@ import Container from "@/shared/ui/Container";
 import { PostI, Post } from "@/entities/Post";
 
 
-const PostsList = () => {
-  const posts: PostI[] = [
-    {
-      id: "sdf",
-      title: "Rollcake",
-      description: " " +
-        "sfsfasFSD fsd fasf SDF sadfSD FSDA fSd fAdf DS FaS FDS asaf f aS" +
-        "sfsfasFSD fsd fasf SDF sadfSD FSDA fSd fAdf DS FaS FDS asaf f aS" +
-        "sfsfasFSD fsd fasf SDF sadfSD FSDA fSd fAdf DS FaS FDS asaf f aS" +
-        "sfsfasFSD fsd fasf SDF sadfSD FSDA fSd fAdf DS FaS FDS asaf f aS" +
-        "sfsfasFSD fsd fasf SDF sadfSD FSDA fSd fAdf DS FaS FDS asaf f aS" +
-        "sfsfasFSD fsd fasf SDF sadfSD FSDA fSd fAdf DS FaS FDS asaf f aS" +
-        "sfsfasFSD fsd fasf SDF sadfSD FSDA fSd fAdf DS FaS FDS asaf f aS" +
-        "sfsfasFSD fsd fasf SDF sadfSD FSDA fSd fAdf DS FaS FDS asaf f aS" +
-        "sfsfasFSD fsd fasf SDF sadfSD FSDA fSd fAdf DS FaS FDS asaf f aS" +
-        "",
-      img: "",
-      video: "",
-      rating: 2,
-      comments: [
-        "AFdafefejfkjkad",
-        "faSAdffdfsdfklf"
-      ]
-
-    }
-  ];
+const PostsList = ({posts}: {
+  posts: PostI[]
+}) => {
   return (
-    <Container variant={"section"}>
+    <Container className='flex gap-4 flex-wrap' variant={"section"}>
       {posts.map(post =>
         <Post {...post}/>
       )}

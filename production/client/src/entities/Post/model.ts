@@ -1,14 +1,28 @@
 import React from "react";
-type Comments = (Comment | string)[] // lazy fetching
-export interface PostI {
-  id: string;
-  title: string;
-  description: string;
-  rating: number;
-  img?: string;
-  video?: string;
-  comments: Comments;
+import { Post as GraphqlPost, User } from "@/shared/api/graphql/generated";
+
+export type PostI = Omit<GraphqlPost, "body" | "published" | "user" | "updatedAt"> & {
+  userId: User['id'],
+  username: User['username'],
+  userImg: User['img'],
+  occupation: User['occupation'],
 }
+// {
+//   id: number;
+//   title: string;
+//   description: string;
+//   rating: number;
+//   img: string;
+//   userId: number;
+//   username: string;
+//   userAvatar ? : string;
+//   occupation: string;
+//   tags: string[];
+//   comments: number;
+//   reviews: number;
+//   createdAt: Date
+//   minutes: number;
+// }
 export interface PostDetailsI {
   title: string
   content: {
@@ -27,3 +41,9 @@ export interface PostDetailsI {
 // type ChildRecursion<T> = {
 //   child: ChildRecursion<T>
 // } & T
+export interface Review {
+  id: number;
+  username: string;
+  rating: number;
+  review: string;
+}

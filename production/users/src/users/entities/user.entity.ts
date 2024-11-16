@@ -6,7 +6,7 @@ import { User as SharedUser } from "@shared/entities/user.entity"
 @ObjectType()
 @Directive('@key(fields: "id")')
 export class User implements SharedUser{
-  @Field((type) => ID)
+  @Field((type) => Int)
   id: number;
   @Field()
   email: string;
@@ -15,6 +15,8 @@ export class User implements SharedUser{
   @Field()
   username: string;
   @Field()
+  occupation: string;
+  @Field()
   role: Roles;
   @Field()
   createdAt: Date;
@@ -22,7 +24,7 @@ export class User implements SharedUser{
   updatedAt: Date;
 
   @Field()
-  picture?: string
+  img?: string
   @Field()
   google_id?: string
   // @Field((type) => [Post])

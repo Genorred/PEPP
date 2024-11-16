@@ -12,14 +12,13 @@ export const ClientProviders = ({children}: PropsWithChildren) => {
   return(
     <>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools initialIsOpen={false} />
-        <PersistGate loading={null} persistor={persistor}>
           <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
             <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_CLIENT_ID as string}>
                 {children}
             </GoogleOAuthProvider>
+            </PersistGate>
           </Provider>
-        </PersistGate>
       </QueryClientProvider>
       </>
   )

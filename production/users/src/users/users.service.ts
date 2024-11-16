@@ -32,9 +32,9 @@ export class UsersService {
     return this.prisma.user.findMany({ where: fields });
   }
 
-  findOne(searchOptions: { id?: number, username?: string, email?: string }) {
-    const { id, username, email } = searchOptions;
-    if (!(id || username || email)) {
+  findOne(searchOptions: { id?: number, username?: string, email?: string, google_id?: string }) {
+    const { id, username, email, google_id } = searchOptions;
+    if (!(id || username || email || google_id)) {
       return null;
     }
     return this.prisma.user.findUnique({ where: searchOptions as User });

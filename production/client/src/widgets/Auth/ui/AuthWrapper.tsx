@@ -1,8 +1,9 @@
 import React from "react";
 import { useRouter } from "next/navigation";
-import { Button, Container, Stack, Typography } from "@mui/material";
 import GoogleIcon from "@/shared/assets/googleIcon.svg";
 import Image from "next/image";
+import Container from "@/shared/ui/Container";
+import { Button } from "@/shared/ui/button";
 
 const AuthWrapper = ({ children, returnUrl }: {
   children: React.ReactNode,
@@ -18,25 +19,24 @@ const AuthWrapper = ({ children, returnUrl }: {
   }
 
   return (
-    <Container maxWidth="xs">
-      <Typography variant="h2" sx={{ fontWeight: "bold", marginBottom: 5, marginTop: 5 }}>
+    <Container>
+      <h1 className='bold mb-3 mt-3'>
         Join PEPP
-      </Typography>
+      </h1>
       {children}
-      <Stack direction="row" justifyContent={"center"} sx={{
-        marginTop: 5
-      }}>
+      <div className='flex mt-5'>
         <Button onClick={SignWithGoogle}>
-          <Stack direction="row" justifyContent={"center"} alignItems={"center"} spacing={2}>
+          <div className='flex justify-center items-center gap-2'>
             <Image src={GoogleIcon.src} alt={"google icon"} width={32} height={32} />
-            <Typography>
+            <h3>
               Sign in With Google
-            </Typography>
-          </Stack>
+            </h3>
+          </div>
         </Button>
-      </Stack>
-    </Container>
-  );
+      </div>
+</Container>
+)
+  ;
 };
 
 export default AuthWrapper;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ModeChanger from "@/widgets/Editor/ui/ModeChanger";
 import { editor, editorTransformation } from "@/features/PostEditor/consts/editor";
 import { Plate } from "@udecode/plate-common/react";
@@ -13,37 +13,33 @@ import { usePostQuery } from "@/shared/api/graphql/generated";
 import { graphqlClient } from "@/shared/api/base";
 import { Editor } from "@/features/PostEditor/ui/plate-ui/editor";
 import { Value } from "@udecode/slate";
+import { PostQuery } from "@/shared/api/graphql/graphql";
+import { usePostEditor } from "@/widgets/Editor";
 
-const EditPost = ({id}: {
+const EditPost = ({ data, id, isDraft, post }: {
+  data?: any[]
   id?: number
+  isDraft?: boolean
+  post?: PostQuery["post"]
 }) => {
-  const { data, isLoading } = id ? usePostQuery(graphqlClient, { id }, {
-    onSuccess: (data) => {
-      editorTransformation.setValue(data.post.body)
-    }
-  }) : {};
-
+  usePostEditor(data);
   return (
-    <section className={'mt-4 ml-4 relative flex justify-center max-w-[100%]'}
+    <section className={"mt-4 ml-4 relative flex justify-center max-w-full"}
     >
-      <DndProvider backend={HTML5Backend}>
-        <Plate editor={editor}>
-          <div className={''} >
-            <FixedToolbar>
-              <FixedToolbarButtons />
-            </FixedToolbar>
+      <div className={"max-w-[90%]"}>
+        <FixedToolbar>
+          <FixedToolbarButtons />
+        </FixedToolbar>
 
-            <Editor />
+        <Editor />
 
-            <FloatingToolbar>
-              <FloatingToolbarButtons />
-            </FloatingToolbar>
-            <CommentsPopover />
-            {/*<PlateContent />*/}
-          </div>
-          <ModeChanger />
-        </Plate>
-      </DndProvider>
+        <FloatingToolbar>
+          <FloatingToolbarButtons />
+        </FloatingToolbar>
+        <CommentsPopover />
+        {/*<PlateContent />*/}
+      </div>
+      <ModeChanger id={id} isDraft={isDraft} post={post}/>
     </section>
   );
 };

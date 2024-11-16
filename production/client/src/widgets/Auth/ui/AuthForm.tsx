@@ -1,5 +1,4 @@
 import React from "react";
-import { Stack } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 const AuthForm = ({ onSubmit, children }: {
@@ -14,9 +13,9 @@ const AuthForm = ({ onSubmit, children }: {
   }
   return (
     <form onSubmit={submit}>
-      <Stack spacing={3}>
+      <div className='flex gap-2'>
         {children}
-      </Stack>
+      </div>
     </form>
   );
 };

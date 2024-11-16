@@ -23,20 +23,20 @@ export default function RootLayout({
     return (
       <html lang="en">
       <meta name="viewport" content="initial-scale=1, width=device-width" />
-      <Providers>
         <body className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiased !overflow-auto",
           fontSans.variable
         )}>
+        <Providers>
         <main >
           <Navbar />
           <div className='font-bold'>
             {children}
           </div>
         </main>
+        </Providers>
         </body>
 
-      </Providers>
       </html>
     );
 }

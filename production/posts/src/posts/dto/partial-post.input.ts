@@ -1,6 +1,6 @@
 import { Field, InputType, PartialType } from "@nestjs/graphql";
-import { CreatePostInput } from "./create-post.input";
+import { CreatePostInput, CreatePostInputService } from "./create-post.input";
 
 @InputType()
-export class PartialPostInput extends PartialType(CreatePostInput) {
+export class PartialPostInput extends PartialType(CreatePostInputService) {
 }

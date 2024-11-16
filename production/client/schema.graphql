@@ -6,15 +6,26 @@ schema {
 input CreatePostInput {
   body: JSONObject!
   published: Boolean
-  userId: Int!
+  subTopics: [String!]
+  title: String!
+  topics: [String!]
 }
 
 input CreateUserInput {
   email: String!
   google_id: String
+  img: String
   password: String
-  picture: String
   username: String!
+}
+
+input CreateVersionPostInput {
+  body: JSONObject!
+  postId: Float!
+  published: Boolean
+  subTopics: [String!]
+  title: String!
+  topics: [String!]
 }
 
 """
@@ -25,8 +36,8 @@ scalar DateTime
 input FindManyUserInput {
   email: String
   google_id: String
+  img: String
   password: String
-  picture: String
   username: String
 }
 
@@ -52,6 +63,8 @@ input LoginInput {
 
 type Mutation {
   createPost(createPostInput: CreatePostInput!): Post!
+  createVersionPost(createVersionPostInput: CreateVersionPostInput!): Post!
+  publish(publishInput: Int!): Post!
   register(registerInput: CreateUserInput!): User!
   removePost(id: Int!): Post!
   removeUser(id: Int!): User!
@@ -59,37 +72,69 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
+input PartialPostInput {
+  body: JSONObject
+  published: Boolean
+  subTopics: [String!]
+  title: String
+  topics: [String!]
+  userId: Float
+}
+
 type Post {
   body: [JSON!]!
+  commentsQuantity: Int
   createdAt: DateTime!
-  id: ID!
+  description: String
+  id: Int!
+  img: String
+  isArchived: Boolean!
+  minutes: Int
+  postId: Float
   published: Boolean!
+  rating: Int
+  reviewsQuantity: Int
+  subTopics: [Topic!]
+  title: String!
+  topics: [Topic!]
   updatedAt: DateTime!
   user: User!
-  userId: ID!
+  userId: Int!
+  version: Float!
 }
 
 type Query {
+  algoPosts(findAlgorithmPostsInput: PartialPostInput!): [Post!]!
+  draft(id: Int!): Post!
   login(loginInput: LoginInput!): User!
   post(id: Int!): Post!
-  posts: [Post!]!
   user(loginInput: FindOneUserInput!): User!
+  userDrafts: [Post!]!
+  userPosts(userId: Int!): [Post!]!
   users(findManyInput: FindManyUserInput!): [User!]!
+}
+
+type Topic {
+  createdAt: DateTime!
+  title: Int!
+  updatedAt: DateTime!
 }
 
 input UpdatePostInput {
   body: JSONObject
   id: Int!
   published: Boolean
-  userId: Int
+  subTopics: [String!]
+  title: String
+  topics: [String!]
 }
 
 input UpdateUserInput {
   email: String
   google_id: String
   id: Int!
+  img: String
   password: String
-  picture: String
   username: String
 }
 
@@ -97,9 +142,10 @@ type User {
   createdAt: DateTime!
   email: String!
   google_id: String!
-  id: ID!
+  id: Int!
+  img: String!
+  occupation: String!
   password: String!
-  picture: String!
   posts: [Post!]!
   role: String!
   updatedAt: DateTime!

@@ -1,7 +1,4 @@
 import React from "react";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -19,6 +16,7 @@ import { usePathname } from "next/navigation";
 import { LogOut, Settings, User, Users, LogIn } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, navigationMenuTriggerStyle } from "@/shared/ui/navigation-menu";
+import { navSettings } from "@/widgets/Navbar/consts";
 
 export const UserTooltip = () => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -47,24 +45,19 @@ export const UserTooltip = () => {
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src="/avatars/01.png" alt="@shadcn" />
+                          <AvatarImage src={user.img} alt="@shadcn" />
                           <AvatarFallback>SC</AvatarFallback>
                         </Avatar>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56" align="end" forceMount>
-                      <DropdownMenuItem>
-                        <User className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Settings className="mr-2 h-4 w-4" />
-                        <span>Settings</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Users className="mr-2 h-4 w-4" />
-                        <span>Friends</span>
-                      </DropdownMenuItem>
+                      { navSettings.map(([name, Icon]) => (
+                        <DropdownMenuItem key={name}>
+                          <Icon className="mr-2 h-4 w-4" />
+                          <span>{name}</span>
+                        </DropdownMenuItem>
+                      ))
+                      }
                       <DropdownMenuSeparator />
                       <DropdownMenuItem onClick={logout}>
                         <LogOut className="mr-2 h-4 w-4" />

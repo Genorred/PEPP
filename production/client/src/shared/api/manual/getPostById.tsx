@@ -4,7 +4,12 @@ const getPostById = graphql(`
     query post($id: Int!) {
         post(id: $id) {
             body
-            published
+            createdAt
+            user {
+                username
+                img
+                id
+            }
         }
     }
 `);
