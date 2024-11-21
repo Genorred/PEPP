@@ -5,11 +5,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
-import useCreatePostSubmit from "@/widgets/Editor/lib/useCreatePostSubmit";
+import useSavePost from "@/widgets/Editor/lib/useSavePost";
 import useUpdatePostSubmit from "@/widgets/Editor/lib/useUpdatePostSubmit";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import { buttonNames } from "@/widgets/Editor/consts";
 import TagsInput from "@/shared/ui/TagsInput";
+import { useSelector } from "react-redux";
+import { focusedPostSlice } from "@/widgets/Editor/model/focused-post.slice";
 
 const formSchema = z.object({
   title: z.string().min(3, {
@@ -23,10 +25,7 @@ const formSchema = z.object({
   }))
 });
 export type HandleWorkFormT = z.infer<typeof formSchema>
-const SaveWork = ({ id, versionPost }: {
-  id?: number
-  versionPost?: PostQuery["post"]
-}) => {
+const SaveWork = () => {
   const form = useForm<HandleWorkFormT>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,7 +34,8 @@ const SaveWork = ({ id, versionPost }: {
       subTopics: []
     }
   });
-  const onSubmit = useCreatePostSubmit({referenceId: id, versionPost});
+  const queryKey = useSelector(focusedPostSlice.selectors.queryKey)
+  const onSubmit = useSavePost();
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

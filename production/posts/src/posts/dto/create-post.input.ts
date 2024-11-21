@@ -10,7 +10,9 @@ export class CreatePostInput {
   @Field(() => GraphQLJSONObject)
   body: any
   @Field(() => Boolean, { nullable: true})
-  published: boolean
+  isPublished?: boolean
+  @Field(() => Boolean, { nullable: true})
+  isDraft?: boolean
   @Field(() => [String], {nullable: true})
   topics?: string[]
   @Field(() => [String], {nullable: true})

@@ -37,7 +37,9 @@ export class Post {
   @Field(() => Int)
   userId: number;
   @Field(() => Boolean)
-  published: boolean
+  isPublished: boolean
+  @Field(() => Boolean)
+  isDraft: boolean
 
   @Field()
   createdAt: Date;

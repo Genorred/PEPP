@@ -7,11 +7,12 @@ import { User } from "./posts/entities/user.entity";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from "@nestjs/apollo";
 import JSON from "graphql-type-json";
+import NextjsEndpoint from "./config/nextjsEndpoint";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [],
+      load: [NextjsEndpoint],
       expandVariables: true,
       cache: true,
       isGlobal: true,

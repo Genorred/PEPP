@@ -42,7 +42,7 @@ import {
   QuoteIcon,
   SquareIcon,
   TableIcon,
-  TableOfContentsIcon,
+  TableCellsMergeIcon,
 } from 'lucide-react';
 
 import {
@@ -183,7 +183,7 @@ const groups: Group[] = [
     group: 'Advanced blocks',
     items: [
       {
-        icon: <TableOfContentsIcon />,
+        icon: <TableCellsMergeIcon />, ////////////////// POHUI I DOLBAYEB
         label: 'Table of contents',
         value: TocPlugin.key,
       },

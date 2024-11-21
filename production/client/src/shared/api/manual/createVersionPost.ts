@@ -6,7 +6,7 @@ const createVersionPost =  graphql(`
             body: $body
             title: $title
             postId: $postId
-            published: $published
+            isPublished: $published
             topics: $topics
             subTopics: $subTopics
         }) {

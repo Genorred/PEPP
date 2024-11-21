@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import { RequestInit } from 'graphql-request/dist/types.dom';
-import { useMutation, useQuery, useInfiniteQuery, UseMutationOptions, UseQueryOptions, UseInfiniteQueryOptions } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions } from '@tanstack/react-query';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -30,7 +30,9 @@ export type Scalars = {
 
 export type CreatePostInput = {
   body: Scalars['JSONObject']['input'];
-  published?: InputMaybe<Scalars['Boolean']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   title: Scalars['String']['input'];
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -46,11 +48,18 @@ export type CreateUserInput = {
 
 export type CreateVersionPostInput = {
   body: Scalars['JSONObject']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   postId: Scalars['Float']['input'];
-  published?: InputMaybe<Scalars['Boolean']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   title: Scalars['String']['input'];
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type FindAllPostsInput = {
+  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
+  token: Scalars['String']['input'];
 };
 
 export type FindManyUserInput = {
@@ -64,6 +73,11 @@ export type FindManyUserInput = {
 export type FindOneUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type FindPostInput = {
+  id: Scalars['Int']['input'];
+  version?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type LoginInput = {
@@ -125,7 +139,10 @@ export type MutationUpdateUserArgs = {
 
 export type PartialPostInput = {
   body?: InputMaybe<Scalars['JSONObject']['input']>;
-  published?: InputMaybe<Scalars['Boolean']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  isArchived: Scalars['Boolean']['input'];
+  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -141,9 +158,10 @@ export type Post = {
   id: Scalars['Int']['output'];
   img?: Maybe<Scalars['String']['output']>;
   isArchived: Scalars['Boolean']['output'];
+  isDraft: Scalars['Boolean']['output'];
+  isPublished: Scalars['Boolean']['output'];
   minutes?: Maybe<Scalars['Int']['output']>;
   postId?: Maybe<Scalars['Float']['output']>;
-  published: Scalars['Boolean']['output'];
   rating?: Maybe<Scalars['Int']['output']>;
   reviewsQuantity?: Maybe<Scalars['Int']['output']>;
   subTopics?: Maybe<Array<Topic>>;
@@ -158,6 +176,7 @@ export type Post = {
 export type Query = {
   __typename?: 'Query';
   algoPosts: Array<Post>;
+  allPosts: Array<Post>;
   draft: Post;
   login: User;
   post: Post;
@@ -173,8 +192,13 @@ export type QueryAlgoPostsArgs = {
 };
 
 
+export type QueryAllPostsArgs = {
+  findAllPostsInput: FindAllPostsInput;
+};
+
+
 export type QueryDraftArgs = {
-  id: Scalars['Int']['input'];
+  findDraft: FindPostInput;
 };
 
 
@@ -184,7 +208,7 @@ export type QueryLoginArgs = {
 
 
 export type QueryPostArgs = {
-  id: Scalars['Int']['input'];
+  findOne: FindPostInput;
 };
 
 
@@ -211,8 +235,10 @@ export type Topic = {
 
 export type UpdatePostInput = {
   body?: InputMaybe<Scalars['JSONObject']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
-  published?: InputMaybe<Scalars['Boolean']['input']>;
+  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -242,12 +268,21 @@ export type User = {
   username: Scalars['String']['output'];
 };
 
+export type PostsIdQueryVariables = Exact<{
+  token: Scalars['String']['input'];
+  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number, version: number }> };
+
 export type CreatePostMutationVariables = Exact<{
   body: Scalars['JSONObject']['input'];
   title: Scalars['String']['input'];
   isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -267,6 +302,7 @@ export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersion
 
 export type DraftQueryVariables = Exact<{
   id: Scalars['Int']['input'];
+  version?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -279,10 +315,11 @@ export type DraftsQuery = { __typename?: 'Query', userDrafts: Array<{ __typename
 
 export type PostQueryVariables = Exact<{
   id: Scalars['Int']['input'];
+  version?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, user: { __typename?: 'User', username: string, img: string, id: number } } };
+export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, user: { __typename?: 'User', username: string, img: string, id: number } } };
 
 export type PublishDraftMutationVariables = Exact<{
   postId: Scalars['Int']['input'];
@@ -290,6 +327,13 @@ export type PublishDraftMutationVariables = Exact<{
 
 
 export type PublishDraftMutation = { __typename?: 'Mutation', publish: { __typename?: 'Post', id: number } };
+
+export type PublishPostVersionMutationVariables = Exact<{
+  postId: Scalars['Int']['input'];
+}>;
+
+
+export type PublishPostVersionMutation = { __typename?: 'Mutation', publish: { __typename?: 'Post', id: number } };
 
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String']['input'];
@@ -304,6 +348,9 @@ export type UpdatePostMutationVariables = Exact<{
   id: Scalars['Int']['input'];
   body?: InputMaybe<Scalars['JSONObject']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -311,10 +358,60 @@ export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __type
 
 
 
+export const PostsIdDocument = `
+    query postsId($token: String!, $isArchived: Boolean) {
+  allPosts(findAllPostsInput: {token: $token, isArchived: $isArchived}) {
+    id
+    version
+  }
+}
+    `;
+
+export const usePostsIdQuery = <
+      TData = PostsIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: PostsIdQueryVariables,
+      options?: UseQueryOptions<PostsIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) => {
+    
+    return useQuery<PostsIdQuery, TError, TData>(
+      ['postsId', variables],
+      fetcher<PostsIdQuery, PostsIdQueryVariables>(client, PostsIdDocument, variables, headers),
+      options
+    )};
+
+usePostsIdQuery.document = PostsIdDocument;
+
+usePostsIdQuery.getKey = (variables: PostsIdQueryVariables) => ['postsId', variables];
+
+export const useInfinitePostsIdQuery = <
+      TData = PostsIdQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables: PostsIdQueryVariables,
+      options?: UseInfiniteQueryOptions<PostsIdQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) => {
+    
+    return useInfiniteQuery<PostsIdQuery, TError, TData>(
+      ['postsId.infinite', variables],
+      (metaData) => fetcher<PostsIdQuery, PostsIdQueryVariables>(client, PostsIdDocument, {...variables, ...(metaData.pageParam ?? {})}, headers)(),
+      options
+    )};
+
+useInfinitePostsIdQuery.getKey = (variables: PostsIdQueryVariables) => ['postsId.infinite', variables];
+
+
+usePostsIdQuery.fetcher = (client: GraphQLClient, variables: PostsIdQueryVariables, headers?: RequestInit['headers']) => fetcher<PostsIdQuery, PostsIdQueryVariables>(client, PostsIdDocument, variables, headers);
+
 export const CreatePostDocument = `
-    mutation createPost($body: JSONObject!, $title: String!, $isPublished: Boolean, $topics: [String!], $subTopics: [String!]) {
+    mutation createPost($body: JSONObject!, $title: String!, $isPublished: Boolean, $topics: [String!], $subTopics: [String!], $isDraft: Boolean) {
   createPost(
-    createPostInput: {body: $body, published: $isPublished, title: $title, topics: $topics, subTopics: $subTopics}
+    createPostInput: {body: $body, isDraft: $isDraft, isPublished: $isPublished, title: $title, topics: $topics, subTopics: $subTopics}
   ) {
     id
   }
@@ -344,7 +441,7 @@ useCreatePostMutation.fetcher = (client: GraphQLClient, variables: CreatePostMut
 export const CreateVersionPostDocument = `
     mutation createVersionPost($body: JSONObject!, $title: String!, $postId: Float!, $published: Boolean!, $topics: [String!], $subTopics: [String!]) {
   createVersionPost(
-    createVersionPostInput: {body: $body, title: $title, postId: $postId, published: $published, topics: $topics, subTopics: $subTopics}
+    createVersionPostInput: {body: $body, title: $title, postId: $postId, isPublished: $published, topics: $topics, subTopics: $subTopics}
   ) {
     id
   }
@@ -372,8 +469,8 @@ useCreateVersionPostMutation.getKey = () => ['createVersionPost'];
 useCreateVersionPostMutation.fetcher = (client: GraphQLClient, variables: CreateVersionPostMutationVariables, headers?: RequestInit['headers']) => fetcher<CreateVersionPostMutation, CreateVersionPostMutationVariables>(client, CreateVersionPostDocument, variables, headers);
 
 export const DraftDocument = `
-    query draft($id: Int!) {
-  draft(id: $id) {
+    query draft($id: Int!, $version: Int) {
+  draft(findDraft: {id: $id, version: $version}) {
     id
     body
     createdAt
@@ -479,10 +576,11 @@ useInfiniteDraftsQuery.getKey = (variables?: DraftsQueryVariables) => variables 
 useDraftsQuery.fetcher = (client: GraphQLClient, variables?: DraftsQueryVariables, headers?: RequestInit['headers']) => fetcher<DraftsQuery, DraftsQueryVariables>(client, DraftsDocument, variables, headers);
 
 export const PostDocument = `
-    query post($id: Int!) {
-  post(id: $id) {
+    query post($id: Int!, $version: Int) {
+  post(findOne: {id: $id, version: $version}) {
     body
     createdAt
+    title
     user {
       username
       img
@@ -561,6 +659,34 @@ usePublishDraftMutation.getKey = () => ['publishDraft'];
 
 usePublishDraftMutation.fetcher = (client: GraphQLClient, variables: PublishDraftMutationVariables, headers?: RequestInit['headers']) => fetcher<PublishDraftMutation, PublishDraftMutationVariables>(client, PublishDraftDocument, variables, headers);
 
+export const PublishPostVersionDocument = `
+    mutation publishPostVersion($postId: Int!) {
+  publish(publishInput: $postId) {
+    id
+  }
+}
+    `;
+
+export const usePublishPostVersionMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      client: GraphQLClient,
+      options?: UseMutationOptions<PublishPostVersionMutation, TError, PublishPostVersionMutationVariables, TContext>,
+      headers?: RequestInit['headers']
+    ) => {
+    
+    return useMutation<PublishPostVersionMutation, TError, PublishPostVersionMutationVariables, TContext>(
+      ['publishPostVersion'],
+      (variables?: PublishPostVersionMutationVariables) => fetcher<PublishPostVersionMutation, PublishPostVersionMutationVariables>(client, PublishPostVersionDocument, variables, headers)(),
+      options
+    )};
+
+usePublishPostVersionMutation.getKey = () => ['publishPostVersion'];
+
+
+usePublishPostVersionMutation.fetcher = (client: GraphQLClient, variables: PublishPostVersionMutationVariables, headers?: RequestInit['headers']) => fetcher<PublishPostVersionMutation, PublishPostVersionMutationVariables>(client, PublishPostVersionDocument, variables, headers);
+
 export const RegisterDocument = `
     mutation register($username: String!, $password: String!, $email: String!) {
   register(
@@ -595,8 +721,10 @@ useRegisterMutation.getKey = () => ['register'];
 useRegisterMutation.fetcher = (client: GraphQLClient, variables: RegisterMutationVariables, headers?: RequestInit['headers']) => fetcher<RegisterMutation, RegisterMutationVariables>(client, RegisterDocument, variables, headers);
 
 export const UpdatePostDocument = `
-    mutation updatePost($id: Int!, $body: JSONObject, $title: String) {
-  updatePost(updatePostInput: {id: $id, body: $body, title: $title}) {
+    mutation updatePost($id: Int!, $body: JSONObject, $title: String, $topics: [String!], $subTopics: [String!], $isPublished: Boolean) {
+  updatePost(
+    updatePostInput: {id: $id, topics: $topics, subTopics: $subTopics, isPublished: $isPublished, body: $body, title: $title}
+  ) {
     id
   }
 }

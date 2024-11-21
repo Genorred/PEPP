@@ -1,43 +1,39 @@
-import React, { Suspense } from "react";
-import { graphqlClient } from "@/shared/api/base";
+import React, { useEffect } from "react";
 import {
+  PostDocument, PostQueryVariables,
   PostsIdDocument,
-  PostDocument,
-  PostQuery,
-  PostQueryVariables,
+  PostsIdQuery,
   PostsIdQueryVariables,
-  PostsIdQuery
 } from "@/shared/api/graphql/generated";
-import Ssr from "@/app/(pages)/(posts)/post/[id]/ssr";
-
-export const revalidate = 60;
-export const dynamicParams = true;
+import { graphqlClient } from "@/shared/api/base";
+import { PostQuery } from "@/shared/api/graphql/graphql";
+import ViewPost from "../ViewPost";
 
 export async function generateStaticParams() {
   const data: PostsIdQuery = await graphqlClient.request(PostsIdDocument, {
-    token: process.env.NEXTJS_ENDPOINTS
+    token: process.env.NEXTJS_ENDPOINTS,
+    isArchived: true
   } as PostsIdQueryVariables);
 
   return data.allPosts.map((post) => ({
-    id: String(post.id)
+    id: String(post.id),
+    version: post.version
   }));
 }
-
 const Page = async ({ params }: {
   params: {
     id: string
+    version: string
   }
 }) => {
   const id = Number(params.id);
+  const version = Number(params.version);
   const post: PostQuery = await graphqlClient.request(PostDocument, {
-    id
+    id,
+    version
   } as PostQueryVariables);
 
-  return (
-    <Suspense fallback={null}>
-      <Ssr id={id} data={post} />
-    </Suspense>
-  );
+  return <ViewPost post={post} id={id} />
 };
 
 export default Page;

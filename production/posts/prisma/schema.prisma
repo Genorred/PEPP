@@ -24,15 +24,19 @@ model Topic {
 }
 
 model Post {
-  id         Int     @id @default(autoincrement())
-  version    Int     @default(1)
-  isArchived Boolean @default(false)
+  id          Int     @id @default(autoincrement())
+  version     Int     @default(1)
+  isArchived  Boolean @default(false)
+  isDraft     Boolean @default(false)
+  isPublished Boolean @default(false)
 
-  actualPost Post?   @relation(fields: [postId], references: [id], name: "actualPost")
-  versions   Post[]  @relation(name: "actualPost")
-  topics    Topic[]   @relation(name: "topic")
-  subTopics Topic[]   @relation(name: "subTopic")
-  comments  Comment[]
+  // if version
+  actualPost Post?     @relation(fields: [postId], references: [id], name: "actualPost")
+  postId     Int?
+  versions   Post[]    @relation(name: "actualPost")
+  topics     Topic[]   @relation(name: "topic")
+  subTopics  Topic[]   @relation(name: "subTopic")
+  comments   Comment[]
 
   title            String
   description      String?
@@ -42,11 +46,9 @@ model Post {
   reviewsQuantity  Int?
   minutes          Int?
   body             Json[]
-  published        Boolean  @default(false)
   userId           Int
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
-  postId           Int?
 }
 
 model Comment {

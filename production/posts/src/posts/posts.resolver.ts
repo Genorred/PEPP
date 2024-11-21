@@ -9,10 +9,16 @@ import { CurrentUser } from "@shared/auth-guard/CurrentUser";
 import { JwtPayload } from "@shared/entities/jwt.entity";
 import UseAuth from "@shared/auth-guard/useAuth";
 import { CreateVersionPostInput } from "./dto/create-version-post.input";
+import { FindPostInput } from "./dto/find-post.input";
+import { Inject, Req, UnauthorizedException } from "@nestjs/common";
+import NextjsEndpoint from "../config/nextjsEndpoint";
+import { ConfigType } from "@nestjs/config";
+import { FindAllPostsInput } from "./dto/_nextjs_find-posts.input";
 
 @Resolver(() => Post)
 export class PostsResolver {
-  constructor(private readonly postsService: PostsService) {
+  constructor(private readonly postsService: PostsService,
+              @Inject(NextjsEndpoint.KEY) private readonly configService: ConfigType<typeof NextjsEndpoint>) {
   }
 
   @Mutation(() => Post)
@@ -28,13 +34,13 @@ export class PostsResolver {
 
   @Query(() => [Post], { name: "userPosts" })
   findUserPosts(@Args("userId", { type: () => Int }) userId: number) {
-    return this.postsService.findMany({ userId: userId, published: true });
+    return this.postsService.findMany({ userId: userId, isPublished: true });
   }
 
   @Query(() => [Post], { name: "userDrafts" })
   @UseAuth()
   findUserDrafts(@CurrentUser() user: JwtPayload) {
-    return this.postsService.findMany({ userId: user.sub, published: false });
+    return this.postsService.findMany({ userId: user.sub, isDraft: true });
   }
 
   @Query(() => [Post], { name: "algoPosts" })
@@ -43,15 +49,17 @@ export class PostsResolver {
   }
 
   @Query(() => Post, { name: "post" })
-  findOne(@Args("id", { type: () => Int }) id: number) {
-    return this.postsService.findOne(id);
+  findOne(@Args("findOne") findOne: FindPostInput) {
+    return this.postsService.findOne(findOne);
   }
 
   @Query(() => Post, { name: "draft" })
-  async findDraft(@Args("id", { type: () => Int }) id: number, @CurrentUser() user: JwtPayload) {
-    const draft = await this.postsService.findOne(id, false);
-    if (draft.userId === user.sub) {
+  async findDraft(@Args("findDraft") findDraft: FindPostInput, @CurrentUser() user: JwtPayload) {
+    const draft = await this.postsService.findOne({...findDraft, isDraft: true});
+    if (draft?.userId === user.sub) {
       return draft;
+    } else {
+      throw new UnauthorizedException()
     }
   }
 
@@ -62,11 +70,22 @@ export class PostsResolver {
 
   @Mutation(() => Post)
   async publish(@Args("publishInput", {type: () => Int}) postId: number, @CurrentUser() user: JwtPayload) {
-    return this.postsService.publish(postId, user.sub);
+    return this.postsService.publishVersion(postId, user.sub);
   }
+
   @Mutation(() => Post)
   removePost(@Args("id", { type: () => Int }) id: number) {
     return this.postsService.remove(id);
+  }
+
+  @Query(() => [Post], {name: 'allPosts'})
+  findAll(@Args('findAllPostsInput') findAllPostsInput: FindAllPostsInput) {
+    const {token, ...isArchived} = findAllPostsInput
+    if (this.configService.token === token) {
+      return this.postsService.findMany(isArchived)
+    } else {
+      throw new UnauthorizedException()
+    }
   }
 
   @ResolveField(() => User)
