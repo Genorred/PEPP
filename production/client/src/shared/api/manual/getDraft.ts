@@ -12,6 +12,12 @@ const getDraft = graphql(`
             img
             title
             updatedAt
+            topics {
+                title
+            }
+            subTopics {
+                title
+            }
         }
     }
 `);

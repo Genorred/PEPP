@@ -9,8 +9,6 @@ import { graphqlClient } from "@/shared/api/base";
 import { useEditorRef } from "@udecode/plate-common/react";
 import { getChangedFields } from "@/shared/utils/getChangedFields";
 import React, { BaseSyntheticEvent, useState } from "react";
-import onPostSubmit from "@/widgets/Editor/lib/onPostSubmit";
-import useUpdatePostSubmit from "@/widgets/Editor/lib/useUpdatePostSubmit";
 import { useRouter } from "next/navigation";
 import { buttonNames } from "@/widgets/Editor/consts";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,7 +20,6 @@ export type CreatePostParams = Parameters<ReturnType<typeof useCreatePostMutatio
 const useSavePost = () => {
 
     const plateState = useEditorRef();
-    const router = useRouter();
 
     const { mutateAsync: createPost } = useCreatePostMutation(graphqlClient);
     const { mutateAsync: createVersionPost } = useCreateVersionPostMutation(graphqlClient);
@@ -34,90 +31,85 @@ const useSavePost = () => {
     const initialData = useFetchPostQuery(data.initialDataQueryKey);
 
 
-
     return function onSubmit(values: HandleWorkFormT, event?: BaseSyntheticEvent<object, any, any>) {
-      if (event) {
-        // @ts-ignore
-        const name: (typeof buttonNames)[keyof typeof buttonNames] = event.nativeEvent!.submitter.name; // Кнопка, вызвавшая сабмит
-        console.log("Кнопка вызвавшая сабмит:", name);
-        if (name === buttonNames.save) {
+      // @ts-ignore
+      const name: (typeof buttonNames)[keyof typeof buttonNames] = event.nativeEvent?.submitter.name; // Кнопка, вызвавшая сабмит
+      console.log("Кнопка вызвавшая сабмит:", name);
+      if (name === buttonNames.publish) {
 
-          if (data.draftId || data.versionId) {
-            const variables = getChangedFields<mutatedData>({
-                title: data?.mutatedData?.title ?? initialData?.title!,
-                topics: data?.mutatedData?.title ?? initialData?.title!,
-                subTopics: data?.mutatedData?.title ?? initialData?.title!,
-                body: data?.mutatedData?.body ?? initialData?.body
-              }, {
-                ...values,
-                body: plateState.children as any
-              }
-            );
-            update({
-              id: data.draftId || data.versionId as number,
-              ...variables
-            }).then(() => {
-              dispatch(focusedPostSlice.actions.spreadMutatedData(variables))
-            });
-          } else if (data.sourceId) {
-            createVersionPost({
+        if (data.versionId) { // works
+          publishVersion({
+            postId: data.versionId
+          }).then(() => {
+            dispatch(focusedPostSlice.actions.setVersionId(null));
+            dispatch(focusedPostSlice.actions.setDraftId(null));
+          });
+        } else if (data.draftId) {// works
+          update({
+            id: data.draftId,
+            isPublished: true
+          }).then((result) => {
+            dispatch(focusedPostSlice.actions.setSourceId(result.updatePost.id));
+            dispatch(focusedPostSlice.actions.setDraftId(null));
+          });
+        } else if (data.sourceId) {
+          const variables = {
+            ...values,
+            published: true,
+            postId: data.sourceId,
+            body: plateState.children as any
+          };
+          createVersionPost(variables).then((result) => {
+            dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
+          });
+        } else {//works
+          const variables = {
+            ...values,
+            body: plateState.children as any,
+            isPublished: true
+          };
+          createPost(variables).then((result) => {
+            dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
+            dispatch(focusedPostSlice.actions.setSourceId(result.createPost.id));
+          });
+        }
+      } else {
+        if (data.draftId || data.versionId) { // just update
+          const variables = getChangedFields<mutatedData>({
+              title: data?.mutatedData?.title ?? initialData?.title!,
+              topics: data?.mutatedData?.topics ?? initialData?.topics?.map(topic => topic.title) ?? [],
+              subTopics: data?.mutatedData?.subTopics ?? initialData?.subTopics?.map(topic => topic.title) ?? [],
+              body: data?.mutatedData?.body ?? initialData?.body
+            }, {
               ...values,
-              published: false,
-              postId: data.sourceId,
               body: plateState.children as any
-            }).then((result)=> {
-              dispatch(focusedPostSlice.actions.set({
-                versionId: result.createVersionPost.id
-              }))
-            });
-          } else {
-            createPost({
-              ...values,
-              body: plateState.children as any,
-              isDraft: true
-            }).then((result)=> {
-              dispatch(focusedPostSlice.actions.set({
-                draftId: result.createPost.id
-              }))
-            });
-          }
+            }
+          );
+          update({
+            id: data.draftId || data.versionId as number,
+            ...variables
+          }).then(() => {
+            dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
+          });
+        } else if (data.sourceId) {// works
+          createVersionPost({
+            ...values,
+            published: false,
+            postId: data.sourceId,
+            body: plateState.children as any
+          }).then((result) => {
+            dispatch(focusedPostSlice.actions.setVersionId(result.createVersionPost.id));
+          });
         } else {
-          if (data.versionId) {
-            publishVersion({
-              postId: data.versionId
-            }).then(() => {
-              dispatch(focusedPostSlice.actions.set({ versionId: null, draftId: null }));
-            });
-          } else if (data.draftId) {
-            update({
-              id: data.draftId,
-              isPublished: true
-            }).then(() => {
-              dispatch(focusedPostSlice.actions.set({}));
-            });
-          } else if (data.sourceId) {
-            const variables = {
-              ...values,
-              published: true,
-              postId: data.sourceId,
-              body: plateState.children as any
-            };
-            createVersionPost(variables).then((result) => {
-              dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
-            });
-          } else {
-            const variables = {
-              ...values,
-              body: plateState.children as any,
-              isPublished: true
-            };
-            createPost(variables).then((result) => {
-              dispatch(focusedPostSlice.actions.set({ sourceId: result.createPost.id, mutatedData: variables }));
-            });
-          }
+          createPost({
+            ...values,
+            body: plateState.children as any,
+            isDraft: true
+          }).then((result) => {
+            dispatch(focusedPostSlice.actions.setDraftId(result.createPost.id));
+          });
         }
       }
-      ;
     };
   }
 ;

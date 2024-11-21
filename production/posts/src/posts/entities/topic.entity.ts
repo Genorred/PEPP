@@ -2,7 +2,7 @@ import { Field, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
 export class Topic {
-  @Field(() => Int)
+  @Field()
   title: string;
 
   @Field()

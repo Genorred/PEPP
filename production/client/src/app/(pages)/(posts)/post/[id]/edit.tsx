@@ -17,6 +17,8 @@ const Page = ({ post, id }: {
   post: PostQuery;
 }) => {
   const { data, isLoading } = usePostQuery(graphqlClient, { id }, {
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     initialData: post,
     enabled: !!id
   });
@@ -24,7 +26,8 @@ const Page = ({ post, id }: {
   const dispatch = useDispatch()
   const queryKey = usePostQuery.getKey({id})
   useEffect(() => {
-    dispatch(focusedPostSlice.actions.set({initialDataQueryKey: queryKey as PostKeys, sourceId: id}))
+    dispatch(focusedPostSlice.actions.setInitialDataQuery(queryKey as PostKeys))
+    dispatch(focusedPostSlice.actions.setSourceId(id))
   }, []);
   return (
     <>

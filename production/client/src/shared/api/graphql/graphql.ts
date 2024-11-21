@@ -149,7 +149,7 @@ export type DraftQueryVariables = Exact<{
 }>;
 
 
-export type DraftQuery = { __typename?: 'Query', draft: { __typename?: 'Post', id: number, body: Array<any>, createdAt: any, img?: string | null, title: string, updatedAt: any } };
+export type DraftQuery = { __typename?: 'Query', draft: { __typename?: 'Post', id: number, body: Array<any>, createdAt: any, img?: string | null, title: string, updatedAt: any, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
 
 export type DraftsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -162,7 +162,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, user: { __typename?: 'User', username: string, img: string, id: number } } };
+export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
 
 export type PublishDraftMutationVariables = Exact<{
   postId: Scalars['Int']['input'];
@@ -249,6 +249,12 @@ export const DraftDocument = new TypedDocumentString(`
     img
     title
     updatedAt
+    topics {
+      title
+    }
+    subTopics {
+      title
+    }
   }
 }
     `) as unknown as TypedDocumentString<DraftQuery, DraftQueryVariables>;
@@ -273,6 +279,12 @@ export const PostDocument = new TypedDocumentString(`
       username
       img
       id
+    }
+    topics {
+      title
+    }
+    subTopics {
+      title
     }
   }
 }

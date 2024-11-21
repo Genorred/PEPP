@@ -229,7 +229,7 @@ export type QueryUsersArgs = {
 export type Topic = {
   __typename?: 'Topic';
   createdAt: Scalars['DateTime']['output'];
-  title: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -306,7 +306,7 @@ export type DraftQueryVariables = Exact<{
 }>;
 
 
-export type DraftQuery = { __typename?: 'Query', draft: { __typename?: 'Post', id: number, body: Array<any>, createdAt: any, img?: string | null, title: string, updatedAt: any } };
+export type DraftQuery = { __typename?: 'Query', draft: { __typename?: 'Post', id: number, body: Array<any>, createdAt: any, img?: string | null, title: string, updatedAt: any, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
 
 export type DraftsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -319,7 +319,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, user: { __typename?: 'User', username: string, img: string, id: number } } };
+export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
 
 export type PublishDraftMutationVariables = Exact<{
   postId: Scalars['Int']['input'];
@@ -477,6 +477,12 @@ export const DraftDocument = `
     img
     title
     updatedAt
+    topics {
+      title
+    }
+    subTopics {
+      title
+    }
   }
 }
     `;
@@ -585,6 +591,12 @@ export const PostDocument = `
       username
       img
       id
+    }
+    topics {
+      title
+    }
+    subTopics {
+      title
     }
   }
 }

@@ -18,13 +18,16 @@ const Page = ({ params }: {
   const version = Number(React.use(params).version);
 
   const { data, isLoading } = useDraftQuery(graphqlClient, { id, version }, {
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     enabled: !!id
   });
 
   const dispatch = useDispatch()
   const queryKey = useDraftQuery.getKey({id})
   useEffect(() => {
-    dispatch(focusedPostSlice.actions.set({queryKey: queryKey as PostKeys, versionId: id}))
+    dispatch(focusedPostSlice.actions.setInitialDataQuery(queryKey as PostKeys))
+    dispatch(focusedPostSlice.actions.setVersionId(id))
   }, []);
   return (
     <>

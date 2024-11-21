@@ -11,6 +11,12 @@ const getPostById = graphql(`
                 img
                 id
             }
+            topics {
+                title
+            }
+            subTopics {
+                title
+            }
         }
     }
 `);

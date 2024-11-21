@@ -135,7 +135,7 @@ type Query {
 
 type Topic {
   createdAt: DateTime!
-  title: Int!
+  title: String!
   updatedAt: DateTime!
 }
 

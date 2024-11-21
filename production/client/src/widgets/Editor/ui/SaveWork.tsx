@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from "@/shared/ui/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -6,12 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import useSavePost from "@/widgets/Editor/lib/useSavePost";
-import useUpdatePostSubmit from "@/widgets/Editor/lib/useUpdatePostSubmit";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import { buttonNames } from "@/widgets/Editor/consts";
 import TagsInput from "@/shared/ui/TagsInput";
 import { useSelector } from "react-redux";
 import { focusedPostSlice } from "@/widgets/Editor/model/focused-post.slice";
+import { useFetchPostQuery } from "@/widgets/Editor/lib/useFetchPostQuery";
 
 const formSchema = z.object({
   title: z.string().min(3, {
@@ -34,8 +34,16 @@ const SaveWork = () => {
       subTopics: []
     }
   });
-  const queryKey = useSelector(focusedPostSlice.selectors.queryKey)
   const onSubmit = useSavePost();
+  const data = useSelector(focusedPostSlice.selectors.all);
+  const initialData = useFetchPostQuery(data.initialDataQueryKey);
+  useEffect(() => {
+    if(initialData) {
+      form.setValue('title', initialData.title)
+      form.setValue('topics', initialData.topics?.map(topic => topic.title) ?? [])
+      form.setValue('subTopics', initialData.subTopics?.map(topic => topic.title) ?? [])
+    }
+  }, []);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -57,7 +65,7 @@ const SaveWork = () => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <TagsInput name="tags" control={form.control} placeholder="Enter tags..." />
+                <TagsInput name="topics" control={form.control} placeholder="Enter tags..." />
               </FormControl>
               <FormDescription>Enter tags and press Enter to add them.</FormDescription>
               <FormMessage />
@@ -70,7 +78,7 @@ const SaveWork = () => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <TagsInput name="tags" control={form.control} placeholder="Enter tags..." />
+                <TagsInput name="subTopics" control={form.control} placeholder="Enter tags..." />
               </FormControl>
               <FormDescription>Enter tags and press Enter to add them.</FormDescription>
               <FormMessage />

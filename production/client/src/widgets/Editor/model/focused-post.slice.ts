@@ -36,11 +36,20 @@ export const focusedPostSlice = createSlice({
     queryKey: state => state.initialDataQueryKey
   },
   reducers: {
-    set: (state, action: PayloadAction<State>) => {
-      state = action.payload;
+    resetAll: (state) => {
+      state.sourceId = null;
+      state.draftId = null;
+      state.versionId = null;
+      state.mutatedData = null;
+    },
+    setSourceId: (state, action: PayloadAction<number | null>) => {
+      state.sourceId = action.payload;
     },
     setDraftId: (state, action: PayloadAction<number | null>) => {
       state.draftId = action.payload;
+    },
+    setVersionId: (state, action: PayloadAction<number | null>) => {
+      state.versionId = action.payload;
     },
     setInitialDataQuery: (state, action: PayloadAction<PostKeys | null>) => {
       state.initialDataQueryKey = action.payload;

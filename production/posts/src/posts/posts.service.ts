@@ -26,14 +26,14 @@ export class PostsService {
   }
 
   async createVersion(createVersionPostInput: CreateVersionPostInputService) {
-    const actualPost = await this.findOne({ id: createVersionPostInput.postId });
+    const { id, topics, subTopics, ...actualPost } = await this.findOne({ id: createVersionPostInput.postId });
 
     if (actualPost.userId === createVersionPostInput.userId) {
       const { topics, subTopics, userId, postId, ...data } = createVersionPostInput;
       if (data.isPublished) { // create post of current version, make it archived and copy new data to main post
         await this.prismaService.post.update({
           where: {
-            id: actualPost.id
+            id
           },
           data: {
             ...data,
@@ -67,7 +67,7 @@ export class PostsService {
 
   findMany(findManyPostInput: PartialPostInput) {
     const { topics, subTopics, ...other } = findManyPostInput;
-    const where: Parameters<typeof this.prismaService.post.findMany>['0']['where'] = {...other}
+    const where: Parameters<typeof this.prismaService.post.findMany>["0"]["where"] = { ...other };
     where.AND = [
       ...(topics?.length ? topics.map(title => ({
         topics: {
@@ -82,10 +82,10 @@ export class PostsService {
             title
           }
         }
-      })) : [])]
+      })) : [])];
     return this.prismaService.post.findMany({
       where: {
-        ...where,
+        ...where
       }, include: {
         topics: true,
         subTopics: true
@@ -94,14 +94,19 @@ export class PostsService {
   }
 
   findOne(findOneInput: FindPostInput & { isDraft?: boolean }) {
-    return this.prismaService.post.findFirst({ where: findOneInput });
+    return this.prismaService.post.findFirst({
+      where: findOneInput, include: {
+        topics: true,
+        subTopics: true
+      }
+    });
   }
 
   update(updatePostInput: UpdatePostInputService) {
     const { id, userId, topics, subTopics, isPublished, ...body } = updatePostInput;
     let where = { id, userId };
     if (isPublished) {
-      body.isDraft = false
+      body.isDraft = false;
       where = {
         ...where,
         // @ts-ignore
@@ -117,14 +122,14 @@ export class PostsService {
     return this.prismaService.post.update({
       where, data: {
         ...body,
-        topics: {
+        topics: (connectOrCreateTopicsData.topics ? {
           set: [],
           ...connectOrCreateTopicsData.topics
-        },
-        subTopics: {
+        } : {}),
+        subTopics: (connectOrCreateTopicsData.subTopics ? {
           set: [],
           ...connectOrCreateTopicsData.subTopics
-        }
+        } : {})
       }
     });
   }

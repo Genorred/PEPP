@@ -3,9 +3,9 @@ import { Injectable } from "@nestjs/common";
 @Injectable()
 export class TopicsRepository {
 
-  connectOrCreateTopics(topics: string[], subTopics: string[]) {
+  connectOrCreateTopics(topics?: string[], subTopics?: string[]) {
     return {
-      topics: {
+      topics: (topics ? {
         connectOrCreate: topics.map(title => ({
           where: {
             title
@@ -14,8 +14,8 @@ export class TopicsRepository {
             title
           }
         }))
-      },
-      subTopics: {
+      } : {}),
+      subTopics: (subTopics ? {
         connectOrCreate: subTopics.map(title => ({
           where: {
             title
@@ -24,7 +24,7 @@ export class TopicsRepository {
             title
           }
         }))
-      }
+      } : {})
     };
   }
 }
