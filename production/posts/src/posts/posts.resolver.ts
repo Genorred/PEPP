@@ -44,8 +44,8 @@ export class PostsResolver {
   }
 
   @Query(() => [Post], { name: "algoPosts" })
-  findAlgorithmPosts(@Args("findAlgorithmPostsInput") findAlgorithmPostsInput: PartialPostInput) {
-    return this.postsService.findMany(findAlgorithmPostsInput);
+  findAlgorithmPosts() {
+    return this.postsService.algoPosts();
   }
 
   @Query(() => Post, { name: "post" })

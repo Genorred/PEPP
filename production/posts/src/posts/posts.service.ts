@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { ForbiddenException, Inject, Injectable } from "@nestjs/common";
 import { CreatePostInput, CreatePostInputService } from "./dto/create-post.input";
 import { UpdatePostInput, UpdatePostInputService } from "./dto/update-post.input";
 import { PrismaService } from "../prisma/prisma.service";
@@ -7,11 +7,14 @@ import { JwtPayload } from "@shared/entities/jwt.entity";
 import { CreateVersionPostInputService } from "./dto/create-version-post.input";
 import { TopicsRepository } from "./topics.repository";
 import { FindPostInput } from "./dto/find-post.input";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { CacheManagerStore } from 'cache-manager'
 
 @Injectable()
 export class PostsService {
   constructor(private readonly prismaService: PrismaService,
-              private readonly topicsRepository: TopicsRepository) {
+              private readonly topicsRepository: TopicsRepository,
+              @Inject(CACHE_MANAGER) private cacheManager: CacheManagerStore) {
   }
 
   create(createPostInput: CreatePostInputService) {
@@ -170,6 +173,26 @@ export class PostsService {
 
   remove(id: number) {
     return this.prismaService.post.delete({ where: { id } });
+  }
+  algoPosts() {
+    const key = new URLSearchParams()
+    key.set('createdAt', 'asc')
+    key.set('rating', 'asc')
+    key.set('cursor', 'id')
+    const postsCached = this.cacheManager.get(key.toString())
+    const posts = this.prismaService.post.findMany({
+      orderBy: { createdAt: 'asc', rating: 'asc', updatedAt: 'desc' },
+      cursor: { id: 1 },
+      include: {
+        topics: true,
+        subTopics: true,
+        _count: true
+      },
+      where: {
+        isPublished: true
+      }
+    })
+    this.cacheManager.set(key.toString(), posts)
   }
 
 // removeMany(removeManyPostInput: PartialPostInput) {
