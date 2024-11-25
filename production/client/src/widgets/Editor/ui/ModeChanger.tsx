@@ -9,13 +9,13 @@ const ModeChanger = () => {
   const ModeChangerIcon = isReadonly ? PenOff : Pen;
   return (
     <>
-      <div className="absolute top-4 right-4 text-nowrap" onClick={() => {
+      <div className="absolute top-4 right-4" onClick={() => {
         setIsReadonly(prev => !prev);
       }}>
         <ModeChangerIcon />
       </div>
       <section
-        className={`flex-col overflow-hidden transition-all ${isReadonly ? "basis-0 p-0" : "basis-auto flex-1 shrink-0 p-8"}`}>
+        className={`flex-col overflow-hidden text-nowrap transition-all ${isReadonly ? "basis-0 p-0" : "basis-auto flex-1 shrink-0 p-8"}`}>
         <h4 className={"text-nowrap"}>You should save your work</h4>
         <Suspense fallback={null}>
           <SaveWork />
