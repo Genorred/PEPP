@@ -1,14 +1,17 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
+import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { ConfigService } from "@nestjs/config";
+import { ConfigService, ConfigType } from "@nestjs/config";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { User } from "../../users/entities/user.entity";
 import { SetAuthCookieService } from "../set-auth-cookie.service";
+import googleConfig from "../../config/google.config";
+import clientConfig from "../../config/client.config";
 
 @Injectable()
 export class RedirectToGoogleSuccess implements NestInterceptor {
-  constructor(private setAuthService: SetAuthCookieService) {
+  constructor(private setAuthService: SetAuthCookieService,
+  @Inject(clientConfig.KEY) private clientService: ConfigType<typeof clientConfig>) {
   }
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const response = context.switchToHttp().getResponse();
@@ -32,7 +35,7 @@ export class RedirectToGoogleSuccess implements NestInterceptor {
           // secure: this.configService.get('NODE_ENV') === 'production',
           maxAge: 7 * 24 * 60 * 60 * 1000 // Время жизни куки (например, 7 дней)
         });
-        return response.redirect("http://localhost:3000/google-success?user=" + JSON.stringify(user) +
+        return response.redirect(this.clientService.url + "/google-success?user=" + JSON.stringify(user) +
           (request.query.state ? ("&returnUrl=" + request.query.state) : ''));
       })
     );

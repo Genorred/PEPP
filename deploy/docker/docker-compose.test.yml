@@ -24,7 +24,8 @@ services:
       - "8080:8080"
     volumes:
       - "../../production/gateway/:/usr/app/gateway/"
-      - "../../production/shared/:/usr/app/shared/"
+      - "../../production/shared/src:/usr/app/gateway/src/shared"
+      - "../../production/shared/scripts:/usr/app/gateway/scripts"
     depends_on:
       - users
 
@@ -45,7 +46,9 @@ services:
       - "${USERS_SERVICE_PORT}:${USERS_SERVICE_PORT}"
     volumes:
       - "../../production/users/:/usr/app/users/"
-      - "../../production/shared/src:/usr/app/users/shared/"
+      - "../../production/shared/src:/usr/app/users/src/shared"
+      - "../../production/shared/scripts:/usr/app/users/scripts"
+
     depends_on:
       - users_db
   users_db:
@@ -99,7 +102,9 @@ services:
       - "${POSTS_SERVICE_PORT}:${POSTS_SERVICE_PORT}"
     volumes:
       - "../../production/posts/:/usr/app/posts/"
-      - "../../production/shared/:/usr/app/shared/"
+      - "../../production/shared/src:/usr/app/posts/src/shared"
+      - "../../production/shared/scripts:/usr/app/posts/scripts"
+
     depends_on:
       - posts_db
   posts_db:

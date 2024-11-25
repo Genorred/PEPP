@@ -4,12 +4,12 @@ import { PostI, Post } from "@/entities/Post";
 
 
 const PostsList = ({posts}: {
-  posts: PostI[]
+  posts: Omit<PostI, 'isArchived' | 'isDraft' | 'isPublished'>[]
 }) => {
   return (
     <Container className='flex gap-4 flex-wrap' variant={"section"}>
       {posts.map(post =>
-        <Post {...post}/>
+        <Post key={post.id} {...post}/>
       )}
     </Container>
   );

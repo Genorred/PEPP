@@ -1,5 +1,7 @@
 FROM node:20.16.0-alpine AS base
 
+ARG SERVICE_NAME
+ENV SERVICE_NAME=$SERVICE_NAME
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -7,7 +9,6 @@ RUN corepack enable
 
 FROM base
 
-ARG SERVICE_NAME
 ENV NODE_ENV=development
 WORKDIR /usr/app
 COPY ./${SERVICE_NAME} ./${SERVICE_NAME}
@@ -21,6 +22,5 @@ EXPOSE 8080
 
 WORKDIR /usr/app/${SERVICE_NAME}
 
-COPY ./shared/scripts ./scripts
 
 CMD ["./scripts/dev.sh"]

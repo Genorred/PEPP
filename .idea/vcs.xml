@@ -4,6 +4,5 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/production/posts" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/production/shared" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../nestjs-kubernetes-template" vcs="Git" />
   </component>
 </project>

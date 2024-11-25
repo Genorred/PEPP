@@ -21,6 +21,7 @@ const documents = {
     "\n    query draft($id: Int!, $version: Int) {\n        draft(findDraft: {\n            id: $id\n            version: $version\n        }) {\n            id\n            body\n            createdAt\n            img\n            title\n            updatedAt\n            topics {\n                title\n            }\n            subTopics {\n                title\n            }\n        }\n    }\n": types.DraftDocument,
     "\n    query drafts {\n        userDrafts {\n            id\n            createdAt\n            img\n            title\n            updatedAt\n        }\n    }\n": types.DraftsDocument,
     "\n    query post($id: Int!, $version: Int) {\n        post(findOne: {id: $id, version: $version}) {\n            body\n            createdAt\n            title\n            user {\n                username\n                img\n                id\n            }\n            topics {\n                title\n            }\n            subTopics {\n                title\n            }\n        }\n    }\n": types.PostDocument,
+    "\n    query postRecommendations {\n        algoPosts {\n            body\n            createdAt\n            updatedAt\n            version\n            title\n            user {\n                username\n                img\n                id\n            }\n            topics {\n                title\n            }\n            subTopics {\n                title\n            }\n        }\n    }\n": types.PostRecommendationsDocument,
     "\n    mutation publishDraft($postId: Int!) {\n        publish(publishInput: $postId) {\n            id\n        }\n    }\n": types.PublishDraftDocument,
     "\n    mutation publishPostVersion($postId: Int!) {\n        publish(publishInput: $postId) {\n            id\n        }\n    }\n": types.PublishPostVersionDocument,
     "\n    mutation register($username: String!, $password: String!, $email: String!) {\n        register(registerInput: {\n            username: $username\n            email: $email\n            password: $password\n        }) {\n            username\n            email\n            id\n            createdAt\n        }\n    }\n": types.RegisterDocument,
@@ -51,6 +52,10 @@ export function graphql(source: "\n    query drafts {\n        userDrafts {\n   
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    query post($id: Int!, $version: Int) {\n        post(findOne: {id: $id, version: $version}) {\n            body\n            createdAt\n            title\n            user {\n                username\n                img\n                id\n            }\n            topics {\n                title\n            }\n            subTopics {\n                title\n            }\n        }\n    }\n"): typeof import('./graphql').PostDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    query postRecommendations {\n        algoPosts {\n            body\n            createdAt\n            updatedAt\n            version\n            title\n            user {\n                username\n                img\n                id\n            }\n            topics {\n                title\n            }\n            subTopics {\n                title\n            }\n        }\n    }\n"): typeof import('./graphql').PostRecommendationsDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

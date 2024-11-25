@@ -137,18 +137,6 @@ export type MutationUpdateUserArgs = {
   updateUserInput: UpdateUserInput;
 };
 
-export type PartialPostInput = {
-  body?: InputMaybe<Scalars['JSONObject']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  isArchived: Scalars['Boolean']['input'];
-  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
-  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
-  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
-  title?: InputMaybe<Scalars['String']['input']>;
-  topics?: InputMaybe<Array<Scalars['String']['input']>>;
-  userId?: InputMaybe<Scalars['Float']['input']>;
-};
-
 export type Post = {
   __typename?: 'Post';
   body: Array<Scalars['JSON']['output']>;
@@ -184,11 +172,6 @@ export type Query = {
   userDrafts: Array<Post>;
   userPosts: Array<Post>;
   users: Array<User>;
-};
-
-
-export type QueryAlgoPostsArgs = {
-  findAlgorithmPostsInput: PartialPostInput;
 };
 
 
@@ -320,6 +303,11 @@ export type PostQueryVariables = Exact<{
 
 
 export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
+
+export type PostRecommendationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PostRecommendationsQuery = { __typename?: 'Query', algoPosts: Array<{ __typename?: 'Post', body: Array<any>, createdAt: any, updatedAt: any, version: number, title: string, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> };
 
 export type PublishDraftMutationVariables = Exact<{
   postId: Scalars['Int']['input'];
@@ -642,6 +630,70 @@ useInfinitePostQuery.getKey = (variables: PostQueryVariables) => ['post.infinite
 
 
 usePostQuery.fetcher = (client: GraphQLClient, variables: PostQueryVariables, headers?: RequestInit['headers']) => fetcher<PostQuery, PostQueryVariables>(client, PostDocument, variables, headers);
+
+export const PostRecommendationsDocument = `
+    query postRecommendations {
+  algoPosts {
+    body
+    createdAt
+    updatedAt
+    version
+    title
+    user {
+      username
+      img
+      id
+    }
+    topics {
+      title
+    }
+    subTopics {
+      title
+    }
+  }
+}
+    `;
+
+export const usePostRecommendationsQuery = <
+      TData = PostRecommendationsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: PostRecommendationsQueryVariables,
+      options?: UseQueryOptions<PostRecommendationsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) => {
+    
+    return useQuery<PostRecommendationsQuery, TError, TData>(
+      variables === undefined ? ['postRecommendations'] : ['postRecommendations', variables],
+      fetcher<PostRecommendationsQuery, PostRecommendationsQueryVariables>(client, PostRecommendationsDocument, variables, headers),
+      options
+    )};
+
+usePostRecommendationsQuery.document = PostRecommendationsDocument;
+
+usePostRecommendationsQuery.getKey = (variables?: PostRecommendationsQueryVariables) => variables === undefined ? ['postRecommendations'] : ['postRecommendations', variables];
+
+export const useInfinitePostRecommendationsQuery = <
+      TData = PostRecommendationsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: PostRecommendationsQueryVariables,
+      options?: UseInfiniteQueryOptions<PostRecommendationsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) => {
+    
+    return useInfiniteQuery<PostRecommendationsQuery, TError, TData>(
+      variables === undefined ? ['postRecommendations.infinite'] : ['postRecommendations.infinite', variables],
+      (metaData) => fetcher<PostRecommendationsQuery, PostRecommendationsQueryVariables>(client, PostRecommendationsDocument, {...variables, ...(metaData.pageParam ?? {})}, headers)(),
+      options
+    )};
+
+useInfinitePostRecommendationsQuery.getKey = (variables?: PostRecommendationsQueryVariables) => variables === undefined ? ['postRecommendations.infinite'] : ['postRecommendations.infinite', variables];
+
+
+usePostRecommendationsQuery.fetcher = (client: GraphQLClient, variables?: PostRecommendationsQueryVariables, headers?: RequestInit['headers']) => fetcher<PostRecommendationsQuery, PostRecommendationsQueryVariables>(client, PostRecommendationsDocument, variables, headers);
 
 export const PublishDraftDocument = `
     mutation publishDraft($postId: Int!) {

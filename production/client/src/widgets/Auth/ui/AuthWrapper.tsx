@@ -4,7 +4,8 @@ import GoogleIcon from "@/shared/assets/googleIcon.svg";
 import Image from "next/image";
 import Container from "@/shared/ui/Container";
 import { Button } from "@/shared/ui/button";
-
+const googleAuthUrl = process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL as string
+console.log(googleAuthUrl);
 const AuthWrapper = ({ children, returnUrl }: {
   children: React.ReactNode,
   returnUrl?: string | null
@@ -12,7 +13,7 @@ const AuthWrapper = ({ children, returnUrl }: {
   const router = useRouter();
 
   function SignWithGoogle() {
-    const url = new URL("http://localhost:5991/auth/google");
+    const url = new URL(googleAuthUrl || '');
     if (returnUrl)
       url.searchParams.set("returnUrl", returnUrl);
     router.push(url.href);

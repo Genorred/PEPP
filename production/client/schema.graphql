@@ -86,18 +86,6 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
-input PartialPostInput {
-  body: JSONObject
-  description: String
-  isArchived: Boolean!
-  isDraft: Boolean
-  isPublished: Boolean
-  subTopics: [String!]
-  title: String
-  topics: [String!]
-  userId: Float
-}
-
 type Post {
   body: [JSON!]!
   commentsQuantity: Int
@@ -122,7 +110,7 @@ type Post {
 }
 
 type Query {
-  algoPosts(findAlgorithmPostsInput: PartialPostInput!): [Post!]!
+  algoPosts: [Post!]!
   allPosts(findAllPostsInput: FindAllPostsInput!): [Post!]!
   draft(findDraft: FindPostInput!): Post!
   login(loginInput: LoginInput!): User!

@@ -1,10 +1,12 @@
 import { graphql } from "@/shared/api/graphql";
 
 const getPostsRecommendations = graphql(`
-    query postRecomendations($id: Int!, $version: Int) {
-        algoPosts(findAlgorithmPostsInput: {: $id, version: $version}) {
+    query postRecommendations {
+        algoPosts {
             body
             createdAt
+            updatedAt
+            version
             title
             user {
                 username

@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import googleConfig from "./config/google.config";
 import authConfig from "./config/auth.config";
+import clientConfig from "./config/client.config";
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import authConfig from "./config/auth.config";
       context: ({ req, res }) => ({ req, res })
     }),
     ConfigModule.forRoot({
-      load: [googleConfig, authConfig],
+      load: [googleConfig, authConfig, clientConfig],
       expandVariables: true,
       cache: true,
       isGlobal: true,

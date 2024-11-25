@@ -79,18 +79,6 @@ export type LoginInput = {
   password: Scalars['String']['input'];
 };
 
-export type PartialPostInput = {
-  body?: InputMaybe<Scalars['JSONObject']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  isArchived: Scalars['Boolean']['input'];
-  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
-  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
-  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
-  title?: InputMaybe<Scalars['String']['input']>;
-  topics?: InputMaybe<Array<Scalars['String']['input']>>;
-  userId?: InputMaybe<Scalars['Float']['input']>;
-};
-
 export type UpdatePostInput = {
   body?: InputMaybe<Scalars['JSONObject']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -163,6 +151,11 @@ export type PostQueryVariables = Exact<{
 
 
 export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
+
+export type PostRecommendationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PostRecommendationsQuery = { __typename?: 'Query', algoPosts: Array<{ __typename?: 'Post', body: Array<any>, createdAt: any, updatedAt: any, version: number, title: string, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> };
 
 export type PublishDraftMutationVariables = Exact<{
   postId: Scalars['Int']['input'];
@@ -289,6 +282,28 @@ export const PostDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<PostQuery, PostQueryVariables>;
+export const PostRecommendationsDocument = new TypedDocumentString(`
+    query postRecommendations {
+  algoPosts {
+    body
+    createdAt
+    updatedAt
+    version
+    title
+    user {
+      username
+      img
+      id
+    }
+    topics {
+      title
+    }
+    subTopics {
+      title
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<PostRecommendationsQuery, PostRecommendationsQueryVariables>;
 export const PublishDraftDocument = new TypedDocumentString(`
     mutation publishDraft($postId: Int!) {
   publish(publishInput: $postId) {
