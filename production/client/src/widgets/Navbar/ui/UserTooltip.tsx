@@ -51,11 +51,13 @@ export const UserTooltip = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56" align="end" forceMount>
-                      { navSettings.map(([name, Icon]) => (
-                        <DropdownMenuItem key={name}>
-                          <Icon className="mr-2 h-4 w-4" />
-                          <span>{name}</span>
-                        </DropdownMenuItem>
+                      { navSettings.map(([name, Icon, href]) => (
+                        <Link key={name} href={href} >
+                          <DropdownMenuItem>
+                            <Icon className="mr-2 h-4 w-4" />
+                            <span>{name}</span>
+                          </DropdownMenuItem>
+                        </Link>
                       ))
                       }
                       <DropdownMenuSeparator />

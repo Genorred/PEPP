@@ -1,12 +1,12 @@
 import { Settings, SquarePen, LibraryBig, CirclePlus, User, Users, Bookmark } from "lucide-react";
 
 export const navPages = ["Topics", "Posts", "Analytics"];
-export const navSettings: [string, typeof User][] = [
-  ["Profile", User],
-  ["Friends", Users],
-  ["Saved", Bookmark],
-  ["Create", CirclePlus],
-  ["My Posts", LibraryBig],
-  ["Drafts", SquarePen],
-  ["Settings", Settings]
+export const navSettings: [string, typeof User, string][] = [
+  ["Profile", User, 'profile'],
+  ["Friends", Users, 'friends'],
+  ["Saved", Bookmark, 'saved'],
+  ["Create", CirclePlus, 'create'],
+  ["My Posts", LibraryBig, 'my-posts'],
+  ["Drafts", SquarePen, 'drafts'],
+  ["Settings", Settings, 'settings']
 ] as const;

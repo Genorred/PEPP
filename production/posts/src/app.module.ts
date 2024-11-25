@@ -8,9 +8,12 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from "@nestjs/apollo";
 import JSON from "graphql-type-json";
 import NextjsEndpoint from "./config/nextjsEndpoint";
+import { CacheModule } from "@nestjs/cache-manager";
 
 @Module({
-  imports: [
+  imports: [ CacheModule.register({
+    isGlobal: true,
+  }),
     ConfigModule.forRoot({
       load: [NextjsEndpoint],
       expandVariables: true,

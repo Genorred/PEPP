@@ -1,7 +1,4 @@
-// import dotenv from 'dotenv';
 import fs from 'node:fs';
-
-// dotenv.config({ override: false });
 
 const serviceName = String(process.env.SERVICE_NAME).toUpperCase();
 

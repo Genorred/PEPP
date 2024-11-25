@@ -9,7 +9,7 @@ const ModeChanger = () => {
   const ModeChangerIcon = isReadonly ? PenOff : Pen;
   return (
     <>
-      <div className="absolute top-4 right-4" onClick={() => {
+      <div className="absolute top-4 right-4 text-nowrap" onClick={() => {
         setIsReadonly(prev => !prev);
       }}>
         <ModeChangerIcon />

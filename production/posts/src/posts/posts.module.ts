@@ -6,7 +6,7 @@ import { TopicsRepository } from "./topics.repository";
 import { CacheModule } from "@nestjs/cache-manager";
 
 @Module({
-  imports: [PrismaModule, CacheModule.register()],
+  imports: [PrismaModule],
   providers: [PostsResolver, PostsService, TopicsRepository],
 })
 export class PostsModule {}

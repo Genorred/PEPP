@@ -8,13 +8,13 @@ import { CreateVersionPostInputService } from "./dto/create-version-post.input";
 import { TopicsRepository } from "./topics.repository";
 import { FindPostInput } from "./dto/find-post.input";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
-import { CacheManagerStore } from 'cache-manager'
+import { Cache } from 'cache-manager'
 
 @Injectable()
 export class PostsService {
   constructor(private readonly prismaService: PrismaService,
               private readonly topicsRepository: TopicsRepository,
-              @Inject(CACHE_MANAGER) private cacheManager: CacheManagerStore) {
+              @Inject(CACHE_MANAGER) private cacheManager: Cache) {
   }
 
   create(createPostInput: CreatePostInputService) {
