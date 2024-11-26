@@ -4,27 +4,27 @@ import {
   useCreateVersionPostMutation, usePublishPostVersionMutation,
   useUpdatePostMutation
 } from "@/shared/api/graphql/generated";
-import { HandleWorkFormT } from "@/widgets/Editor/ui/SaveWork";
-import { graphqlClient } from "@/shared/api/base";
+import { HandleWorkFormT } from "@/features/Editor/ui/SaveWork";
+import { apiClient } from "@/shared/api/base";
 import { useEditorRef } from "@udecode/plate-common/react";
 import { getChangedFields } from "@/shared/utils/getChangedFields";
 import React, { BaseSyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { buttonNames } from "@/widgets/Editor/consts";
+import { buttonNames } from "@/features/Editor/consts/buttonNames";
 import { useDispatch, useSelector } from "react-redux";
-import { focusedPostSlice, mutatedData } from "@/widgets/Editor/model/focused-post.slice";
+import { focusedPostSlice, mutatedData } from "@/features/Editor/model/focused-post.slice";
 import { createValidFileMatcher } from "next/dist/server/lib/find-page-file";
-import { useFetchPostQuery } from "@/widgets/Editor/lib/useFetchPostQuery";
+import { useFetchPostQuery } from "@/features/Editor/lib/useFetchPostQuery";
 
 export type CreatePostParams = Parameters<ReturnType<typeof useCreatePostMutation>["mutateAsync"]>["0"]
 const useSavePost = () => {
 
     const plateState = useEditorRef();
 
-    const { mutateAsync: createPost } = useCreatePostMutation(graphqlClient);
-    const { mutateAsync: createVersionPost } = useCreateVersionPostMutation(graphqlClient);
-    const { mutateAsync: update } = useUpdatePostMutation(graphqlClient);
-    const { mutateAsync: publishVersion } = usePublishPostVersionMutation(graphqlClient);
+    const { mutateAsync: createPost } = useCreatePostMutation(apiClient);
+    const { mutateAsync: createVersionPost } = useCreateVersionPostMutation(apiClient);
+    const { mutateAsync: update } = useUpdatePostMutation(apiClient);
+    const { mutateAsync: publishVersion } = usePublishPostVersionMutation(apiClient);
 
     const dispatch = useDispatch();
     const data = useSelector(focusedPostSlice.selectors.all);

@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { graphqlClient } from "@/shared/api/base";
+import { apiClient, serverApiClient, serverBaseUrl } from "@/shared/api/base";
 import {
   PostsIdDocument,
   PostDocument,
@@ -14,13 +14,27 @@ export const revalidate = 60;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const data: PostsIdQuery = await graphqlClient.request(PostsIdDocument, {
-    token: process.env.NEXTJS_ENDPOINTS
-  } as PostsIdQueryVariables);
+  try {
+    const data: PostsIdQuery = await serverApiClient.request(PostsIdDocument, {
+      token: process.env.NEXTJS_ENDPOINTS
+    } as PostsIdQueryVariables);
 
-  return data.allPosts.map((post) => ({
-    id: String(post.id)
-  }));
+    // const data: PostsIdQuery = await fetch(serverBaseUrl, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     query:PostsIdDocument,
+    //   }),
+    //   next: { revalidate: 10 },
+    // }).then((res) => res.json());
+    return data.allPosts.map((post) => ({
+      id: String(post.id)
+    }));
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 const Page = async ({ params }: {
@@ -29,9 +43,11 @@ const Page = async ({ params }: {
   }
 }) => {
   const id = Number(params.id);
-  const post: PostQuery = await graphqlClient.request(PostDocument, {
+  const post: PostQuery = await serverApiClient.request(PostDocument, {
     id
-  } as PostQueryVariables);
+  } as PostQueryVariables, {
+
+  });
 
   return (
     <Suspense fallback={null}>

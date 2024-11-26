@@ -4,7 +4,7 @@ import Image from "next/image"
 import { ImageOff } from "lucide-react";
 
 const PostHeader = ({img, title}: {
-  img: string
+  img?: string | null;
   title: string
 }) => {
   return (

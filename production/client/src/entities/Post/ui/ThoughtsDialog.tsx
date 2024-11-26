@@ -12,10 +12,9 @@ const ThoughtsDialog = ({reviewList, url}: {
 }) => {
   const [showReviews, setShowReviews] = useState(false);
   return (
-    <div onClick={stopPropagation}>
             <Dialog open={showReviews} onOpenChange={setShowReviews}>
               <DialogTrigger asChild>
-                <Button variant="outline" className="w-full">View Popular Reviews</Button>
+                <Button variant="outline" className="w-full z-10 relative">View Popular Reviews</Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -39,7 +38,6 @@ const ThoughtsDialog = ({reviewList, url}: {
                 </div>
               </DialogContent>
             </Dialog>
-          </div>
   );
 };
 

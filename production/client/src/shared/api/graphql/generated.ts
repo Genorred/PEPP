@@ -57,6 +57,14 @@ export type CreateVersionPostInput = {
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+export type FindAlgorithmPostsInput = {
+  createdAtDesc?: InputMaybe<Scalars['Boolean']['input']>;
+  cursorId?: InputMaybe<Scalars['Int']['input']>;
+  ratingDesc?: InputMaybe<Scalars['Boolean']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 export type FindAllPostsInput = {
   isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   token: Scalars['String']['input'];
@@ -168,10 +176,16 @@ export type Query = {
   draft: Post;
   login: User;
   post: Post;
+  topics: Array<Topic>;
   user: User;
   userDrafts: Array<Post>;
   userPosts: Array<Post>;
   users: Array<User>;
+};
+
+
+export type QueryAlgoPostsArgs = {
+  findAlgorithmInput: FindAlgorithmPostsInput;
 };
 
 
@@ -192,6 +206,11 @@ export type QueryLoginArgs = {
 
 export type QueryPostArgs = {
   findOne: FindPostInput;
+};
+
+
+export type QueryTopicsArgs = {
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -243,7 +262,7 @@ export type User = {
   google_id: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   img: Scalars['String']['output'];
-  occupation: Scalars['String']['output'];
+  occupation?: Maybe<Scalars['String']['output']>;
   password: Scalars['String']['output'];
   posts: Array<Post>;
   role: Scalars['String']['output'];
@@ -304,10 +323,23 @@ export type PostQueryVariables = Exact<{
 
 export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
 
-export type PostRecommendationsQueryVariables = Exact<{ [key: string]: never; }>;
+export type TopicsQueryVariables = Exact<{
+  title?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
-export type PostRecommendationsQuery = { __typename?: 'Query', algoPosts: Array<{ __typename?: 'Post', body: Array<any>, createdAt: any, updatedAt: any, version: number, title: string, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> };
+export type TopicsQuery = { __typename?: 'Query', topics: Array<{ __typename?: 'Topic', title: string }> };
+
+export type PostRecommendationsQueryVariables = Exact<{
+  createdAtDesc?: InputMaybe<Scalars['Boolean']['input']>;
+  ratingDesc?: InputMaybe<Scalars['Boolean']['input']>;
+  cursorId?: InputMaybe<Scalars['Int']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type PostRecommendationsQuery = { __typename?: 'Query', algoPosts: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img: string }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> };
 
 export type PublishDraftMutationVariables = Exact<{
   postId: Scalars['Int']['input'];
@@ -631,18 +663,76 @@ useInfinitePostQuery.getKey = (variables: PostQueryVariables) => ['post.infinite
 
 usePostQuery.fetcher = (client: GraphQLClient, variables: PostQueryVariables, headers?: RequestInit['headers']) => fetcher<PostQuery, PostQueryVariables>(client, PostDocument, variables, headers);
 
-export const PostRecommendationsDocument = `
-    query postRecommendations {
-  algoPosts {
-    body
-    createdAt
-    updatedAt
-    version
+export const TopicsDocument = `
+    query topics($title: String) {
+  topics(title: $title) {
     title
+  }
+}
+    `;
+
+export const useTopicsQuery = <
+      TData = TopicsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: TopicsQueryVariables,
+      options?: UseQueryOptions<TopicsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) => {
+    
+    return useQuery<TopicsQuery, TError, TData>(
+      variables === undefined ? ['topics'] : ['topics', variables],
+      fetcher<TopicsQuery, TopicsQueryVariables>(client, TopicsDocument, variables, headers),
+      options
+    )};
+
+useTopicsQuery.document = TopicsDocument;
+
+useTopicsQuery.getKey = (variables?: TopicsQueryVariables) => variables === undefined ? ['topics'] : ['topics', variables];
+
+export const useInfiniteTopicsQuery = <
+      TData = TopicsQuery,
+      TError = unknown
+    >(
+      client: GraphQLClient,
+      variables?: TopicsQueryVariables,
+      options?: UseInfiniteQueryOptions<TopicsQuery, TError, TData>,
+      headers?: RequestInit['headers']
+    ) => {
+    
+    return useInfiniteQuery<TopicsQuery, TError, TData>(
+      variables === undefined ? ['topics.infinite'] : ['topics.infinite', variables],
+      (metaData) => fetcher<TopicsQuery, TopicsQueryVariables>(client, TopicsDocument, {...variables, ...(metaData.pageParam ?? {})}, headers)(),
+      options
+    )};
+
+useInfiniteTopicsQuery.getKey = (variables?: TopicsQueryVariables) => variables === undefined ? ['topics.infinite'] : ['topics.infinite', variables];
+
+
+useTopicsQuery.fetcher = (client: GraphQLClient, variables?: TopicsQueryVariables, headers?: RequestInit['headers']) => fetcher<TopicsQuery, TopicsQueryVariables>(client, TopicsDocument, variables, headers);
+
+export const PostRecommendationsDocument = `
+    query postRecommendations($createdAtDesc: Boolean, $ratingDesc: Boolean, $cursorId: Int, $topics: [String!], $subTopics: [String!]) {
+  algoPosts(
+    findAlgorithmInput: {createdAtDesc: $createdAtDesc, ratingDesc: $ratingDesc, cursorId: $cursorId, topics: $topics, subTopics: $subTopics}
+  ) {
+    id
+    rating
+    commentsQuantity
+    reviewsQuantity
+    img
+    minutes
+    title
+    createdAt
+    userId
+    description
+    version
+    updatedAt
     user {
       username
+      occupation
       img
-      id
     }
     topics {
       title

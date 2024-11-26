@@ -2,20 +2,20 @@
 import React from "react";
 import PostsFilter from "@/widgets/PostsFilter";
 import PostsList from "../../../widgets/PostsList";
-import { PostI } from "@/entities/Post";
+import { GeneralPostI } from "@/entities/Post";
 import { useInfinitePostRecommendationsQuery } from "@/shared/api/graphql/generated";
-import { graphqlClient } from "@/shared/api/base";
+import { apiClient } from "@/shared/api/base";
 
 const Page = () => {
-  const { data: posts, isLoading, fetchNextPage, hasNextPage, hasPreviousPage}  = useInfinitePostRecommendationsQuery(graphqlClient);
+  const { data: posts, isLoading, fetchNextPage, hasNextPage, hasPreviousPage}  = useInfinitePostRecommendationsQuery(apiClient);
   return (
     <>
-      {isLoading && posts
+      {isLoading || !posts || !(posts.pages.length > 0)
       ? 'Loading...'
       :
         <>
           <PostsFilter />
-          <PostsList posts={posts!.pages[0].algoPosts}/>
+          <PostsList posts={posts.pages[0].algoPosts}/>
         </>
       }
 

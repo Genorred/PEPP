@@ -8,8 +8,8 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 
 import { useUpdatePostMutation, useRegisterMutation } from "@/shared/api/graphql/generated";
-import { editor } from "@/features/PostEditor/consts/editor";
-import { graphqlClient } from "@/shared/api/base";
+import { editor } from "@/features/Editor/consts/editor";
+import { apiClient } from "@/shared/api/base";
 import { userSlice } from "@/entities/User/model/user.slice";
 import { useSelector } from "react-redux";
 
@@ -29,7 +29,7 @@ const UpdateWork = () => {
       subtopic: "",
     },
   })
-  const { mutate: createPost } = useUpdatePostMutation(graphqlClient, {
+  const { mutate: createPost } = useUpdatePostMutation(apiClient, {
     onSuccess: (data) => {
       console.log(data)
     }

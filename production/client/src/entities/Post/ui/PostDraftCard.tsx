@@ -2,7 +2,7 @@ import React, { useId, useState } from "react";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "@/shared/ui/card";
 import Link from "next/link";
-import { PostI, Review } from "@/entities/Post/model";
+import { GeneralPostI, Review } from "@/entities/Post/model";
 import Rating from "@/entities/Post/ui/Rating";
 import PostHeader from "@/entities/Post/ui/PostHeader";
 import UserLink from "@/entities/Post/ui/UserLink";
@@ -13,10 +13,10 @@ const PostDraftCard = ({
                          img,
                          title,
                          description,
-                       }: Pick<PostI, "id" | "img" | "title" | "description">) => {
+                       }: Pick<GeneralPostI, "id" | "img" | "title" | "description">) => {
   const url = `/draft/${id}`;
   return (
-    <Link href={url} id={`${id}`} className="w-full shrink grow basis-[min-content] overflow-hidden relative min-w-72">
+    <Link href={url} id={`${id}`} className="w-full flex-1 overflow-hidden relative min-w-72">
       <Card>
         <PostHeader img={img || ''} title={title} />
         <CardContent className="pt-4">

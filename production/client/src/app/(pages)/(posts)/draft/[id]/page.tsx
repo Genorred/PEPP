@@ -1,12 +1,12 @@
 'use client'
 import React, { useEffect } from "react";
 import { useDraftQuery, usePostQuery } from "@/shared/api/graphql/generated";
-import { graphqlClient } from "@/shared/api/base";
-import { EditPost } from "@/widgets/Editor";
+import { apiClient } from "@/shared/api/base";
+import { EditPost } from "@/features/Editor";
 import { PostQuery } from "@/shared/api/graphql/graphql";
-import { focusedPostSlice } from "@/widgets/Editor/model/focused-post.slice";
+import { focusedPostSlice } from "@/features/Editor/model/focused-post.slice";
 import { useDispatch } from "react-redux";
-import { PostKeys } from "@/widgets/Editor/model/model";
+import { PostKeys } from "@/features/Editor/model/model";
 
 
 const Page = ({ params }: {
@@ -15,7 +15,7 @@ const Page = ({ params }: {
   }>
 }) => {
   const id = Number(React.use(params).id);
-  const { data, isLoading } = useDraftQuery(graphqlClient, { id }, {
+  const { data, isLoading } = useDraftQuery(apiClient, { id }, {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     enabled: !!id

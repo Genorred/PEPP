@@ -1,10 +1,11 @@
 import React from "react";
 import Container from "@/shared/ui/Container";
-import { PostI, Post } from "@/entities/Post";
+import { GeneralPostI, Post } from "@/entities/Post";
+import { PostRecommendationsQuery } from "@/shared/api/graphql/graphql";
 
 
 const PostsList = ({posts}: {
-  posts: Omit<PostI, 'isArchived' | 'isDraft' | 'isPublished'>[]
+  posts: PostRecommendationsQuery["algoPosts"]
 }) => {
   return (
     <Container className='flex gap-4 flex-wrap' variant={"section"}>

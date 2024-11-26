@@ -1,7 +1,7 @@
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CreatePostMutationVariables, User } from "@/shared/api/graphql/generated";
 import { rootReducer } from "@/shared/lib/redux";
-import { PostKeys } from "@/widgets/Editor/model/model";
+import { PostKeys } from "@/features/Editor/model/model";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import { QueryKey } from "@tanstack/react-query";
 

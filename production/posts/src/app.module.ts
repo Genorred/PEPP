@@ -9,6 +9,7 @@ import { ApolloFederationDriver, ApolloFederationDriverConfig } from "@nestjs/ap
 import JSON from "graphql-type-json";
 import NextjsEndpoint from "./config/nextjsEndpoint";
 import { CacheModule } from "@nestjs/cache-manager";
+import { TopicsModule } from './topics/topics.module';
 
 @Module({
   imports: [ CacheModule.register({
@@ -32,6 +33,7 @@ import { CacheModule } from "@nestjs/cache-manager";
     }),
 PrismaModule,
     PostsModule,
+    TopicsModule,
 ],
   providers: [PrismaService]})
 export class AppModule {}

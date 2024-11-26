@@ -1,16 +1,16 @@
 'use client'
 import React from "react";
-import { Editor } from "@/features/PostEditor/ui/plate-ui/editor";
-import { usePostEditor } from "@/widgets/Editor";
+import { Editor } from "@/entities/Post/ui/plate-ui/editor";
+import { usePostEditor } from "@/features/Editor";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import { usePostQuery } from "@/shared/api/graphql/generated";
-import { graphqlClient } from "@/shared/api/base";
+import { apiClient } from "@/shared/api/base";
 
 const ViewPost = ({post, id}: {
   id: number
   post: PostQuery
 }) => {
-  const { data, isLoading } = usePostQuery(graphqlClient, { id }, {
+  const { data, isLoading } = usePostQuery(apiClient, { id }, {
     initialData: post,
     enabled: !!id
   });

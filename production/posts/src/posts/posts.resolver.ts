@@ -14,6 +14,7 @@ import { Inject, Req, UnauthorizedException } from "@nestjs/common";
 import NextjsEndpoint from "../config/nextjsEndpoint";
 import { ConfigType } from "@nestjs/config";
 import { FindAllPostsInput } from "./dto/_nextjs_find-posts.input";
+import { FindAlgorithmPostsInput } from "./dto/find-algorithm-posts.input";
 
 @Resolver(() => Post)
 export class PostsResolver {
@@ -44,8 +45,8 @@ export class PostsResolver {
   }
 
   @Query(() => [Post], { name: "algoPosts" })
-  findAlgorithmPosts() {
-    return this.postsService.algoPosts();
+  findAlgorithmPosts(@Args('findAlgorithmInput') findAlgorithmInput: FindAlgorithmPostsInput) {
+    return this.postsService.algoPosts(findAlgorithmInput);
   }
 
   @Query(() => Post, { name: "post" })
@@ -77,6 +78,10 @@ export class PostsResolver {
   removePost(@Args("id", { type: () => Int }) id: number) {
     return this.postsService.remove(id);
   }
+
+
+
+
 
   @Query(() => [Post], {name: 'allPosts'})
   findAll(@Args('findAllPostsInput') findAllPostsInput: FindAllPostsInput) {

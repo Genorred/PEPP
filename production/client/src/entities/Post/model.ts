@@ -1,11 +1,13 @@
 import React from "react";
 import { Post as GraphqlPost, User } from "@/shared/api/graphql/generated";
 
-export type PostI = Omit<GraphqlPost, "body" | "published" | "user" | "updatedAt"> & {
-  userId: User['id'],
-  username: User['username'],
-  userImg: User['img'],
-  occupation: User['occupation'],
+export type GeneralPostI = Omit<GraphqlPost, "body" | "published" | 'isArchived' | 'isDraft' | 'isPublished' | 'topics' | 'subTopics'> & {
+  topics: {
+    title: string
+  }
+  subTopics: {
+    title: string
+  }
 }
 // {
 //   id: number;

@@ -37,6 +37,14 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input FindAlgorithmPostsInput {
+  createdAtDesc: Boolean
+  cursorId: Int
+  ratingDesc: Boolean
+  subTopics: [String!]
+  topics: [String!]
+}
+
 input FindAllPostsInput {
   isArchived: Boolean
   token: String!
@@ -110,11 +118,12 @@ type Post {
 }
 
 type Query {
-  algoPosts: [Post!]!
+  algoPosts(findAlgorithmInput: FindAlgorithmPostsInput!): [Post!]!
   allPosts(findAllPostsInput: FindAllPostsInput!): [Post!]!
   draft(findDraft: FindPostInput!): Post!
   login(loginInput: LoginInput!): User!
   post(findOne: FindPostInput!): Post!
+  topics(title: String): [Topic!]!
   user(loginInput: FindOneUserInput!): User!
   userDrafts: [Post!]!
   userPosts(userId: Int!): [Post!]!
@@ -153,7 +162,7 @@ type User {
   google_id: String!
   id: Int!
   img: String!
-  occupation: String!
+  occupation: String
   password: String!
   posts: [Post!]!
   role: String!

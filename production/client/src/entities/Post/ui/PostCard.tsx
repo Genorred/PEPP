@@ -3,28 +3,30 @@ import { Badge } from "@/shared/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "@/shared/ui/card";
 import { MessageCircle } from "lucide-react";
 import Link from "next/link";
-import { PostI, Review } from "@/entities/Post/model";
+import { GeneralPostI, Review } from "@/entities/Post/model";
 import Rating from "@/entities/Post/ui/Rating";
 import PostHeader from "@/entities/Post/ui/PostHeader";
 import UserLink from "@/entities/Post/ui/UserLink";
 import ThoughtsDialog from "@/entities/Post/ui/ThoughtsDialog";
+import { PostRecommendationsQuery } from "@/shared/api/graphql/graphql";
 
 const PostCard = ({
                     id,
-                    occupation,
                     rating,
-                    comments,
-                    reviews,
+                    commentsQuantity,
+                    reviewsQuantity,
                     img,
                     minutes,
-                    tags,
+                    topics,
+                    subTopics,
                     title,
                     createdAt,
                     userId,
-                    userImg,
                     description,
-                    username
-                  }: PostI) => {
+                    user,
+                    version,
+                    updatedAt
+                  }: PostRecommendationsQuery["algoPosts"][number]) => {
   const reviewList: Review[] = [
     {
       id: 4234234,
@@ -45,39 +47,41 @@ const PostCard = ({
       review: "The implications for secure communications are enormous!"
     }
   ];
-  const titleId = useId();
   const url = `/post/${id}`;
   return (
-    <Link href={url} id={`${id}`} className="w-full shrink grow basis-[min-content] overflow-hidden relative min-w-72">
-      <Card>
+    <Card id={`${id}`} className="w-full shrink grow basis-[min-content] overflow-hidden relative min-w-72">
+      <Link href={url} className='before:inset-0 before:absolute'>
         <PostHeader img={img} title={title} />
-        <CardContent className="pt-4">
-          <div className="flex items-center justify-between mb-4">
-            <UserLink userId={userId} userImg={userImg} occupation={occupation} username={username}/>
-            {tags && tags.map(tag =>
-              <Badge variant="secondary">{tag}</Badge>
-            )}
-          </div>
-          <p className="text-sm text-muted-foreground mb-4">
-            {description}
-          </p>
-          <div className="flex items-center justify-between text-sm mb-4">
-            <Rating rating={rating} />
-            <Link href={url + "#messages"} className="flex items-center space-x-2">
-              <MessageCircle className="w-4 h-4" />
-              <span>{comments} comments</span>
-            </Link>
-            <Link href={url + "#reviews"} className="flex items-center space-x-2">
-              <span>{reviews} reviews</span>
-            </Link>
-          </div>
-          <ThoughtsDialog url={url} reviewList={reviewList} />
-        </CardContent>
-        <CardFooter className="bg-muted/50 text-xs text-muted-foreground">
-          Published on August 15, 2023 | {minutes} min read
-        </CardFooter>
-      </Card>
-    </Link>
+      </Link>
+      <CardContent className="pt-4">
+        <div className="flex items-center justify-between mb-4">
+          <UserLink userId={userId} userImg={user.img} occupation={user.occupation} username={user.username} />
+          {topics && topics.length > 0 && topics.map(topic =>
+            <Badge variant="secondary">{topic.title}</Badge>
+          )}
+          {subTopics && subTopics.length > 0 && subTopics.map(subTopic =>
+            <Badge variant="outline">{subTopic.title}</Badge>
+          )}
+        </div>
+        <p className="text-sm text-muted-foreground mb-4">
+          {description}
+        </p>
+        <div className="flex items-center justify-between text-sm mb-4">
+          <Rating rating={rating} />
+          <Link href={url + "#messages"} className="flex items-center space-x-2">
+            <MessageCircle className="w-4 h-4" />
+            <span>{commentsQuantity} comments</span>
+          </Link>
+          <Link href={url + "#reviews"} className="flex items-center space-x-2">
+            <span>{reviewsQuantity} reviews</span>
+          </Link>
+        </div>
+        <ThoughtsDialog url={url} reviewList={reviewList} />
+      </CardContent>
+      <CardFooter className="bg-muted/50 text-xs text-muted-foreground">
+        Published on August 15, 2023 | {minutes} min read
+      </CardFooter>
+    </Card>
   );
 };
 

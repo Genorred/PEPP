@@ -14,8 +14,8 @@ export class User implements SharedUser{
   password: string;
   @Field()
   username: string;
-  @Field()
-  occupation: string;
+  @Field({nullable: true})
+  occupation?: string;
   @Field()
   role: Roles;
   @Field()

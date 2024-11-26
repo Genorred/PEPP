@@ -1,6 +1,6 @@
 import { useGetFetchQuery } from "@/shared/api/useGetFetchQuery";
 import { DraftQuery, PostQuery } from "@/shared/api/graphql/graphql";
-import { PostKeys } from "@/widgets/Editor/model/model";
+import { PostKeys } from "@/features/Editor/model/model";
 
 type QueryResult <K extends PostKeys> = K extends 'post' ? PostQuery[K] : DraftQuery['draft']
 export const useFetchPostQuery = <K extends PostKeys | null> (queryKey?: K) => {

@@ -6,7 +6,7 @@ const UserLink = ({userId, userImg, username, occupation}: {
   userId: number
   userImg: string
   username: string
-  occupation: string
+  occupation?: string | null
 }) => {
   return (
     <Link href={"/user/" + userId}>

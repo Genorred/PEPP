@@ -8,7 +8,8 @@ import { CreateVersionPostInputService } from "./dto/create-version-post.input";
 import { TopicsRepository } from "./topics.repository";
 import { FindPostInput } from "./dto/find-post.input";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
-import { Cache } from 'cache-manager'
+import { Cache } from "cache-manager";
+import { FindAlgorithmPostsInput } from "./dto/find-algorithm-posts.input";
 
 @Injectable()
 export class PostsService {
@@ -174,15 +175,35 @@ export class PostsService {
   remove(id: number) {
     return this.prismaService.post.delete({ where: { id } });
   }
-  algoPosts() {
-    const key = new URLSearchParams()
-    key.set('createdAt', 'asc')
-    key.set('rating', 'asc')
-    key.set('cursor', 'id')
-    const postsCached = this.cacheManager.get(key.toString())
-    const posts = this.prismaService.post.findMany({
-      orderBy: { createdAt: 'asc', rating: 'asc', updatedAt: 'desc' },
-      cursor: { id: 1 },
+
+  async algoPosts({ ratingDesc, createdAtDesc, cursorId, topics, subTopics }: FindAlgorithmPostsInput) {
+    const key = new URLSearchParams();
+    key.set("rating", ratingDesc ? "desc" : "asc");
+    key.set("createdAt", createdAtDesc ? "desc" : "asc");
+    if (cursorId)
+      key.set("cursorId", cursorId.toString());
+    if (topics)
+      key.set("topics", JSON.stringify(topics));
+    if (subTopics)
+      key.set("topics", JSON.stringify(subTopics));
+
+    const postsCached = await this.cacheManager.get(key.toString());
+    console.log(postsCached);
+    if (postsCached)
+      return postsCached;
+
+    const posts = await this.prismaService.post.findMany({
+      orderBy: [
+        {
+          createdAt: "asc"
+        },
+        {
+          rating: "asc"
+        }, {
+          updatedAt: "desc"
+        }
+      ],
+      cursor: (cursorId && { id: cursorId }),
       include: {
         topics: true,
         subTopics: true,
@@ -191,8 +212,10 @@ export class PostsService {
       where: {
         isPublished: true
       }
-    })
-    this.cacheManager.set(key.toString(), posts)
+    });
+    void this.cacheManager.set(key.toString(), posts, 15000);
+    console.log(posts);
+    return posts;
   }
 
 // removeMany(removeManyPostInput: PartialPostInput) {

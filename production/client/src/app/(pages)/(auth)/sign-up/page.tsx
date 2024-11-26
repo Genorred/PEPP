@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/shared/ui/form";
 import { AuthWrapper } from "@/widgets/Auth";
-import { graphqlClient } from "@/shared/api/base";
+import { apiClient } from "@/shared/api/base";
 import { useRegisterMutation } from "@/shared/api/graphql/generated";
 import { useDispatch, useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
@@ -46,7 +46,7 @@ const Page = () => {
     router.push(returnUrl || "/");
   }
 
-  const { mutate: registerUser } = useRegisterMutation(graphqlClient, {
+  const { mutate: registerUser } = useRegisterMutation(apiClient, {
     onSuccess: data => {
       dispatch(userSlice.actions.setUser(data.register));
     }

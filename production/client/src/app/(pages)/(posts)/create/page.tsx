@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { EditPost } from "@/widgets/Editor";
+import { EditPost } from "@/features/Editor";
 
 export default function Page() {
   return (

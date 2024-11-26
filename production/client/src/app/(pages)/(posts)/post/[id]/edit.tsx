@@ -2,21 +2,21 @@
 import React, { useEffect, useState } from "react";
 import Container from "@/shared/ui/Container";
 import { PostDetailsI } from "@/entities/Post/model";
-import { EditPost } from "@/widgets/Editor";
+import { EditPost } from "@/features/Editor";
 import { usePostQuery } from "@/shared/api/graphql/generated";
-import { graphqlClient } from "@/shared/api/base";
-import { editorTransformation } from "@/features/PostEditor/consts/editor";
+import { apiClient } from "@/shared/api/base";
+import { editorTransformation } from "@/features/Editor/consts/editor";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import { useDispatch } from "react-redux";
-import { focusedPostSlice } from "@/widgets/Editor/model/focused-post.slice";
-import { PostKeys } from "@/widgets/Editor/model/model";
+import { focusedPostSlice } from "@/features/Editor/model/focused-post.slice";
+import { PostKeys } from "@/features/Editor/model/model";
 
 
 const Page = ({ post, id }: {
   id: number
   post: PostQuery;
 }) => {
-  const { data, isLoading } = usePostQuery(graphqlClient, { id }, {
+  const { data, isLoading } = usePostQuery(apiClient, { id }, {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     initialData: post,
