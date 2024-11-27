@@ -10,13 +10,15 @@ import JSON from "graphql-type-json";
 import NextjsEndpoint from "./config/nextjsEndpoint";
 import { CacheModule } from "@nestjs/cache-manager";
 import { TopicsModule } from './topics/topics.module';
+import { SearchModule } from './search/search.module';
+import elasticDb from "./config/elasticDb";
 
 @Module({
-  imports: [ CacheModule.register({
+  imports: [ SearchModule, CacheModule.register({
     isGlobal: true,
   }),
     ConfigModule.forRoot({
-      load: [NextjsEndpoint],
+      load: [NextjsEndpoint, elasticDb],
       expandVariables: true,
       cache: true,
       isGlobal: true,
@@ -34,6 +36,7 @@ import { TopicsModule } from './topics/topics.module';
 PrismaModule,
     PostsModule,
     TopicsModule,
+    SearchModule,
 ],
   providers: [PrismaService]})
 export class AppModule {}

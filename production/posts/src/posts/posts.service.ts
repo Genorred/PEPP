@@ -10,23 +10,31 @@ import { FindPostInput } from "./dto/find-post.input";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
 import { FindAlgorithmPostsInput } from "./dto/find-algorithm-posts.input";
+import { ElasticsearchService } from "@nestjs/elasticsearch";
 
 @Injectable()
 export class PostsService {
   constructor(private readonly prismaService: PrismaService,
               private readonly topicsRepository: TopicsRepository,
-              @Inject(CACHE_MANAGER) private cacheManager: Cache) {
+              @Inject(CACHE_MANAGER) private cacheManager: Cache,
+              private readonly esService: ElasticsearchService) {
   }
 
-  create(createPostInput: CreatePostInputService) {
+  async create(createPostInput: CreatePostInputService) {
     const { topics, subTopics, isPublished, ...data } = createPostInput;
-    return this.prismaService.post.create({
+    const post = await this.prismaService.post.create({
       data: {
         ...data,
         isPublished: !data?.isDraft && isPublished, // draft can't be published
         ...this.topicsRepository.connectOrCreateTopics(topics, subTopics)
       }
     });
+    if(isPublished) {
+      this.esService.create({
+        index: post.id
+      })
+    }
+    return post
   }
 
   async createVersion(createVersionPostInput: CreateVersionPostInputService) {
