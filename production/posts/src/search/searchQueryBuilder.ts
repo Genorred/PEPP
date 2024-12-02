@@ -32,11 +32,9 @@ export class SearchQueryBuilderService {
       }
       if (flag) {
         return {
-          query: {
             bool: {
               must: query,
             },
-          },
         };
       }
       return {};

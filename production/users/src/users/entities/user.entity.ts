@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int, Directive, ID } from "@nestjs/graphql";
 import { Roles } from ".prisma/client";
-import { User as SharedUser } from "@shared/entities/user.entity"
+import { User as SharedUser } from "@_shared/entities/user.entity"
 
 
 @ObjectType()

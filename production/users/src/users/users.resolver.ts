@@ -4,7 +4,7 @@ import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { FindOneUserInput } from './dto/find-one-user.input';
 import { FindManyUserInput } from './dto/find-many-user.input';
-import UseRoles from "@shared/auth-guard/useRoles";
+import UseRoles from "@_shared/auth-guard/useRoles";
 
 @Resolver(() => User)
 export class UsersResolver {

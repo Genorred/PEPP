@@ -1,4 +1,5 @@
 {
+  "extends": "../tsconfig.client.json",
   "compilerOptions": {
     "lib": [
       "dom",
@@ -16,6 +17,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": "./",
     "plugins": [
       {
         "name": "next"
@@ -25,11 +27,7 @@
         "schema": "./schema.graphql"
       }
     ],
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    },
+//    paths shouldn't be overwritten
     "target": "ES2017"
   },
   "include": [

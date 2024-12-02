@@ -1,5 +1,5 @@
 import { applyDecorators, Injectable, SetMetadata, UseGuards } from "@nestjs/common";
-import { Meta, RolesT } from "@shared/entities/roles.entity";
+import { Meta, RolesT } from "@_shared/entities/roles.entity";
 import { RolesGuard } from "./roles-guard";
 
 

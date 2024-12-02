@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { User } from "../users/entities/user.entity";
 import { JwtService } from "@nestjs/jwt";
-import { JwtPayload } from "@shared/entities/jwt.entity";
+import { JwtPayload } from "@_shared/entities/jwt.entity";
 
 @Injectable()
 export class SetAuthCookieService {

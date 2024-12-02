@@ -9,7 +9,7 @@ This document covers all the steps to build and publish images to the registry.
 
 ## Config
 
-Before you build your first image, you need to setup the configuration in `config/config.js` file.
+Before you build your first image, you need to setup the configuration in `config/hosts.ts` file.
 
 ### Config options
 
@@ -21,7 +21,7 @@ Before you build your first image, you need to setup the configuration in `confi
 | servicesPath        | The path of the services folder                                       | `production`                |
 | imgPrefix           | The prefix of the image name                                          |                             |
 | excludeFolders      | Folders in `servicesPath` that should be excluded from the build      | `['node_modules', 'types']` |
-| customServiceConfig | Custom service config file to override default build config           | `docker-build.config.js`    |
+| customServiceConfig | Custom service config file to override default build config           | `docker-build.hosts.ts`    |
 | dockerPath          | The path of the docker folder                                         | `docker`                    |
 
 ### `customServiceConfig` file

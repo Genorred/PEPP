@@ -1,4 +1,6 @@
 networks:
+  default:
+    driver: bridge
   backend:
     driver: bridge
   frontend:
@@ -8,16 +10,16 @@ networks:
     name: elastic
     external: false
 
+# ADD CONFIG TO BUILD
+
 services:
   gateway:
-    container_name: ${GATEWAY_SERVICE_HOST}
     build:
       context: ../../production
       dockerfile: ../deploy/docker/Dockerfile.development
       args:
         SERVICE_NAME: gateway
     restart: always
-    hostname: ${GATEWAY_SERVICE_HOST}
     env_file:
       - ../../config/.env.test
     networks:
@@ -27,13 +29,13 @@ services:
       - "8080:8080"
     volumes:
       - "../../production/gateway/:/usr/app/gateway/"
-      - "../../production/shared/src:/usr/app/gateway/src/shared"
-      - "../../production/shared/scripts:/usr/app/gateway/scripts"
+      - "../../production/_shared/src:/usr/app/gateway/src/_shared"
+      - "../../production/_shared/scripts:/usr/app/gateway/scripts"
+      - "../../production/_shared/config:/usr/app/gateway/config"
     depends_on:
       - users
 
   users:
-    container_name: ${USERS_SERVICE_HOST}
     build:
       context: ../../production
       dockerfile: ../deploy/docker/Dockerfile.development
@@ -42,20 +44,18 @@ services:
     env_file:
       - ../../config/.env.test
     restart: always
-    hostname: ${USERS_SERVICE_HOST}
     networks:
       - backend
     ports:
       - "${USERS_SERVICE_PORT}:${USERS_SERVICE_PORT}"
     volumes:
       - "../../production/users/:/usr/app/users/"
-      - "../../production/shared/src:/usr/app/users/src/shared"
-      - "../../production/shared/scripts:/usr/app/users/scripts"
-
+      - "../../production/_shared/src:/usr/app/users/src/_shared"
+      - "../../production/_shared/scripts:/usr/app/users/scripts"
+      - "../../production/_shared/config:/usr/app/users/config"
     depends_on:
       - users_db
   users_db:
-    container_name: "${USERS_POSTGRES_HOST}"
     image: postgres
     restart: always
     networks:
@@ -70,8 +70,7 @@ services:
       - "${USERS_POSTGRES_PORT}:5432"
     volumes:
       - db-data-users:/var/lib/postgresql/data
-  pepp:
-    container_name: pepp
+  client:
     restart: always
     build:
       context: ../../production
@@ -88,8 +87,8 @@ services:
       - WATCHPACK_POLLING=true
     volumes:
       - "../../production/client/:/usr/app/client/"
+      - "../../production/_shared/config:/usr/app/client/config"
   posts:
-    container_name: ${POSTS_SERVICE_HOST}
     build:
       context: ../../production
       dockerfile: ../deploy/docker/Dockerfile.development
@@ -98,20 +97,20 @@ services:
     env_file:
       - ../../config/.env.test
     restart: always
-    hostname: ${POSTS_SERVICE_HOST}
     networks:
       - backend
+      - elastic
     ports:
       - "${POSTS_SERVICE_PORT}:${POSTS_SERVICE_PORT}"
     volumes:
       - "../../production/posts/:/usr/app/posts/"
-      - "../../production/shared/src:/usr/app/posts/src/shared"
-      - "../../production/shared/scripts:/usr/app/posts/scripts"
-
+      - "../../production/_shared/src:/usr/app/posts/src/_shared"
+      - "../../production/_shared/scripts:/usr/app/posts/scripts"
+      - "../../production/_shared/config:/usr/app/posts/config"
     depends_on:
       - posts_db
+      - es01
   posts_db:
-    container_name: "${POSTS_POSTGRES_HOST}"
     image: postgres
     restart: always
     networks:
@@ -142,7 +141,8 @@ services:
       timeout: 5s
       retries: 120
   es01:
-    hostname: ${ES_HOST}
+    networks:
+      - elastic
     depends_on:
       posts_elastic_setup:
         condition: service_healthy
@@ -186,6 +186,111 @@ services:
       interval: 10s
       timeout: 10s
       retries: 120
+  kibana:
+    networks:
+      - elastic
+    depends_on:
+      es01:
+        condition: service_healthy
+    image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+    labels:
+      co.elastic.logs/module: kibana
+    volumes:
+      - certs:/usr/share/kibana/config/certs
+      - kibanadata:/usr/share/kibana/data
+    ports:
+      - ${KIBANA_PORT}:5601
+    environment:
+      - SERVERNAME=kibana
+      - ELASTICSEARCH_HOSTS=https://es01:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
+      - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+      - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+#    mem_limit: ${KB_MEM_LIMIT}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+  metricbeat01:
+    networks:
+      - elastic
+    depends_on:
+      es01:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
+    image: docker.elastic.co/beats/metricbeat:${STACK_VERSION}
+    user: root
+    command: ["--strict.perms=false"]
+#      - 'chmod 644 metricbeat/metricbeat.yml'
+    volumes:
+      - certs:/usr/share/metricbeat/certs
+      - metricbeatdata01:/usr/share/metricbeat/data
+      - "../metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro"
+      - "/proc:/hostfs/proc:ro"
+      - "/:/hostfs:ro"
+    environment:
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_HOSTS=https://posts_elastic_db:9200
+      - KIBANA_HOSTS=http://kibana:5601
+      - LOGSTASH_HOSTS=http://logstash01:9600
+  filebeat01:
+    networks:
+      - elastic
+    depends_on:
+      es01:
+        condition: service_healthy
+    image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
+    user: root
+    command: ["--strict.perms=false"]
+    volumes:
+      - certs:/usr/share/filebeat/certs
+      - filebeatdata01:/usr/share/filebeat/data
+      - "./filebeat_ingest_data/:/usr/share/filebeat/ingest_data/"
+      - "../filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
+      - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    environment:
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_HOSTS=https://posts_elastic_db:9200
+      - KIBANA_HOSTS=http://kibana:5601
+      - LOGSTASH_HOSTS=http://logstash01:9600
+  logstash01:
+    networks:
+      - elastic
+    depends_on:
+      es01:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
+    image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+    labels:
+      co.elastic.logs/module: logstash
+    user: root
+#    command: ["--strict.perms=false"]
+    volumes:
+      - certs:/usr/share/logstash/certs
+      - logstashdata01:/usr/share/logstash/data
+      - "./logstash_ingest_data/:/usr/share/logstash/ingest_data/"
+      - "../logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"
+    environment:
+      - xpack.monitoring.enabled=false
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_HOSTS=https://posts_elastic_db:9200
+#      - ELASTIC_HOSTS=https://es01:9200
 
 
 volumes:
