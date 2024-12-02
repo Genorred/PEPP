@@ -8,7 +8,9 @@ export class FindAlgorithmPostsInput {
   @Field({ nullable: true })
   ratingDesc?: boolean
   @Field(() => Int, { nullable: true })
-  cursorId?: number;
+  page?: number;
+  @Field({ nullable: true })
+  searchValue?: string;
   @Field(() => [String], {nullable: true})
   topics?: string[]
   @Field(() => [String], {nullable: true})

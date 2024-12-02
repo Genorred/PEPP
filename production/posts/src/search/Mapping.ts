@@ -20,5 +20,8 @@ export const Mapping: MappingTypeMapping = {
     text: {
       type: 'text',
     },
+    rating: {
+      type: 'float'
+    }
   }
 }

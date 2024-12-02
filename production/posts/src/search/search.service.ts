@@ -3,11 +3,10 @@ import { ElasticsearchService } from "@nestjs/elasticsearch";
 import { Mapping } from "./mapping";
 import { SearchQueryBuilderService } from "./searchQueryBuilder";
 import { Post } from "../posts/entities/post.entity";
+import { ElasticPost } from "./entities/elastic_post.entity";
+import { SearchDto } from "./dto/search.dto";
 
 const index = "posts";
-interface ElasticPost extends Pick<Post, "body" | "description" | "topics" | "subTopics" | "title"> {
-  text: string
-}
 
 @Injectable()
 export class SearchService {
@@ -52,13 +51,14 @@ export class SearchService {
     }
   }
 
-  public async search(searchParam: {search: string}) {
+  public async search(searchParam: SearchDto) {
     try {
-      const { body } = await this.esService.search<any>({
+      const pageSize = 10
+      const { fields } = await this.esService.search<ElasticPost>({
         index,
         query: this.builderService.buildSearchQuery(searchParam),
-        from: 0,
-        size: 1000
+        from: searchParam.page ? searchParam.page * pageSize : 0,
+        size: 50
       });
       const totalCount = body.hits.total.value;
       const hits = body.hits.hits;
