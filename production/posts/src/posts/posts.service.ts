@@ -3,7 +3,6 @@ import { CreatePostInput, CreatePostInputService } from "./dto/create-post.input
 import { UpdatePostInput, UpdatePostInputService } from "./dto/update-post.input";
 import { PrismaService } from "../prisma/prisma.service";
 import { PartialPostInput } from "./dto/partial-post.input";
-import { JwtPayload } from "@shared/entities/jwt.entity";
 import { CreateVersionPostInputService } from "./dto/create-version-post.input";
 import { TopicsRepository } from "./topics.repository";
 import { FindPostInput } from "./dto/find-post.input";
@@ -11,13 +10,14 @@ import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
 import { FindAlgorithmPostsInput } from "./dto/find-algorithm-posts.input";
 import { ElasticsearchService } from "@nestjs/elasticsearch";
+import { SearchService } from "../search/search.service";
 
 @Injectable()
 export class PostsService {
   constructor(private readonly prismaService: PrismaService,
               private readonly topicsRepository: TopicsRepository,
               @Inject(CACHE_MANAGER) private cacheManager: Cache,
-              private readonly esService: ElasticsearchService) {
+              private readonly searchService: SearchService) {
   }
 
   async create(createPostInput: CreatePostInputService) {
@@ -30,9 +30,7 @@ export class PostsService {
       }
     });
     if(isPublished) {
-      this.esService.create({
-        index: post.id
-      })
+      void this.searchService.indexPost(post)
     }
     return post
   }
@@ -43,7 +41,7 @@ export class PostsService {
     if (actualPost.userId === createVersionPostInput.userId) {
       const { topics, subTopics, userId, postId, ...data } = createVersionPostInput;
       if (data.isPublished) { // create post of current version, make it archived and copy new data to main post
-        await this.prismaService.post.update({
+        const post = await this.prismaService.post.update({
           where: {
             id
           },
@@ -53,6 +51,7 @@ export class PostsService {
             ...this.topicsRepository.connectOrCreateTopics(topics, subTopics)
           }
         });
+        void this.searchService.updatePost(post)
 
         return this.prismaService.post.create({
           data: {
