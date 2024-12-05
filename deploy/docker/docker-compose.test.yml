@@ -29,9 +29,9 @@ services:
       - "8080:8080"
     volumes:
       - "../../production/gateway/:/usr/app/gateway/"
-      - "../../production/_shared/src:/usr/app/gateway/src/_shared"
-      - "../../production/_shared/scripts:/usr/app/gateway/scripts"
-      - "../../production/_shared/config:/usr/app/gateway/config"
+      - "../../production/_shared:/usr/app/gateway/src/_shared"
+#      - "../../production/_shared/scripts:/usr/app/gateway/scripts"
+#      - "../../production/_shared/config:/usr/app/gateway/_config"
     depends_on:
       - users
 
@@ -50,9 +50,9 @@ services:
       - "${USERS_SERVICE_PORT}:${USERS_SERVICE_PORT}"
     volumes:
       - "../../production/users/:/usr/app/users/"
-      - "../../production/_shared/src:/usr/app/users/src/_shared"
-      - "../../production/_shared/scripts:/usr/app/users/scripts"
-      - "../../production/_shared/config:/usr/app/users/config"
+      - "../../production/_shared:/usr/app/users/src/_shared"
+#      - "../../production/_shared/scripts:/usr/app/users/scripts"
+#      - "../../production/_shared/config:/usr/app/users/_config"
     depends_on:
       - users_db
   users_db:
@@ -87,7 +87,7 @@ services:
       - WATCHPACK_POLLING=true
     volumes:
       - "../../production/client/:/usr/app/client/"
-      - "../../production/_shared/config:/usr/app/client/config"
+      - "../../production/_shared/config:/usr/app/client/_config"
   posts:
     build:
       context: ../../production
@@ -104,9 +104,9 @@ services:
       - "${POSTS_SERVICE_PORT}:${POSTS_SERVICE_PORT}"
     volumes:
       - "../../production/posts/:/usr/app/posts/"
-      - "../../production/_shared/src:/usr/app/posts/src/_shared"
-      - "../../production/_shared/scripts:/usr/app/posts/scripts"
-      - "../../production/_shared/config:/usr/app/posts/config"
+      - "../../production/_shared:/usr/app/posts/src/_shared"
+#      - "../../production/_shared/scripts:/usr/app/posts/scripts"
+#      - "../../production/_shared/config:/usr/app/posts/_config"
     depends_on:
       - posts_db
       - es01
@@ -291,6 +291,14 @@ services:
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - ELASTIC_HOSTS=https://posts_elastic_db:9200
 #      - ELASTIC_HOSTS=https://es01:9200
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - ./data:/data
 
 
 volumes:

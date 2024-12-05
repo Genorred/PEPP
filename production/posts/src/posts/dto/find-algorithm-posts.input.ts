@@ -1,12 +1,19 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
-import { GraphQLJSONObject } from "graphql-type-json";
+import { InputType, Int, Field, registerEnumType } from "@nestjs/graphql";
+
+enum SortOrder {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+registerEnumType(SortOrder, {
+  name: 'SortOrder',
+});
 
 @InputType()
 export class FindAlgorithmPostsInput {
-  @Field({ nullable: true })
-  createdAtDesc?: boolean
-  @Field({ nullable: true })
-  ratingDesc?: boolean
+  @Field(() => SortOrder,{ nullable: true })
+  createdAt?: SortOrder
+  @Field(() => SortOrder,{ nullable: true })
+  rating?: SortOrder
   @Field(() => Int, { nullable: true })
   page?: number;
   @Field({ nullable: true })

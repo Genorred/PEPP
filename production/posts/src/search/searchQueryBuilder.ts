@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { QueryDslQueryContainer } from "@elastic/elasticsearch/lib/api/typesWithBodyKey";
+import { QueryDslQueryContainer, Sort } from "@elastic/elasticsearch/lib/api/typesWithBodyKey";
 import { ElasticKey, ElasticKeys, ElasticPost } from "./entities/elastic_post.entity";
 import { SearchDto } from "./dto/search.dto";
 
@@ -8,28 +8,33 @@ export class SearchQueryBuilderService {
   constructor() {
   }
 
+  public sortSearchQuery (searchParams: SearchDto) {
+    const { rating, createdAt } = searchParams;
+    return [{rating}, {createdAt}] as Sort;
+  }
+
   public buildSearchQuery(searchParams: SearchDto) {
     try {
       const {
-        recommendationPostIds, searchValue, page,
-        createdAtDesc, ratingDesc, topics, subTopics
+        likedPosts, dislikedPosts, searchValue, topics, subTopics
       } = searchParams;
-      let isRandom = true;
-
       let query: QueryDslQueryContainer["bool"][] = [] as QueryDslQueryContainer["bool"][];
-      if (recommendationPostIds) {
+
+      if (likedPosts) {
         query.push(
           {
             must: {
               more_like_this: {
-                like: recommendationPostIds.map(postId => ({
-                  _id: postId
-                }))
+                like: likedPosts.map(postId => ({
+                  _id: postId.toString()
+                })),
+                unlike: (dislikedPosts && dislikedPosts.map(postId => ({
+                  _id: postId.toString()
+                })))
               }
             }
           }
         );
-        isRandom = false;
       }
 
       if (searchValue) {
@@ -41,8 +46,7 @@ export class SearchQueryBuilderService {
               tie_breaker: 0.3
             }
           }
-        })
-        isRandom = false;
+        });
       }
 
       const topicsArray = [...topics, ...subTopics];
@@ -52,32 +56,32 @@ export class SearchQueryBuilderService {
           must: {
             bool: {
               should: topicsArray.map(topic => ({
-                bool: {
-                  should:[
-                    {
-                      term: {
-                        'topics.keyword': topic
+                  bool: {
+                    should: [
+                      {
+                        term: {
+                          "topics.keyword": topic
+                        }
+                      },
+                      {
+                        term: {
+                          "subTopics.keyword": topic
+                        }
                       }
-                    },
-                    {
-                      term: {
-                        'subTopics.keyword': topic
-                      }
-                    }
-                  ]
-                }
+                    ]
+                  }
                 } as QueryDslQueryContainer
               ))
-            },
             }
-        })
+          }
+        });
       }
 
-      return isRandom ? {} : {
+      return {
         function_score: {
-          query: {
+          query: (query.length > 1 ? {
             bool: query
-          },
+          } : undefined),
           functions: [
             {
               field_value_factor: {

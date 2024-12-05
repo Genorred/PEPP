@@ -11,13 +11,16 @@ import { Cache } from "cache-manager";
 import { FindAlgorithmPostsInput } from "./dto/find-algorithm-posts.input";
 import { ElasticsearchService } from "@nestjs/elasticsearch";
 import { SearchService } from "../search/search.service";
+import { SearchQueryBuilderService } from "../search/searchQueryBuilder";
+import { ElasticPost } from "../search/entities/elastic_post.entity";
+import { PreferencesService } from "./preferences.service";
 
 @Injectable()
 export class PostsService {
   constructor(private readonly prismaService: PrismaService,
               private readonly topicsRepository: TopicsRepository,
-              @Inject(CACHE_MANAGER) private cacheManager: Cache,
-              private readonly searchService: SearchService) {
+              private readonly searchService: SearchService,
+              private readonly preferencesService: PreferencesService) {
   }
 
   async create(createPostInput: CreatePostInputService) {
@@ -29,10 +32,10 @@ export class PostsService {
         ...this.topicsRepository.connectOrCreateTopics(topics, subTopics)
       }
     });
-    if(isPublished) {
-      void this.searchService.indexPost(post)
+    if (isPublished) {
+      void this.searchService.indexPost(post);
     }
-    return post
+    return post;
   }
 
   async createVersion(createVersionPostInput: CreateVersionPostInputService) {
@@ -51,7 +54,7 @@ export class PostsService {
             ...this.topicsRepository.connectOrCreateTopics(topics, subTopics)
           }
         });
-        void this.searchService.updatePost(post)
+        void this.searchService.updatePost(post);
 
         return this.prismaService.post.create({
           data: {
@@ -183,47 +186,21 @@ export class PostsService {
     return this.prismaService.post.delete({ where: { id } });
   }
 
-  async algoPosts({ ratingDesc, createdAtDesc, cursorId, topics, subTopics }: FindAlgorithmPostsInput) {
-    const key = new URLSearchParams();
-    key.set("rating", ratingDesc ? "desc" : "asc");
-    key.set("createdAt", createdAtDesc ? "desc" : "asc");
-    if (cursorId)
-      key.set("cursorId", cursorId.toString());
-    if (topics)
-      key.set("topics", JSON.stringify(topics));
-    if (subTopics)
-      key.set("topics", JSON.stringify(subTopics));
-
-    const postsCached = await this.cacheManager.get(key.toString());
-    console.log(postsCached);
-    if (postsCached)
-      return postsCached;
-
-    const posts = await this.prismaService.post.findMany({
-      orderBy: [
-        {
-          createdAt: "asc"
-        },
-        {
-          rating: "asc"
-        }, {
-          updatedAt: "desc"
-        }
-      ],
-      cursor: (cursorId && { id: cursorId }),
-      include: {
-        topics: true,
-        subTopics: true,
-        _count: true
-      },
-      where: {
-        isPublished: true
-      }
+  async recommendations(recommendationsInput: FindAlgorithmPostsInput & { userId: number }) {
+    const { userId, page, ...data  } = recommendationsInput;
+    const { dislikedPosts, likedPosts, recentlyShowedPosts } = await this.preferencesService.get(userId);
+    const response = await this.searchService.search({
+      ...data,
+      page,
+      likedPosts,
+      dislikedPosts,
+      recentlyShowedPosts
     });
-    void this.cacheManager.set(key.toString(), posts, 15000);
-    console.log(posts);
-    return posts;
+    void this.preferencesService.setRecentlyShowed(userId, page, response.data, recentlyShowedPosts)
+    return response;
   }
+
+
 
 // removeMany(removeManyPostInput: PartialPostInput) {
 //   return this.prismaService.post.deleteMany({ where: removeManyPostInput });

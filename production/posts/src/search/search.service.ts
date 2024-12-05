@@ -38,12 +38,13 @@ export class SearchService {
       // map draft children
       const text = this.dbToEs(body);
 
+      console.log('createdAt', data.createdAt);
       return await this.esService.index({
         index,
         id: id.toString(),
         document: {
           ...data,
-          text
+          text,
         } as ElasticPost
       });
     } catch (err) {
@@ -71,16 +72,19 @@ export class SearchService {
   }
   public async search(searchParam: SearchDto) {
     try {
-      const pageSize = 10
+      const pageSize = 20
       const { hits: parentHits } = await this.esService.search<ElasticPost>({
         index,
+        sort: this.builderService.sortSearchQuery(searchParam),
         query: this.builderService.buildSearchQuery(searchParam),
         from: searchParam.page ? searchParam.page * pageSize : 0,
-        size: 50
+        size: 80
       });
       const totalCount = parentHits.total;
       const hits = parentHits.hits;
-      const data = hits.map((item) => item._source);
+      const data = hits.map((item) => (
+        {...item._source, id: Number(item._id)}
+      ));
       return {
         totalCount,
         data

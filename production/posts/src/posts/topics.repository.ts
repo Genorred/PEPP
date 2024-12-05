@@ -1,12 +1,14 @@
 import { Injectable } from "@nestjs/common";
 
+// NO MORE THAN 5 TOPICS
+const biggestIndex = 4
 @Injectable()
 export class TopicsRepository {
 
   connectOrCreateTopics(topics?: string[], subTopics?: string[]) {
     return {
       topics: (topics ? {
-        connectOrCreate: topics.map(title => ({
+        connectOrCreate: topics.slice(0, biggestIndex).map(title => ({
           where: {
             title
           },
@@ -16,7 +18,7 @@ export class TopicsRepository {
         }))
       } : {}),
       subTopics: (subTopics ? {
-        connectOrCreate: subTopics.map(title => ({
+        connectOrCreate: subTopics.slice(0, biggestIndex).map(title => ({
           where: {
             title
           },

@@ -22,6 +22,9 @@ export const Mapping: MappingTypeMapping = {
     },
     rating: {
       type: 'float'
+    },
+    createdAt: {
+      type: 'date'
     }
   }
 }

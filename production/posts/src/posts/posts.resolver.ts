@@ -45,8 +45,8 @@ export class PostsResolver {
   }
 
   @Query(() => [Post], { name: "algoPosts" })
-  findAlgorithmPosts(@Args('findAlgorithmInput') findAlgorithmInput: FindAlgorithmPostsInput) {
-    return this.postsService.algoPosts(findAlgorithmInput);
+  findAlgorithmPosts(@Args('findAlgorithmInput') findAlgorithmInput: FindAlgorithmPostsInput, @CurrentUser() user: JwtPayload) {
+    return this.postsService.recommendations({...findAlgorithmInput, userId: user.sub});
   }
 
   @Query(() => Post, { name: "post" })

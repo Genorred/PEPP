@@ -9,5 +9,6 @@ export const hosts = {
   usersDb: 'users_db',
   gateway: 'gateway',
   client: 'client',
-  posts_elastic_db: 'posts_elastic_db'
+  posts_elastic_db: 'posts_elastic_db',
+  redis: 'redis',
 } as const
