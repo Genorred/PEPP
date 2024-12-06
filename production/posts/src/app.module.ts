@@ -25,6 +25,7 @@ import { hosts } from "@_config/hosts";
         socket: {
           host: hosts.redis,
           port: 6379,
+          passphrase: configService.password,
         },
       });
       return {

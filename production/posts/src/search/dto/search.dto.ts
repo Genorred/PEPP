@@ -1,7 +1,5 @@
 import { FindAlgorithmPostsInput } from "../../posts/dto/find-algorithm-posts.input";
+import { PreferencesService } from "../../posts/preferences.service";
 
-export interface SearchDto extends FindAlgorithmPostsInput {
-  likedPosts?: number[]
-  dislikedPosts?: number[]
-  recentlyShowedPosts?: number[]
-}
+export type SearchDto = FindAlgorithmPostsInput &
+  Awaited<ReturnType<PreferencesService['get']>>

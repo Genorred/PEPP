@@ -20,6 +20,4 @@ export class FindAlgorithmPostsInput {
   searchValue?: string;
   @Field(() => [String], {nullable: true})
   topics?: string[]
-  @Field(() => [String], {nullable: true})
-  subTopics?: string[]
 }

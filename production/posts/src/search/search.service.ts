@@ -34,18 +34,13 @@ export class SearchService {
 
   public async indexPost(payload: IndexDto) {
     try {
-      const {id, body, ...data} = payload;
+      const {id, ...data} = payload;
       // map draft children
-      const text = this.dbToEs(body);
-
       console.log('createdAt', data.createdAt);
       return await this.esService.index({
         index,
         id: id.toString(),
-        document: {
-          ...data,
-          text,
-        } as ElasticPost
+        document: data as ElasticPost
       });
     } catch (err) {
       throw err;
@@ -53,17 +48,12 @@ export class SearchService {
   }
   public async updatePost(payload: IndexDto) {
     try {
-      const {id, body, ...data} = payload;
+      const {id, ...data} = payload;
       // map draft children
-      const text = this.dbToEs(body);
-
       return await this.esService.update({
           index,
           id: id.toString(),
-          ...{
-            ...data,
-            text
-          } as ElasticPost
+          ...data as ElasticPost
         }
       );
     } catch (err) {
@@ -83,7 +73,7 @@ export class SearchService {
       const totalCount = parentHits.total;
       const hits = parentHits.hits;
       const data = hits.map((item) => (
-        {...item._source, id: Number(item._id)}
+        {...item._source, id: item._id}
       ));
       return {
         totalCount,
@@ -92,11 +82,5 @@ export class SearchService {
     } catch (err) {
       throw err;
     }
-  }
-
-  public dbToEs (body: any[]) {
-    return body.slice(2)
-      .map((block) => block.children.text)
-      .join(" ");
   }
 }

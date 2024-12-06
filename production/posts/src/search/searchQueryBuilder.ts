@@ -8,28 +8,30 @@ export class SearchQueryBuilderService {
   constructor() {
   }
 
-  public sortSearchQuery (searchParams: SearchDto) {
+  public sortSearchQuery(searchParams: SearchDto) {
     const { rating, createdAt } = searchParams;
-    return [{rating}, {createdAt}] as Sort;
+    return [{ rating }, { createdAt }] as Sort;
   }
 
-  public buildSearchQuery(searchParams: SearchDto) {
+  public buildSearchQuery(searchParams: Omit<SearchDto, "page" | "createdAt" | "rating">) {
     try {
       const {
-        likedPosts, dislikedPosts, searchValue, topics, subTopics
+        likedPosts, dislikedPosts, searchValue,
+        topics, recentlyShowedPosts, pressedPosts
       } = searchParams;
       let query: QueryDslQueryContainer["bool"][] = [] as QueryDslQueryContainer["bool"][];
 
-      if (likedPosts) {
+      if (likedPosts.length || pressedPosts.length) {
         query.push(
           {
-            must: {
+            should: {
               more_like_this: {
-                like: likedPosts.map(postId => ({
-                  _id: postId.toString()
+                fields: ["topics", "subTopics"],
+                like: [...likedPosts, ...pressedPosts].map(post => ({
+                  _id: post // extra field toString()
                 })),
-                unlike: (dislikedPosts && dislikedPosts.map(postId => ({
-                  _id: postId.toString()
+                unlike: (dislikedPosts && dislikedPosts.map(post => ({
+                  _id: post
                 })))
               }
             }
@@ -41,7 +43,7 @@ export class SearchQueryBuilderService {
         query.push({
           must: {
             multi_match: {
-              fields: ["title", "description", "text"] as ElasticKeys,
+              fields: ["title", "description"] as ElasticKeys,
               query: searchValue,
               tie_breaker: 0.3
             }
@@ -49,13 +51,12 @@ export class SearchQueryBuilderService {
         });
       }
 
-      const topicsArray = [...topics, ...subTopics];
-      if (topicsArray.length > 0) {
+      if (topics.length) {
         // one match is must and others are useful
         query.push({
           must: {
             bool: {
-              should: topicsArray.map(topic => ({
+              should: topics.map(topic => ({
                   bool: {
                     should: [
                       {
@@ -82,6 +83,7 @@ export class SearchQueryBuilderService {
           query: (query.length > 1 ? {
             bool: query
           } : undefined),
+          boost_mode: "multiply",
           functions: [
             {
               field_value_factor: {
@@ -90,7 +92,16 @@ export class SearchQueryBuilderService {
                 modifier: "none",
                 missing: 2.5
               }
-            }
+            },
+            ...recentlyShowedPosts.map(([_id, index]) => ({
+                filter: {
+                  terms: {
+                    _id
+                  }
+                },
+                weight: Number(index) * 0.95
+              }
+            ))
           ]
         }
       } as QueryDslQueryContainer;

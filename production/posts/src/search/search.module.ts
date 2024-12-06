@@ -22,6 +22,7 @@ import { hosts } from "@_config/hosts";
       },
     })
   })],
+  exports: [SearchService],
   providers: [SearchService, SearchQueryBuilderService]
 })
 export class SearchModule implements OnModuleInit {
