@@ -2,4 +2,4 @@ import { FindAlgorithmPostsInput } from "../../posts/dto/find-algorithm-posts.in
 import { PreferencesRepository } from "../../../domain/repositories/elastic/preferences.repository";
 
 export type SearchDto = FindAlgorithmPostsInput &
-  Awaited<ReturnType<PreferencesRepository['get']>>
+  Awaited<ReturnType<PreferencesRepository["get"]>>

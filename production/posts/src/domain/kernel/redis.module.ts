@@ -5,13 +5,13 @@ import { ConfigModule, ConfigType } from "@nestjs/config";
 import redisConfig from "../../infrastructure/config/redis";
 import { hosts } from "@_config/hosts";
 
-export const REDIS_CLIENT = 'REDIS_CLIENT'
+export const REDIS_CLIENT = "REDIS_CLIENT";
 export const RedisClientProvider: Provider = {
   provide: REDIS_CLIENT,
   useFactory: (cacheManager: Cache & { store: { client: RedisClientConnectionType } }) => {
     return cacheManager.store.client;
   },
-  inject: [CACHE_MANAGER],
+  inject: [CACHE_MANAGER]
 };
 
 @Global()
@@ -23,7 +23,7 @@ export const RedisClientProvider: Provider = {
       const redisURI = `redis://:${configService.password}@${hosts.redis}:6379`; // Replace with your Redis URI
       const keyvRedis = new KeyvRedis(redisURI);
       const keyv = new Keyv({ store: keyvRedis });
-      await keyvRedis.client.connect()
+      await keyvRedis.client.connect();
 
       return {
 
@@ -33,9 +33,10 @@ export const RedisClientProvider: Provider = {
         }
       };
     },
-    inject: [redisConfig.KEY],
+    inject: [redisConfig.KEY]
   })],
   providers: [RedisClientProvider],
-  exports: [REDIS_CLIENT],
+  exports: [REDIS_CLIENT]
 })
-export class RedisModule {}
+export class RedisModule {
+}

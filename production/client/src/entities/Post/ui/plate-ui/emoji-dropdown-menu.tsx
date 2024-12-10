@@ -1,26 +1,23 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import {
-  type EmojiDropdownMenuOptions,
-  useEmojiDropdownMenuState,
-} from '@udecode/plate-emoji/react';
-import { Smile } from 'lucide-react';
+import { type EmojiDropdownMenuOptions, useEmojiDropdownMenuState } from "@udecode/plate-emoji/react";
+import { Smile } from "lucide-react";
 
-import { emojiCategoryIcons, emojiSearchIcons } from './emoji-icons';
-import { EmojiPicker } from './emoji-picker';
-import { EmojiToolbarDropdown } from './emoji-toolbar-dropdown';
-import { ToolbarButton } from './toolbar';
+import { emojiCategoryIcons, emojiSearchIcons } from "./emoji-icons";
+import { EmojiPicker } from "./emoji-picker";
+import { EmojiToolbarDropdown } from "./emoji-toolbar-dropdown";
+import { ToolbarButton } from "./toolbar";
 
 type EmojiDropdownMenuProps = {
   options?: EmojiDropdownMenuOptions;
 } & React.ComponentPropsWithoutRef<typeof ToolbarButton>;
 
 export function EmojiDropdownMenu({
-  options,
-  ...props
-}: EmojiDropdownMenuProps) {
+                                    options,
+                                    ...props
+                                  }: EmojiDropdownMenuProps) {
   const { emojiPickerState, isOpen, setIsOpen } =
     useEmojiDropdownMenuState(options);
 
@@ -38,7 +35,7 @@ export function EmojiDropdownMenu({
         {...emojiPickerState}
         icons={{
           categories: emojiCategoryIcons,
-          search: emojiSearchIcons,
+          search: emojiSearchIcons
         }}
         isOpen={isOpen}
         setIsOpen={setIsOpen}

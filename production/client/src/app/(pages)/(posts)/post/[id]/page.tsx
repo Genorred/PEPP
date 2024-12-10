@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
-import { apiClient, serverApiClient, serverBaseUrl } from "@/shared/api/base";
+import { serverApiClient } from "@/shared/api/base";
 import {
-  PostsIdDocument,
   PostDocument,
   PostQuery,
   PostQueryVariables,
-  PostsIdQueryVariables,
-  PostsIdQuery
+  PostsIdDocument,
+  PostsIdQuery,
+  PostsIdQueryVariables
 } from "@/shared/api/graphql/generated";
 import Ssr from "@/app/(pages)/(posts)/post/[id]/ssr";
 
@@ -33,7 +33,7 @@ export async function generateStaticParams() {
       id: String(post.id)
     }));
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
 }
 
@@ -45,9 +45,7 @@ const Page = async ({ params }: {
   const id = Number(params.id);
   const post: PostQuery = await serverApiClient.request(PostDocument, {
     id
-  } as PostQueryVariables, {
-
-  });
+  } as PostQueryVariables, {});
 
   return (
     <Suspense fallback={null}>

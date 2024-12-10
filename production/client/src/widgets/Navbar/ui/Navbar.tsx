@@ -1,23 +1,23 @@
 "use client";
-import * as React from 'react'
-import Link from 'next/link'
-import { Menu } from 'lucide-react'
+import * as React from "react";
+import Link from "next/link";
+import { Menu } from "lucide-react";
 
-import { cn } from '@/shared/lib/utils'
-import { Button } from '@/shared/ui/button'
+import { cn } from "@/shared/lib/utils";
+import { Button } from "@/shared/ui/button";
 
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from '@/shared/ui/navigation-menu'
+  navigationMenuTriggerStyle
+} from "@/shared/ui/navigation-menu";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/shared/ui/sheet";
 import { navPages } from "@/widgets/Navbar/consts";
 import Image from "next/image";
 import Logo from "@/shared/assets/icon.svg";
-import { UserTooltip } from './UserTooltip';
+import { UserTooltip } from "./UserTooltip";
 
 
 function Navbar() {
@@ -42,7 +42,7 @@ function Navbar() {
               {navPages.map((item) => (
                 <Link
                   key={item}
-                 href={'/'+item.toLowerCase()}
+                  href={"/" + item.toLowerCase()}
                   className="block px-2 py-1 text-lg"
                 >
                   {item}
@@ -59,11 +59,11 @@ function Navbar() {
             <NavigationMenuList>
               {navPages.map((item) => (
                 <NavigationMenuItem key={item}>
-                  <Link href={'/'+item.toLowerCase()} legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    {item}
-                  </NavigationMenuLink>
-                </Link>
+                  <Link href={"/" + item.toLowerCase()} legacyBehavior passHref>
+                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                      {item}
+                    </NavigationMenuLink>
+                  </Link>
                 </NavigationMenuItem>
               ))}
             </NavigationMenuList>
@@ -97,7 +97,7 @@ const ListItem = React.forwardRef<
         </a>
       </NavigationMenuLink>
     </li>
-  )
-})
-ListItem.displayName = "ListItem"
+  );
+});
+ListItem.displayName = "ListItem";
 export default Navbar;

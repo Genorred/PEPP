@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
-  PostDocument, PostQueryVariables,
+  PostDocument,
+  PostQueryVariables,
   PostsIdDocument,
   PostsIdQuery,
-  PostsIdQueryVariables,
+  PostsIdQueryVariables
 } from "@/shared/api/graphql/generated";
 import { apiClient } from "@/shared/api/base";
 import { PostQuery } from "@/shared/api/graphql/graphql";
@@ -20,6 +21,7 @@ export async function generateStaticParams() {
     version: post.version
   }));
 }
+
 const Page = async ({ params }: {
   params: {
     id: string
@@ -33,7 +35,7 @@ const Page = async ({ params }: {
     version
   } as PostQueryVariables);
 
-  return <ViewPost post={post} id={id} />
+  return <ViewPost post={post} id={id} />;
 };
 
 export default Page;

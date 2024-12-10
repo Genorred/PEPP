@@ -4,20 +4,20 @@ import { hosts } from "@_config/hosts";
 
 export const clientBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/graphql";
 export const apiClient = new GraphQLClient(clientBaseUrl, {
-credentials: 'include',
-})
-export const serverBaseUrl =  `http://${hosts.gateway}:8080/graphql`;
+  credentials: "include"
+});
+export const serverBaseUrl = `http://${hosts.gateway}:8080/graphql`;
 export const serverApiClient = new GraphQLClient(serverBaseUrl, {
-  credentials: 'include',
-})
+  credentials: "include"
+});
 export const queryClient = new QueryClient({
-defaultOptions: {
-  queries: {
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false
+    }
   }
-}
 });
 export const baseFetch = (url: string, init?: RequestInit) => {
-    return fetch(clientBaseUrl + "/" + url, init).then((response) => response.json());
+  return fetch(clientBaseUrl + "/" + url, init).then((response) => response.json());
 };

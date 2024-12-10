@@ -1,29 +1,22 @@
-'use client';
+"use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
-import {
-  type WithRequiredKey,
-  isSelectionExpanded,
-} from '@udecode/plate-common';
-import {
-  useEditorSelector,
-  useElement,
-  useRemoveNodeButton,
-} from '@udecode/plate-common/react';
+import { isSelectionExpanded, type WithRequiredKey } from "@udecode/plate-common";
+import { useEditorSelector, useElement, useRemoveNodeButton } from "@udecode/plate-common/react";
 import {
   FloatingMedia as FloatingMediaPrimitive,
   floatingMediaActions,
-  useFloatingMediaSelectors,
-} from '@udecode/plate-media/react';
-import { Link, Trash2Icon } from 'lucide-react';
-import { useReadOnly, useSelected } from 'slate-react';
+  useFloatingMediaSelectors
+} from "@udecode/plate-media/react";
+import { Link, Trash2Icon } from "lucide-react";
+import { useReadOnly, useSelected } from "slate-react";
 
-import { Button, buttonVariants } from './button';
-import { CaptionButton } from './caption';
-import { inputVariants } from './input';
-import { Popover, PopoverAnchor, PopoverContent } from './popover';
-import { Separator } from './separator';
+import { Button, buttonVariants } from "./button";
+import { CaptionButton } from "./caption";
+import { inputVariants } from "./input";
+import { Popover, PopoverAnchor, PopoverContent } from "./popover";
+import { Separator } from "./separator";
 
 export interface MediaPopoverProps {
   children: React.ReactNode;
@@ -69,7 +62,7 @@ export function MediaPopover({ children, plugin }: MediaPopoverProps) {
               </div>
 
               <FloatingMediaPrimitive.UrlInput
-                className={inputVariants({ h: 'sm', variant: 'ghost' })}
+                className={inputVariants({ h: "sm", variant: "ghost" })}
                 placeholder="Paste the embed link..."
                 options={{ plugin }}
               />
@@ -78,7 +71,7 @@ export function MediaPopover({ children, plugin }: MediaPopoverProps) {
         ) : (
           <div className="box-content flex items-center">
             <FloatingMediaPrimitive.EditButton
-              className={buttonVariants({ size: 'sm', variant: 'ghost' })}
+              className={buttonVariants({ size: "sm", variant: "ghost" })}
             >
               Edit link
             </FloatingMediaPrimitive.EditButton>

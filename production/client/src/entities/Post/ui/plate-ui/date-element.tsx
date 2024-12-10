@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { cn, withRef } from '@udecode/cn';
-import { setNodes } from '@udecode/plate-common';
-import { findNodePath } from '@udecode/plate-common/react';
+import { cn, withRef } from "@udecode/cn";
+import { setNodes } from "@udecode/plate-common";
+import { findNodePath } from "@udecode/plate-common/react";
 
-import { Calendar } from './calendar';
-import { PlateElement } from './plate-element';
-import { Popover, PopoverContent, PopoverTrigger } from './popover';
+import { Calendar } from "./calendar";
+import { PlateElement } from "./plate-element";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 export const DateElement = withRef<typeof PlateElement>(
   ({ children, className, ...props }, ref) => {
@@ -15,7 +15,7 @@ export const DateElement = withRef<typeof PlateElement>(
     return (
       <PlateElement
         ref={ref}
-        className={cn('inline-block', className)}
+        className={cn("inline-block", className)}
         contentEditable={false}
         {...props}
       >
@@ -23,7 +23,7 @@ export const DateElement = withRef<typeof PlateElement>(
           <PopoverTrigger asChild>
             <span
               className={cn(
-                'w-fit cursor-pointer rounded-sm bg-muted px-1 text-muted-foreground'
+                "w-fit cursor-pointer rounded-sm bg-muted px-1 text-muted-foreground"
               )}
               contentEditable={false}
             >
@@ -45,14 +45,14 @@ export const DateElement = withRef<typeof PlateElement>(
                       today.setDate(today.getDate() + 2)
                     ).toDateString() === elementDate.toDateString();
 
-                  if (isToday) return 'Today';
-                  if (isYesterday) return 'Yesterday';
-                  if (isTomorrow) return 'Tomorrow';
+                  if (isToday) return "Today";
+                  if (isYesterday) return "Yesterday";
+                  if (isTomorrow) return "Tomorrow";
 
                   return elementDate.toLocaleDateString(undefined, {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric"
                   });
                 })()
               ) : (

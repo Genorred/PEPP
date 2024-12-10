@@ -1,9 +1,9 @@
-import React, { useId, useState } from "react";
+import React from "react";
 import { Badge } from "@/shared/ui/badge";
-import { Card, CardContent, CardFooter, CardHeader } from "@/shared/ui/card";
+import { Card, CardContent, CardFooter } from "@/shared/ui/card";
 import { MessageCircle } from "lucide-react";
 import Link from "next/link";
-import { GeneralPostI, Review } from "@/entities/Post/model";
+import { Review } from "@/entities/Post/model";
 import Rating from "@/entities/Post/ui/Rating";
 import PostHeader from "@/entities/Post/ui/PostHeader";
 import UserLink from "@/entities/Post/ui/UserLink";
@@ -50,7 +50,7 @@ const PostCard = ({
   const url = `/post/${id}`;
   return (
     <Card id={`${id}`} className="w-full shrink grow basis-[min-content] overflow-hidden relative min-w-72">
-      <Link href={url} className='before:inset-0 before:absolute'>
+      <Link href={url} className="before:inset-0 before:absolute">
         <PostHeader img={img} title={title} />
       </Link>
       <CardContent className="pt-4">

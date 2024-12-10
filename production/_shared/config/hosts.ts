@@ -3,12 +3,12 @@ type KeyEqualsValue = {
 };
 
 export const hosts = {
-  posts: 'posts',
-  users: 'users',
-  postsDb: 'posts_db',
-  usersDb: 'users_db',
-  gateway: 'gateway',
-  client: 'client',
-  es01: 'es01',
-  redis: 'redis',
-} as const
+  posts: "posts",
+  users: "users",
+  postsDb: "posts_db",
+  usersDb: "users_db",
+  gateway: "gateway",
+  client: "client",
+  es01: "es01",
+  redis: "redis"
+} as const;

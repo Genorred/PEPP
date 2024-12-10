@@ -1,54 +1,54 @@
-'use client'
+"use client";
 
-import * as React from 'react'
-import { X } from 'lucide-react'
-import { useController, Control } from 'react-hook-form'
-import { Badge } from '@/shared/ui/badge'
-import { Button } from '@/shared/ui/button'
-import { Input } from '@/shared/ui/input'
+import * as React from "react";
+import { X } from "lucide-react";
+import { Control, useController } from "react-hook-form";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
 
 interface TagsInputProps {
-  name: string
-  control: Control<any>
-  placeholder?: string
+  name: string;
+  control: Control<any>;
+  placeholder?: string;
 }
 
-export default function TagsInput({ name, control, placeholder = 'Add a tag...' }: TagsInputProps) {
+export default function TagsInput({ name, control, placeholder = "Add a tag..." }: TagsInputProps) {
   const {
     field: { onChange, value },
-    fieldState: { error },
+    fieldState: { error }
   } = useController({
     name,
     control,
-    defaultValue: [],
-  })
+    defaultValue: []
+  });
 
-  const [inputValue, setInputValue] = React.useState('')
-  const inputRef = React.useRef<HTMLInputElement>(null)
+  const [inputValue, setInputValue] = React.useState("");
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value)
-  }
+    setInputValue(e.target.value);
+  };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inputValue.trim() !== '') {
-      e.preventDefault()
+    if (e.key === "Enter" && inputValue.trim() !== "") {
+      e.preventDefault();
       if (!value.includes(inputValue.trim())) {
-        onChange([...value, inputValue.trim()])
-        setInputValue('')
+        onChange([...value, inputValue.trim()]);
+        setInputValue("");
       }
-    } else if (e.key === 'Backspace' && inputValue === '' && value.length > 0) {
-      onChange(value.slice(0, -1))
+    } else if (e.key === "Backspace" && inputValue === "" && value.length > 0) {
+      onChange(value.slice(0, -1));
     }
-  }
+  };
 
   const removeTag = (tagToRemove: string) => {
-    onChange(value.filter((tag: string) => tag !== tagToRemove))
-  }
+    onChange(value.filter((tag: string) => tag !== tagToRemove));
+  };
 
   const handleWrapperClick = () => {
-    inputRef.current?.focus()
-  }
+    inputRef.current?.focus();
+  };
 
   return (
     <div className="space-y-2">
@@ -73,7 +73,7 @@ export default function TagsInput({ name, control, placeholder = 'Add a tag...' 
         <Input
           ref={inputRef}
           type="text"
-          placeholder={value.length === 0 ? placeholder : ''}
+          placeholder={value.length === 0 ? placeholder : ""}
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
@@ -82,5 +82,5 @@ export default function TagsInput({ name, control, placeholder = 'Add a tag...' 
       </div>
       {error && <p className="text-sm text-destructive">{error.message}</p>}
     </div>
-  )
+  );
 }

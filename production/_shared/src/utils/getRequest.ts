@@ -5,4 +5,5 @@ function getRequest(context: ExecutionContext) {
   const ctx = GqlExecutionContext.create(context);
   return ctx.getContext().req;
 }
-export default getRequest
+
+export default getRequest;

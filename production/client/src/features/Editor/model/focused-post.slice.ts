@@ -1,11 +1,9 @@
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CreatePostMutationVariables, User } from "@/shared/api/graphql/generated";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CreatePostMutationVariables } from "@/shared/api/graphql/generated";
 import { rootReducer } from "@/shared/lib/redux";
 import { PostKeys } from "@/features/Editor/model/model";
-import { PostQuery } from "@/shared/api/graphql/graphql";
-import { QueryKey } from "@tanstack/react-query";
 
-export type mutatedData = Partial<Pick<CreatePostMutationVariables, 'body' | 'title' | 'topics' | 'subTopics'>>
+export type mutatedData = Partial<Pick<CreatePostMutationVariables, "body" | "title" | "topics" | "subTopics">>
 type State = {
   mutatedData?: mutatedData | null
   initialDataQueryKey?: PostKeys | null
@@ -55,7 +53,7 @@ export const focusedPostSlice = createSlice({
       state.initialDataQueryKey = action.payload;
     },
     spreadMutatedData: (state, action: PayloadAction<mutatedData>) => {
-      state.mutatedData = {...state.mutatedData, ...action.payload};
+      state.mutatedData = { ...state.mutatedData, ...action.payload };
     }
   }
 }).injectInto(rootReducer);

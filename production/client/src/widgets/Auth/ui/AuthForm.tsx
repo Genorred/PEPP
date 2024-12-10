@@ -10,10 +10,10 @@ const AuthForm = ({ onSubmit, children }: {
   const submit = (...args: any[]) => {
     onSubmit(...args);
     // router.push("/");
-  }
+  };
   return (
     <form onSubmit={submit}>
-      <div className='flex gap-2'>
+      <div className="flex gap-2">
         {children}
       </div>
     </form>

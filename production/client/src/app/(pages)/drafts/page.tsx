@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 import DraftsList from "@/app/(pages)/drafts/ui/DraftsList";
 import Link from "next/link";
 import { Card } from "@/shared/ui/card";

@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import fs from "node:fs";
 
 const databaseUrl = process.env.REACT_APP_DATABASE_URL;
-fs.writeFileSync('.env', `DATABASE_URL=${databaseUrl}`);
+fs.writeFileSync(".env", `DATABASE_URL=${databaseUrl}`);

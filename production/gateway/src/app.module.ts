@@ -1,10 +1,5 @@
-import { ConfigModule, ConfigService, ConfigType } from "@nestjs/config";
-import {
-  ApolloFederationDriver,
-  ApolloFederationDriverConfig,
-  ApolloGatewayDriver,
-  ApolloGatewayDriverConfig
-} from "@nestjs/apollo";
+import { ConfigModule, ConfigType } from "@nestjs/config";
+import { ApolloGatewayDriver, ApolloGatewayDriverConfig } from "@nestjs/apollo";
 import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { IntrospectAndCompose, RemoteGraphQLDataSource } from "@apollo/gateway";
@@ -22,7 +17,7 @@ import microservicesConfig from "./config/microservicesConfig";
       cache: true,
       isGlobal: true
       // envFilePath: '../.env.local.local'
-    }),JwtModule.registerAsync({
+    }), JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [authConfig.KEY],
       useFactory: async (configService: ConfigType<typeof authConfig>) => ({

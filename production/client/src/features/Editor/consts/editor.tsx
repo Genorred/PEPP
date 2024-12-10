@@ -234,4 +234,4 @@ export const editor = createPlateEditor({
     }
   ]
 });
-export const {tf: editorTransformation} = editor
+export const { tf: editorTransformation } = editor;

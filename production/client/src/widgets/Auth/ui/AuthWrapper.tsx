@@ -4,7 +4,8 @@ import GoogleIcon from "@/shared/assets/googleIcon.svg";
 import Image from "next/image";
 import Container from "@/shared/ui/Container";
 import { Button } from "@/shared/ui/button";
-const googleAuthUrl = process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL as string
+
+const googleAuthUrl = process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL as string;
 console.log(googleAuthUrl);
 const AuthWrapper = ({ children, returnUrl }: {
   children: React.ReactNode,
@@ -13,7 +14,7 @@ const AuthWrapper = ({ children, returnUrl }: {
   const router = useRouter();
 
   function SignWithGoogle() {
-    const url = new URL(googleAuthUrl || '');
+    const url = new URL(googleAuthUrl || "");
     if (returnUrl)
       url.searchParams.set("returnUrl", returnUrl);
     router.push(url.href);
@@ -21,13 +22,13 @@ const AuthWrapper = ({ children, returnUrl }: {
 
   return (
     <Container>
-      <h1 className='bold mb-3 mt-3'>
+      <h1 className="bold mb-3 mt-3">
         Join PEPP
       </h1>
       {children}
-      <div className='flex mt-5'>
+      <div className="flex mt-5">
         <Button onClick={SignWithGoogle}>
-          <div className='flex justify-center items-center gap-2'>
+          <div className="flex justify-center items-center gap-2">
             <Image src={GoogleIcon.src} alt={"google icon"} width={32} height={32} />
             <h3>
               Sign in With Google
@@ -35,9 +36,9 @@ const AuthWrapper = ({ children, returnUrl }: {
           </div>
         </Button>
       </div>
-</Container>
-)
-  ;
+    </Container>
+  )
+    ;
 };
 
 export default AuthWrapper;

@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import useSavePost from "@/features/Editor/lib/useSavePost";
-import { PostQuery } from "@/shared/api/graphql/graphql";
 import { buttonNames } from "@/features/Editor/consts/buttonNames";
 import TagsInput from "@/shared/ui/TagsInput";
 import { useSelector } from "react-redux";
@@ -20,12 +19,12 @@ const formSchema = z.object({
   topics: z.array(z.string().min(2, {
     message: "Topic must be at least 2 characters."
   })).max(5, {
-    message: 'No more than 5 topics.'
+    message: "No more than 5 topics."
   }),
   subTopics: z.array(z.string().min(2, {
     message: "Topic must be at least 2 characters."
   })).max(5, {
-    message: 'No more than 5 subTopics.'
+    message: "No more than 5 subTopics."
   })
 });
 export type HandleWorkFormT = z.infer<typeof formSchema>
@@ -42,10 +41,10 @@ const SaveWork = () => {
   const data = useSelector(focusedPostSlice.selectors.all);
   const initialData = useFetchPostQuery(data.initialDataQueryKey);
   useEffect(() => {
-    if(initialData) {
-      form.setValue('title', initialData.title)
-      form.setValue('topics', initialData.topics?.map(topic => topic.title) ?? [])
-      form.setValue('subTopics', initialData.subTopics?.map(topic => topic.title) ?? [])
+    if (initialData) {
+      form.setValue("title", initialData.title);
+      form.setValue("topics", initialData.topics?.map(topic => topic.title) ?? []);
+      form.setValue("subTopics", initialData.subTopics?.map(topic => topic.title) ?? []);
     }
   }, []);
   return (

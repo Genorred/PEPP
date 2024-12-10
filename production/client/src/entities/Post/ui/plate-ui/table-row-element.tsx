@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import { cn, withRef } from '@udecode/cn';
+import { cn, withRef } from "@udecode/cn";
 
-import { PlateElement } from './plate-element';
+import { PlateElement } from "./plate-element";
 
 export const TableRowElement = withRef<
   typeof PlateElement,
@@ -16,7 +16,7 @@ export const TableRowElement = withRef<
     <PlateElement
       ref={ref}
       as="tr"
-      className={cn('h-full', hideBorder && 'border-none')}
+      className={cn("h-full", hideBorder && "border-none")}
       {...props}
     >
       {children}

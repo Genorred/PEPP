@@ -1,38 +1,32 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import type { TEditor } from '@udecode/plate-common';
-import type { DropTargetMonitor } from 'react-dnd';
+import type { TEditor } from "@udecode/plate-common";
+import type { DropTargetMonitor } from "react-dnd";
 
-import { cn, withRef } from '@udecode/cn';
+import { cn, withRef } from "@udecode/cn";
 import {
-  type PlateElementProps,
   MemoizedChildren,
+  type PlateElementProps,
   useEditorPlugin,
   useEditorRef,
-  withHOC,
-} from '@udecode/plate-common/react';
+  withHOC
+} from "@udecode/plate-common/react";
 import {
-  type DragItemNode,
   DraggableProvider,
+  type DragItemNode,
   useDraggable,
   useDraggableGutter,
   useDraggableState,
-  useDropLine,
-} from '@udecode/plate-dnd';
-import { BlockSelectionPlugin } from '@udecode/plate-selection/react';
-import { GripVertical } from 'lucide-react';
+  useDropLine
+} from "@udecode/plate-dnd";
+import { BlockSelectionPlugin } from "@udecode/plate-selection/react";
+import { GripVertical } from "lucide-react";
 
-import { useMounted } from '@/shared/lib/hooks/use-mounted';
+import { useMounted } from "@/shared/lib/hooks/use-mounted";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipPortal,
-  TooltipProvider,
-  TooltipTrigger,
-} from './tooltip';
+import { Tooltip, TooltipContent, TooltipPortal, TooltipProvider, TooltipTrigger } from "./tooltip";
 
 export interface DraggableProps extends PlateElementProps {
   /**
@@ -53,7 +47,7 @@ export interface DraggableProps extends PlateElementProps {
 
 export const Draggable = withHOC(
   DraggableProvider,
-  withRef<'div', DraggableProps>(
+  withRef<"div", DraggableProps>(
     ({ className, onDropHandler, ...props }, ref) => {
       const { children, element } = props;
 
@@ -66,18 +60,18 @@ export const Draggable = withHOC(
         <div
           ref={ref}
           className={cn(
-            'relative',
-            isDragging && 'opacity-50',
-            'group',
+            "relative",
+            isDragging && "opacity-50",
+            "group",
             className
           )}
         >
           <Gutter>
-            <div className={cn('slate-blockToolbarWrapper', 'flex h-[1.5em]')}>
+            <div className={cn("slate-blockToolbarWrapper", "flex h-[1.5em]")}>
               <div
                 className={cn(
-                  'slate-blockToolbar',
-                  'pointer-events-auto mr-1 flex items-center'
+                  "slate-blockToolbar",
+                  "pointer-events-auto mr-1 flex items-center"
                 )}
               >
                 <div
@@ -107,16 +101,16 @@ const Gutter = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ children, className, ...props }, ref) => {
   const { useOption } = useEditorPlugin(BlockSelectionPlugin);
-  const isSelectionAreaVisible = useOption('isSelectionAreaVisible');
+  const isSelectionAreaVisible = useOption("isSelectionAreaVisible");
   const gutter = useDraggableGutter();
 
   return (
     <div
       ref={ref}
       className={cn(
-        'slate-gutterLeft',
-        'absolute -top-px z-50 flex h-full -translate-x-full cursor-text opacity-0 hover:opacity-100 group-hover:opacity-100',
-        isSelectionAreaVisible && 'hidden',
+        "slate-gutterLeft",
+        "absolute -top-px z-50 flex h-full -translate-x-full cursor-text opacity-0 hover:opacity-100 group-hover:opacity-100",
+        isSelectionAreaVisible && "hidden",
         className
       )}
       {...props}
@@ -168,11 +162,11 @@ const DropLine = React.memo(
           {...props}
           {...state.props}
           className={cn(
-            'slate-dropLine',
-            'absolute inset-x-0 h-0.5 opacity-100 transition-opacity',
-            'bg-brand/50',
-            state.dropLine === 'top' && '-top-px',
-            state.dropLine === 'bottom' && '-bottom-px',
+            "slate-dropLine",
+            "absolute inset-x-0 h-0.5 opacity-100 transition-opacity",
+            "bg-brand/50",
+            state.dropLine === "top" && "-top-px",
+            state.dropLine === "bottom" && "-bottom-px",
             className
           )}
         >

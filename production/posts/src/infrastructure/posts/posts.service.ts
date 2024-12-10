@@ -1,18 +1,13 @@
-import { ForbiddenException, Inject, Injectable } from "@nestjs/common";
-import { CreatePostInput, CreatePostInputService } from "./dto/create-post.input";
-import { UpdatePostInput, UpdatePostInputService } from "./dto/update-post.input";
+import { ForbiddenException, Injectable } from "@nestjs/common";
+import { CreatePostInputService } from "./dto/create-post.input";
+import { UpdatePostInputService } from "./dto/update-post.input";
 import { PrismaService } from "../../domain/kernel/prisma/prisma.service";
 import { PartialPostInput } from "./dto/partial-post.input";
 import { CreateVersionPostInputService } from "./dto/create-version-post.input";
 import { TopicsRepository } from "../../domain/repositories/db/topics.repository";
 import { FindPostInput } from "./dto/find-post.input";
-import { CACHE_MANAGER } from "@nestjs/cache-manager";
-import { Cache } from "cache-manager";
 import { FindAlgorithmPostsInput } from "./dto/find-algorithm-posts.input";
-import { ElasticsearchService } from "@nestjs/elasticsearch";
 import { SearchService } from "../search/search.service";
-import { SearchQueryBuilderService } from "../search/searchQueryBuilder";
-import { ElasticPost } from "../search/entities/elastic_post.entity";
 import { PreferencesRepository } from "../../domain/repositories/elastic/preferences.repository";
 
 @Injectable()
@@ -146,12 +141,12 @@ export class PostsService {
         } : {})
       }
     });
-    if(isPublished){
+    if (isPublished) {
       void this.searchService.indexPost(post);
     } else if (isPublished === false) {
       void this.searchService.deletePost(post.id);
     }
-    return post
+    return post;
   }
 
 
@@ -186,7 +181,7 @@ export class PostsService {
         }
       });
       void this.searchService.indexPost(post);
-      return post
+      return post;
     }
   }
 
@@ -198,7 +193,7 @@ export class PostsService {
     const { userId, page, ...data } = recommendationsInput;
     const { dislikedPosts, likedPosts, pressedPosts, recentlyShowedPosts } =
       await this.preferencesService.get(userId, page);
-    console.log('input', recommendationsInput)
+    console.log("input", recommendationsInput);
     const response = await this.searchService.search({
       ...data,
       page,
@@ -207,7 +202,7 @@ export class PostsService {
       pressedPosts,
       recentlyShowedPosts
     });
-    console.log('response', response)
+    console.log("response", response);
     void this.preferencesService.setRecentlyShowed(userId, response.data);
     return {
       totalCount: response.totalCount,

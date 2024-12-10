@@ -1,6 +1,6 @@
 import { registerAs } from "@nestjs/config";
 
-export default registerAs('elasticDb', () => ({
+export default registerAs("elasticDb", () => ({
   username: process.env.ELASTIC_USERNAME,
-  password: process.env.ELASTIC_PASSWORD,
+  password: process.env.ELASTIC_PASSWORD
 }));

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ModeChanger from "@/features/Editor/ui/ModeChanger";
 import { FixedToolbar } from "@/entities/Post/ui/plate-ui/fixed-toolbar";
 import { FixedToolbarButtons } from "@/entities/Post/ui/plate-ui/fixed-toolbar-buttons";
@@ -7,16 +7,15 @@ import { FloatingToolbarButtons } from "@/entities/Post/ui/plate-ui/floating-too
 import { CommentsPopover } from "@/entities/Post/ui/plate-ui/comments-popover";
 import { Editor } from "@/entities/Post/ui/plate-ui/editor";
 import { usePostEditor } from "@/features/Editor";
-import { useGetFetchQuery } from "@/shared/api/useGetFetchQuery";
 import { useFetchPostQuery } from "@/features/Editor/lib/useFetchPostQuery";
 import { useSelector } from "react-redux";
 import { focusedPostSlice } from "@/features/Editor/model/focused-post.slice";
 
 export const EditPost = () => {
-  const queryKey = useSelector(focusedPostSlice.selectors.queryKey)
+  const queryKey = useSelector(focusedPostSlice.selectors.queryKey);
   if (queryKey) {
     const data = useFetchPostQuery(queryKey);
-    console.log(data, 'goalll');
+    console.log(data, "goalll");
     usePostEditor(data?.body);
   }
   return (
@@ -30,11 +29,11 @@ export const EditPost = () => {
 
           <Editor />
 
-        <FloatingToolbar>
-          <FloatingToolbarButtons />
-        </FloatingToolbar>
-        <CommentsPopover />
-        {/*<PlateContent />*/}
+          <FloatingToolbar>
+            <FloatingToolbarButtons />
+          </FloatingToolbar>
+          <CommentsPopover />
+          {/*<PlateContent />*/}
         </div>
       </div>
       <ModeChanger />

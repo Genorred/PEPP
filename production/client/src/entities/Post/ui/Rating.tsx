@@ -1,10 +1,10 @@
 import React from "react";
 import { Star } from "lucide-react";
 
-const Rating = ({rating}: {
+const Rating = ({ rating }: {
   rating?: number | null;
 }) => {
-  if (!rating) return null
+  if (!rating) return null;
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 >= 0.5;
   return (

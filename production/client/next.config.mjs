@@ -1,23 +1,23 @@
-/** @type {import('next').NextConfig} */
+/** @type {import("next").NextConfig} */
 const nextConfig = {
-    webpack: {
-        watchOptions: {
-            poll: 800,
-            aggregateTimeout: 300,
-        }
-    },
-    async rewrites() {
-        return [
-            {
-                source: '/api/:path*',
-                destination: 'http://localhost:8080/:path*', // Прокси на внешний API
-            },
-            {
-                source: '/auth/google',
-                destination: 'http://localhost:5591/auth/google', // users microservice
-            }
-        ];
-    },
+  webpack: {
+    watchOptions: {
+      poll: 800,
+      aggregateTimeout: 300
+    }
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://localhost:8080/:path*" // Прокси на внешний API
+      },
+      {
+        source: "/auth/google",
+        destination: "http://localhost:5591/auth/google" // users microservice
+      }
+    ];
+  }
 };
 
 export default nextConfig;

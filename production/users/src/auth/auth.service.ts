@@ -1,11 +1,9 @@
-import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { UsersService } from "../users/users.service";
 import { JwtService } from "@nestjs/jwt";
 import { LoginInput } from "./dto/login.input";
 import * as bcrypt from "bcrypt";
 import { CreateUserInput } from "../users/dto/create-user.input";
-import { User } from "../users/entities/user.entity";
-import { GoogleInput } from "./dto/google.dto";
 
 @Injectable()
 export class AuthService {
@@ -27,7 +25,7 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException();
     }
-    return user
+    return user;
   }
 
   private async validateUser(loginInput: LoginInput) {

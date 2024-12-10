@@ -1,23 +1,24 @@
-import { InputType, Int, Field, registerEnumType } from "@nestjs/graphql";
+import { Field, InputType, Int, registerEnumType } from "@nestjs/graphql";
 
 enum SortOrder {
-  ASC = 'asc',
-  DESC = 'desc',
+  ASC = "asc",
+  DESC = "desc",
 }
+
 registerEnumType(SortOrder, {
-  name: 'SortOrder',
+  name: "SortOrder"
 });
 
 @InputType()
 export class FindAlgorithmPostsInput {
-  @Field(() => SortOrder,{ nullable: true })
-  createdAt?: SortOrder
-  @Field(() => SortOrder,{ nullable: true })
-  rating?: SortOrder
+  @Field(() => SortOrder, { nullable: true })
+  createdAt?: SortOrder;
+  @Field(() => SortOrder, { nullable: true })
+  rating?: SortOrder;
   @Field(() => Int, { nullable: true })
   page?: number;
   @Field({ nullable: true })
   searchValue?: string;
-  @Field(() => [String], {nullable: true})
-  topics?: string[]
+  @Field(() => [String], { nullable: true })
+  topics?: string[];
 }

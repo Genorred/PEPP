@@ -1,8 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ElasticPost } from "../../../infrastructure/search/entities/elastic_post.entity";
-import { CACHE_MANAGER } from "@nestjs/cache-manager";
-import { Cache, Store } from "cache-manager";
-import KeyvRedis, { RedisClientConnectionType } from "@keyv/redis";
+import { RedisClientConnectionType } from "@keyv/redis";
 import { REDIS_CLIENT } from "../../kernel/redis.module";
 
 const userPrefKeys = {

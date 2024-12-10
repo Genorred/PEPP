@@ -5,9 +5,12 @@
 
 */
 -- AlterTable
-ALTER TABLE "User" ADD COLUMN     "google_id" TEXT,
+ALTER TABLE "User"
+    ADD COLUMN "google_id" TEXT,
 ADD COLUMN     "picture" TEXT,
-ALTER COLUMN "password" DROP NOT NULL;
+ALTER
+COLUMN "password" DROP
+NOT NULL;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_google_id_key" ON "User"("google_id");
+CREATE UNIQUE INDEX "User_google_id_key" ON "User" ("google_id");

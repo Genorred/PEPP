@@ -13,7 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import { graphql } from "@/shared/api/graphql";
 
 const formSchema = z.object({
   username: z.string().min(2, {

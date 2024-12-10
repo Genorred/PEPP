@@ -1,20 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Checkbox } from "@/shared/ui/checkbox";
-import { Label } from "@/shared/ui/label";
+import React from "react";
 import { Input } from "@/shared/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Button } from "@/shared/ui/button";
-import { ChevronDown, Search, X } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/shared/ui/select";
+import { ChevronDown, X } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { Badge } from "@/shared/ui/badge";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { FilterState } from "@/widgets/PostsFilter/model/domain";
 import { useDispatch } from "react-redux";
 import { filtersSlice } from "@/widgets/PostsFilter/model/filters.slice";
@@ -89,7 +80,7 @@ export function PostsFilter() {
                         <SelectValue placeholder="Date" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value='none'>Newest</SelectItem>
+                        <SelectItem value="none">Newest</SelectItem>
                         <SelectItem value="desc">Newest</SelectItem>
                         <SelectItem value="asc">Oldest</SelectItem>
                       </SelectContent>
@@ -112,7 +103,7 @@ export function PostsFilter() {
                         <SelectValue placeholder="Rating" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value='none'>Newest</SelectItem>
+                        <SelectItem value="none">Newest</SelectItem>
                         <SelectItem value="desc">Highest Rated</SelectItem>
                         <SelectItem value="asc">Lowest Rated</SelectItem>
                       </SelectContent>

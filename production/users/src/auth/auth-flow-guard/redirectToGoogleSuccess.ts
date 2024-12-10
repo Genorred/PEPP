@@ -1,18 +1,17 @@
 import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { ConfigService, ConfigType } from "@nestjs/config";
+import { ConfigType } from "@nestjs/config";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { User } from "../../users/entities/user.entity";
 import { SetAuthCookieService } from "../set-auth-cookie.service";
-import googleConfig from "../../config/google.config";
 import clientConfig from "../../config/client.config";
 
 @Injectable()
 export class RedirectToGoogleSuccess implements NestInterceptor {
   constructor(private setAuthService: SetAuthCookieService,
-  @Inject(clientConfig.KEY) private clientService: ConfigType<typeof clientConfig>) {
+              @Inject(clientConfig.KEY) private clientService: ConfigType<typeof clientConfig>) {
   }
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const response = context.switchToHttp().getResponse();
     return next.handle().pipe(
@@ -23,7 +22,7 @@ export class RedirectToGoogleSuccess implements NestInterceptor {
         const accessToken = this.setAuthService.generateToken(user, true);
         const refreshToken = this.setAuthService.generateToken(user, false);
 
-        console.log(accessToken, refreshToken)
+        console.log(accessToken, refreshToken);
         response.cookie("accessToken", accessToken, {
           httpOnly: true, // Токен доступен только на сервере
           // secure: this.configService.get('NODE_ENV') === 'production',
@@ -36,7 +35,7 @@ export class RedirectToGoogleSuccess implements NestInterceptor {
           maxAge: 7 * 24 * 60 * 60 * 1000 // Время жизни куки (например, 7 дней)
         });
         return response.redirect(this.clientService.url + "/google-success?user=" + JSON.stringify(user) +
-          (request.query.state ? ("&returnUrl=" + request.query.state) : ''));
+          (request.query.state ? ("&returnUrl=" + request.query.state) : ""));
       })
     );
   }

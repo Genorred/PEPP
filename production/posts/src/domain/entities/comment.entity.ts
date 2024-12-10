@@ -6,10 +6,10 @@ export class Comment {
   id: number;
   @Field()
   title: string;
-  @Field({nullable: true})
-  description?: string
-  @Field(() => Int, {nullable: true})
-  rating?: number
+  @Field({ nullable: true })
+  description?: string;
+  @Field(() => Int, { nullable: true })
+  rating?: number;
   @Field(() => Int)
   userId: number;
   @Field(() => Int)

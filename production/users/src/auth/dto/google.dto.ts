@@ -8,6 +8,6 @@ export class GoogleInput {
   google_id: string;
   @Field()
   email: string;
-  @Field({nullable: true})
-  picture?: string
+  @Field({ nullable: true })
+  picture?: string;
 }

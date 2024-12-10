@@ -8,9 +8,9 @@ const Rating = ({ stars, className }: {
 }) => {
   const array = [1, 2, 3, 4, 5];
   return (
-    <div className={cn('flex', className)}>
+    <div className={cn("flex", className)}>
       {array.map(star =>
-        <Star size={16} strokeWidth={1.5} fill={star<=stars ? 'yellow' : 'white'} key={star} />
+        <Star size={16} strokeWidth={1.5} fill={star <= stars ? "yellow" : "white"} key={star} />
       )}
     </div>
   );

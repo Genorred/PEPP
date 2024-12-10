@@ -1,16 +1,15 @@
-import { Resolver, Query, Mutation, Args, Int, ResolveField, Parent } from "@nestjs/graphql";
+import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
 import { PostsService } from "./posts.service";
 import { Post } from "../../domain/entities/post.entity";
 import { CreatePostInput } from "./dto/create-post.input";
 import { UpdatePostInput } from "./dto/update-post.input";
-import { PartialPostInput } from "./dto/partial-post.input";
 import { User } from "../../domain/entities/user.entity";
 import { CurrentUser } from "@_shared/auth-guard/CurrentUser";
 import { JwtPayload } from "@_shared/entities/jwt.entity";
 import UseAuth from "@_shared/auth-guard/useAuth";
 import { CreateVersionPostInput } from "./dto/create-version-post.input";
 import { FindPostInput } from "./dto/find-post.input";
-import { Inject, Req, UnauthorizedException } from "@nestjs/common";
+import { Inject, UnauthorizedException } from "@nestjs/common";
 import NextjsEndpoint from "../config/nextjsEndpoint";
 import { ConfigType } from "@nestjs/config";
 import { FindAllPostsInput } from "./dto/_nextjs_find-posts.input";
@@ -28,10 +27,11 @@ export class PostsResolver {
   async createPost(@Args("createPostInput") createPostInput: CreatePostInput, @CurrentUser() user: JwtPayload) {
     return this.postsService.create({ ...createPostInput, userId: user.sub });
   }
+
   @Mutation(() => Post)
   @UseAuth()
   createVersionPost(@Args("createVersionPostInput") createPostInput: CreateVersionPostInput, @CurrentUser() user: JwtPayload) {
-    return this.postsService.createVersion({...createPostInput, userId: user.sub})
+    return this.postsService.createVersion({ ...createPostInput, userId: user.sub });
   }
 
   @Query(() => [Post], { name: "userPosts" })
@@ -46,8 +46,8 @@ export class PostsResolver {
   }
 
   @Query(() => Recommendations, { name: "algoPosts" })
-  findAlgorithmPosts(@Args('findAlgorithmInput') findAlgorithmInput: FindAlgorithmPostsInput, @CurrentUser() user: JwtPayload) {
-    return this.postsService.recommendations({...findAlgorithmInput, userId: user.sub});
+  findAlgorithmPosts(@Args("findAlgorithmInput") findAlgorithmInput: FindAlgorithmPostsInput, @CurrentUser() user: JwtPayload) {
+    return this.postsService.recommendations({ ...findAlgorithmInput, userId: user.sub });
   }
 
   @Query(() => Post, { name: "post" })
@@ -57,11 +57,11 @@ export class PostsResolver {
 
   @Query(() => Post, { name: "draft" })
   async findDraft(@Args("findDraft") findDraft: FindPostInput, @CurrentUser() user: JwtPayload) {
-    const draft = await this.postsService.findOne({...findDraft, isDraft: true});
+    const draft = await this.postsService.findOne({ ...findDraft, isDraft: true });
     if (draft?.userId === user.sub) {
       return draft;
     } else {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException();
     }
   }
 
@@ -71,7 +71,7 @@ export class PostsResolver {
   }
 
   @Mutation(() => Post)
-  async publish(@Args("publishInput", {type: () => Int}) postId: number, @CurrentUser() user: JwtPayload) {
+  async publish(@Args("publishInput", { type: () => Int }) postId: number, @CurrentUser() user: JwtPayload) {
     return this.postsService.publishVersion(postId, user.sub);
   }
 
@@ -81,16 +81,13 @@ export class PostsResolver {
   }
 
 
-
-
-
-  @Query(() => [Post], {name: 'allPosts'})
-  findAll(@Args('findAllPostsInput') findAllPostsInput: FindAllPostsInput) {
-    const {token, ...isArchived} = findAllPostsInput
+  @Query(() => [Post], { name: "allPosts" })
+  findAll(@Args("findAllPostsInput") findAllPostsInput: FindAllPostsInput) {
+    const { token, ...isArchived } = findAllPostsInput;
     if (this.configService.token === token) {
-      return this.postsService.findMany(isArchived)
+      return this.postsService.findMany(isArchived);
     } else {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException();
     }
   }
 

@@ -1,29 +1,22 @@
-import React from 'react';
+import React from "react";
 
 import {
   BoldPlugin,
   CodePlugin,
   ItalicPlugin,
   StrikethroughPlugin,
-  UnderlinePlugin,
-} from '@udecode/plate-basic-marks/react';
-import { useEditorReadOnly } from '@udecode/plate-common/react';
-import {
-  BoldIcon,
-  Code2Icon,
-  ItalicIcon,
-  SparklesIcon,
-  StrikethroughIcon,
-  UnderlineIcon,
-} from 'lucide-react';
+  UnderlinePlugin
+} from "@udecode/plate-basic-marks/react";
+import { useEditorReadOnly } from "@udecode/plate-common/react";
+import { BoldIcon, Code2Icon, ItalicIcon, SparklesIcon, StrikethroughIcon, UnderlineIcon } from "lucide-react";
 
-import { AIToolbarButton } from './ai-toolbar-button';
-import { CommentToolbarButton } from './comment-toolbar-button';
-import { LinkToolbarButton } from './link-toolbar-button';
-import { MarkToolbarButton } from './mark-toolbar-button';
-import { MoreDropdownMenu } from './more-dropdown-menu';
-import { ToolbarGroup } from './toolbar';
-import { TurnIntoDropdownMenu } from './turn-into-dropdown-menu';
+import { AIToolbarButton } from "./ai-toolbar-button";
+import { CommentToolbarButton } from "./comment-toolbar-button";
+import { LinkToolbarButton } from "./link-toolbar-button";
+import { MarkToolbarButton } from "./mark-toolbar-button";
+import { MoreDropdownMenu } from "./more-dropdown-menu";
+import { ToolbarGroup } from "./toolbar";
+import { TurnIntoDropdownMenu } from "./turn-into-dropdown-menu";
 
 export function FloatingToolbarButtons() {
   const readOnly = useEditorReadOnly();

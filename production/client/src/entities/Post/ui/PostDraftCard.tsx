@@ -1,24 +1,20 @@
-import React, { useId, useState } from "react";
-import { Badge } from "@/shared/ui/badge";
-import { Card, CardContent, CardFooter, CardHeader } from "@/shared/ui/card";
+import React from "react";
+import { Card, CardContent, CardFooter } from "@/shared/ui/card";
 import Link from "next/link";
-import { GeneralPostI, Review } from "@/entities/Post/model";
-import Rating from "@/entities/Post/ui/Rating";
+import { GeneralPostI } from "@/entities/Post/model";
 import PostHeader from "@/entities/Post/ui/PostHeader";
-import UserLink from "@/entities/Post/ui/UserLink";
-import ThoughtsDialog from "@/entities/Post/ui/ThoughtsDialog";
 
 const PostDraftCard = ({
                          id,
                          img,
                          title,
-                         description,
+                         description
                        }: Pick<GeneralPostI, "id" | "img" | "title" | "description">) => {
   const url = `/draft/${id}`;
   return (
     <Link href={url} id={`${id}`} className="w-full flex-1 overflow-hidden relative min-w-72">
       <Card>
-        <PostHeader img={img || ''} title={title} />
+        <PostHeader img={img || ""} title={title} />
         <CardContent className="pt-4">
           <p className="text-sm text-muted-foreground mb-4">
             {description}

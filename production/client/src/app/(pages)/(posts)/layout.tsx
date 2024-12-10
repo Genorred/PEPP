@@ -1,9 +1,5 @@
-"use client"
-import type { Metadata } from "next";
+"use client";
 import React from "react";
-import Navbar from "@/widgets/Navbar";
-import { Providers } from "@/widgets/Providers";
-import { cn } from "@/shared/lib/utils";
 import { DndProvider } from "react-dnd";
 import { Plate } from "@udecode/plate-common/react";
 import { HTML5Backend } from "react-dnd-html5-backend";

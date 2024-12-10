@@ -1,30 +1,14 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import { someNode } from '@udecode/plate-common';
-import {
-  focusEditor,
-  useEditorPlugin,
-  useEditorSelector,
-} from '@udecode/plate-common/react';
-import { deleteTable, insertTableRow } from '@udecode/plate-table';
-import {
-  TablePlugin,
-  deleteColumn,
-  deleteRow,
-  insertTable,
-} from '@udecode/plate-table/react';
-import {
-  Minus,
-  Plus,
-  RectangleHorizontal,
-  RectangleVertical,
-  Table,
-  Trash,
-} from 'lucide-react';
+import { someNode } from "@udecode/plate-common";
+import { focusEditor, useEditorPlugin, useEditorSelector } from "@udecode/plate-common/react";
+import { deleteTable, insertTableRow } from "@udecode/plate-table";
+import { deleteColumn, deleteRow, insertTable, TablePlugin } from "@udecode/plate-table/react";
+import { Minus, Plus, RectangleHorizontal, RectangleVertical, Table, Trash } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -35,9 +19,9 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-  useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+  useOpenState
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
 export function TableDropdownMenu(props: DropdownMenuProps) {
   const tableSelected = useEditorSelector(

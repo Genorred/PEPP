@@ -1,20 +1,20 @@
 import React from "react";
 import { CardHeader } from "@/shared/ui/card";
-import Image from "next/image"
+import Image from "next/image";
 import { ImageOff } from "lucide-react";
 
-const PostHeader = ({img, title}: {
+const PostHeader = ({ img, title }: {
   img?: string | null;
   title: string
 }) => {
   return (
     <div className="relative h-48">
-      { img
-      ?
+      {img
+        ?
         <Image src={img} alt={`image for post ${title}`} width={0} height={0}
                className="w-full h-full object-cover"
         />
-      :
+        :
         <ImageOff />
       }
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />

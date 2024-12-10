@@ -3,25 +3,26 @@ import { rootReducer } from "@/shared/lib/redux";
 import { FilterState } from "@/widgets/PostsFilter/model/domain";
 
 interface State {
-    filters: FilterState;
+  filters: FilterState;
 }
-const initialUsersState: State  = {
-    filters: {
-        topics: [],
-        createdAt: 'none',
-        search: '',
-        rating: 'none'
-    }
+
+const initialUsersState: State = {
+  filters: {
+    topics: [],
+    createdAt: "none",
+    search: "",
+    rating: "none"
+  }
 };
 export const filtersSlice = createSlice({
-    name: "users",
-    initialState: initialUsersState,
-    selectors: {
-        filter: (state: State)  => state.filters,
-    },
-    reducers: {
-        setFilters: (state, action: PayloadAction<FilterState>) => {
-            state.filters = action.payload;
-        }
-    },
+  name: "users",
+  initialState: initialUsersState,
+  selectors: {
+    filter: (state: State) => state.filters
+  },
+  reducers: {
+    setFilters: (state, action: PayloadAction<FilterState>) => {
+      state.filters = action.payload;
+    }
+  }
 }).injectInto(rootReducer);

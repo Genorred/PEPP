@@ -2,13 +2,10 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ElasticsearchService } from "@nestjs/elasticsearch";
 import { Mapping } from "../../domain/repositories/elastic/mapping";
 import { SearchQueryBuilderService } from "./searchQueryBuilder";
-import { Post } from "../../domain/entities/post.entity";
 import { ElasticPost } from "./entities/elastic_post.entity";
 import { SearchDto } from "./dto/search.dto";
 import { IndexDto } from "./dto/index.dto";
-import { CACHE_MANAGER } from "@nestjs/cache-manager";
-import { Cache } from "cache-manager";
-import KeyvRedis, { RedisClientConnectionType } from "@keyv/redis";
+import { RedisClientConnectionType } from "@keyv/redis";
 import { REDIS_CLIENT } from "../../domain/kernel/redis.module";
 
 const index = "posts";
@@ -24,9 +21,9 @@ export class SearchService {
   public async createIndex() {
     // create index if doesn't exist
     try {
-      console.log('gh');
+      console.log("gh");
       // @ts-ignore
-      console.log('j', this.redisClient);
+      console.log("j", this.redisClient);
       const checkIndex = await this.esService.indices.exists({ index });
       if (!checkIndex) {
         this.esService.indices.create({
@@ -42,9 +39,9 @@ export class SearchService {
 
   public async indexPost(payload: IndexDto) {
     try {
-      const {id, ...data} = payload;
+      const { id, ...data } = payload;
       // map draft children
-      console.log('createdAt', data.createdAt);
+      console.log("createdAt", data.createdAt);
       return await this.esService.index({
         index,
         id: id.toString(),
@@ -54,15 +51,17 @@ export class SearchService {
       throw err;
     }
   }
+
   public deletePost(id: number) {
     return this.esService.delete({
       index,
       id: id.toString()
-    })
+    });
   }
+
   public async updatePost(payload: IndexDto) {
     try {
-      const {id, ...data} = payload;
+      const { id, ...data } = payload;
       // map draft children
       return await this.esService.update({
           index,
@@ -74,9 +73,10 @@ export class SearchService {
       throw err;
     }
   }
+
   public async search(searchParam: SearchDto) {
     try {
-      const pageSize = 20
+      const pageSize = 20;
       const { hits: parentHits } = await this.esService.search<ElasticPost>({
         index,
         sort: this.builderService.sortSearchQuery(searchParam),
@@ -87,7 +87,7 @@ export class SearchService {
       const totalCount = parentHits.total;
       const hits = parentHits.hits;
       const data = hits.map((item) => (
-        {...item._source, id: item._id}
+        { ...item._source, id: item._id }
       ));
       return {
         // @ts-ignore

@@ -1,11 +1,11 @@
-import { ObjectType, Field, Int, Directive, ID } from "@nestjs/graphql";
+import { Directive, Field, Int, ObjectType } from "@nestjs/graphql";
 import { Roles } from ".prisma/client";
-import { User as SharedUser } from "@_shared/entities/user.entity"
+import { User as SharedUser } from "@_shared/entities/user.entity";
 
 
 @ObjectType()
-@Directive('@key(fields: "id")')
-export class User implements SharedUser{
+@Directive("@key(fields: \"id\")")
+export class User implements SharedUser {
   @Field((type) => Int)
   id: number;
   @Field()
@@ -14,7 +14,7 @@ export class User implements SharedUser{
   password: string;
   @Field()
   username: string;
-  @Field({nullable: true})
+  @Field({ nullable: true })
   occupation?: string;
   @Field()
   role: Roles;
@@ -24,9 +24,9 @@ export class User implements SharedUser{
   updatedAt: Date;
 
   @Field()
-  img?: string
+  img?: string;
   @Field()
-  google_id?: string
+  google_id?: string;
   // @Field((type) => [Post])
   // posts: Post[];
 }

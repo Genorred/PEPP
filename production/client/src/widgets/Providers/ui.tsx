@@ -3,9 +3,9 @@ import { ClientProviders } from "@/widgets/Providers/clientProviders";
 
 const Providers = ({ children }: PropsWithChildren) => {
   return (
-        <ClientProviders>
-          {children}
-        </ClientProviders>
+    <ClientProviders>
+      {children}
+    </ClientProviders>
   );
 };
 

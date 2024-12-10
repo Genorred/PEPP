@@ -1,16 +1,11 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import {
-  focusEditor,
-  useEditorReadOnly,
-  useEditorRef,
-  usePlateStore,
-} from '@udecode/plate-common/react';
-import { Eye, Pen } from 'lucide-react';
+import { focusEditor, useEditorReadOnly, useEditorRef, usePlateStore } from "@udecode/plate-common/react";
+import { Eye, Pen } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -18,9 +13,9 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-  useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+  useOpenState
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
 export function ModeDropdownMenu(props: DropdownMenuProps) {
   const editor = useEditorRef();
@@ -28,9 +23,9 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
   const readOnly = useEditorReadOnly();
   const openState = useOpenState();
 
-  let value = 'editing';
+  let value = "editing";
 
-  if (readOnly) value = 'viewing';
+  if (readOnly) value = "viewing";
 
   const item: any = {
     editing: (
@@ -44,7 +39,7 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
         <Eye />
         <span className="hidden lg:inline">Viewing</span>
       </>
-    ),
+    )
   };
 
   return (
@@ -63,15 +58,15 @@ export function ModeDropdownMenu(props: DropdownMenuProps) {
         <DropdownMenuRadioGroup
           value={value}
           onValueChange={(newValue) => {
-            if (newValue !== 'viewing') {
+            if (newValue !== "viewing") {
               setReadOnly(false);
             }
-            if (newValue === 'viewing') {
+            if (newValue === "viewing") {
               setReadOnly(true);
 
               return;
             }
-            if (newValue === 'editing') {
+            if (newValue === "editing") {
               focusEditor(editor);
 
               return;

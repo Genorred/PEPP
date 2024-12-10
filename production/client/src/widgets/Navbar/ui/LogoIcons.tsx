@@ -35,6 +35,6 @@ const LogoIcon = ({ isMobile = false }: { isMobile?: boolean }) => {
 export default () => (
   <>
     <LogoIcon />
-    <LogoIcon isMobile/>
+    <LogoIcon isMobile />
   </>
 )

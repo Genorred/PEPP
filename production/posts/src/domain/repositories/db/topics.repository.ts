@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 
 // NO MORE THAN 5 TOPICS
-const biggestIndex = 4
+const biggestIndex = 4;
+
 @Injectable()
 export class TopicsRepository {
 

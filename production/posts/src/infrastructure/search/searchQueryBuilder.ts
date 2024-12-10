@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { QueryDslQueryContainer, Sort } from "@elastic/elasticsearch/lib/api/typesWithBodyKey";
-import { ElasticKey, ElasticKeys, ElasticPost } from "./entities/elastic_post.entity";
+import { ElasticKey, ElasticKeys } from "./entities/elastic_post.entity";
 import { SearchDto } from "./dto/search.dto";
 
 @Injectable()

@@ -1,4 +1,4 @@
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/shared/api/graphql/generated";
 import { rootReducer } from "@/shared/lib/redux";
 
@@ -20,5 +20,5 @@ export const userSlice = createSlice({
     setUser: (state, action: PayloadAction<Partial<User> | null>) => {
       state.user = action.payload;
     }
-  },
+  }
 }).injectInto(rootReducer);

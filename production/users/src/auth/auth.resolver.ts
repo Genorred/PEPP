@@ -3,7 +3,6 @@ import { LoginInput } from "./dto/login.input";
 import { AuthService } from "./auth.service";
 import { CreateUserInput } from "../users/dto/create-user.input";
 import { UseTokens } from "./auth-flow-guard/UseTokens";
-import { Req, Res } from "@nestjs/common";
 import { User } from "../users/entities/user.entity";
 
 @Resolver()
@@ -17,7 +16,7 @@ export class AuthResolver {
     const user = await this.authService.login(loginInput);
     const request = context.switchToHttp().getRequest();
     request.user = user;
-    console.log(user)
+    console.log(user);
     return user;
   }
 
@@ -29,7 +28,7 @@ export class AuthResolver {
     if (context.req) {
       context.req.user = user;
     }
-    console.log(user)
+    console.log(user);
     return user;
   }
 }

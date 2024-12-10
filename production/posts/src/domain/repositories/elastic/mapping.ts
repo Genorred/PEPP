@@ -4,24 +4,24 @@ export const Mapping: MappingTypeMapping = {
   properties: {
     topics: {
       // boost: 3,
-      type: 'keyword'
+      type: "keyword"
     },
     subTopics: {
-      type: 'keyword'
+      type: "keyword"
     },
     title: {
-      type: 'text',
+      type: "text"
       // boost: 3,
     },
     description: {
-      type: 'text',
+      type: "text"
       // boost: 2,
     },
     rating: {
-      type: 'float'
+      type: "float"
     },
     createdAt: {
-      type: 'date'
+      type: "date"
     }
   }
-}
+};

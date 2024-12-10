@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
 
-const UserLink = ({userId, userImg, username, occupation}: {
+const UserLink = ({ userId, userImg, username, occupation }: {
   userId: number
   userImg: string
   username: string

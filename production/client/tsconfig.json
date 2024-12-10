@@ -27,7 +27,7 @@
         "schema": "./schema.graphql"
       }
     ],
-//    paths shouldn't be overwritten
+    //    paths shouldn't be overwritten
     "target": "ES2017"
   },
   "include": [

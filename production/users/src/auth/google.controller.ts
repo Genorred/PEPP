@@ -1,18 +1,16 @@
-import { Body, Controller, Get, Post, Req, UseGuards, UseInterceptors } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
-import { UseTokens } from "./auth-flow-guard/UseTokens";
+import { Controller, Get, Req, UseGuards, UseInterceptors } from "@nestjs/common";
 import { GoogleGuard } from "./auth-flow-guard/google.guard";
 import { RedirectToGoogleSuccess } from "./auth-flow-guard/redirectToGoogleSuccess";
 
-@Controller('auth')
+@Controller("auth")
 export class GoogleController {
-  @Get('google')
+  @Get("google")
   @UseGuards(GoogleGuard)
   async googleAuth(@Req() req) {
     // Инициирует перенаправление на Google для авторизации
   }
 
-  @Get('google/callback')
+  @Get("google/callback")
   @UseGuards(GoogleGuard)
   @UseInterceptors(RedirectToGoogleSuccess)
   async googleAuthRedirect(@Req() req) {

@@ -1,15 +1,12 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import { withRef } from '@udecode/cn';
-import {
-  useToggleToolbarButton,
-  useToggleToolbarButtonState,
-} from '@udecode/plate-toggle/react';
-import { ChevronRightIcon } from 'lucide-react';
+import { withRef } from "@udecode/cn";
+import { useToggleToolbarButton, useToggleToolbarButtonState } from "@udecode/plate-toggle/react";
+import { ChevronRightIcon } from "lucide-react";
 
-import { ToolbarButton } from './toolbar';
+import { ToolbarButton } from "./toolbar";
 
 export const ToggleToolbarButton = withRef<typeof ToolbarButton>(
   (rest, ref) => {

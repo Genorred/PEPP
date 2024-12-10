@@ -1,1 +1,1 @@
-export type PostKeys = ['post' | 'draft', {id: number, version?: number} & Record<string, any>]
+export type PostKeys = ["post" | "draft", { id: number, version?: number } & Record<string, any>]

@@ -1,18 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTopicInput } from './dto/create-topic.input';
-import { UpdateTopicInput } from './dto/update-topic.input';
+import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../domain/kernel/prisma/prisma.service";
 
 @Injectable()
 export class TopicsService {
   constructor(private readonly prismaService: PrismaService) {
   }
+
   // create(createTopicInput: CreateTopicInput) {
   //   return 'This action adds a new topic';
   // }
 
   findAll(title: string) {
-    return this.prismaService.topic.findMany({where: {title: {contains: title}}, take: 8});
+    return this.prismaService.topic.findMany({ where: { title: { contains: title } }, take: 8 });
   }
 
   // findOne(id: number) {

@@ -1,19 +1,17 @@
-import { PostQuery } from "@/shared/api/graphql/graphql";
 import {
   useCreatePostMutation,
-  useCreateVersionPostMutation, usePublishPostVersionMutation,
+  useCreateVersionPostMutation,
+  usePublishPostVersionMutation,
   useUpdatePostMutation
 } from "@/shared/api/graphql/generated";
 import { HandleWorkFormT } from "@/features/Editor/ui/SaveWork";
 import { apiClient } from "@/shared/api/base";
 import { useEditorRef } from "@udecode/plate-common/react";
 import { getChangedFields } from "@/shared/utils/getChangedFields";
-import React, { BaseSyntheticEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+import { BaseSyntheticEvent } from "react";
 import { buttonNames } from "@/features/Editor/consts/buttonNames";
 import { useDispatch, useSelector } from "react-redux";
 import { focusedPostSlice, mutatedData } from "@/features/Editor/model/focused-post.slice";
-import { createValidFileMatcher } from "next/dist/server/lib/find-page-file";
 import { useFetchPostQuery } from "@/features/Editor/lib/useFetchPostQuery";
 
 export type CreatePostParams = Parameters<ReturnType<typeof useCreatePostMutation>["mutateAsync"]>["0"]

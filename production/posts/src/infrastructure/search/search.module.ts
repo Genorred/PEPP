@@ -21,10 +21,10 @@ import { RedisModule } from "../../domain/kernel/redis.module";
         pingTimeout: 60000,
         sniffOnStart: true,
         tls: {
-          ca: fs.readFileSync('/usr/app/posts/certs/ca/ca.crt'),
-          cert: fs.readFileSync('/usr/app/posts/certs/es01/es01.crt'),
-          key: fs.readFileSync('/usr/app/posts/certs/es01/es01.key'),
-          rejectUnauthorized: process.env.NODE_ENV === 'production', // Ensure this is true for production
+          ca: fs.readFileSync("/usr/app/posts/certs/ca/ca.crt"),
+          cert: fs.readFileSync("/usr/app/posts/certs/es01/es01.crt"),
+          key: fs.readFileSync("/usr/app/posts/certs/es01/es01.key"),
+          rejectUnauthorized: process.env.NODE_ENV === "production" // Ensure this is true for production
         },
         auth: {
           username: elasticConfig.username,

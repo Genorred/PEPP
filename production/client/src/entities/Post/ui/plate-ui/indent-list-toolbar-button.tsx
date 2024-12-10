@@ -1,16 +1,13 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import { withRef } from '@udecode/cn';
-import { ListStyleType } from '@udecode/plate-indent-list';
-import {
-  useIndentListToolbarButton,
-  useIndentListToolbarButtonState,
-} from '@udecode/plate-indent-list/react';
-import { List, ListOrdered } from 'lucide-react';
+import { withRef } from "@udecode/cn";
+import { ListStyleType } from "@udecode/plate-indent-list";
+import { useIndentListToolbarButton, useIndentListToolbarButtonState } from "@udecode/plate-indent-list/react";
+import { List, ListOrdered } from "lucide-react";
 
-import { ToolbarButton } from './toolbar';
+import { ToolbarButton } from "./toolbar";
 
 export const IndentListToolbarButton = withRef<
   typeof ToolbarButton,
@@ -25,7 +22,7 @@ export const IndentListToolbarButton = withRef<
     <ToolbarButton
       ref={ref}
       tooltip={
-        nodeType === ListStyleType.Disc ? 'Bulleted List' : 'Numbered List'
+        nodeType === ListStyleType.Disc ? "Bulleted List" : "Numbered List"
       }
       {...props}
     >

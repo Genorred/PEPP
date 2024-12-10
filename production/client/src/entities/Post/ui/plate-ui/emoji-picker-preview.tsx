@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import type { UseEmojiPickerType } from '@udecode/plate-emoji/react';
+import type { UseEmojiPickerType } from "@udecode/plate-emoji/react";
 
 export type EmojiPickerPreviewProps = Pick<
   UseEmojiPickerType,
-  'emoji' | 'hasFound' | 'i18n' | 'isSearching'
+  "emoji" | "hasFound" | "i18n" | "isSearching"
 >;
 
-export type EmojiPreviewProps = Pick<UseEmojiPickerType, 'emoji'>;
+export type EmojiPreviewProps = Pick<UseEmojiPickerType, "emoji">;
 
-export type NoEmojiPreviewProps = Pick<UseEmojiPickerType, 'i18n'>;
+export type NoEmojiPreviewProps = Pick<UseEmojiPickerType, "i18n">;
 
 export type PickAnEmojiPreviewProps = NoEmojiPreviewProps;
 
@@ -53,12 +53,12 @@ function PickAnEmoji({ i18n }: PickAnEmojiPreviewProps) {
 }
 
 export function EmojiPickerPreview({
-  emoji,
-  hasFound = true,
-  i18n,
-  isSearching = false,
-  ...props
-}: EmojiPickerPreviewProps) {
+                                     emoji,
+                                     hasFound = true,
+                                     i18n,
+                                     isSearching = false,
+                                     ...props
+                                   }: EmojiPickerPreviewProps) {
   const showPickEmoji = !emoji && (!isSearching || hasFound);
   const showNoEmoji = isSearching && !hasFound;
   const showPreview = emoji && !showNoEmoji && !showNoEmoji;

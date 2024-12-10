@@ -9,8 +9,8 @@ export class User {
   createdAt: Date;
   updatedAt: Date;
 
-  picture?: string
-  google_id?: string
+  picture?: string;
+  google_id?: string;
   // @Field((type) => [Post])
   // posts: Post[];
 }

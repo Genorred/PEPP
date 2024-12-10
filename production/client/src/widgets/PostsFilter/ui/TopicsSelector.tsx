@@ -7,16 +7,8 @@ import { Label } from "@/shared/ui/label";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { Control, Controller } from "react-hook-form";
 import { Input } from "@/shared/ui/input";
-import {
-  PostsIdDocument,
-  PostsIdQuery,
-  PostsIdQueryVariables,
-  TopicsQuery,
-  useTopicsQuery
-} from "@/shared/api/graphql/generated";
+import { useTopicsQuery } from "@/shared/api/graphql/generated";
 import { apiClient } from "@/shared/api/base";
-import { TopicsDocument } from "@/shared/api/graphql/generated";
-import { TopicsQueryVariables } from "@/shared/api/graphql/graphql";
 import { FilterState } from "@/widgets/PostsFilter/model/domain";
 
 const TopicsSelector = ({ watchedTopics, control }:

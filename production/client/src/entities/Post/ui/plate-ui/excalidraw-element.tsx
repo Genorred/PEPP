@@ -1,17 +1,17 @@
-'use client';
-import React from 'react';
+"use client";
+import React from "react";
 
-import { withRef } from '@udecode/cn';
-import { useExcalidrawElement } from '@udecode/plate-excalidraw/react';
+import { withRef } from "@udecode/cn";
+import { useExcalidrawElement } from "@udecode/plate-excalidraw/react";
 
-import { PlateElement } from './plate-element';
+import { PlateElement } from "./plate-element";
 
 export const ExcalidrawElement = withRef<typeof PlateElement>(
   ({ nodeProps, ...props }, ref) => {
     const { children, element } = props;
 
     const { Excalidraw, excalidrawProps } = useExcalidrawElement({
-      element,
+      element
     });
 
     return (

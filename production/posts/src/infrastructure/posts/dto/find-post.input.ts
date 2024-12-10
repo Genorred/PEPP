@@ -1,10 +1,9 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
-import { GraphQLJSONObject } from "graphql-type-json";
+import { Field, InputType, Int } from "@nestjs/graphql";
 
 @InputType()
 export class FindPostInput {
   @Field(() => Int)
   id: number;
   @Field(() => Int, { nullable: true })
-  version?: number
+  version?: number;
 }

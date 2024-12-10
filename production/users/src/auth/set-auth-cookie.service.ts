@@ -7,11 +7,12 @@ import { JwtPayload } from "@_shared/entities/jwt.entity";
 export class SetAuthCookieService {
   constructor(private jwtService: JwtService) {
   }
+
   generateToken(user: Partial<User>, isAccess: boolean) {
     const { id, username, role } = user;
     const payload: JwtPayload = { username, sub: id, role };
     return this.jwtService.sign(payload, {
-      expiresIn: isAccess ? '15m' : '21d'
+      expiresIn: isAccess ? "15m" : "21d"
     });
   }
 

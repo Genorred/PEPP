@@ -1,7 +1,9 @@
 import React from "react";
-import { Post as GraphqlPost, User } from "@/shared/api/graphql/generated";
+import { Post as GraphqlPost } from "@/shared/api/graphql/generated";
 
-export type GeneralPostI = Omit<GraphqlPost, "body" | "published" | 'isArchived' | 'isDraft' | 'isPublished' | 'topics' | 'subTopics'> & {
+export type GeneralPostI =
+  Omit<GraphqlPost, "body" | "published" | "isArchived" | "isDraft" | "isPublished" | "topics" | "subTopics">
+  & {
   topics: {
     title: string
   }
@@ -26,7 +28,7 @@ export type GeneralPostI = Omit<GraphqlPost, "body" | "published" | 'isArchived'
 //   minutes: number;
 // }
 export interface PostDetailsI {
-  title: string
+  title: string;
   content: {
     component: [
       keyof JSX.IntrinsicElements,
@@ -37,7 +39,7 @@ export interface PostDetailsI {
     xe: number
     ys: number
     ye: number
-  } [] // array of elements that have its coordinates
+  } []; // array of elements that have its coordinates
 }
 
 // type ChildRecursion<T> = {

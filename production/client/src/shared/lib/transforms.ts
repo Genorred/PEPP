@@ -1,58 +1,49 @@
-import type { PlateEditor } from '@udecode/plate-common/react';
+import type { PlateEditor } from "@udecode/plate-common/react";
 
-import { insertCallout } from '@udecode/plate-callout';
-import { CalloutPlugin } from '@udecode/plate-callout/react';
-import { insertCodeBlock } from '@udecode/plate-code-block';
-import { CodeBlockPlugin } from '@udecode/plate-code-block/react';
+import { insertCallout } from "@udecode/plate-callout";
+import { CalloutPlugin } from "@udecode/plate-callout/react";
+import { insertCodeBlock } from "@udecode/plate-code-block";
+import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
 import {
-  type TElement,
-  type TNodeEntry,
   getBlockAbove,
   getBlocks,
   getNodeEntry,
   insertNodes,
   removeEmptyPreviousBlock,
   setNodes,
+  type TElement,
+  type TNodeEntry,
   unsetNodes,
-  withoutNormalizing,
-} from '@udecode/plate-common';
-import { insertDate } from '@udecode/plate-date';
-import { DatePlugin } from '@udecode/plate-date/react';
-import { insertToc } from '@udecode/plate-heading';
-import { TocPlugin } from '@udecode/plate-heading/react';
-import { INDENT_LIST_KEYS, ListStyleType } from '@udecode/plate-indent-list';
-import { IndentListPlugin } from '@udecode/plate-indent-list/react';
-import { toggleColumns } from '@udecode/plate-layout';
-import { LinkPlugin, triggerFloatingLink } from '@udecode/plate-link/react';
-import { insertEquation, insertInlineEquation } from '@udecode/plate-math';
-import {
-  EquationPlugin,
-  InlineEquationPlugin,
-} from '@udecode/plate-math/react';
+  withoutNormalizing
+} from "@udecode/plate-common";
+import { insertDate } from "@udecode/plate-date";
+import { DatePlugin } from "@udecode/plate-date/react";
+import { insertToc } from "@udecode/plate-heading";
+import { TocPlugin } from "@udecode/plate-heading/react";
+import { INDENT_LIST_KEYS, ListStyleType } from "@udecode/plate-indent-list";
+import { IndentListPlugin } from "@udecode/plate-indent-list/react";
+import { toggleColumns } from "@udecode/plate-layout";
+import { LinkPlugin, triggerFloatingLink } from "@udecode/plate-link/react";
+import { insertEquation, insertInlineEquation } from "@udecode/plate-math";
+import { EquationPlugin, InlineEquationPlugin } from "@udecode/plate-math/react";
 import {
   insertAudioPlaceholder,
   insertFilePlaceholder,
   insertMedia,
-  insertVideoPlaceholder,
-} from '@udecode/plate-media';
-import {
-  AudioPlugin,
-  FilePlugin,
-  ImagePlugin,
-  MediaEmbedPlugin,
-  VideoPlugin,
-} from '@udecode/plate-media/react';
-import { TablePlugin, insertTable } from '@udecode/plate-table/react';
-import { Path } from 'slate';
+  insertVideoPlaceholder
+} from "@udecode/plate-media";
+import { AudioPlugin, FilePlugin, ImagePlugin, MediaEmbedPlugin, VideoPlugin } from "@udecode/plate-media/react";
+import { insertTable, TablePlugin } from "@udecode/plate-table/react";
+import { Path } from "slate";
 
-const ACTION_THREE_COLUMNS = 'action_three_columns';
+const ACTION_THREE_COLUMNS = "action_three_columns";
 
 const insertList = (editor: PlateEditor, type: string) => {
   insertNodes(
     editor,
     editor.api.create.block({
       indent: 1,
-      listStyleType: type,
+      listStyleType: type
     }),
     { select: true }
   );
@@ -60,7 +51,7 @@ const insertList = (editor: PlateEditor, type: string) => {
 
 const insertColumns = (editor: PlateEditor, _: string) => {
   insertNodes(editor, editor.api.create.block(), {
-    select: true,
+    select: true
   });
 
   const entry = getBlockAbove(editor);
@@ -85,19 +76,19 @@ const insertBlockMap: Record<
   [ImagePlugin.key]: (editor) =>
     insertMedia(editor, {
       select: true,
-      type: ImagePlugin.key,
+      type: ImagePlugin.key
     }),
   [ListStyleType.Decimal]: insertList,
   [ListStyleType.Disc]: insertList,
   [MediaEmbedPlugin.key]: (editor) =>
     insertMedia(editor, {
       select: true,
-      type: MediaEmbedPlugin.key,
+      type: MediaEmbedPlugin.key
     }),
   [TablePlugin.key]: (editor) => insertTable(editor, {}, { select: true }),
   [TocPlugin.key]: (editor) => insertToc(editor, { select: true }),
   [VideoPlugin.key]: (editor) =>
-    insertVideoPlaceholder(editor, { select: true }),
+    insertVideoPlaceholder(editor, { select: true })
 };
 
 const insertInlineMap: Record<
@@ -106,8 +97,8 @@ const insertInlineMap: Record<
 > = {
   [DatePlugin.key]: (editor) => insertDate(editor, { select: true }),
   [InlineEquationPlugin.key]: (editor) =>
-    insertInlineEquation(editor, '', { select: true }),
-  [LinkPlugin.key]: (editor) => triggerFloatingLink(editor, { focused: true }),
+    insertInlineEquation(editor, "", { select: true }),
+  [LinkPlugin.key]: (editor) => triggerFloatingLink(editor, { focused: true })
 };
 
 export const insertBlock = (editor: PlateEditor, type: string) => {
@@ -123,7 +114,7 @@ export const insertBlock = (editor: PlateEditor, type: string) => {
 
       insertNodes(editor, editor.api.create.block({ type }), {
         at,
-        select: true,
+        select: true
       });
     }
 
@@ -146,10 +137,10 @@ const setList = (
     editor,
     editor.api.create.block({
       indent: 1,
-      listStyleType: type,
+      listStyleType: type
     }),
     {
-      at: entry[1],
+      at: entry[1]
     }
   );
 };
@@ -169,7 +160,7 @@ const setBlockMap: Record<
   [ACTION_THREE_COLUMNS]: setColumns,
   [INDENT_LIST_KEYS.todo]: setList,
   [ListStyleType.Decimal]: setList,
-  [ListStyleType.Disc]: setList,
+  [ListStyleType.Disc]: setList
 };
 
 export const setBlockType = (
@@ -182,7 +173,7 @@ export const setBlockType = (
       const [node, path] = entry;
 
       if (node[IndentListPlugin.key]) {
-        unsetNodes(editor, [IndentListPlugin.key, 'indent'], { at: path });
+        unsetNodes(editor, [IndentListPlugin.key, "indent"], { at: path });
       }
       if (type in setBlockMap) {
         return setBlockMap[type](editor, type, entry);

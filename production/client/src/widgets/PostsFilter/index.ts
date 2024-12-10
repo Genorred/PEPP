@@ -1,1 +1,1 @@
-export {default} from "./ui/PostsFilter"
+export { default } from "./ui/PostsFilter";

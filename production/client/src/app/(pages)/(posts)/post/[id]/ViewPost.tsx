@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 import { Editor } from "@/entities/Post/ui/plate-ui/editor";
 import { usePostEditor } from "@/features/Editor";
@@ -6,7 +6,7 @@ import { PostQuery } from "@/shared/api/graphql/graphql";
 import { usePostQuery } from "@/shared/api/graphql/generated";
 import { apiClient } from "@/shared/api/base";
 
-const ViewPost = ({post, id}: {
+const ViewPost = ({ post, id }: {
   id: number
   post: PostQuery
 }) => {

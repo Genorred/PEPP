@@ -1,20 +1,15 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 
-import { BlockquotePlugin } from '@udecode/plate-block-quote/react';
-import { CodeBlockPlugin } from '@udecode/plate-code-block/react';
-import {
-  ParagraphPlugin,
-  focusEditor,
-  useEditorRef,
-  useSelectionFragmentProp,
-} from '@udecode/plate-common/react';
-import { HEADING_KEYS } from '@udecode/plate-heading';
-import { INDENT_LIST_KEYS, ListStyleType } from '@udecode/plate-indent-list';
-import { TogglePlugin } from '@udecode/plate-toggle/react';
+import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
+import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
+import { focusEditor, ParagraphPlugin, useEditorRef, useSelectionFragmentProp } from "@udecode/plate-common/react";
+import { HEADING_KEYS } from "@udecode/plate-heading";
+import { INDENT_LIST_KEYS, ListStyleType } from "@udecode/plate-indent-list";
+import { TogglePlugin } from "@udecode/plate-toggle/react";
 import {
   ChevronRightIcon,
   Columns3Icon,
@@ -26,10 +21,10 @@ import {
   ListOrderedIcon,
   PilcrowIcon,
   QuoteIcon,
-  SquareIcon,
-} from 'lucide-react';
+  SquareIcon
+} from "lucide-react";
 
-import { getBlockType, setBlockType } from '@/shared/lib/transforms';
+import { getBlockType, setBlockType } from "@/shared/lib/transforms";
 
 import {
   DropdownMenu,
@@ -37,76 +32,76 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-  useOpenState,
-} from './dropdown-menu';
-import { ToolbarButton } from './toolbar';
+  useOpenState
+} from "./dropdown-menu";
+import { ToolbarButton } from "./toolbar";
 
 const turnIntoItems = [
   {
     icon: <PilcrowIcon />,
-    keywords: ['paragraph'],
-    label: 'Text',
-    value: ParagraphPlugin.key,
+    keywords: ["paragraph"],
+    label: "Text",
+    value: ParagraphPlugin.key
   },
   {
     icon: <Heading1Icon />,
-    keywords: ['title', 'h1'],
-    label: 'Heading 1',
-    value: HEADING_KEYS.h1,
+    keywords: ["title", "h1"],
+    label: "Heading 1",
+    value: HEADING_KEYS.h1
   },
   {
     icon: <Heading2Icon />,
-    keywords: ['subtitle', 'h2'],
-    label: 'Heading 2',
-    value: HEADING_KEYS.h2,
+    keywords: ["subtitle", "h2"],
+    label: "Heading 2",
+    value: HEADING_KEYS.h2
   },
   {
     icon: <Heading3Icon />,
-    keywords: ['subtitle', 'h3'],
-    label: 'Heading 3',
-    value: HEADING_KEYS.h3,
+    keywords: ["subtitle", "h3"],
+    label: "Heading 3",
+    value: HEADING_KEYS.h3
   },
   {
     icon: <ListIcon />,
-    keywords: ['unordered', 'ul', '-'],
-    label: 'Bulleted list',
-    value: ListStyleType.Disc,
+    keywords: ["unordered", "ul", "-"],
+    label: "Bulleted list",
+    value: ListStyleType.Disc
   },
   {
     icon: <ListOrderedIcon />,
-    keywords: ['ordered', 'ol', '1'],
-    label: 'Numbered list',
-    value: ListStyleType.Decimal,
+    keywords: ["ordered", "ol", "1"],
+    label: "Numbered list",
+    value: ListStyleType.Decimal
   },
   {
     icon: <SquareIcon />,
-    keywords: ['checklist', 'task', 'checkbox', '[]'],
-    label: 'To-do list',
-    value: INDENT_LIST_KEYS.todo,
+    keywords: ["checklist", "task", "checkbox", "[]"],
+    label: "To-do list",
+    value: INDENT_LIST_KEYS.todo
   },
   {
     icon: <ChevronRightIcon />,
-    keywords: ['collapsible', 'expandable'],
-    label: 'Toggle list',
-    value: TogglePlugin.key,
+    keywords: ["collapsible", "expandable"],
+    label: "Toggle list",
+    value: TogglePlugin.key
   },
   {
     icon: <FileCodeIcon />,
-    keywords: ['```'],
-    label: 'Code',
-    value: CodeBlockPlugin.key,
+    keywords: ["```"],
+    label: "Code",
+    value: CodeBlockPlugin.key
   },
   {
     icon: <QuoteIcon />,
-    keywords: ['citation', 'blockquote', '>'],
-    label: 'Quote',
-    value: BlockquotePlugin.key,
+    keywords: ["citation", "blockquote", ">"],
+    label: "Quote",
+    value: BlockquotePlugin.key
   },
   {
     icon: <Columns3Icon />,
-    label: '3 columns',
-    value: 'action_three_columns',
-  },
+    label: "3 columns",
+    value: "action_three_columns"
+  }
 ];
 
 export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
@@ -115,7 +110,7 @@ export function TurnIntoDropdownMenu(props: DropdownMenuProps) {
 
   const value = useSelectionFragmentProp({
     defaultValue: ParagraphPlugin.key,
-    getProp: (node) => getBlockType(node as any),
+    getProp: (node) => getBlockType(node as any)
   });
   const selectedItem = React.useMemo(
     () =>

@@ -1,8 +1,7 @@
 "use client";
 import React from "react";
 import Container from "@/shared/ui/Container";
-import { GeneralPostI, Post } from "@/entities/Post";
-import { PostRecommendationsQuery } from "@/shared/api/graphql/graphql";
+import { Post } from "@/entities/Post";
 import { filtersSlice } from "@/widgets/PostsFilter/model/filters.slice";
 import { useSelector } from "react-redux";
 import { useInfinitePostRecommendationsQuery } from "@/shared/api/graphql/generated";
