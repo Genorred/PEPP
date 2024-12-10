@@ -1,10 +1,10 @@
 import { Resolver, Query, Mutation, Args, Int, ResolveField, Parent } from "@nestjs/graphql";
 import { PostsService } from "./posts.service";
-import { Post } from "./entities/post.entity";
+import { Post } from "../../domain/entities/post.entity";
 import { CreatePostInput } from "./dto/create-post.input";
 import { UpdatePostInput } from "./dto/update-post.input";
 import { PartialPostInput } from "./dto/partial-post.input";
-import { User } from "./entities/user.entity";
+import { User } from "../../domain/entities/user.entity";
 import { CurrentUser } from "@_shared/auth-guard/CurrentUser";
 import { JwtPayload } from "@_shared/entities/jwt.entity";
 import UseAuth from "@_shared/auth-guard/useAuth";
@@ -15,6 +15,7 @@ import NextjsEndpoint from "../config/nextjsEndpoint";
 import { ConfigType } from "@nestjs/config";
 import { FindAllPostsInput } from "./dto/_nextjs_find-posts.input";
 import { FindAlgorithmPostsInput } from "./dto/find-algorithm-posts.input";
+import { Recommendations } from "./model/recommendations.response";
 
 @Resolver(() => Post)
 export class PostsResolver {
@@ -44,7 +45,7 @@ export class PostsResolver {
     return this.postsService.findMany({ userId: user.sub, isDraft: true });
   }
 
-  @Query(() => [Post], { name: "algoPosts" })
+  @Query(() => Recommendations, { name: "algoPosts" })
   findAlgorithmPosts(@Args('findAlgorithmInput') findAlgorithmInput: FindAlgorithmPostsInput, @CurrentUser() user: JwtPayload) {
     return this.postsService.recommendations({...findAlgorithmInput, userId: user.sub});
   }

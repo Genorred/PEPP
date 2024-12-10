@@ -1,4 +1,4 @@
-import { Post } from "../../posts/entities/post.entity";
+import { Post } from "../../../domain/entities/post.entity";
 
 export interface ElasticPost extends Pick<Post,'createdAt' | 'rating' | "description" | "topics" | "subTopics" | "title"> {
 }

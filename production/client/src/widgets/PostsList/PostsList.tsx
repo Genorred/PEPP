@@ -1,18 +1,47 @@
+"use client";
 import React from "react";
 import Container from "@/shared/ui/Container";
 import { GeneralPostI, Post } from "@/entities/Post";
 import { PostRecommendationsQuery } from "@/shared/api/graphql/graphql";
+import { filtersSlice } from "@/widgets/PostsFilter/model/filters.slice";
+import { useSelector } from "react-redux";
+import { useInfinitePostRecommendationsQuery } from "@/shared/api/graphql/generated";
+import { apiClient } from "@/shared/api/base";
 
 
-const PostsList = ({posts}: {
-  posts: PostRecommendationsQuery["algoPosts"]
-}) => {
+const PostsList = () => {
+  const filters = useSelector(filtersSlice.selectors.filter);
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    hasPreviousPage
+  } = useInfinitePostRecommendationsQuery(apiClient);
+
   return (
-    <Container className='flex gap-4 flex-wrap' variant={"section"}>
-      {posts.map(post =>
-        <Post key={post.id} {...post}/>
-      )}
-    </Container>
+    <>
+      {isLoading
+        ?
+        "Loading..."
+        :
+        <>
+          {data?.pages
+            ?
+            <Container className="flex gap-4 flex-wrap" variant={"section"}>
+              {data.pages.map(posts =>
+                posts.algoPosts.posts.map(post =>
+                  <Post key={post.id} {...post} />
+                )
+              )}
+            </Container>
+            :
+            "NO posts found"
+          }
+
+        </>
+      }
+    </>
   );
 };
 

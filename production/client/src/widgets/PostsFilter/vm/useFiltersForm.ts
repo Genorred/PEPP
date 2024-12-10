@@ -5,8 +5,8 @@ import { useEffect } from "react";
 export const useFiltersForm = () => {
   const { control, handleSubmit, watch, setValue } = useForm<FilterState>({
     defaultValues: {
-      createdAtDesc: false,
-      ratingDesc: false,
+      createdAt: null,
+      rating: null,
       search: '',
       topics: []
     }

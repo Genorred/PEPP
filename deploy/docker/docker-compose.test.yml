@@ -1,14 +1,9 @@
 networks:
   default:
     driver: bridge
-  backend:
-    driver: bridge
   frontend:
     name: infrastructure
     driver: bridge
-  elastic:
-    name: elastic
-    external: false
 
 # ADD CONFIG TO BUILD
 
@@ -23,7 +18,7 @@ services:
     env_file:
       - ../../config/.env.test
     networks:
-      - backend
+      - default
       - frontend
     ports:
       - "8080:8080"
@@ -31,9 +26,10 @@ services:
       - "../../production/gateway/:/usr/app/gateway/"
       - "../../production/_shared:/usr/app/gateway/src/_shared"
 #      - "../../production/_shared/scripts:/usr/app/gateway/scripts"
-#      - "../../production/_shared/config:/usr/app/gateway/_config"
+#      - "../../production/_shared/config:/usr/app/gateway/config"
     depends_on:
       - users
+      - posts
 
   users:
     build:
@@ -44,22 +40,18 @@ services:
     env_file:
       - ../../config/.env.test
     restart: always
-    networks:
-      - backend
     ports:
       - "${USERS_SERVICE_PORT}:${USERS_SERVICE_PORT}"
     volumes:
       - "../../production/users/:/usr/app/users/"
       - "../../production/_shared:/usr/app/users/src/_shared"
 #      - "../../production/_shared/scripts:/usr/app/users/scripts"
-#      - "../../production/_shared/config:/usr/app/users/_config"
+#      - "../../production/_shared/config:/usr/app/users/config"
     depends_on:
       - users_db
   users_db:
     image: postgres
     restart: always
-    networks:
-      - backend
     environment:
       - POSTGRES_USER=${USERS_POSTGRES_USER}
       - POSTGRES_PASSWORD=${USERS_POSTGRES_PASSWORD}
@@ -87,7 +79,7 @@ services:
       - WATCHPACK_POLLING=true
     volumes:
       - "../../production/client/:/usr/app/client/"
-      - "../../production/_shared/config:/usr/app/client/_config"
+      - "../../production/_shared/config:/usr/app/client/config"
   posts:
     build:
       context: ../../production
@@ -97,24 +89,20 @@ services:
     env_file:
       - ../../config/.env.test
     restart: always
-    networks:
-      - backend
-      - elastic
     ports:
       - "${POSTS_SERVICE_PORT}:${POSTS_SERVICE_PORT}"
     volumes:
       - "../../production/posts/:/usr/app/posts/"
       - "../../production/_shared:/usr/app/posts/src/_shared"
+      - certs:/usr/app/posts/certs
 #      - "../../production/_shared/scripts:/usr/app/posts/scripts"
-#      - "../../production/_shared/config:/usr/app/posts/_config"
+#      - "../../production/_shared/config:/usr/app/posts/config"
     depends_on:
       - posts_db
       - es01
   posts_db:
     image: postgres
     restart: always
-    networks:
-      - backend
     environment:
       - POSTGRES_USER=${POSTS_POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTS_POSTGRES_PASSWORD}
@@ -129,8 +117,6 @@ services:
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
       - ../setup.elastic.sh:/usr/local/bin/setup.sh
-    networks:
-      - elastic
     user: "0"
     command: ["/bin/bash", "/usr/local/bin/setup.sh"]
     env_file:
@@ -141,8 +127,6 @@ services:
       timeout: 5s
       retries: 120
   es01:
-    networks:
-      - elastic
     depends_on:
       posts_elastic_setup:
         condition: service_healthy
@@ -187,8 +171,6 @@ services:
       timeout: 10s
       retries: 120
   kibana:
-    networks:
-      - elastic
     depends_on:
       es01:
         condition: service_healthy
@@ -220,8 +202,6 @@ services:
       timeout: 10s
       retries: 120
   metricbeat01:
-    networks:
-      - elastic
     depends_on:
       es01:
         condition: service_healthy
@@ -246,8 +226,6 @@ services:
       - KIBANA_HOSTS=http://kibana:5601
       - LOGSTASH_HOSTS=http://logstash01:9600
   filebeat01:
-    networks:
-      - elastic
     depends_on:
       es01:
         condition: service_healthy
@@ -268,8 +246,6 @@ services:
       - KIBANA_HOSTS=http://kibana:5601
       - LOGSTASH_HOSTS=http://logstash01:9600
   logstash01:
-    networks:
-      - elastic
     depends_on:
       es01:
         condition: service_healthy

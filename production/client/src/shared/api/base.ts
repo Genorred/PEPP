@@ -11,7 +11,12 @@ export const serverApiClient = new GraphQLClient(serverBaseUrl, {
   credentials: 'include',
 })
 export const queryClient = new QueryClient({
-
+defaultOptions: {
+  queries: {
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  }
+}
 });
 export const baseFetch = (url: string, init?: RequestInit) => {
     return fetch(clientBaseUrl + "/" + url, init).then((response) => response.json());

@@ -16,8 +16,6 @@ const Page = ({ params }: {
 }) => {
   const id = Number(React.use(params).id);
   const { data, isLoading } = useDraftQuery(apiClient, { id }, {
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
     enabled: !!id
   });
 

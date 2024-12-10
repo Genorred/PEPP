@@ -52,10 +52,10 @@ export type CreateVersionPostInput = {
 };
 
 export type FindAlgorithmPostsInput = {
-  createdAtDesc?: InputMaybe<Scalars['Boolean']['input']>;
-  cursorId?: InputMaybe<Scalars['Int']['input']>;
-  ratingDesc?: InputMaybe<Scalars['Boolean']['input']>;
-  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  createdAt?: InputMaybe<SortOrder>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  rating?: InputMaybe<SortOrder>;
+  searchValue?: InputMaybe<Scalars['String']['input']>;
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
@@ -86,6 +86,11 @@ export type LoginInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
 };
+
+export enum SortOrder {
+  Asc = 'ASC',
+  Desc = 'DESC'
+}
 
 export type UpdatePostInput = {
   body?: InputMaybe<Scalars['JSONObject']['input']>;
@@ -168,15 +173,14 @@ export type TopicsQueryVariables = Exact<{
 export type TopicsQuery = { __typename?: 'Query', topics: Array<{ __typename?: 'Topic', title: string }> };
 
 export type PostRecommendationsQueryVariables = Exact<{
-  createdAtDesc?: InputMaybe<Scalars['Boolean']['input']>;
-  ratingDesc?: InputMaybe<Scalars['Boolean']['input']>;
-  cursorId?: InputMaybe<Scalars['Int']['input']>;
+  createdAt?: InputMaybe<SortOrder>;
+  rating?: InputMaybe<SortOrder>;
+  page?: InputMaybe<Scalars['Int']['input']>;
   topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type PostRecommendationsQuery = { __typename?: 'Query', algoPosts: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img: string }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> };
+export type PostRecommendationsQuery = { __typename?: 'Query', algoPosts: { __typename?: 'Recommendations', totalCount: number, posts: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img: string }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
 
 export type PublishDraftMutationVariables = Exact<{
   postId: Scalars['Int']['input'];
@@ -311,32 +315,35 @@ export const TopicsDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<TopicsQuery, TopicsQueryVariables>;
 export const PostRecommendationsDocument = new TypedDocumentString(`
-    query postRecommendations($createdAtDesc: Boolean, $ratingDesc: Boolean, $cursorId: Int, $topics: [String!], $subTopics: [String!]) {
+    query postRecommendations($createdAt: SortOrder, $rating: SortOrder, $page: Int, $topics: [String!]) {
   algoPosts(
-    findAlgorithmInput: {createdAtDesc: $createdAtDesc, ratingDesc: $ratingDesc, cursorId: $cursorId, topics: $topics, subTopics: $subTopics}
+    findAlgorithmInput: {createdAt: $createdAt, rating: $rating, page: $page, topics: $topics}
   ) {
-    id
-    rating
-    commentsQuantity
-    reviewsQuantity
-    img
-    minutes
-    title
-    createdAt
-    userId
-    description
-    version
-    updatedAt
-    user {
-      username
-      occupation
+    totalCount
+    posts {
+      id
+      rating
+      commentsQuantity
+      reviewsQuantity
       img
-    }
-    topics {
+      minutes
       title
-    }
-    subTopics {
-      title
+      createdAt
+      userId
+      description
+      version
+      updatedAt
+      user {
+        username
+        occupation
+        img
+      }
+      topics {
+        title
+      }
+      subTopics {
+        title
+      }
     }
   }
 }

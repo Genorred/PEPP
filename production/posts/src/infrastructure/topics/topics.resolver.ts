@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { TopicsService } from './topics.service';
 import { CreateTopicInput } from './dto/create-topic.input';
 import { UpdateTopicInput } from './dto/update-topic.input';
-import { Topic } from "./entities/topic.entity";
+import { Topic } from "../../domain/entities/topic.entity";
 
 @Resolver(() => Topic)
 export class TopicsResolver {

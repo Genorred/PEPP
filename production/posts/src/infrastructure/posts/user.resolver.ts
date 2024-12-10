@@ -1,11 +1,11 @@
 
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { PostsService } from "../posts/posts.service";
-import { Post } from "../posts/entities/post.entity";
-import { User } from "../posts/entities/user.entity";
+import { PostsService } from "./posts.service";
+import { Post } from "../../domain/entities/post.entity";
+import { User } from "../../domain/entities/user.entity";
 
 @Resolver(() => User)
-export class UsersResolver {
+export class UserResolver {
   constructor(private readonly postsService: PostsService) {}
 
   @ResolveField(() => [Post])

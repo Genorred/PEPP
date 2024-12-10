@@ -17,8 +17,6 @@ const Page = ({ post, id }: {
   post: PostQuery;
 }) => {
   const { data, isLoading } = usePostQuery(apiClient, { id }, {
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
     initialData: post,
     enabled: !!id
   });

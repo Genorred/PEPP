@@ -18,8 +18,6 @@ const Page = ({ params }: {
   const version = Number(React.use(params).version);
 
   const { data, isLoading } = useDraftQuery(apiClient, { id, version }, {
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
     enabled: !!id
   });
 

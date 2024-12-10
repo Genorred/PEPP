@@ -1,39 +1,43 @@
 import { graphql } from "@/shared/api/graphql";
 
 const getPostsRecommendations = graphql(`
-    query postRecommendations($createdAtDesc: Boolean, $ratingDesc: Boolean,
-        $cursorId: Int, $topics: [String!], $subTopics: [String!]) {
-       
+    query postRecommendations($createdAt: SortOrder, $rating: SortOrder,
+        $page: Int, $topics: [String!]) {
+
         algoPosts (findAlgorithmInput: {
-            createdAtDesc: $createdAtDesc,
-            ratingDesc: $ratingDesc,
-            cursorId: $cursorId,
+            createdAt: $createdAt,
+            rating: $rating,
+            page: $page,
             topics: $topics,
-            subTopics: $subTopics
         }) {
-            id,
-            rating,
-            commentsQuantity,
-            reviewsQuantity,
-            img,
-            minutes,
-            title,
-            createdAt,
-            userId,
-            description,
-            version,
-            updatedAt
-            user {
-                username
-                occupation
-                img
+            totalCount,
+            posts {
+                id,
+                rating,
+                commentsQuantity,
+                reviewsQuantity,
+                img,
+                minutes,
+                title,
+                createdAt,
+                userId,
+                description,
+                version,
+                updatedAt
+                user {
+                    username
+                    occupation
+                    img
+                }
+                topics {
+                    title
+                }
+                subTopics {
+                    title
+                }
             }
-            topics {
-                title
-            }
-            subTopics {
-                title
-            }
+
+
         }
     }
 `);

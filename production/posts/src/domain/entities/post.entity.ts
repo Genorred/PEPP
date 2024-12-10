@@ -1,7 +1,7 @@
 import { ObjectType, Field, Int, ID, Directive } from "@nestjs/graphql";
 import { User } from "./user.entity";
 import JSON from "graphql-type-json";
-import { Topic } from "../../topics/entities/topic.entity";
+import { Topic } from "./topic.entity";
 
 @ObjectType()
 @Directive('@key(fields: "id")')

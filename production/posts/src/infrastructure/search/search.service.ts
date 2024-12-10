@@ -1,11 +1,15 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { ElasticsearchService } from "@nestjs/elasticsearch";
-import { Mapping } from "./mapping";
+import { Mapping } from "../../domain/repositories/elastic/mapping";
 import { SearchQueryBuilderService } from "./searchQueryBuilder";
-import { Post } from "../posts/entities/post.entity";
+import { Post } from "../../domain/entities/post.entity";
 import { ElasticPost } from "./entities/elastic_post.entity";
 import { SearchDto } from "./dto/search.dto";
 import { IndexDto } from "./dto/index.dto";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Cache } from "cache-manager";
+import KeyvRedis, { RedisClientConnectionType } from "@keyv/redis";
+import { REDIS_CLIENT } from "../../domain/kernel/redis.module";
 
 const index = "posts";
 
@@ -13,12 +17,16 @@ const index = "posts";
 export class SearchService {
   constructor(
     private readonly esService: ElasticsearchService,
+    @Inject(REDIS_CLIENT) private redisClient: RedisClientConnectionType,
     private readonly builderService: SearchQueryBuilderService) {
   }
 
   public async createIndex() {
     // create index if doesn't exist
     try {
+      console.log('gh');
+      // @ts-ignore
+      console.log('j', this.redisClient);
       const checkIndex = await this.esService.indices.exists({ index });
       if (!checkIndex) {
         this.esService.indices.create({
@@ -45,6 +53,12 @@ export class SearchService {
     } catch (err) {
       throw err;
     }
+  }
+  public deletePost(id: number) {
+    return this.esService.delete({
+      index,
+      id: id.toString()
+    })
   }
   public async updatePost(payload: IndexDto) {
     try {
@@ -76,7 +90,8 @@ export class SearchService {
         {...item._source, id: item._id}
       ));
       return {
-        totalCount,
+        // @ts-ignore
+        totalCount: totalCount?.value ?? totalCount,
         data
       };
     } catch (err) {

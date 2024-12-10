@@ -1,10 +1,10 @@
 import { ForbiddenException, Inject, Injectable } from "@nestjs/common";
 import { CreatePostInput, CreatePostInputService } from "./dto/create-post.input";
 import { UpdatePostInput, UpdatePostInputService } from "./dto/update-post.input";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "../../domain/kernel/prisma/prisma.service";
 import { PartialPostInput } from "./dto/partial-post.input";
 import { CreateVersionPostInputService } from "./dto/create-version-post.input";
-import { TopicsRepository } from "./topics.repository";
+import { TopicsRepository } from "../../domain/repositories/db/topics.repository";
 import { FindPostInput } from "./dto/find-post.input";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
 import { Cache } from "cache-manager";
@@ -13,14 +13,14 @@ import { ElasticsearchService } from "@nestjs/elasticsearch";
 import { SearchService } from "../search/search.service";
 import { SearchQueryBuilderService } from "../search/searchQueryBuilder";
 import { ElasticPost } from "../search/entities/elastic_post.entity";
-import { PreferencesService } from "./preferences.service";
+import { PreferencesRepository } from "../../domain/repositories/elastic/preferences.repository";
 
 @Injectable()
 export class PostsService {
   constructor(private readonly prismaService: PrismaService,
               private readonly topicsRepository: TopicsRepository,
               private readonly searchService: SearchService,
-              private readonly preferencesService: PreferencesService) {
+              private readonly preferencesService: PreferencesRepository) {
   }
 
   async create(createPostInput: CreatePostInputService) {
@@ -116,7 +116,7 @@ export class PostsService {
     });
   }
 
-  update(updatePostInput: UpdatePostInputService) {
+  async update(updatePostInput: UpdatePostInputService) {
     const { id, userId, topics, subTopics, isPublished, ...body } = updatePostInput;
     let where = { id, userId };
     if (isPublished) {
@@ -133,7 +133,7 @@ export class PostsService {
       };
     }
     const connectOrCreateTopicsData = this.topicsRepository.connectOrCreateTopics(topics, subTopics);
-    return this.prismaService.post.update({
+    const post = await this.prismaService.post.update({
       where, data: {
         ...body,
         topics: (connectOrCreateTopicsData.topics ? {
@@ -146,6 +146,12 @@ export class PostsService {
         } : {})
       }
     });
+    if(isPublished){
+      void this.searchService.indexPost(post);
+    } else if (isPublished === false) {
+      void this.searchService.deletePost(post.id);
+    }
+    return post
   }
 
 
@@ -158,7 +164,7 @@ export class PostsService {
 
     if (actualPost.userId === userId) {
       const { topics, subTopics, userId, postId, id, ...data } = actualPost;
-      await this.prismaService.post.update({
+      const post = await this.prismaService.post.update({
         where: {
           id
         },
@@ -170,7 +176,7 @@ export class PostsService {
         }
       });
 
-      return this.prismaService.post.update({
+      await this.prismaService.post.update({
         where: {
           id: versionPost.id
         },
@@ -179,6 +185,8 @@ export class PostsService {
           isArchived: true
         }
       });
+      void this.searchService.indexPost(post);
+      return post
     }
   }
 
@@ -190,6 +198,7 @@ export class PostsService {
     const { userId, page, ...data } = recommendationsInput;
     const { dislikedPosts, likedPosts, pressedPosts, recentlyShowedPosts } =
       await this.preferencesService.get(userId, page);
+    console.log('input', recommendationsInput)
     const response = await this.searchService.search({
       ...data,
       page,
@@ -198,8 +207,12 @@ export class PostsService {
       pressedPosts,
       recentlyShowedPosts
     });
+    console.log('response', response)
     void this.preferencesService.setRecentlyShowed(userId, response.data);
-    return response;
+    return {
+      totalCount: response.totalCount,
+      posts: response.data
+    };
   }
 
 

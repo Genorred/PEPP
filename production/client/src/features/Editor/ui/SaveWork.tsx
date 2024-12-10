@@ -22,8 +22,8 @@ const formSchema = z.object({
   })).max(5, {
     message: 'No more than 5 topics.'
   }),
-  subTopics: z.array(z.string().min(8, {
-    message: "Message must be at least 8 characters."
+  subTopics: z.array(z.string().min(2, {
+    message: "Topic must be at least 2 characters."
   })).max(5, {
     message: 'No more than 5 subTopics.'
   })

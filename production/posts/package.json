@@ -22,6 +22,7 @@
   "dependencies": {
     "@apollo/subgraph": "^2.9.3",
     "@elastic/elasticsearch": "^8.16.2",
+    "@keyv/redis": "^4.0.2",
     "@nestjs/apollo": "^12.2.1",
     "@nestjs/cache-manager": "^2.3.0",
     "@nestjs/common": "^10.4.8",
@@ -32,8 +33,8 @@
     "@nestjs/platform-express": "^10.4.8",
     "@prisma/client": "5.21.1",
     "cache-manager": "^5.7.6",
-    "cache-manager-redis-store": "^3.0.1",
     "graphql-type-json": "^0.3.2",
+    "keyv": "^5.2.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },

@@ -3,7 +3,7 @@ import { MappingTypeMapping } from "@elastic/elasticsearch/lib/api/typesWithBody
 export const Mapping: MappingTypeMapping = {
   properties: {
     topics: {
-      boost: 3,
+      // boost: 3,
       type: 'keyword'
     },
     subTopics: {
@@ -11,11 +11,11 @@ export const Mapping: MappingTypeMapping = {
     },
     title: {
       type: 'text',
-      boost: 3,
+      // boost: 3,
     },
     description: {
       type: 'text',
-      boost: 2,
+      // boost: 2,
     },
     rating: {
       type: 'float'

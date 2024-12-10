@@ -1,5 +1,5 @@
 if [ "$SERVICE_NAME" != "gateway" ]; then
-    node scripts/getPrismaDbUrl.mjs
+    node ./src/_shared/scripts/getPrismaDbUrl.mjs
     npx prisma db push
 fi
 

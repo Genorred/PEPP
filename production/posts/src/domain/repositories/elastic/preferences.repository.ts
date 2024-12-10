@@ -1,8 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { ElasticPost } from "../search/entities/elastic_post.entity";
+import { ElasticPost } from "../../../infrastructure/search/entities/elastic_post.entity";
 import { CACHE_MANAGER } from "@nestjs/cache-manager";
-import { Cache } from "cache-manager";
-import { RedisStore } from "cache-manager-redis-store";
+import { Cache, Store } from "cache-manager";
+import KeyvRedis, { RedisClientConnectionType } from "@keyv/redis";
+import { REDIS_CLIENT } from "../../kernel/redis.module";
 
 const userPrefKeys = {
   list: {
@@ -36,18 +37,14 @@ const getUserPrefKey = {
 type UserPrefKeys = ReturnType<typeof getUserPrefKeys>;
 
 @Injectable()
-export class PreferencesService {
-  private redisClient: ReturnType<RedisStore["getClient"]>;
-
+export class PreferencesRepository {
   constructor(
-    @Inject(CACHE_MANAGER) private cacheManager: Cache
+    @Inject(REDIS_CLIENT) private redisClient: RedisClientConnectionType
   ) {
-    // this.redisClient = (cacheManager.store as unknown as RedisStore).getClient();
   }
 
   public async get(userId: number, page: number) {
     const keys = getUserPrefKeys(userId);
-    this.redisClient = (this.cacheManager.store as unknown as RedisStore).getClient();
     const [likedPosts, dislikedPosts, pressedPosts, recentlyShowed, recentlyShowedSuspended] =
       await Promise.all([
         this.getList(keys.liked),
@@ -76,8 +73,10 @@ export class PreferencesService {
     id: string
   }[]) {
     // apply each pagination
-    return this.redisClient.lPush(getUserPrefKey.recentlyShowedSuspended(userId),
-      posts.map(post => post.id));
+    if (posts.length > 0) {
+      return this.redisClient.lPush(getUserPrefKey.recentlyShowedSuspended(userId),
+        posts.map(post => post.id));
+    }
   }
 
   private getList(key: string) {
@@ -89,19 +88,21 @@ export class PreferencesService {
                                     recentlyShowed: Record<string, string>) {
     void this.redisClient.del(keys.recentlyShowedSuspended);
 
-    const multi = this.redisClient.multi();
-    recentlyShowedSuspended.forEach(postId => {
-      multi.hIncrBy(keys.recentlyShowed, postId, 1);
-    });
-    // Добавляем ключ в список порядка
-    multi.rPush(keys.recentlyShowedList, recentlyShowedSuspended);
-    void multi.exec();
+    if (recentlyShowedSuspended.length > 0) {
+      const multi = this.redisClient.multi();
+      recentlyShowedSuspended.forEach(postId => {
+        multi.hIncrBy(keys.recentlyShowed, postId, 1);
+      });
+      // Добавляем ключ в список порядка
+      multi.rPush(keys.recentlyShowedList, recentlyShowedSuspended);
+      void multi.exec();
+    }
 
     const maxLength = 80;
     // Проверяем длину списка порядка
     const length = Object.values(recentlyShowed).length + recentlyShowedSuspended.length;
     const difference = Math.max(length - maxLength, 0);
-    if (difference) {
+    if (difference > 0) {
       // Удаляем самый старый ключ из списка
       const list = await this.redisClient.lRange(keys.recentlyShowedList, 0, difference);
       await this.redisClient.lTrim(keys.recentlyShowedList, 0, difference);
