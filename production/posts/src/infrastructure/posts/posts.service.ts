@@ -190,23 +190,23 @@ export class PostsService {
   }
 
   async recommendations(recommendationsInput: FindAlgorithmPostsInput & { userId: number }) {
-    const { userId, page, ...data } = recommendationsInput;
+    const { userId, skipPages, ...data } = recommendationsInput;
     const { dislikedPosts, likedPosts, pressedPosts, recentlyShowedPosts } =
-      await this.preferencesService.get(userId, page);
+      await this.preferencesService.get(userId, !skipPages);
     console.log("input", recommendationsInput);
-    const response = await this.searchService.search({
+    const { totalPages, data: posts } = await this.searchService.search({
       ...data,
-      page,
+      skipPages,
       likedPosts,
       dislikedPosts,
       pressedPosts,
       recentlyShowedPosts
     });
-    console.log("response", response);
-    void this.preferencesService.setRecentlyShowed(userId, response.data);
+    console.log("response", totalPages, posts);
+    void this.preferencesService.setRecentlyShowed(userId, posts);
     return {
-      totalCount: response.totalCount,
-      posts: response.data
+      totalPages,
+      data: posts
     };
   }
 

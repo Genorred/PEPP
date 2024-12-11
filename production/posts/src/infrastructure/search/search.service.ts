@@ -75,13 +75,16 @@ export class SearchService {
   }
 
   public async search(searchParam: SearchDto) {
+    console.log(searchParam);
     try {
       const pageSize = 20;
+      const v = this.builderService.buildSearchQuery(searchParam)
+      console.log('query', v);
       const { hits: parentHits } = await this.esService.search<ElasticPost>({
         index,
         sort: this.builderService.sortSearchQuery(searchParam),
         query: this.builderService.buildSearchQuery(searchParam),
-        from: searchParam.page ? searchParam.page * pageSize : 0,
+        from: searchParam.skipPages ? searchParam.skipPages * pageSize : 0,
         size: 80
       });
       const totalCount = parentHits.total;
@@ -91,7 +94,7 @@ export class SearchService {
       ));
       return {
         // @ts-ignore
-        totalCount: totalCount?.value ?? totalCount,
+        totalPages: Math.ceil((totalCount?.value ?? totalCount) / pageSize),
         data
       };
     } catch (err) {

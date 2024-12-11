@@ -4,7 +4,7 @@ import { Post } from "../../../domain/entities/post.entity";
 @ObjectType()
 export class Recommendations {
   @Field(() => Int)
-  totalCount: number;
+  totalPages: number;
   @Field(() => [Post])
-  posts: Post[];
+  data: Post[];
 }

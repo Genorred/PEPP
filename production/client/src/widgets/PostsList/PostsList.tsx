@@ -6,40 +6,69 @@ import { filtersSlice } from "@/widgets/PostsFilter/model/filters.slice";
 import { useSelector } from "react-redux";
 import { useInfinitePostRecommendationsQuery } from "@/shared/api/graphql/generated";
 import { apiClient } from "@/shared/api/base";
+import { useIntersectionObserver } from "usehooks-ts";
+import { PostRecommendationsQueryVariables } from "@/shared/api/graphql/graphql";
 
 
 const PostsList = () => {
-  const filters = useSelector(filtersSlice.selectors.filter);
+  const { rating, createdAt, ...filters } = useSelector(filtersSlice.selectors.filter);
+  const defaultParams = {
+    ...filters,
+    rating: rating === "none" ? undefined : rating || undefined,
+    create: createdAt === "none" ? undefined : createdAt || undefined
+  } as PostRecommendationsQueryVariables;
   const {
     data,
     isLoading,
     fetchNextPage,
-    hasNextPage,
-    hasPreviousPage
-  } = useInfinitePostRecommendationsQuery(apiClient);
+    hasNextPage
+  } = useInfinitePostRecommendationsQuery(apiClient, defaultParams, {
+    getNextPageParam: (lastPage, allPages) => (
+      lastPage.algoPosts.totalPages - allPages.length > 1 ?
+        {
+          ...defaultParams,
+          skipPages: allPages.length
+        } as PostRecommendationsQueryVariables
+        : undefined
+    )
+  });
+
+  const [ref] = useIntersectionObserver({
+    onChange: isIntersecting => {
+      if (isIntersecting && hasNextPage) {
+        void fetchNextPage();
+      }
+    }
+  });
 
   return (
     <>
-      {isLoading
+      {data?.pages
         ?
-        "Loading..."
-        :
         <>
-          {data?.pages
-            ?
-            <Container className="flex gap-4 flex-wrap" variant={"section"}>
-              {data.pages.map(posts =>
-                posts.algoPosts.posts.map(post =>
-                  <Post key={post.id} {...post} />
-                )
-              )}
-            </Container>
-            :
-            "NO posts found"
+          <Container className="flex gap-4 flex-wrap" variant={"section"}>
+            {data.pages.map(posts =>
+              posts.algoPosts.data.map(post =>
+                <Post key={post.id} {...post} />
+              )
+            )}
+          </Container>
+          {hasNextPage ?
+            isLoading
+              ?
+              "loading next page..."
+              :
+              <div className="h-1 w-full" ref={ref} />
+            : null
           }
-
         </>
+        : isLoading
+          ?
+          "loading..."
+          :
+          "NO posts found"
       }
+
     </>
   );
 };

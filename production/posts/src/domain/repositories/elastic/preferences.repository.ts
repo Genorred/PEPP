@@ -40,7 +40,7 @@ export class PreferencesRepository {
   ) {
   }
 
-  public async get(userId: number, page: number) {
+  public async get(userId: number, isFirstPage: boolean) {
     const keys = getUserPrefKeys(userId);
     const [likedPosts, dislikedPosts, pressedPosts, recentlyShowed, recentlyShowedSuspended] =
       await Promise.all([
@@ -48,12 +48,12 @@ export class PreferencesRepository {
         this.getList(keys.disliked),
         this.getList(keys.pressed),
         this.redisClient.hGetAll(keys.recentlyShowed),
-        page === 1
+        isFirstPage
           ? this.getList(keys.recentlyShowedSuspended)
           : [] as string[]
       ]);
 
-    if (page === 1) {
+    if (isFirstPage) {
       // apply suspended ids
       void this.applySuspendedPosts(keys, recentlyShowedSuspended, recentlyShowed);
     }
@@ -62,7 +62,9 @@ export class PreferencesRepository {
       likedPosts,
       dislikedPosts,
       pressedPosts,
-      recentlyShowedPosts: { ...recentlyShowed, ...recentlyShowedSuspended }
+      recentlyShowedPosts: [ ...Object.entries(recentlyShowed),
+        ...recentlyShowedSuspended.map(postId => ([postId, '1']))
+      ] as [string, string][]
     };
   }
 
@@ -99,7 +101,7 @@ export class PreferencesRepository {
     // Проверяем длину списка порядка
     const length = Object.values(recentlyShowed).length + recentlyShowedSuspended.length;
     const difference = Math.max(length - maxLength, 0);
-    if (difference > 0) {
+    if (difference) {
       // Удаляем самый старый ключ из списка
       const list = await this.redisClient.lRange(keys.recentlyShowedList, 0, difference);
       await this.redisClient.lTrim(keys.recentlyShowedList, 0, difference);

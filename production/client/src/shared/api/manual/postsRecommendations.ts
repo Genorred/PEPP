@@ -2,16 +2,17 @@ import { graphql } from "@/shared/api/graphql";
 
 const getPostsRecommendations = graphql(`
     query postRecommendations($createdAt: SortOrder, $rating: SortOrder,
-        $page: Int, $topics: [String!]) {
+        $skipPages: Int, $topics: [String!], $search: String) {
 
         algoPosts (findAlgorithmInput: {
             createdAt: $createdAt,
             rating: $rating,
-            page: $page,
+            skipPages: $skipPages,
             topics: $topics,
+            searchValue: $search
         }) {
-            totalCount,
-            posts {
+            totalPages,
+            data {
                 id,
                 rating,
                 commentsQuantity,

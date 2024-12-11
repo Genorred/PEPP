@@ -14,100 +14,84 @@ export class SearchQueryBuilderService {
   }
 
   public buildSearchQuery(searchParams: Omit<SearchDto, "page" | "createdAt" | "rating">) {
-    try {
-      const {
-        likedPosts, dislikedPosts, searchValue,
-        topics, recentlyShowedPosts, pressedPosts
-      } = searchParams;
-      let query: QueryDslQueryContainer["bool"][] = [] as QueryDslQueryContainer["bool"][];
+    const {
+      likedPosts, dislikedPosts, searchValue,
+      topics, recentlyShowedPosts, pressedPosts
+    } = searchParams;
+    const mustQueries: QueryDslQueryContainer["bool"]["must"][] = [];
+    const shouldQueries: QueryDslQueryContainer["bool"]["should"][] = [];
+    const filterQueries: QueryDslQueryContainer["bool"]["filter"][] = [];
+    let query: QueryDslQueryContainer["bool"][] = [] as QueryDslQueryContainer["bool"][];
 
-      if (likedPosts.length || pressedPosts.length) {
-        query.push(
-          {
-            should: {
-              more_like_this: {
-                fields: ["topics", "subTopics"],
-                like: [...likedPosts, ...pressedPosts].map(post => ({
-                  _id: post // extra field toString()
-                })),
-                unlike: (dislikedPosts && dislikedPosts.map(post => ({
-                  _id: post
-                })))
-              }
-            }
-          }
-        );
-      }
-
-      if (searchValue) {
-        query.push({
-          must: {
-            multi_match: {
-              fields: ["title", "description"] as ElasticKeys,
-              query: searchValue,
-              tie_breaker: 0.3
-            }
-          }
-        });
-      }
-
-      if (topics.length) {
-        // one match is must and others are useful
-        query.push({
-          must: {
-            bool: {
-              should: topics.map(topic => ({
-                  bool: {
-                    should: [
-                      {
-                        term: {
-                          "topics.keyword": topic
-                        }
-                      },
-                      {
-                        term: {
-                          "subTopics.keyword": topic
-                        }
-                      }
-                    ]
-                  }
-                } as QueryDslQueryContainer
-              ))
-            }
-          }
-        });
-      }
-
-      return {
-        function_score: {
-          query: (query.length > 1 ? {
-            bool: query
-          } : undefined),
-          boost_mode: "multiply",
-          functions: [
-            {
-              field_value_factor: {
-                field: "rating" as ElasticKey,
-                factor: 1,
-                modifier: "none",
-                missing: 2.5
-              }
-            },
-            ...recentlyShowedPosts.map(([_id, index]) => ({
-                filter: {
-                  terms: {
-                    _id
-                  }
-                },
-                weight: Number(index) * 0.95
-              }
-            ))
-          ]
+    if (likedPosts.length || pressedPosts.length) {
+      shouldQueries.push({
+        more_like_this: {
+          fields: ["topics", "subTopics"],
+          like: [...likedPosts, ...pressedPosts].map(post => ({ _id: post })),
+          unlike: dislikedPosts.map(post => ({ _id: post }))
         }
-      } as QueryDslQueryContainer;
-
-    } catch (err) {
-
+      });
     }
+
+    if (searchValue) {
+      mustQueries.push({
+        multi_match: {
+          fields: ["title", "description"] as ElasticKeys,
+          query: searchValue,
+          tie_breaker: 0.3
+        }
+      });
+    }
+
+    if (topics.length) {
+      // one match is must and others are useful
+      mustQueries.push({
+        bool: {
+          should: topics.map(topic => ({
+            bool: {
+              should: [
+                { term: { "topics.keyword": topic } },
+                { term: { "subTopics.keyword": topic } }
+              ]
+            }
+          }))
+        }
+      });
+    }
+
+    console.log("query array ", query);
+    return {
+      function_score: {
+        query: {
+          bool: {
+            must: mustQueries,
+            should: shouldQueries,
+            filter: filterQueries
+          }
+        },
+        boost_mode: "multiply",
+        functions: [
+          {
+            field_value_factor: {
+              field: "rating" as ElasticKey,
+              factor: 1,
+              modifier: "none",
+              missing: 2.5
+            }
+          },
+          ...Object.entries(
+            recentlyShowedPosts.reduce<Record<string, string[]>>((acc, [postId, occurrences]) => {
+              (acc[occurrences] ||= []).push(postId);
+              return acc;
+            }, {})
+          ).map(([occurrences, postIds]) => ({
+            filter: {
+              ids: { values: postIds }
+            },
+            weight: Number(occurrences) * 0.95
+          }))
+        ]
+      }
+    } as QueryDslQueryContainer;
   }
 }

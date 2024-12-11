@@ -1,13 +1,12 @@
 /* eslint-disable */
-import { DocumentTypeDecoration } from "@graphql-typed-document-node/core";
-
+import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -24,271 +23,206 @@ export type Scalars = {
 };
 
 export type CreatePostInput = {
-  body: Scalars["JSONObject"]["input"];
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  isDraft?: InputMaybe<Scalars["Boolean"]["input"]>;
-  isPublished?: InputMaybe<Scalars["Boolean"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  title: Scalars["String"]["input"];
-  topics?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  body: Scalars['JSONObject']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title: Scalars['String']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type CreateUserInput = {
-  email: Scalars["String"]["input"];
-  google_id?: InputMaybe<Scalars["String"]["input"]>;
-  img?: InputMaybe<Scalars["String"]["input"]>;
-  password?: InputMaybe<Scalars["String"]["input"]>;
-  username: Scalars["String"]["input"];
+  email: Scalars['String']['input'];
+  google_id?: InputMaybe<Scalars['String']['input']>;
+  img?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  username: Scalars['String']['input'];
 };
 
 export type CreateVersionPostInput = {
-  body: Scalars["JSONObject"]["input"];
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  isDraft?: InputMaybe<Scalars["Boolean"]["input"]>;
-  isPublished?: InputMaybe<Scalars["Boolean"]["input"]>;
-  postId: Scalars["Float"]["input"];
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  title: Scalars["String"]["input"];
-  topics?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  body: Scalars['JSONObject']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
+  postId: Scalars['Float']['input'];
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title: Scalars['String']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type FindAlgorithmPostsInput = {
   createdAt?: InputMaybe<SortOrder>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
   rating?: InputMaybe<SortOrder>;
-  searchValue?: InputMaybe<Scalars["String"]["input"]>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  searchValue?: InputMaybe<Scalars['String']['input']>;
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type FindAllPostsInput = {
-  isArchived?: InputMaybe<Scalars["Boolean"]["input"]>;
-  token: Scalars["String"]["input"];
+  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
+  token: Scalars['String']['input'];
 };
 
 export type FindManyUserInput = {
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  google_id?: InputMaybe<Scalars["String"]["input"]>;
-  img?: InputMaybe<Scalars["String"]["input"]>;
-  password?: InputMaybe<Scalars["String"]["input"]>;
-  username?: InputMaybe<Scalars["String"]["input"]>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  google_id?: InputMaybe<Scalars['String']['input']>;
+  img?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type FindOneUserInput = {
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  username?: InputMaybe<Scalars["String"]["input"]>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type FindPostInput = {
-  id: Scalars["Int"]["input"];
-  version?: InputMaybe<Scalars["Int"]["input"]>;
+  id: Scalars['Int']['input'];
+  version?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type LoginInput = {
-  email: Scalars["String"]["input"];
-  password: Scalars["String"]["input"];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 export enum SortOrder {
-  Asc = "ASC",
-  Desc = "DESC"
+  Asc = 'ASC',
+  Desc = 'DESC'
 }
 
 export type UpdatePostInput = {
-  body?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  id: Scalars["Int"]["input"];
-  isDraft?: InputMaybe<Scalars["Boolean"]["input"]>;
-  isPublished?: InputMaybe<Scalars["Boolean"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  body?: InputMaybe<Scalars['JSONObject']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
+  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type UpdateUserInput = {
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  google_id?: InputMaybe<Scalars["String"]["input"]>;
-  id: Scalars["Int"]["input"];
-  img?: InputMaybe<Scalars["String"]["input"]>;
-  password?: InputMaybe<Scalars["String"]["input"]>;
-  username?: InputMaybe<Scalars["String"]["input"]>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  google_id?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  img?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PostsIdQueryVariables = Exact<{
-  token: Scalars["String"]["input"];
-  isArchived?: InputMaybe<Scalars["Boolean"]["input"]>;
+  token: Scalars['String']['input'];
+  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
-export type PostsIdQuery = {
-  __typename?: "Query",
-  allPosts: Array<{ __typename?: "Post", id: number, version: number }>
-};
+export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number, version: number }> };
 
 export type CreatePostMutationVariables = Exact<{
-  body: Scalars["JSONObject"]["input"];
-  title: Scalars["String"]["input"];
-  isPublished?: InputMaybe<Scalars["Boolean"]["input"]>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  isDraft?: InputMaybe<Scalars["Boolean"]["input"]>;
+  body: Scalars['JSONObject']['input'];
+  title: Scalars['String']['input'];
+  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
-export type CreatePostMutation = { __typename?: "Mutation", createPost: { __typename?: "Post", id: number } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number } };
 
 export type CreateVersionPostMutationVariables = Exact<{
-  body: Scalars["JSONObject"]["input"];
-  title: Scalars["String"]["input"];
-  postId: Scalars["Float"]["input"];
-  published: Scalars["Boolean"]["input"];
-  topics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  body: Scalars['JSONObject']['input'];
+  title: Scalars['String']['input'];
+  postId: Scalars['Float']['input'];
+  published: Scalars['Boolean']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type CreateVersionPostMutation = {
-  __typename?: "Mutation",
-  createVersionPost: { __typename?: "Post", id: number }
-};
+export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersionPost: { __typename?: 'Post', id: number } };
 
 export type DraftQueryVariables = Exact<{
-  id: Scalars["Int"]["input"];
-  version?: InputMaybe<Scalars["Int"]["input"]>;
+  id: Scalars['Int']['input'];
+  version?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type DraftQuery = {
-  __typename?: "Query",
-  draft: {
-    __typename?: "Post",
-    id: number,
-    body: Array<any>,
-    createdAt: any,
-    img?: string | null,
-    title: string,
-    updatedAt: any,
-    topics?: Array<{ __typename?: "Topic", title: string }> | null,
-    subTopics?: Array<{ __typename?: "Topic", title: string }> | null
-  }
-};
+export type DraftQuery = { __typename?: 'Query', draft: { __typename?: 'Post', id: number, body: Array<any>, createdAt: any, img?: string | null, title: string, updatedAt: any, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
 
 export type DraftsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type DraftsQuery = {
-  __typename?: "Query",
-  userDrafts: Array<{
-    __typename?: "Post",
-    id: number,
-    createdAt: any,
-    img?: string | null,
-    title: string,
-    updatedAt: any
-  }>
-};
+export type DraftsQuery = { __typename?: 'Query', userDrafts: Array<{ __typename?: 'Post', id: number, createdAt: any, img?: string | null, title: string, updatedAt: any }> };
 
 export type PostQueryVariables = Exact<{
-  id: Scalars["Int"]["input"];
-  version?: InputMaybe<Scalars["Int"]["input"]>;
+  id: Scalars['Int']['input'];
+  version?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type PostQuery = {
-  __typename?: "Query",
-  post: {
-    __typename?: "Post",
-    body: Array<any>,
-    createdAt: any,
-    title: string,
-    user: { __typename?: "User", username: string, img: string, id: number },
-    topics?: Array<{ __typename?: "Topic", title: string }> | null,
-    subTopics?: Array<{ __typename?: "Topic", title: string }> | null
-  }
-};
+export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
 
 export type TopicsQueryVariables = Exact<{
-  title?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type TopicsQuery = { __typename?: "Query", topics: Array<{ __typename?: "Topic", title: string }> };
+export type TopicsQuery = { __typename?: 'Query', topics: Array<{ __typename?: 'Topic', title: string }> };
 
 export type PostRecommendationsQueryVariables = Exact<{
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
-  page?: InputMaybe<Scalars["Int"]["input"]>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type PostRecommendationsQuery = {
-  __typename?: "Query",
-  algoPosts: {
-    __typename?: "Recommendations",
-    totalCount: number,
-    posts: Array<{
-      __typename?: "Post",
-      id: number,
-      rating?: number | null,
-      commentsQuantity?: number | null,
-      reviewsQuantity?: number | null,
-      img?: string | null,
-      minutes?: number | null,
-      title: string,
-      createdAt: any,
-      userId: number,
-      description?: string | null,
-      version: number,
-      updatedAt: any,
-      user: { __typename?: "User", username: string, occupation?: string | null, img: string },
-      topics?: Array<{ __typename?: "Topic", title: string }> | null,
-      subTopics?: Array<{ __typename?: "Topic", title: string }> | null
-    }>
-  }
-};
+export type PostRecommendationsQuery = { __typename?: 'Query', algoPosts: { __typename?: 'Recommendations', totalPages: number, data: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img: string }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
 
 export type PublishDraftMutationVariables = Exact<{
-  postId: Scalars["Int"]["input"];
+  postId: Scalars['Int']['input'];
 }>;
 
 
-export type PublishDraftMutation = { __typename?: "Mutation", publish: { __typename?: "Post", id: number } };
+export type PublishDraftMutation = { __typename?: 'Mutation', publish: { __typename?: 'Post', id: number } };
 
 export type PublishPostVersionMutationVariables = Exact<{
-  postId: Scalars["Int"]["input"];
+  postId: Scalars['Int']['input'];
 }>;
 
 
-export type PublishPostVersionMutation = { __typename?: "Mutation", publish: { __typename?: "Post", id: number } };
+export type PublishPostVersionMutation = { __typename?: 'Mutation', publish: { __typename?: 'Post', id: number } };
 
 export type RegisterMutationVariables = Exact<{
-  username: Scalars["String"]["input"];
-  password: Scalars["String"]["input"];
-  email: Scalars["String"]["input"];
+  username: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  email: Scalars['String']['input'];
 }>;
 
 
-export type RegisterMutation = {
-  __typename?: "Mutation",
-  register: { __typename?: "User", username: string, email: string, id: number, createdAt: any }
-};
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', username: string, email: string, id: number, createdAt: any } };
 
 export type UpdatePostMutationVariables = Exact<{
-  id: Scalars["Int"]["input"];
-  body?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  isPublished?: InputMaybe<Scalars["Boolean"]["input"]>;
+  id: Scalars['Int']['input'];
+  body?: InputMaybe<Scalars['JSONObject']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
-export type UpdatePostMutation = { __typename?: "Mutation", updatePost: { __typename?: "Post", id: number } };
+export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: number } };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
-  implements DocumentTypeDecoration<TResult, TVariables> {
-  __apiType?: DocumentTypeDecoration<TResult, TVariables>["__apiType"];
+  implements DocumentTypeDecoration<TResult, TVariables>
+{
+  __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
   constructor(private value: string, public __meta__?: Record<string, any>) {
     super(value);
@@ -382,12 +316,12 @@ export const TopicsDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<TopicsQuery, TopicsQueryVariables>;
 export const PostRecommendationsDocument = new TypedDocumentString(`
-    query postRecommendations($createdAt: SortOrder, $rating: SortOrder, $page: Int, $topics: [String!]) {
+    query postRecommendations($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $topics: [String!], $search: String) {
   algoPosts(
-    findAlgorithmInput: {createdAt: $createdAt, rating: $rating, page: $page, topics: $topics}
+    findAlgorithmInput: {createdAt: $createdAt, rating: $rating, skipPages: $skipPages, topics: $topics, searchValue: $search}
   ) {
-    totalCount
-    posts {
+    totalPages
+    data {
       id
       rating
       commentsQuantity

@@ -39,7 +39,9 @@ import microservicesConfig from "./config/microservicesConfig";
           },
           gateway: {
             supergraphSdl: new IntrospectAndCompose({
-              subgraphs
+              subgraphs,
+              subgraphHealthCheck: true,
+              pollIntervalInMs: 5000,
             }),
             buildService({ url }) {
               return new RemoteGraphQLDataSource({

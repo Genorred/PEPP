@@ -16,7 +16,7 @@ export class FindAlgorithmPostsInput {
   @Field(() => SortOrder, { nullable: true })
   rating?: SortOrder;
   @Field(() => Int, { nullable: true })
-  page?: number;
+  skipPages?: number;
   @Field({ nullable: true })
   searchValue?: string;
   @Field(() => [String], { nullable: true })
