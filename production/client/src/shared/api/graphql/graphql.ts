@@ -163,7 +163,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
+export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, rating?: number | null, minutes?: number | null, version: number, commentsQuantity?: number | null, reviewsQuantity?: number | null, description?: string | null, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
 
 export type TopicsQueryVariables = Exact<{
   title?: InputMaybe<Scalars['String']['input']>;
@@ -305,6 +305,12 @@ export const PostDocument = new TypedDocumentString(`
     subTopics {
       title
     }
+    rating
+    minutes
+    version
+    commentsQuantity
+    reviewsQuantity
+    description
   }
 }
     `) as unknown as TypedDocumentString<PostQuery, PostQueryVariables>;

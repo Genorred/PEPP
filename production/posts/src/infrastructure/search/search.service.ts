@@ -40,12 +40,19 @@ export class SearchService {
   public async indexPost(payload: IndexDto) {
     try {
       const { id, ...data } = payload;
+      const { topics, subTopics, createdAt, title, description } = data
       // map draft children
       console.log("createdAt", data.createdAt);
       return await this.esService.index({
         index,
         id: id.toString(),
-        document: data as ElasticPost
+        document: {
+          title,
+          subTopics,
+          createdAt,
+          topics,
+          description,
+        } as ElasticPost
       });
     } catch (err) {
       throw err;
@@ -80,6 +87,7 @@ export class SearchService {
       const pageSize = 20;
       const v = this.builderService.buildSearchQuery(searchParam)
       console.log('query', v);
+      console.log('sort', this.builderService.sortSearchQuery(searchParam));
       const { hits: parentHits } = await this.esService.search<ElasticPost>({
         index,
         sort: this.builderService.sortSearchQuery(searchParam),

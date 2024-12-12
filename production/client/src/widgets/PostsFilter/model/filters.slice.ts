@@ -9,9 +9,9 @@ interface State {
 const initialUsersState: State = {
   filters: {
     topics: [],
-    createdAt: "none",
+    createdAt: null,
     search: "",
-    rating: "none"
+    rating: null
   }
 };
 export const filtersSlice = createSlice({

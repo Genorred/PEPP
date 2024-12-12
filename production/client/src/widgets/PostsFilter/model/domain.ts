@@ -1,8 +1,8 @@
 import { SortOrder } from "@/shared/api/graphql/graphql";
 
 export interface FilterState {
-  createdAt: SortOrder | "none";
-  rating: SortOrder | "none";
+  createdAt: SortOrder | null;
+  rating: SortOrder | null;
   search: string;
   topics: string[];
 }

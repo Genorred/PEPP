@@ -14,7 +14,6 @@ import TopicsSelector from "@/widgets/PostsFilter/ui/TopicsSelector";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger
@@ -33,9 +32,15 @@ const allTopics = [
 export function PostsFilter() {
 
 
-  const { control, setValue, handleSubmit, watchedTopics } = useFiltersForm();
+  const { control, setValue, handleSubmit, watchedTopics, watchedRating, watchedCreatedAt } = useFiltersForm();
 
-
+  const getSortLabel = (sort: FilterState["rating"], type: "createdAt" | "rating") => {
+    if (type === "createdAt") {
+      return sort === "DESC" ? "Newest" : "Oldest";
+    } else {
+      return sort === "DESC" ? "Highest Rated" : "Lowest Rated";
+    }
+  };
   const dispatch = useDispatch();
   const onSubmit = (data: FilterState) => {
     dispatch(filtersSlice.actions.setFilters(data));
@@ -58,67 +63,75 @@ export function PostsFilter() {
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="min-w-[150px]">
+            <Button variant="outline">
               Sort by
               <ChevronDown className="ml-2 h-4 w-4 opacity-50" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[200px]">
+          <DropdownMenuContent align="end" className="w-[200px] p-2">
             <DropdownMenuLabel>Choose options</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Controller
-                name="createdAt"
-                control={control}
-                render={({ field }) => (
-                  <div className="min-w-[150px]">
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value || undefined}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Date" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">Newest</SelectItem>
-                        <SelectItem value="desc">Newest</SelectItem>
-                        <SelectItem value="asc">Oldest</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-              />
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Controller
-                name="rating"
-                control={control}
-                render={({ field }) => (
-                  <div className="min-w-[150px]">
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value || undefined}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Rating" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">Newest</SelectItem>
-                        <SelectItem value="desc">Highest Rated</SelectItem>
-                        <SelectItem value="asc">Lowest Rated</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-              />
-            </DropdownMenuItem>
+            <Controller
+              name="createdAt"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value || undefined}
+                >
+                  <SelectTrigger className="my-1.5 w-full">
+                    <SelectValue placeholder="Date" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="DESC">Newest</SelectItem>
+                    <SelectItem value="ASC">Oldest</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <Controller
+              name="rating"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value || undefined}
+                >
+                  <SelectTrigger className="my-1.5 w-full">
+                    <SelectValue placeholder="Rating" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="DESC">Highest Rated</SelectItem>
+                    <SelectItem value="ASC">Lowest Rated</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </DropdownMenuContent>
         </DropdownMenu>
         <TopicsSelector watchedTopics={watchedTopics} control={control} />
         <Button type="submit">Apply Filters</Button>
       </div>
-      {watchedTopics.length > 0 && (
+      {(watchedTopics.length > 0 || watchedCreatedAt || watchedRating) && (
         <div className="mt-4 flex flex-wrap gap-2">
+          {watchedCreatedAt && (
+            <Badge variant="secondary" className="text-xs">
+              {getSortLabel(watchedCreatedAt, "createdAt")}
+              <X
+                className="ml-1 h-3 w-3 cursor-pointer"
+                onClick={() => setValue("createdAt", null)}
+              />
+            </Badge>
+          )}
+          {watchedRating && (
+            <Badge variant="secondary" className="text-xs">
+              {getSortLabel(watchedRating, "rating")}
+              <X
+                className="ml-1 h-3 w-3 cursor-pointer"
+                onClick={() => setValue("rating", null)}
+              />
+            </Badge>
+          )}
           {watchedTopics.map((topic) => (
             <Badge key={topic} variant="secondary" className="text-xs">
               {topic}

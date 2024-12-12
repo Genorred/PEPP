@@ -7,7 +7,7 @@ import { Review } from "@/entities/Post/model";
 import Rating from "@/entities/Post/ui/Rating";
 import PostHeader from "@/entities/Post/ui/PostHeader";
 import UserLink from "@/entities/Post/ui/UserLink";
-import ThoughtsDialog from "@/entities/Post/ui/ThoughtsDialog";
+import ReviewsDialog from "@/entities/Post/ui/ReviewsDialog";
 import { PostRecommendationsQuery } from "@/shared/api/graphql/graphql";
 
 const PostCard = ({
@@ -26,7 +26,7 @@ const PostCard = ({
                     user,
                     version,
                     updatedAt
-                  }: PostRecommendationsQuery["algoPosts"][number]) => {
+                  }: PostRecommendationsQuery["algoPosts"]['data'][number]) => {
   const reviewList: Review[] = [
     {
       id: 4234234,
@@ -76,7 +76,7 @@ const PostCard = ({
             <span>{reviewsQuantity} reviews</span>
           </Link>
         </div>
-        <ThoughtsDialog url={url} reviewList={reviewList} />
+        <ReviewsDialog url={url} reviewList={reviewList} />
       </CardContent>
       <CardFooter className="bg-muted/50 text-xs text-muted-foreground">
         Published on August 15, 2023 | {minutes} min read

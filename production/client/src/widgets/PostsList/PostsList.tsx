@@ -14,9 +14,10 @@ const PostsList = () => {
   const { rating, createdAt, ...filters } = useSelector(filtersSlice.selectors.filter);
   const defaultParams = {
     ...filters,
-    rating: rating === "none" ? undefined : rating || undefined,
-    create: createdAt === "none" ? undefined : createdAt || undefined
+    rating: rating ? rating.toUpperCase() || undefined : undefined,
+    createdAt: createdAt ? createdAt.toUpperCase() || undefined : undefined
   } as PostRecommendationsQueryVariables;
+  console.log(defaultParams);
   const {
     data,
     isLoading,

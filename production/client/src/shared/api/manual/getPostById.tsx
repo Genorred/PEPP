@@ -17,6 +17,12 @@ const getPostById = graphql(`
             subTopics {
                 title
             }
+            rating
+            minutes
+            version
+            commentsQuantity
+            reviewsQuantity
+            description
         }
     }
 `);

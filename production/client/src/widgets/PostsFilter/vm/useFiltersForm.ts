@@ -12,9 +12,11 @@ export const useFiltersForm = () => {
   });
 
   const watchedTopics = watch("topics");
+  const watchedCreatedAt = watch("createdAt");
+  const watchedRating = watch("rating");
 
   return {
-    control, handleSubmit, watchedTopics, setValue
+    control, handleSubmit, watchedTopics, setValue, watchedRating, watchedCreatedAt,
   };
 
 };

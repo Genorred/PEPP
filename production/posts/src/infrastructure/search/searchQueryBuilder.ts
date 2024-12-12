@@ -10,10 +10,11 @@ export class SearchQueryBuilderService {
 
   public sortSearchQuery(searchParams: SearchDto) {
     const { rating, createdAt } = searchParams;
-    return [{ rating }, { createdAt }] as Sort;
+    return [{ rating: rating?.toLowerCase() },
+      { createdAt: createdAt?.toLowerCase() }] as Sort;
   }
 
-  public buildSearchQuery(searchParams: Omit<SearchDto, "page" | "createdAt" | "rating">) {
+  public buildSearchQuery(searchParams: Omit<SearchDto, "skipPages" | "createdAt" | "rating">) {
     const {
       likedPosts, dislikedPosts, searchValue,
       topics, recentlyShowedPosts, pressedPosts
@@ -26,7 +27,7 @@ export class SearchQueryBuilderService {
     if (likedPosts.length || pressedPosts.length) {
       shouldQueries.push({
         more_like_this: {
-          fields: ["topics", "subTopics"],
+          fields: ["topics^2", "subTopics"],
           like: [...likedPosts, ...pressedPosts].map(post => ({ _id: post })),
           unlike: dislikedPosts.map(post => ({ _id: post }))
         }
@@ -36,7 +37,7 @@ export class SearchQueryBuilderService {
     if (searchValue) {
       mustQueries.push({
         multi_match: {
-          fields: ["title", "description"] as ElasticKeys,
+          fields: ["title^2", "description"] as ElasticKeys,
           query: searchValue,
           tie_breaker: 0.3
         }
@@ -50,7 +51,7 @@ export class SearchQueryBuilderService {
           should: topics.map(topic => ({
             bool: {
               should: [
-                { term: { "topics.keyword": topic } },
+                { term: { "topics.keyword^2": topic } },
                 { term: { "subTopics.keyword": topic } }
               ]
             }

@@ -5,6 +5,8 @@ import { usePostEditor } from "@/features/Editor";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import { usePostQuery } from "@/shared/api/graphql/generated";
 import { apiClient } from "@/shared/api/base";
+import { PostInfo } from "@/widgets/PostInfo/ui/PostInfo";
+import Container from "@/shared/ui/Container";
 
 const ViewPost = ({ post, id }: {
   id: number
@@ -16,12 +18,13 @@ const ViewPost = ({ post, id }: {
   });
   usePostEditor((data ?? post).post.body);
   return (
-    <section className={"mt-4 ml-4 relative flex justify-center max-w-full"}
-    >
+    <Container>
+      <PostInfo {...post.post} id={id} />
       <div className={"max-w-[90%]"}>
-        <Editor />
+        <Editor readOnly={true} />
       </div>
-    </section>
+
+    </Container>
   );
 };
 
