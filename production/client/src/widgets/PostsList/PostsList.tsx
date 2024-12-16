@@ -23,7 +23,7 @@ const PostsList = () => {
     isLoading,
     fetchNextPage,
     hasNextPage
-  } = useInfinitePostRecommendationsQuery(apiClient, defaultParams, {
+  } = useInfinitePostRecommendationsQuery(defaultParams, {
     getNextPageParam: (lastPage, allPages) => (
       lastPage.algoPosts.totalPages - allPages.length > 1 ?
         {

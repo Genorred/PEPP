@@ -1,4 +1,4 @@
 import { UseInterceptors } from "@nestjs/common";
-import { SetTokensInterceptor } from "./setTokens.interceptor";
+import { SetAuthTokens } from "./set-auth-tokens";
 
-export const UseTokens = () => UseInterceptors(SetTokensInterceptor);
+export const UseTokens = () => UseInterceptors(SetAuthTokens);

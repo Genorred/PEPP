@@ -9,6 +9,7 @@ import { GoogleStrategy } from "./google.strategy";
 import { SetAuthCookieService } from "./set-auth-cookie.service";
 import { ConfigModule, ConfigType } from "@nestjs/config";
 import authConfig from "../config/auth.config";
+import { SetAuthTokens } from "./auth-flow-guard/set-auth-tokens";
 
 @Module({
   imports: [UsersModule, PassportModule,
@@ -21,7 +22,7 @@ import authConfig from "../config/auth.config";
       })
     })],
   controllers: [GoogleController],
-  providers: [AuthService, AuthResolver, GoogleStrategy, SetAuthCookieService]
+  providers: [AuthService, AuthResolver, GoogleStrategy, SetAuthCookieService, SetAuthTokens]
 })
 export class AuthModule {
 }

@@ -12,7 +12,7 @@ const config: CodegenConfig = {
       config: {
         legacyMode: false,
         addInfiniteQuery: true,
-        fetcher: "graphql-request",
+        fetcher: "@/shared/api/base#fetcher",
         exposeFetcher: true,
         exposeMutationKeys: true,
         exposeQueryKeys: true,

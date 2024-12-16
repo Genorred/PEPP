@@ -1,6 +1,5 @@
-import { GraphQLClient } from 'graphql-request';
-import { RequestInit } from 'graphql-request/dist/types.dom';
 import { useQuery, useInfiniteQuery, useMutation, UseQueryOptions, UseInfiniteQueryOptions, UseMutationOptions } from '@tanstack/react-query';
+import { fetcher } from '@/shared/api/base';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -8,14 +7,6 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
-
-function fetcher<TData, TVariables extends { [key: string]: any }>(client: GraphQLClient, query: string, variables?: TVariables, requestHeaders?: RequestInit['headers']) {
-  return async (): Promise<TData> => client.request({
-    document: query,
-    variables,
-    requestHeaders
-  });
-}
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -402,15 +393,13 @@ export const usePostsIdQuery = <
       TData = PostsIdQuery,
       TError = unknown
     >(
-      client: GraphQLClient,
       variables: PostsIdQueryVariables,
-      options?: UseQueryOptions<PostsIdQuery, TError, TData>,
-      headers?: RequestInit['headers']
+      options?: UseQueryOptions<PostsIdQuery, TError, TData>
     ) => {
     
     return useQuery<PostsIdQuery, TError, TData>(
       ['postsId', variables],
-      fetcher<PostsIdQuery, PostsIdQueryVariables>(client, PostsIdDocument, variables, headers),
+      fetcher<PostsIdQuery, PostsIdQueryVariables>(PostsIdDocument, variables),
       options
     )};
 
@@ -422,22 +411,20 @@ export const useInfinitePostsIdQuery = <
       TData = PostsIdQuery,
       TError = unknown
     >(
-      client: GraphQLClient,
       variables: PostsIdQueryVariables,
-      options?: UseInfiniteQueryOptions<PostsIdQuery, TError, TData>,
-      headers?: RequestInit['headers']
+      options?: UseInfiniteQueryOptions<PostsIdQuery, TError, TData>
     ) => {
     
     return useInfiniteQuery<PostsIdQuery, TError, TData>(
       ['postsId.infinite', variables],
-      (metaData) => fetcher<PostsIdQuery, PostsIdQueryVariables>(client, PostsIdDocument, {...variables, ...(metaData.pageParam ?? {})}, headers)(),
+      (metaData) => fetcher<PostsIdQuery, PostsIdQueryVariables>(PostsIdDocument, {...variables, ...(metaData.pageParam ?? {})})(),
       options
     )};
 
 useInfinitePostsIdQuery.getKey = (variables: PostsIdQueryVariables) => ['postsId.infinite', variables];
 
 
-usePostsIdQuery.fetcher = (client: GraphQLClient, variables: PostsIdQueryVariables, headers?: RequestInit['headers']) => fetcher<PostsIdQuery, PostsIdQueryVariables>(client, PostsIdDocument, variables, headers);
+usePostsIdQuery.fetcher = (variables: PostsIdQueryVariables, options?: RequestInit['headers']) => fetcher<PostsIdQuery, PostsIdQueryVariables>(PostsIdDocument, variables, options);
 
 export const CreatePostDocument = `
     mutation createPost($body: JSONObject!, $title: String!, $isPublished: Boolean, $topics: [String!], $subTopics: [String!], $isDraft: Boolean) {
@@ -452,22 +439,18 @@ export const CreatePostDocument = `
 export const useCreatePostMutation = <
       TError = unknown,
       TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<CreatePostMutation, TError, CreatePostMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) => {
+    >(options?: UseMutationOptions<CreatePostMutation, TError, CreatePostMutationVariables, TContext>) => {
     
     return useMutation<CreatePostMutation, TError, CreatePostMutationVariables, TContext>(
       ['createPost'],
-      (variables?: CreatePostMutationVariables) => fetcher<CreatePostMutation, CreatePostMutationVariables>(client, CreatePostDocument, variables, headers)(),
+      (variables?: CreatePostMutationVariables) => fetcher<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument, variables)(),
       options
     )};
 
 useCreatePostMutation.getKey = () => ['createPost'];
 
 
-useCreatePostMutation.fetcher = (client: GraphQLClient, variables: CreatePostMutationVariables, headers?: RequestInit['headers']) => fetcher<CreatePostMutation, CreatePostMutationVariables>(client, CreatePostDocument, variables, headers);
+useCreatePostMutation.fetcher = (variables: CreatePostMutationVariables, options?: RequestInit['headers']) => fetcher<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument, variables, options);
 
 export const CreateVersionPostDocument = `
     mutation createVersionPost($body: JSONObject!, $title: String!, $postId: Float!, $published: Boolean!, $topics: [String!], $subTopics: [String!]) {
@@ -482,22 +465,18 @@ export const CreateVersionPostDocument = `
 export const useCreateVersionPostMutation = <
       TError = unknown,
       TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<CreateVersionPostMutation, TError, CreateVersionPostMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) => {
+    >(options?: UseMutationOptions<CreateVersionPostMutation, TError, CreateVersionPostMutationVariables, TContext>) => {
     
     return useMutation<CreateVersionPostMutation, TError, CreateVersionPostMutationVariables, TContext>(
       ['createVersionPost'],
-      (variables?: CreateVersionPostMutationVariables) => fetcher<CreateVersionPostMutation, CreateVersionPostMutationVariables>(client, CreateVersionPostDocument, variables, headers)(),
+      (variables?: CreateVersionPostMutationVariables) => fetcher<CreateVersionPostMutation, CreateVersionPostMutationVariables>(CreateVersionPostDocument, variables)(),
       options
     )};
 
 useCreateVersionPostMutation.getKey = () => ['createVersionPost'];
 
 
-useCreateVersionPostMutation.fetcher = (client: GraphQLClient, variables: CreateVersionPostMutationVariables, headers?: RequestInit['headers']) => fetcher<CreateVersionPostMutation, CreateVersionPostMutationVariables>(client, CreateVersionPostDocument, variables, headers);
+useCreateVersionPostMutation.fetcher = (variables: CreateVersionPostMutationVariables, options?: RequestInit['headers']) => fetcher<CreateVersionPostMutation, CreateVersionPostMutationVariables>(CreateVersionPostDocument, variables, options);
 
 export const DraftDocument = `
     query draft($id: Int!, $version: Int) {
@@ -522,15 +501,13 @@ export const useDraftQuery = <
       TData = DraftQuery,
       TError = unknown
     >(
-      client: GraphQLClient,
       variables: DraftQueryVariables,
-      options?: UseQueryOptions<DraftQuery, TError, TData>,
-      headers?: RequestInit['headers']
+      options?: UseQueryOptions<DraftQuery, TError, TData>
     ) => {
     
     return useQuery<DraftQuery, TError, TData>(
       ['draft', variables],
-      fetcher<DraftQuery, DraftQueryVariables>(client, DraftDocument, variables, headers),
+      fetcher<DraftQuery, DraftQueryVariables>(DraftDocument, variables),
       options
     )};
 
@@ -542,22 +519,20 @@ export const useInfiniteDraftQuery = <
       TData = DraftQuery,
       TError = unknown
     >(
-      client: GraphQLClient,
       variables: DraftQueryVariables,
-      options?: UseInfiniteQueryOptions<DraftQuery, TError, TData>,
-      headers?: RequestInit['headers']
+      options?: UseInfiniteQueryOptions<DraftQuery, TError, TData>
     ) => {
     
     return useInfiniteQuery<DraftQuery, TError, TData>(
       ['draft.infinite', variables],
-      (metaData) => fetcher<DraftQuery, DraftQueryVariables>(client, DraftDocument, {...variables, ...(metaData.pageParam ?? {})}, headers)(),
+      (metaData) => fetcher<DraftQuery, DraftQueryVariables>(DraftDocument, {...variables, ...(metaData.pageParam ?? {})})(),
       options
     )};
 
 useInfiniteDraftQuery.getKey = (variables: DraftQueryVariables) => ['draft.infinite', variables];
 
 
-useDraftQuery.fetcher = (client: GraphQLClient, variables: DraftQueryVariables, headers?: RequestInit['headers']) => fetcher<DraftQuery, DraftQueryVariables>(client, DraftDocument, variables, headers);
+useDraftQuery.fetcher = (variables: DraftQueryVariables, options?: RequestInit['headers']) => fetcher<DraftQuery, DraftQueryVariables>(DraftDocument, variables, options);
 
 export const DraftsDocument = `
     query drafts {
@@ -575,15 +550,13 @@ export const useDraftsQuery = <
       TData = DraftsQuery,
       TError = unknown
     >(
-      client: GraphQLClient,
       variables?: DraftsQueryVariables,
-      options?: UseQueryOptions<DraftsQuery, TError, TData>,
-      headers?: RequestInit['headers']
+      options?: UseQueryOptions<DraftsQuery, TError, TData>
     ) => {
     
     return useQuery<DraftsQuery, TError, TData>(
       variables === undefined ? ['drafts'] : ['drafts', variables],
-      fetcher<DraftsQuery, DraftsQueryVariables>(client, DraftsDocument, variables, headers),
+      fetcher<DraftsQuery, DraftsQueryVariables>(DraftsDocument, variables),
       options
     )};
 
@@ -595,22 +568,20 @@ export const useInfiniteDraftsQuery = <
       TData = DraftsQuery,
       TError = unknown
     >(
-      client: GraphQLClient,
       variables?: DraftsQueryVariables,
-      options?: UseInfiniteQueryOptions<DraftsQuery, TError, TData>,
-      headers?: RequestInit['headers']
+      options?: UseInfiniteQueryOptions<DraftsQuery, TError, TData>
     ) => {
     
     return useInfiniteQuery<DraftsQuery, TError, TData>(
       variables === undefined ? ['drafts.infinite'] : ['drafts.infinite', variables],
-      (metaData) => fetcher<DraftsQuery, DraftsQueryVariables>(client, DraftsDocument, {...variables, ...(metaData.pageParam ?? {})}, headers)(),
+      (metaData) => fetcher<DraftsQuery, DraftsQueryVariables>(DraftsDocument, {...variables, ...(metaData.pageParam ?? {})})(),
       options
     )};
 
 useInfiniteDraftsQuery.getKey = (variables?: DraftsQueryVariables) => variables === undefined ? ['drafts.infinite'] : ['drafts.infinite', variables];
 
 
-useDraftsQuery.fetcher = (client: GraphQLClient, variables?: DraftsQueryVariables, headers?: RequestInit['headers']) => fetcher<DraftsQuery, DraftsQueryVariables>(client, DraftsDocument, variables, headers);
+useDraftsQuery.fetcher = (variables?: DraftsQueryVariables, options?: RequestInit['headers']) => fetcher<DraftsQuery, DraftsQueryVariables>(DraftsDocument, variables, options);
 
 export const PostDocument = `
     query post($id: Int!, $version: Int) {
@@ -643,15 +614,13 @@ export const usePostQuery = <
       TData = PostQuery,
       TError = unknown
     >(
-      client: GraphQLClient,
       variables: PostQueryVariables,
-      options?: UseQueryOptions<PostQuery, TError, TData>,
-      headers?: RequestInit['headers']
+      options?: UseQueryOptions<PostQuery, TError, TData>
     ) => {
     
     return useQuery<PostQuery, TError, TData>(
       ['post', variables],
-      fetcher<PostQuery, PostQueryVariables>(client, PostDocument, variables, headers),
+      fetcher<PostQuery, PostQueryVariables>(PostDocument, variables),
       options
     )};
 
@@ -663,22 +632,20 @@ export const useInfinitePostQuery = <
       TData = PostQuery,
       TError = unknown
     >(
-      client: GraphQLClient,
       variables: PostQueryVariables,
-      options?: UseInfiniteQueryOptions<PostQuery, TError, TData>,
-      headers?: RequestInit['headers']
+      options?: UseInfiniteQueryOptions<PostQuery, TError, TData>
     ) => {
     
     return useInfiniteQuery<PostQuery, TError, TData>(
       ['post.infinite', variables],
-      (metaData) => fetcher<PostQuery, PostQueryVariables>(client, PostDocument, {...variables, ...(metaData.pageParam ?? {})}, headers)(),
+      (metaData) => fetcher<PostQuery, PostQueryVariables>(PostDocument, {...variables, ...(metaData.pageParam ?? {})})(),
       options
     )};
 
 useInfinitePostQuery.getKey = (variables: PostQueryVariables) => ['post.infinite', variables];
 
 
-usePostQuery.fetcher = (client: GraphQLClient, variables: PostQueryVariables, headers?: RequestInit['headers']) => fetcher<PostQuery, PostQueryVariables>(client, PostDocument, variables, headers);
+usePostQuery.fetcher = (variables: PostQueryVariables, options?: RequestInit['headers']) => fetcher<PostQuery, PostQueryVariables>(PostDocument, variables, options);
 
 export const TopicsDocument = `
     query topics($title: String) {
@@ -692,15 +659,13 @@ export const useTopicsQuery = <
       TData = TopicsQuery,
       TError = unknown
     >(
-      client: GraphQLClient,
       variables?: TopicsQueryVariables,
-      options?: UseQueryOptions<TopicsQuery, TError, TData>,
-      headers?: RequestInit['headers']
+      options?: UseQueryOptions<TopicsQuery, TError, TData>
     ) => {
     
     return useQuery<TopicsQuery, TError, TData>(
       variables === undefined ? ['topics'] : ['topics', variables],
-      fetcher<TopicsQuery, TopicsQueryVariables>(client, TopicsDocument, variables, headers),
+      fetcher<TopicsQuery, TopicsQueryVariables>(TopicsDocument, variables),
       options
     )};
 
@@ -712,22 +677,20 @@ export const useInfiniteTopicsQuery = <
       TData = TopicsQuery,
       TError = unknown
     >(
-      client: GraphQLClient,
       variables?: TopicsQueryVariables,
-      options?: UseInfiniteQueryOptions<TopicsQuery, TError, TData>,
-      headers?: RequestInit['headers']
+      options?: UseInfiniteQueryOptions<TopicsQuery, TError, TData>
     ) => {
     
     return useInfiniteQuery<TopicsQuery, TError, TData>(
       variables === undefined ? ['topics.infinite'] : ['topics.infinite', variables],
-      (metaData) => fetcher<TopicsQuery, TopicsQueryVariables>(client, TopicsDocument, {...variables, ...(metaData.pageParam ?? {})}, headers)(),
+      (metaData) => fetcher<TopicsQuery, TopicsQueryVariables>(TopicsDocument, {...variables, ...(metaData.pageParam ?? {})})(),
       options
     )};
 
 useInfiniteTopicsQuery.getKey = (variables?: TopicsQueryVariables) => variables === undefined ? ['topics.infinite'] : ['topics.infinite', variables];
 
 
-useTopicsQuery.fetcher = (client: GraphQLClient, variables?: TopicsQueryVariables, headers?: RequestInit['headers']) => fetcher<TopicsQuery, TopicsQueryVariables>(client, TopicsDocument, variables, headers);
+useTopicsQuery.fetcher = (variables?: TopicsQueryVariables, options?: RequestInit['headers']) => fetcher<TopicsQuery, TopicsQueryVariables>(TopicsDocument, variables, options);
 
 export const PostRecommendationsDocument = `
     query postRecommendations($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $topics: [String!], $search: String) {
@@ -768,15 +731,13 @@ export const usePostRecommendationsQuery = <
       TData = PostRecommendationsQuery,
       TError = unknown
     >(
-      client: GraphQLClient,
       variables?: PostRecommendationsQueryVariables,
-      options?: UseQueryOptions<PostRecommendationsQuery, TError, TData>,
-      headers?: RequestInit['headers']
+      options?: UseQueryOptions<PostRecommendationsQuery, TError, TData>
     ) => {
     
     return useQuery<PostRecommendationsQuery, TError, TData>(
       variables === undefined ? ['postRecommendations'] : ['postRecommendations', variables],
-      fetcher<PostRecommendationsQuery, PostRecommendationsQueryVariables>(client, PostRecommendationsDocument, variables, headers),
+      fetcher<PostRecommendationsQuery, PostRecommendationsQueryVariables>(PostRecommendationsDocument, variables),
       options
     )};
 
@@ -788,22 +749,20 @@ export const useInfinitePostRecommendationsQuery = <
       TData = PostRecommendationsQuery,
       TError = unknown
     >(
-      client: GraphQLClient,
       variables?: PostRecommendationsQueryVariables,
-      options?: UseInfiniteQueryOptions<PostRecommendationsQuery, TError, TData>,
-      headers?: RequestInit['headers']
+      options?: UseInfiniteQueryOptions<PostRecommendationsQuery, TError, TData>
     ) => {
     
     return useInfiniteQuery<PostRecommendationsQuery, TError, TData>(
       variables === undefined ? ['postRecommendations.infinite'] : ['postRecommendations.infinite', variables],
-      (metaData) => fetcher<PostRecommendationsQuery, PostRecommendationsQueryVariables>(client, PostRecommendationsDocument, {...variables, ...(metaData.pageParam ?? {})}, headers)(),
+      (metaData) => fetcher<PostRecommendationsQuery, PostRecommendationsQueryVariables>(PostRecommendationsDocument, {...variables, ...(metaData.pageParam ?? {})})(),
       options
     )};
 
 useInfinitePostRecommendationsQuery.getKey = (variables?: PostRecommendationsQueryVariables) => variables === undefined ? ['postRecommendations.infinite'] : ['postRecommendations.infinite', variables];
 
 
-usePostRecommendationsQuery.fetcher = (client: GraphQLClient, variables?: PostRecommendationsQueryVariables, headers?: RequestInit['headers']) => fetcher<PostRecommendationsQuery, PostRecommendationsQueryVariables>(client, PostRecommendationsDocument, variables, headers);
+usePostRecommendationsQuery.fetcher = (variables?: PostRecommendationsQueryVariables, options?: RequestInit['headers']) => fetcher<PostRecommendationsQuery, PostRecommendationsQueryVariables>(PostRecommendationsDocument, variables, options);
 
 export const PublishDraftDocument = `
     mutation publishDraft($postId: Int!) {
@@ -816,22 +775,18 @@ export const PublishDraftDocument = `
 export const usePublishDraftMutation = <
       TError = unknown,
       TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<PublishDraftMutation, TError, PublishDraftMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) => {
+    >(options?: UseMutationOptions<PublishDraftMutation, TError, PublishDraftMutationVariables, TContext>) => {
     
     return useMutation<PublishDraftMutation, TError, PublishDraftMutationVariables, TContext>(
       ['publishDraft'],
-      (variables?: PublishDraftMutationVariables) => fetcher<PublishDraftMutation, PublishDraftMutationVariables>(client, PublishDraftDocument, variables, headers)(),
+      (variables?: PublishDraftMutationVariables) => fetcher<PublishDraftMutation, PublishDraftMutationVariables>(PublishDraftDocument, variables)(),
       options
     )};
 
 usePublishDraftMutation.getKey = () => ['publishDraft'];
 
 
-usePublishDraftMutation.fetcher = (client: GraphQLClient, variables: PublishDraftMutationVariables, headers?: RequestInit['headers']) => fetcher<PublishDraftMutation, PublishDraftMutationVariables>(client, PublishDraftDocument, variables, headers);
+usePublishDraftMutation.fetcher = (variables: PublishDraftMutationVariables, options?: RequestInit['headers']) => fetcher<PublishDraftMutation, PublishDraftMutationVariables>(PublishDraftDocument, variables, options);
 
 export const PublishPostVersionDocument = `
     mutation publishPostVersion($postId: Int!) {
@@ -844,22 +799,18 @@ export const PublishPostVersionDocument = `
 export const usePublishPostVersionMutation = <
       TError = unknown,
       TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<PublishPostVersionMutation, TError, PublishPostVersionMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) => {
+    >(options?: UseMutationOptions<PublishPostVersionMutation, TError, PublishPostVersionMutationVariables, TContext>) => {
     
     return useMutation<PublishPostVersionMutation, TError, PublishPostVersionMutationVariables, TContext>(
       ['publishPostVersion'],
-      (variables?: PublishPostVersionMutationVariables) => fetcher<PublishPostVersionMutation, PublishPostVersionMutationVariables>(client, PublishPostVersionDocument, variables, headers)(),
+      (variables?: PublishPostVersionMutationVariables) => fetcher<PublishPostVersionMutation, PublishPostVersionMutationVariables>(PublishPostVersionDocument, variables)(),
       options
     )};
 
 usePublishPostVersionMutation.getKey = () => ['publishPostVersion'];
 
 
-usePublishPostVersionMutation.fetcher = (client: GraphQLClient, variables: PublishPostVersionMutationVariables, headers?: RequestInit['headers']) => fetcher<PublishPostVersionMutation, PublishPostVersionMutationVariables>(client, PublishPostVersionDocument, variables, headers);
+usePublishPostVersionMutation.fetcher = (variables: PublishPostVersionMutationVariables, options?: RequestInit['headers']) => fetcher<PublishPostVersionMutation, PublishPostVersionMutationVariables>(PublishPostVersionDocument, variables, options);
 
 export const RegisterDocument = `
     mutation register($username: String!, $password: String!, $email: String!) {
@@ -877,22 +828,18 @@ export const RegisterDocument = `
 export const useRegisterMutation = <
       TError = unknown,
       TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<RegisterMutation, TError, RegisterMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) => {
+    >(options?: UseMutationOptions<RegisterMutation, TError, RegisterMutationVariables, TContext>) => {
     
     return useMutation<RegisterMutation, TError, RegisterMutationVariables, TContext>(
       ['register'],
-      (variables?: RegisterMutationVariables) => fetcher<RegisterMutation, RegisterMutationVariables>(client, RegisterDocument, variables, headers)(),
+      (variables?: RegisterMutationVariables) => fetcher<RegisterMutation, RegisterMutationVariables>(RegisterDocument, variables)(),
       options
     )};
 
 useRegisterMutation.getKey = () => ['register'];
 
 
-useRegisterMutation.fetcher = (client: GraphQLClient, variables: RegisterMutationVariables, headers?: RequestInit['headers']) => fetcher<RegisterMutation, RegisterMutationVariables>(client, RegisterDocument, variables, headers);
+useRegisterMutation.fetcher = (variables: RegisterMutationVariables, options?: RequestInit['headers']) => fetcher<RegisterMutation, RegisterMutationVariables>(RegisterDocument, variables, options);
 
 export const UpdatePostDocument = `
     mutation updatePost($id: Int!, $body: JSONObject, $title: String, $topics: [String!], $subTopics: [String!], $isPublished: Boolean) {
@@ -907,22 +854,18 @@ export const UpdatePostDocument = `
 export const useUpdatePostMutation = <
       TError = unknown,
       TContext = unknown
-    >(
-      client: GraphQLClient,
-      options?: UseMutationOptions<UpdatePostMutation, TError, UpdatePostMutationVariables, TContext>,
-      headers?: RequestInit['headers']
-    ) => {
+    >(options?: UseMutationOptions<UpdatePostMutation, TError, UpdatePostMutationVariables, TContext>) => {
     
     return useMutation<UpdatePostMutation, TError, UpdatePostMutationVariables, TContext>(
       ['updatePost'],
-      (variables?: UpdatePostMutationVariables) => fetcher<UpdatePostMutation, UpdatePostMutationVariables>(client, UpdatePostDocument, variables, headers)(),
+      (variables?: UpdatePostMutationVariables) => fetcher<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument, variables)(),
       options
     )};
 
 useUpdatePostMutation.getKey = () => ['updatePost'];
 
 
-useUpdatePostMutation.fetcher = (client: GraphQLClient, variables: UpdatePostMutationVariables, headers?: RequestInit['headers']) => fetcher<UpdatePostMutation, UpdatePostMutationVariables>(client, UpdatePostDocument, variables, headers);
+useUpdatePostMutation.fetcher = (variables: UpdatePostMutationVariables, options?: RequestInit['headers']) => fetcher<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument, variables, options);
 
 
       export type PossibleTypesResultData = {

@@ -9,22 +9,24 @@ export class UsersService {
   constructor(private prisma: PrismaService) {
   }
 
-  create(createUserInput: CreateUserInput) {
-    return this.prisma.user.create({
-      data: {
-        ...createUserInput,
-        role: "USER"
-      }
-    }).catch(e => {
+  async create(createUserInput: CreateUserInput) {
+    try {
+      return await this.prisma.user.create({
+        data: {
+          ...createUserInput,
+          role: "USER"
+        }
+      });
+    } catch (e) {
       console.log(e);
-      const { message } = e;
-      if (message.includes("username"))
+      const { message: message_1 } = e;
+      if (message_1.includes("username"))
         throw new ConflictException("Username already in use");
-      if (message.includes("google_id"))
+      if (message_1.includes("google_id"))
         throw new ConflictException("Google id already in use");
-      if (message.includes("email"))
+      if (message_1.includes("email"))
         throw new ConflictException("Email already in use");
-    });
+    }
   }
 
   findMany(fields: Partial<User>) {

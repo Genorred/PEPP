@@ -17,7 +17,7 @@ const TopicsSelector = ({ watchedTopics, control }:
                           control: Control<FilterState, any>
                         }) => {
   const [topicSearch, setTopicSearch] = useState("");
-  const { refetch, data: filteredTopics, isLoading } = useTopicsQuery(apiClient, {
+  const { refetch, data: filteredTopics, isLoading } = useTopicsQuery({
     title: topicSearch
   });
 

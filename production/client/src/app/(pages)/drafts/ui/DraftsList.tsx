@@ -11,7 +11,7 @@ const DraftsList = () => {
   const router = useRouter();
   const user = useSelector(userSlice.selectors.user);
   if (!user) router.push("/");
-  const { data, isLoading } = useDraftsQuery(apiClient);
+  const { data, isLoading } = useDraftsQuery();
   if (isLoading || !data) {
     return <div>Loading...</div>;
   }

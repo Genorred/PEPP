@@ -13,7 +13,7 @@ const Page = ({ post, id }: {
   id: number
   post: PostQuery;
 }) => {
-  const { data, isLoading } = usePostQuery(apiClient, { id }, {
+  const { data, isLoading } = usePostQuery( { id }, {
     initialData: post,
     enabled: !!id
   });

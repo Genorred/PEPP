@@ -6,12 +6,12 @@ import {
   PostsIdQuery,
   PostsIdQueryVariables
 } from "@/shared/api/graphql/generated";
-import { apiClient } from "@/shared/api/base";
+import { apiClient, serverApiClient } from "@/shared/api/base";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import ViewPost from "../ViewPost";
 
 export async function generateStaticParams() {
-  const data: PostsIdQuery = await apiClient.request(PostsIdDocument, {
+  const data: PostsIdQuery = await serverApiClient.request(PostsIdDocument, {
     token: process.env.NEXTJS_ENDPOINTS,
     isArchived: true
   } as PostsIdQueryVariables);
@@ -30,7 +30,7 @@ const Page = async ({ params }: {
 }) => {
   const id = Number(params.id);
   const version = Number(params.version);
-  const post: PostQuery = await apiClient.request(PostDocument, {
+  const post: PostQuery = await serverApiClient.request(PostDocument, {
     id,
     version
   } as PostQueryVariables);

@@ -4,6 +4,9 @@ import { AuthService } from "./auth.service";
 import { CreateUserInput } from "../users/dto/create-user.input";
 import { UseTokens } from "./auth-flow-guard/UseTokens";
 import { User } from "../users/entities/user.entity";
+import { ServerResponse } from "node:http";
+import { CustomExecutionContext } from "@_shared/decorators/execution-context";
+import { CustomContext } from "@_shared/types/CustomContext";
 
 @Resolver()
 export class AuthResolver {
@@ -12,23 +15,13 @@ export class AuthResolver {
 
   @Query(returns => User)
   @UseTokens()
-  async login(@Context() context, @Args("loginInput") loginInput: LoginInput) {
-    const user = await this.authService.login(loginInput);
-    const request = context.switchToHttp().getRequest();
-    request.user = user;
-    console.log(user);
-    return user;
+  login(@CustomExecutionContext() context: CustomContext, @Args("loginInput") loginInput: LoginInput) {
+    return this.authService.login(loginInput, context);
   }
 
   @Mutation(returns => User)
   @UseTokens()
-  async register(@Context() context, @Args("registerInput") registerInput: CreateUserInput) {
-    const user = await this.authService.register(registerInput);
-    console.log("user", user);
-    if (context.req) {
-      context.req.user = user;
-    }
-    console.log(user);
-    return user;
+  register(@CustomExecutionContext() context: CustomContext, @Args("registerInput") registerInput: CreateUserInput) {
+    return  this.authService.register(registerInput, context);
   }
 }

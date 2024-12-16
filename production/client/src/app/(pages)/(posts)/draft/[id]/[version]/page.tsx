@@ -17,7 +17,7 @@ const Page = ({ params }: {
   const id = Number(React.use(params).id);
   const version = Number(React.use(params).version);
 
-  const { data, isLoading } = useDraftQuery(apiClient, { id, version }, {
+  const { data, isLoading } = useDraftQuery( { id, version }, {
     enabled: !!id
   });
 

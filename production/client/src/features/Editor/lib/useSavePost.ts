@@ -19,10 +19,10 @@ const useSavePost = () => {
 
     const plateState = useEditorRef();
 
-    const { mutateAsync: createPost } = useCreatePostMutation(apiClient);
-    const { mutateAsync: createVersionPost } = useCreateVersionPostMutation(apiClient);
-    const { mutateAsync: update } = useUpdatePostMutation(apiClient);
-    const { mutateAsync: publishVersion } = usePublishPostVersionMutation(apiClient);
+    const { mutateAsync: createPost } = useCreatePostMutation();
+    const { mutateAsync: createVersionPost } = useCreateVersionPostMutation();
+    const { mutateAsync: update } = useUpdatePostMutation();
+    const { mutateAsync: publishVersion } = usePublishPostVersionMutation();
 
     const dispatch = useDispatch();
     const data = useSelector(focusedPostSlice.selectors.all);

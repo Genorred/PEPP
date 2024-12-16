@@ -7,12 +7,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/shared/ui/form";
 import { AuthWrapper } from "@/widgets/Auth";
-import { apiClient } from "@/shared/api/base";
 import { useRegisterMutation } from "@/shared/api/graphql/generated";
 import { useDispatch, useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
+import { getGraphqlErrors } from "@/shared/api/getGraphqlErrors";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -24,7 +24,6 @@ const formSchema = z.object({
   email: z.string().email("Invalid email address.")
 });
 
-;
 const Page = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,7 +44,7 @@ const Page = () => {
     router.push(returnUrl || "/");
   }
 
-  const { mutate: registerUser } = useRegisterMutation(apiClient, {
+  const { mutate: registerUser, isError, error } = useRegisterMutation({
     onSuccess: data => {
       dispatch(userSlice.actions.setUser(data.register));
     }
@@ -58,6 +57,7 @@ const Page = () => {
   return (
     <AuthWrapper returnUrl={returnUrl}>
       <Form {...form}>
+        {isError && "WOAAAAH"}
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
@@ -101,6 +101,12 @@ const Page = () => {
               </FormItem>
             )}
           />
+          {getGraphqlErrors(error).map((error) => (
+            <p className='text-sm font-medium text-destructive'
+            key={error.message}>
+              {error.message}
+            </p>
+          ))}
           <Button type="submit">Submit</Button>
         </form>
       </Form>

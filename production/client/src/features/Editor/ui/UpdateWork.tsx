@@ -28,7 +28,7 @@ const UpdateWork = () => {
       subtopic: ""
     }
   });
-  const { mutate: createPost } = useUpdatePostMutation(apiClient, {
+  const { mutate: createPost } = useUpdatePostMutation( {
     onSuccess: (data) => {
       console.log(data);
     }

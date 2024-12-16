@@ -5,6 +5,7 @@ import Navbar from "@/widgets/Navbar";
 import { Providers } from "@/widgets/Providers";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/shared/lib/utils";
+import { Toaster } from "@/shared/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <div className="font-bold">
           {children}
         </div>
+        <Toaster />
       </main>
     </Providers>
     </body>

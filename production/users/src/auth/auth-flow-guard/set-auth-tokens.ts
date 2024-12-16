@@ -1,25 +1,26 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
+import { ArgumentsHost, CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
 import { User } from "../../users/entities/user.entity";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
+import { SetAuthCookieService } from "../set-auth-cookie.service";
+import { ServerResponse } from "node:http";
+import { CustomContext } from "@_shared/types/CustomContext";
 
 @Injectable()
-export class SetTokensInterceptor implements NestInterceptor {
+export class SetAuthTokens {
   constructor(private jwtService: JwtService,
-              private configService: ConfigService) {
+              private configService: ConfigService,
+              private setAuthService: SetAuthCookieService) {
   }
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    return next.handle().pipe(
-      tap(() => {
-        const gqlContext = context.getArgs()[2];
-        const response = gqlContext.res;
-        const user = (gqlContext?.req?.user) as User;
+  setTokens(user: User, context: CustomContext ) {
+    console.log(context.res);
+    const response = context.res;
 
-        const accessToken = this.generateToken(user, true);
-        const refreshToken = this.generateToken(user, false);
+        const accessToken = this.setAuthService.generateToken(user, true);
+        const refreshToken = this.setAuthService.generateToken(user, false);
 
         console.log(accessToken, refreshToken);
         response.cookie("accessToken", accessToken, {
@@ -33,16 +34,5 @@ export class SetTokensInterceptor implements NestInterceptor {
           // secure: this.configService.get('NODE_ENV') === 'production',
           maxAge: 7 * 24 * 60 * 60 * 1000 // Время жизни куки (например, 7 дней)
         });
-        return response;
-      })
-    );
-  }
-
-  private async generateToken(user: Partial<User>, isAccess: boolean) {
-    const { id, username, role } = user;
-    const payload = { username, sub: id, role };
-    return this.jwtService.sign(payload, {
-      expiresIn: isAccess ? "15m" : "21d"
-    });
   }
 }

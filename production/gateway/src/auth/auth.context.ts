@@ -2,11 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "@_shared/entities/jwt.entity";
-
-interface Cookie {
-  cookies: string[];
-  cookie: any;
-}
+import { Cookie } from "@_shared/types/Cookie";
+import { CustomContext } from "@_shared/types/CustomContext";
 
 @Injectable()
 export class AuthContext {
@@ -18,8 +15,7 @@ export class AuthContext {
     req: Request & Cookie
     res: Response & Cookie
   }) {
-
-    let user: JwtPayload;
+    let user: JwtPayload
 
     const resetAccessToken = () => {
       const refreshToken = req.cookies["refreshToken"];

@@ -44,7 +44,7 @@ export class SearchQueryBuilderService {
       });
     }
 
-    if (topics.length) {
+    if (topics?.length) {
       // one match is must and others are useful
       mustQueries.push({
         bool: {

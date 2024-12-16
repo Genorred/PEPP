@@ -9,6 +9,8 @@ import { AuthModule } from "./auth/auth.module";
 import googleConfig from "./config/google.config";
 import authConfig from "./config/auth.config";
 import clientConfig from "./config/client.config";
+import { LoggerModule } from "nestjs-pino";
+import { LoggerOptions } from "@_shared/modules/logger-module";
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import clientConfig from "./config/client.config";
       cache: true,
       isGlobal: true
     }),
+    LoggerModule.forRoot(LoggerOptions),
     PrismaModule,
     UsersModule,
     AuthModule
