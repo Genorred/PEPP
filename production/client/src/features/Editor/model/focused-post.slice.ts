@@ -21,7 +21,7 @@ const initialUserState: State = {
 };
 
 export const focusedPostSlice = createSlice({
-  name: "editPost`",
+  name: "editPost",
   initialState: initialUserState,
   selectors: {
     all: state => ({

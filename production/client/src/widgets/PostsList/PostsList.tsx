@@ -5,9 +5,9 @@ import { Post } from "@/entities/Post";
 import { filtersSlice } from "@/widgets/PostsFilter/model/filters.slice";
 import { useSelector } from "react-redux";
 import { useInfinitePostRecommendationsQuery } from "@/shared/api/graphql/generated";
-import { apiClient } from "@/shared/api/base";
 import { useIntersectionObserver } from "usehooks-ts";
 import { PostRecommendationsQueryVariables } from "@/shared/api/graphql/graphql";
+import { FileX } from "lucide-react";
 
 
 const PostsList = () => {
@@ -65,9 +65,18 @@ const PostsList = () => {
         </>
         : isLoading
           ?
-          "loading..."
+          <h2 className='text-2xl font-semibold text-gray-800 mb-2 '>
+            "loading..."
+          </h2>
           :
-          "NO posts found"
+          <div
+            className="flex flex-col items-center justify-center p-8 text-center bg-gray-50 rounded-lg border border-gray-200">
+            <FileX className="w-16 h-16 text-gray-400 mb-4" />
+            <h2 className="text-2xl font-semibold text-gray-800 mb-2">No Posts Found</h2>
+            <p className="text-gray-600 max-w-md">
+              We couldn't find any posts at the moment. Check back later or try a different search.
+            </p>
+          </div>
       }
 
     </>

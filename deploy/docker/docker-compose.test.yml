@@ -157,7 +157,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
 #      -
-      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
 #    mem_limit: 280000000
     ulimits:
       memlock:
@@ -166,7 +166,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 600M
+          memory: 1024M
     healthcheck:
       test:
         [

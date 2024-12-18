@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Button } from "@/shared/ui/button";
 import { ChevronDown, Search } from "lucide-react";
@@ -10,6 +10,8 @@ import { Input } from "@/shared/ui/input";
 import { useTopicsQuery } from "@/shared/api/graphql/generated";
 import { apiClient } from "@/shared/api/base";
 import { FilterState } from "@/widgets/PostsFilter/model/domain";
+import { useDebounce } from "@/shared/lib/hooks/use-debounce";
+import { useDebounceCallback } from "usehooks-ts";
 
 const TopicsSelector = ({ watchedTopics, control }:
                         {
@@ -21,9 +23,13 @@ const TopicsSelector = ({ watchedTopics, control }:
     title: topicSearch
   });
 
-  useEffect(() => {
-    void refetch();
-  }, [topicSearch]);
+  const debounceRefetch = useDebounceCallback(() => {
+    void refetch()
+  }, 300)
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setTopicSearch(e.target.value)
+    debounceRefetch()
+  }
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -39,7 +45,7 @@ const TopicsSelector = ({ watchedTopics, control }:
             <Input
               placeholder="Filter topics..."
               value={topicSearch}
-              onChange={(e) => setTopicSearch(e.target.value)}
+              onChange={onChange}
               className="border-none focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>

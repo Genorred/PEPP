@@ -57,10 +57,10 @@ const PostCard = ({
         <div className="flex items-center justify-between mb-4">
           <UserLink userId={userId} userImg={user.img} occupation={user.occupation} username={user.username} />
           {topics && topics.length > 0 && topics.map(topic =>
-            <Badge variant="secondary">{topic.title}</Badge>
+            <Badge variant="secondary" key={topic.title}>{topic.title}</Badge>
           )}
           {subTopics && subTopics.length > 0 && subTopics.map(subTopic =>
-            <Badge variant="outline">{subTopic.title}</Badge>
+            <Badge variant="outline" key={subTopic.title}>{subTopic.title}</Badge>
           )}
         </div>
         <p className="text-sm text-muted-foreground mb-4">

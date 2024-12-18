@@ -73,7 +73,7 @@ export class SearchService {
       return await this.esService.update({
           index,
           id: id.toString(),
-          ...data as ElasticPost
+          doc: data as ElasticPost
         }
       );
     } catch (err) {

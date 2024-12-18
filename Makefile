@@ -14,6 +14,9 @@ setup_env:
 dev-up: setup_env
 	docker-compose -f deploy/docker/docker-compose.test.yml --env-file ./config/.env.test up --build
 
+dev-up-cache: setup_env
+	docker-compose -f deploy/docker/docker-compose.test.yml --env-file ./config/.env.test up
+
 dev-down: setup_env
 	docker-compose -f deploy/docker/docker-compose.test.yml --env-file ./config/.env.test down -v --remove-orphans
 

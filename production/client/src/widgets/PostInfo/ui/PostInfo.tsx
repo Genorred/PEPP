@@ -14,10 +14,14 @@ export function PostInfo({
                            version,
                            commentsQuantity,
                            reviewsQuantity,
-                           id
-                         }: Omit<PostQuery["post"], 'body' | 'title'> & { id: number }) {
+                           id,
+                           title
+                         }: Omit<PostQuery["post"], "body"> & { id: number }) {
   return (
     <div className="mt-8 p-6 bg-card rounded-lg shadow-md w-full">
+      <h1 className="text-4xl font-semibold text-gray-900 mb-4">
+        {title}
+      </h1>
       <div className="flex items-center mb-4">
         {user?.img
           ?
@@ -50,28 +54,36 @@ export function PostInfo({
             ))}
           </div>
         </div>
-        <div>
-          <h4 className="font-medium mb-2">Sub-topics</h4>
-          <div className="flex flex-wrap gap-2">
-            {subTopics?.map((subTopic, index) => (
-              <span key={index} className="bg-accent text-accent-foreground px-2 py-1 rounded-full text-sm">
+        {subTopics &&
+          <div>
+            <h4 className="font-medium mb-2">Sub-topics</h4>
+            <div className="flex flex-wrap gap-2">
+              {subTopics?.map((subTopic, index) => (
+                <span key={index} className="bg-accent text-accent-foreground px-2 py-1 rounded-full text-sm">
                 {subTopic.title}
               </span>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        }
       </div>
 
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <StarIcon className="w-5 h-5 text-yellow-400 mr-1" />
-          <span>{rating?.toFixed(1)}</span>
+      <div className="flex items-center mb-4">
+        <div className="mr-auto flex gap-4">
+          {rating &&
+            <div className="flex items-center">
+              <StarIcon className="w-5 h-5 text-yellow-400 mr-1" />
+              <span>{rating?.toFixed(1)}</span>
+            </div>
+          }
+          {minutes &&
+            <div className="flex items-center">
+              <ClockIcon className="w-5 h-5 mr-1" />
+              <span>{minutes} min read</span>
+            </div>
+          }
         </div>
-        <div className="flex items-center">
-          <ClockIcon className="w-5 h-5 mr-1" />
-          <span>{minutes} min read</span>
-        </div>
-        <div>Version: {version}</div>
+        <div className="ml-auto">Version: {version}</div>
       </div>
 
       <div className="flex justify-between">

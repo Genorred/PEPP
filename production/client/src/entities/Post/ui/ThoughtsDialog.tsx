@@ -1,7 +1,7 @@
 import { FileTextIcon, MessageCircleIcon } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogTrigger } from "@/shared/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/shared/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 
 const variants = {
@@ -29,23 +29,24 @@ export const ThoughtsDialog = ({
           <DialogTrigger asChild>
             <Button variant="outline">
               <MessageCircleIcon className="w-4 h-4 mr-2" />
-              Comments ({commentsQuantity})
+              {variants.comments} ({commentsQuantity})
             </Button>
           </DialogTrigger>
           :
           <DialogTrigger asChild>
             <Button variant="outline">
               <FileTextIcon className="w-4 h-4 mr-2" />
-              Reviews ({reviewsQuantity})
+              {variants.reviews} ({reviewsQuantity})
             </Button>
           </DialogTrigger>
         }
 
         <DialogContent>
+          <DialogTitle>Thoughts</DialogTitle>
 
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="account">Account</TabsTrigger>
-            <TabsTrigger value="password">Password</TabsTrigger>
+            <TabsTrigger value="account">{variants.reviews}</TabsTrigger>
+            <TabsTrigger value="password">{variants.reviews}</TabsTrigger>
           </TabsList>
           <TabsContent value={variants.comments}>
             <div className="space-y-4">

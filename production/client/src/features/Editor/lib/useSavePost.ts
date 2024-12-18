@@ -13,6 +13,7 @@ import { buttonNames } from "@/features/Editor/consts/buttonNames";
 import { useDispatch, useSelector } from "react-redux";
 import { focusedPostSlice, mutatedData } from "@/features/Editor/model/focused-post.slice";
 import { useFetchPostQuery } from "@/features/Editor/lib/useFetchPostQuery";
+import { useRouter } from "next/navigation";
 
 export type CreatePostParams = Parameters<ReturnType<typeof useCreatePostMutation>["mutateAsync"]>["0"]
 const useSavePost = () => {
@@ -24,6 +25,7 @@ const useSavePost = () => {
     const { mutateAsync: update } = useUpdatePostMutation();
     const { mutateAsync: publishVersion } = usePublishPostVersionMutation();
 
+    const router = useRouter();
     const dispatch = useDispatch();
     const data = useSelector(focusedPostSlice.selectors.all);
     const initialData = useFetchPostQuery(data.initialDataQueryKey);
@@ -59,6 +61,7 @@ const useSavePost = () => {
           };
           createVersionPost(variables).then((result) => {
             dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
+            router.push('/post/' + result.createVersionPost.id)
           });
         } else {//works
           const variables = {
@@ -69,6 +72,7 @@ const useSavePost = () => {
           createPost(variables).then((result) => {
             dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
             dispatch(focusedPostSlice.actions.setSourceId(result.createPost.id));
+            router.push('/post/' + result.createPost.id)
           });
         }
       } else {

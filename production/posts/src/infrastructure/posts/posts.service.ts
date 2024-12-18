@@ -9,6 +9,7 @@ import { FindPostInput } from "./dto/find-post.input";
 import { FindAlgorithmPostsInput } from "./dto/find-algorithm-posts.input";
 import { SearchService } from "../search/search.service";
 import { PreferencesRepository } from "../../domain/repositories/elastic/preferences.repository";
+import { Post } from "../../domain/entities/post.entity";
 
 @Injectable()
 export class PostsService {
@@ -74,7 +75,7 @@ export class PostsService {
     }
   }
 
-  findMany(findManyPostInput: PartialPostInput) {
+  findMany(findManyPostInput: PartialPostInput & Parameters<typeof this.prismaService.post.findMany>['0']['where']) {
     const { topics, subTopics, ...other } = findManyPostInput;
     const where: Parameters<typeof this.prismaService.post.findMany>["0"]["where"] = { ...other };
     where.AND = [
@@ -194,7 +195,7 @@ export class PostsService {
     const { dislikedPosts, likedPosts, pressedPosts, recentlyShowedPosts } =
       await this.preferencesService.get(userId, !skipPages);
     console.log("input", recommendationsInput);
-    const { totalPages, data: posts } = await this.searchService.search({
+    const { totalPages, data: elasticPosts } = await this.searchService.search({
       ...data,
       skipPages,
       likedPosts,
@@ -202,8 +203,11 @@ export class PostsService {
       pressedPosts,
       recentlyShowedPosts
     });
+    void this.preferencesService.setRecentlyShowed(userId, elasticPosts);
+    const posts = await this.findMany({id: {
+      in: elasticPosts.map(post => Number(post.id))
+      }})
     console.log("response", totalPages, posts);
-    void this.preferencesService.setRecentlyShowed(userId, posts);
     return {
       totalPages,
       data: posts

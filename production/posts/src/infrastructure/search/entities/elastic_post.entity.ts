@@ -1,6 +1,8 @@
 import { Post } from "../../../domain/entities/post.entity";
+import { ObjectType, PickType } from "@nestjs/graphql";
 
-export interface ElasticPost extends Pick<Post, "createdAt" | "rating" | "description" | "topics" | "subTopics" | "title"> {
+@ObjectType()
+export class ElasticPost extends PickType(Post, ["createdAt", "rating", "description", "topics", "subTopics", "title"]) {
 }
 
 export type ElasticKey = (keyof ElasticPost)
