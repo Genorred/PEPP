@@ -5,33 +5,44 @@ const MAX_HEIGHT = -64; // Half of navbar height
 const HALF_MAX = -32;
 
 interface State {
-  scroll: number;
+  topPosition: number;
   lastScrollTop: number;
   isMobile: boolean;
-  scrollTimeout: NodeJS.Timeout
 }
 
 const initialState: State = {
-  scroll: 0,
+  topPosition: 0,
   lastScrollTop: 0,
   isMobile: false,
-  scrollTimeout:
 };
-const scrollSlice = createSlice({
+export const scrollSlice = createSlice({
   name: "scroll",
   initialState,
   selectors: {
-    scroll: state => state.scroll
+    topPosition: state => state.topPosition,
   },
   reducers: {
-    setScroll: (state, action: PayloadAction<State>) => {
-      const { scroll } = action.payload;
-      if (state.isMobile) return;
-      const scrollTop = document.documentElement.scrollTop;
-      const difference = state.lastScrollTop - scrollTop;
-      let newValue = state.scroll + difference;
-      state.scroll = Math.min(0, Math.max(newValue, MAX_HEIGHT)); // Clamp between 0 and MAX_HEIGHT
+    setIsMobile: (state, action: PayloadAction<boolean>) => {
+      state.isMobile = action.payload;
     },
+    handleScroll: (state, action: PayloadAction<number>) => {
+        if (!state.isMobile) return;
+
+        const scrollTop = action.payload;
+        const difference = state.lastScrollTop - scrollTop;
+
+        let newValue = state.topPosition + difference;
+        state.topPosition = Math.min(0, Math.max(newValue, MAX_HEIGHT)); // Clamp
+        state.lastScrollTop = scrollTop;
+    },
+    setTopPosition: (state, action: PayloadAction<number>) => {
+      state.topPosition = action.payload;
+    },
+    handleTouchEnd: (state) => {
+      if (!state.isMobile) return; // Skip logic if not mobile
+      // Snap navbar position after scrolling stops
+      state.topPosition = state.topPosition >= HALF_MAX ? 0 : MAX_HEIGHT;
+    }
 
   }
 }).injectInto(rootReducer);

@@ -19,61 +19,63 @@ import { navPages } from "@/widgets/Navbar/consts";
 import Image from "next/image";
 import Logo from "@/shared/assets/icon.svg";
 import { UserTooltip } from "./UserTooltip";
+import { useHidingNavbar } from "@/widgets/Navbar/ui/useHidingNavbar";
 
 
 const MAX_HEIGHT = -64; // Half of navbar height
 const HALF_MAX = -32;
 
 function Navbar() {
-  const [topPosition, setTopPosition] = useState(0); // State for navbar position
-  const lastScrollTop = useRef(0);
-  const isMobile = useRef(window.innerWidth < 768);
-
-  useEffect(() => {
-    let scrollTimeout: NodeJS.Timeout;
-
-    const handleResize = () => {
-      // Update device type dynamically on resize
-      isMobile.current = window.innerWidth < 768;
-      setTopPosition(0); // Reset navbar position
-    };
-
-    const handleScroll = () => {
-      if (!isMobile.current) return;
-
-      const scrollTop = document.documentElement.scrollTop;
-      const difference = lastScrollTop.current - scrollTop;
-
-      setTopPosition((prev) => {
-        let newValue = prev + difference;
-        return Math.min(0, Math.max(newValue, MAX_HEIGHT)); // Clamp between 0 and MAX_HEIGHT
-      });
-
-      lastScrollTop.current = scrollTop;
-    };
-
-    const handleTouchEnd = () => {
-      if (!isMobile.current) return; // Skip logic if not mobile
-      // Snap navbar position after scrolling stops
-      setTopPosition((prev) => (prev >= HALF_MAX ? 0 : MAX_HEIGHT));
-    };
-
-    const scrollListener = () => {
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(handleScroll, 10); // Debounce for performance
-    };
-
-    window.addEventListener("scroll", scrollListener);
-    window.addEventListener("touchend", handleTouchEnd);
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("scroll", scrollListener);
-      window.removeEventListener("touchend", handleTouchEnd);
-      window.removeEventListener("resize", handleResize);
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-    };
-  }, []);
+  // const [topPosition, setTopPosition] = useState(0); // State for navbar position
+  // const lastScrollTop = useRef(0);
+  // const isMobile = useRef(window.innerWidth < 768);
+  //
+  // useEffect(() => {
+  //   let scrollTimeout: NodeJS.Timeout;
+  //
+  //   const handleResize = () => {
+  //     // Update device type dynamically on resize
+  //     isMobile.current = window.innerWidth < 768;
+  //     setTopPosition(0); // Reset navbar position
+  //   };
+  //
+  //   const handleScroll = () => {
+  //     if (!isMobile.current) return;
+  //
+  //     const scrollTop = document.documentElement.scrollTop;
+  //     const difference = lastScrollTop.current - scrollTop;
+  //
+  //     setTopPosition((prev) => {
+  //       let newValue = prev + difference;
+  //       return Math.min(0, Math.max(newValue, MAX_HEIGHT)); // Clamp between 0 and MAX_HEIGHT
+  //     });
+  //
+  //     lastScrollTop.current = scrollTop;
+  //   };
+  //
+  //   const handleTouchEnd = () => {
+  //     if (!isMobile.current) return; // Skip logic if not mobile
+  //     // Snap navbar position after scrolling stops
+  //     setTopPosition((prev) => (prev >= HALF_MAX ? 0 : MAX_HEIGHT));
+  //   };
+  //
+  //   const scrollListener = () => {
+  //     if (scrollTimeout) clearTimeout(scrollTimeout);
+  //     scrollTimeout = setTimeout(handleScroll, 10); // Debounce for performance
+  //   };
+  //
+  //   window.addEventListener("scroll", scrollListener);
+  //   window.addEventListener("touchend", handleTouchEnd);
+  //   window.addEventListener("resize", handleResize);
+  //
+  //   return () => {
+  //     window.removeEventListener("scroll", scrollListener);
+  //     window.removeEventListener("touchend", handleTouchEnd);
+  //     window.removeEventListener("resize", handleResize);
+  //     if (scrollTimeout) clearTimeout(scrollTimeout);
+  //   };
+  // }, []);
+  const {topPosition} = useHidingNavbar()
 
   return (
     <nav className="border-b">
