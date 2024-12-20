@@ -19,16 +19,6 @@ import {
   DropdownMenuTrigger
 } from "@/shared/ui/dropdown-menu";
 
-// This would typically come from an API or a larger dataset
-const allTopics = [
-  "React", "Node.js", "GraphQL", "TypeScript", "JavaScript", "CSS", "HTML",
-  "Next.js", "Express", "MongoDB", "PostgreSQL", "Redux", "Vue.js", "Angular",
-  "Svelte", "Docker", "Kubernetes", "AWS", "Azure", "Google Cloud", "DevOps",
-  "CI/CD", "Machine Learning", "Artificial Intelligence", "Blockchain",
-  "Cybersecurity", "Data Science", "Big Data", "IoT", "Mobile Development",
-  "iOS", "Android", "React Native", "Flutter", "Xamarin", "Unity", "Game Development"
-];
-
 export function PostsFilter() {
 
 

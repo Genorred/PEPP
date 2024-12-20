@@ -4,7 +4,6 @@ import { Editor } from "@/entities/Post/ui/plate-ui/editor";
 import { usePostEditor } from "@/features/Editor";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import { usePostQuery } from "@/shared/api/graphql/generated";
-import { apiClient } from "@/shared/api/base";
 import { PostInfo } from "@/widgets/PostInfo/ui/PostInfo";
 import Container from "@/shared/ui/Container";
 
@@ -12,7 +11,7 @@ const ViewPost = ({ post, id }: {
   id: number
   post: PostQuery
 }) => {
-  const { data, isLoading } = usePostQuery( { id }, {
+  const { data, isLoading } = usePostQuery({ id }, {
     initialData: post,
     enabled: !!id
   });
@@ -20,9 +19,7 @@ const ViewPost = ({ post, id }: {
   return (
     <Container>
       <PostInfo {...post.post} id={id} />
-      <div className={"max-w-[90%]"}>
-        <Editor readOnly={true} />
-      </div>
+      <Editor readOnly={true} />
 
     </Container>
   );

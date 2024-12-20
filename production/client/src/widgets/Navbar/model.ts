@@ -20,6 +20,7 @@ export const scrollSlice = createSlice({
   initialState,
   selectors: {
     topPosition: state => state.topPosition,
+    isScrolling: state => !!state.topPosition,
   },
   reducers: {
     setIsMobile: (state, action: PayloadAction<boolean>) => {

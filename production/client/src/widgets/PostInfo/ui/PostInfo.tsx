@@ -2,23 +2,30 @@ import Image from "next/image";
 import { CalendarIcon, ClockIcon, StarIcon } from "lucide-react";
 import { ThoughtsDialog } from "@/entities/Post/ui/ThoughtsDialog";
 import { PostQuery } from "@/shared/api/graphql/graphql";
+import { useIntersectionObserver } from "usehooks-ts";
+import FloatingModal from "@/widgets/PostInfo/ui/FloatingModal";
 
 
-export function PostInfo({
-                           createdAt,
-                           user,
-                           topics,
-                           subTopics,
-                           rating,
-                           minutes,
-                           version,
-                           commentsQuantity,
-                           reviewsQuantity,
-                           id,
-                           title
-                         }: Omit<PostQuery["post"], "body"> & { id: number }) {
+export function PostInfo(props: Omit<PostQuery["post"], "body"> & { id: number }) {
+  const {
+    createdAt,
+    user,
+    topics,
+    subTopics,
+    rating,
+    minutes,
+    version,
+    commentsQuantity,
+    reviewsQuantity,
+    id,
+    title
+  } = props;
+  const [ref, isIntersecting] = useIntersectionObserver({
+    initialIsIntersecting: true
+  });
   return (
-    <div className="mt-8 p-6 bg-card rounded-lg shadow-md w-full">
+    <div className="mt-8 p-6 bg-card rounded-lg shadow-md w-full" ref={ref}>
+        <FloatingModal {...props} isShowing={!isIntersecting} />
       <h1 className="text-4xl font-semibold text-gray-900 mb-4">
         {title}
       </h1>

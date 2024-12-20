@@ -31,7 +31,7 @@ export default function RootLayout({
     <Providers>
       <main>
         <Navbar />
-        <div className="font-bold">
+        <div className="font-bold relative">
           {children}
         </div>
         <Toaster />
