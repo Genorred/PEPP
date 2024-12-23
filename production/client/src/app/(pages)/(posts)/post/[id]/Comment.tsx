@@ -21,6 +21,7 @@ interface Comment {
   id: number;
   user: User;
   postId: number;
+  parentId?: number;
   createdAt: string;
   message: string;
   replies?: Comment[];
@@ -112,7 +113,7 @@ export function Comment({ comment, isReply }: CommentProps) {
           )}
         </div>
         {isReplying && (
-          <CommentForm postId={comment.postId} parentId={comment.id} state={state}
+          <CommentForm postId={comment.postId} parentId={isReply ? comment.parentId : comment.id} state={state}
           respondedCommentId={isReply ? comment.id : undefined}/>
         )}
       </CardContent>

@@ -45,6 +45,7 @@ const Replies = ({ parentId, postId }: {
                 comment={{
                   ...reply,
                   postId,
+                  parentId,
                   respondedComment: reply.respondedCommentId ? commentMap.get(reply.respondedCommentId) : undefined
                 }} isReply={true} />
             </div>
