@@ -19,6 +19,39 @@ export type Scalars = {
   JSONObject: { input: any; output: any; }
 };
 
+export type Comment = {
+  __typename?: 'Comment';
+  createdAt: Scalars['DateTime']['output'];
+  dislikes: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  likes: Scalars['Int']['output'];
+  message: Scalars['String']['output'];
+  parent?: Maybe<Comment>;
+  parentId: Scalars['Int']['output'];
+  post: Array<Post>;
+  postId: Scalars['Int']['output'];
+  postVersion: Scalars['Int']['output'];
+  repliesQuantity: Scalars['Int']['output'];
+  respondedCommentId?: Maybe<Scalars['Int']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+  user: User;
+  userId: Scalars['Int']['output'];
+};
+
+export type CommentsByPost = {
+  __typename?: 'CommentsByPost';
+  data: Array<Comment>;
+  totalPages: Scalars['Int']['output'];
+};
+
+export type CreateCommentInput = {
+  message: Scalars['String']['input'];
+  parentId?: InputMaybe<Scalars['Int']['input']>;
+  /** Example field (placeholder) */
+  postId: Scalars['Int']['input'];
+  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type CreatePostInput = {
   body: Scalars['JSONObject']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
@@ -79,6 +112,16 @@ export type FindPostInput = {
   version?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type GetByParentCommentInput = {
+  parentId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type GetByPostInput = {
+  postId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type LoginInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -86,14 +129,22 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createComment: Comment;
   createPost: Post;
   createVersionPost: Post;
   publish: Post;
   register: User;
+  removeComment: Comment;
   removePost: Post;
   removeUser: User;
+  updateComment: Comment;
   updatePost: Post;
   updateUser: User;
+};
+
+
+export type MutationCreateCommentArgs = {
+  createCommentInput: CreateCommentInput;
 };
 
 
@@ -117,6 +168,11 @@ export type MutationRegisterArgs = {
 };
 
 
+export type MutationRemoveCommentArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
 export type MutationRemovePostArgs = {
   id: Scalars['Int']['input'];
 };
@@ -124,6 +180,11 @@ export type MutationRemovePostArgs = {
 
 export type MutationRemoveUserArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type MutationUpdateCommentArgs = {
+  updateCommentInput: UpdateCommentInput;
 };
 
 
@@ -164,9 +225,12 @@ export type Query = {
   __typename?: 'Query';
   algoPosts: Recommendations;
   allPosts: Array<Post>;
+  comment: Comment;
+  comments: CommentsByPost;
   draft: Post;
   login: User;
   post: Post;
+  replies: CommentsByPost;
   topics: Array<Topic>;
   user: User;
   userDrafts: Array<Post>;
@@ -185,6 +249,16 @@ export type QueryAllPostsArgs = {
 };
 
 
+export type QueryCommentArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryCommentsArgs = {
+  postComments: GetByPostInput;
+};
+
+
 export type QueryDraftArgs = {
   findDraft: FindPostInput;
 };
@@ -197,6 +271,11 @@ export type QueryLoginArgs = {
 
 export type QueryPostArgs = {
   findOne: FindPostInput;
+};
+
+
+export type QueryRepliesArgs = {
+  postComments: GetByParentCommentInput;
 };
 
 
@@ -237,6 +316,15 @@ export type Topic = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+export type UpdateCommentInput = {
+  id: Scalars['Int']['input'];
+  message?: InputMaybe<Scalars['String']['input']>;
+  parentId?: InputMaybe<Scalars['Int']['input']>;
+  /** Example field (placeholder) */
+  postId?: InputMaybe<Scalars['Int']['input']>;
+  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type UpdatePostInput = {
   body?: InputMaybe<Scalars['JSONObject']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -259,6 +347,7 @@ export type UpdateUserInput = {
 
 export type User = {
   __typename?: 'User';
+  comments: Array<Comment>;
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
   google_id: Scalars['String']['output'];
@@ -279,6 +368,16 @@ export type PostsIdQueryVariables = Exact<{
 
 
 export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number, version: number }> };
+
+export type CreateCommentMutationVariables = Exact<{
+  message: Scalars['String']['input'];
+  parentId?: InputMaybe<Scalars['Int']['input']>;
+  postId: Scalars['Int']['input'];
+  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: number } };
 
 export type CreatePostMutationVariables = Exact<{
   body: Scalars['JSONObject']['input'];
@@ -303,6 +402,22 @@ export type CreateVersionPostMutationVariables = Exact<{
 
 
 export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersionPost: { __typename?: 'Post', id: number } };
+
+export type GetCommentsByParentIdQueryVariables = Exact<{
+  parentId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetCommentsByParentIdQuery = { __typename?: 'Query', replies: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', respondedCommentId?: number | null, id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, postVersion: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img: string } }> } };
+
+export type GetCommentsByPostIdQueryVariables = Exact<{
+  postId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetCommentsByPostIdQuery = { __typename?: 'Query', comments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, postVersion: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img: string } }> } };
 
 export type DraftQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -426,6 +541,32 @@ useInfinitePostsIdQuery.getKey = (variables: PostsIdQueryVariables) => ['postsId
 
 usePostsIdQuery.fetcher = (variables: PostsIdQueryVariables, options?: RequestInit['headers']) => fetcher<PostsIdQuery, PostsIdQueryVariables>(PostsIdDocument, variables, options);
 
+export const CreateCommentDocument = `
+    mutation createComment($message: String!, $parentId: Int, $postId: Int!, $respondedCommentId: Int) {
+  createComment(
+    createCommentInput: {message: $message, postId: $postId, parentId: $parentId, respondedCommentId: $respondedCommentId}
+  ) {
+    id
+  }
+}
+    `;
+
+export const useCreateCommentMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateCommentMutation, TError, CreateCommentMutationVariables, TContext>) => {
+    
+    return useMutation<CreateCommentMutation, TError, CreateCommentMutationVariables, TContext>(
+      ['createComment'],
+      (variables?: CreateCommentMutationVariables) => fetcher<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, variables)(),
+      options
+    )};
+
+useCreateCommentMutation.getKey = () => ['createComment'];
+
+
+useCreateCommentMutation.fetcher = (variables: CreateCommentMutationVariables, options?: RequestInit['headers']) => fetcher<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, variables, options);
+
 export const CreatePostDocument = `
     mutation createPost($body: JSONObject!, $title: String!, $isPublished: Boolean, $topics: [String!], $subTopics: [String!], $isDraft: Boolean) {
   createPost(
@@ -477,6 +618,125 @@ useCreateVersionPostMutation.getKey = () => ['createVersionPost'];
 
 
 useCreateVersionPostMutation.fetcher = (variables: CreateVersionPostMutationVariables, options?: RequestInit['headers']) => fetcher<CreateVersionPostMutation, CreateVersionPostMutationVariables>(CreateVersionPostDocument, variables, options);
+
+export const GetCommentsByParentIdDocument = `
+    query getCommentsByParentId($parentId: Int!, $skipPages: Int) {
+  replies(postComments: {parentId: $parentId, skipPages: $skipPages}) {
+    totalPages
+    data {
+      respondedCommentId
+      id
+      message
+      likes
+      dislikes
+      repliesQuantity
+      postVersion
+      user {
+        username
+        img
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+export const useGetCommentsByParentIdQuery = <
+      TData = GetCommentsByParentIdQuery,
+      TError = unknown
+    >(
+      variables: GetCommentsByParentIdQueryVariables,
+      options?: UseQueryOptions<GetCommentsByParentIdQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetCommentsByParentIdQuery, TError, TData>(
+      ['getCommentsByParentId', variables],
+      fetcher<GetCommentsByParentIdQuery, GetCommentsByParentIdQueryVariables>(GetCommentsByParentIdDocument, variables),
+      options
+    )};
+
+useGetCommentsByParentIdQuery.document = GetCommentsByParentIdDocument;
+
+useGetCommentsByParentIdQuery.getKey = (variables: GetCommentsByParentIdQueryVariables) => ['getCommentsByParentId', variables];
+
+export const useInfiniteGetCommentsByParentIdQuery = <
+      TData = GetCommentsByParentIdQuery,
+      TError = unknown
+    >(
+      variables: GetCommentsByParentIdQueryVariables,
+      options?: UseInfiniteQueryOptions<GetCommentsByParentIdQuery, TError, TData>
+    ) => {
+    
+    return useInfiniteQuery<GetCommentsByParentIdQuery, TError, TData>(
+      ['getCommentsByParentId.infinite', variables],
+      (metaData) => fetcher<GetCommentsByParentIdQuery, GetCommentsByParentIdQueryVariables>(GetCommentsByParentIdDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    )};
+
+useInfiniteGetCommentsByParentIdQuery.getKey = (variables: GetCommentsByParentIdQueryVariables) => ['getCommentsByParentId.infinite', variables];
+
+
+useGetCommentsByParentIdQuery.fetcher = (variables: GetCommentsByParentIdQueryVariables, options?: RequestInit['headers']) => fetcher<GetCommentsByParentIdQuery, GetCommentsByParentIdQueryVariables>(GetCommentsByParentIdDocument, variables, options);
+
+export const GetCommentsByPostIdDocument = `
+    query getCommentsByPostId($postId: Int!, $skipPages: Int) {
+  comments(postComments: {postId: $postId, skipPages: $skipPages}) {
+    totalPages
+    data {
+      id
+      message
+      likes
+      dislikes
+      repliesQuantity
+      postVersion
+      user {
+        username
+        img
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+export const useGetCommentsByPostIdQuery = <
+      TData = GetCommentsByPostIdQuery,
+      TError = unknown
+    >(
+      variables: GetCommentsByPostIdQueryVariables,
+      options?: UseQueryOptions<GetCommentsByPostIdQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetCommentsByPostIdQuery, TError, TData>(
+      ['getCommentsByPostId', variables],
+      fetcher<GetCommentsByPostIdQuery, GetCommentsByPostIdQueryVariables>(GetCommentsByPostIdDocument, variables),
+      options
+    )};
+
+useGetCommentsByPostIdQuery.document = GetCommentsByPostIdDocument;
+
+useGetCommentsByPostIdQuery.getKey = (variables: GetCommentsByPostIdQueryVariables) => ['getCommentsByPostId', variables];
+
+export const useInfiniteGetCommentsByPostIdQuery = <
+      TData = GetCommentsByPostIdQuery,
+      TError = unknown
+    >(
+      variables: GetCommentsByPostIdQueryVariables,
+      options?: UseInfiniteQueryOptions<GetCommentsByPostIdQuery, TError, TData>
+    ) => {
+    
+    return useInfiniteQuery<GetCommentsByPostIdQuery, TError, TData>(
+      ['getCommentsByPostId.infinite', variables],
+      (metaData) => fetcher<GetCommentsByPostIdQuery, GetCommentsByPostIdQueryVariables>(GetCommentsByPostIdDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    )};
+
+useInfiniteGetCommentsByPostIdQuery.getKey = (variables: GetCommentsByPostIdQueryVariables) => ['getCommentsByPostId.infinite', variables];
+
+
+useGetCommentsByPostIdQuery.fetcher = (variables: GetCommentsByPostIdQueryVariables, options?: RequestInit['headers']) => fetcher<GetCommentsByPostIdQuery, GetCommentsByPostIdQueryVariables>(GetCommentsByPostIdDocument, variables, options);
 
 export const DraftDocument = `
     query draft($id: Int!, $version: Int) {

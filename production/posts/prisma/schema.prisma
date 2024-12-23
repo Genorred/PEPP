@@ -24,20 +24,11 @@ model Topic {
 }
 
 model Post {
-  id          Int     @id @default(autoincrement())
-  version     Int     @default(1)
-  isArchived  Boolean @default(false)
-  isDraft     Boolean @default(false)
-  isPublished Boolean @default(false)
-
-  // if version
-  actualPost Post?     @relation(fields: [postId], references: [id], name: "actualPost")
-  postId     Int?
-  versions   Post[]    @relation(name: "actualPost")
-  topics     Topic[]   @relation(name: "topic")
-  subTopics  Topic[]   @relation(name: "subTopic")
-  comments   Comment[]
-
+  id               Int      @id @default(autoincrement())
+  version          Int      @default(1)
+  isArchived       Boolean  @default(false)
+  isDraft          Boolean  @default(false)
+  isPublished      Boolean  @default(false)
   title            String
   description      String?
   rating           Int?
@@ -49,18 +40,33 @@ model Post {
   userId           Int
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+
+  // if version
+  actualPost Post?  @relation(fields: [postId], references: [id], name: "actualPost")
+  postId     Int?
+  versions   Post[] @relation(name: "actualPost")
+
+  topics    Topic[]   @relation(name: "topic")
+  subTopics Topic[]   @relation(name: "subTopic")
+  comments  Comment[] @relation(name: "comments")
 }
 
 model Comment {
-  id          Int     @id @default(autoincrement())
-  title       String
-  description String?
-  rating      Int?
-  userId      Int
-  post        Post    @relation(fields: [postId], references: [id])
+  id                 Int      @id @default(autoincrement())
+  message            String
+  userId             Int
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  likes              Int      @default(0)
+  dislikes           Int      @default(0)
+  repliesQuantity    Int      @default(0)
+  respondedCommentId Int?
+
+  post        Post @relation(fields: [postId], references: [id], name: "comments")
   postId      Int
   postVersion Int
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  replies  Comment[] @relation(name: "replies")
+  parentId Int?
+  parent   Comment?  @relation(fields: [parentId], references: [id], name: "replies")
 }

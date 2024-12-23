@@ -1,4 +1,5 @@
 import { Post } from "./post.entity";
+import { Comment } from "./comment.entity";
 import { Directive, Field, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
@@ -9,4 +10,6 @@ export class User {
 
   @Field(() => [Post])
   posts?: Post[];
+  @Field(() => [Comment])
+  comments?: Comment[];
 }

@@ -6,6 +6,7 @@ import { SearchModule } from "./infrastructure/search/search.module";
 import { RedisModule } from "./domain/kernel/redis.module";
 import { ConfigModuleInitializer } from "./infrastructure/config/index.module";
 import { GraphQLModuleInitializer } from "./infrastructure/graphql/graphql.module";
+import { CommentsModule } from './infrastructure/comments/comments.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { GraphQLModuleInitializer } from "./infrastructure/graphql/graphql.modul
     PostsModule,
     TopicsModule,
     SearchModule,
-    RedisModule
+    RedisModule,
+    CommentsModule
   ]
 })
 export class AppModule {

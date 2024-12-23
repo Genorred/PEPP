@@ -36,6 +36,8 @@ export class Post {
   body: any[];
   @Field(() => Int)
   userId: number;
+  @Field(() => User)
+  user?: User;
   @Field(() => Boolean)
   isPublished: boolean;
   @Field(() => Boolean)
@@ -46,6 +48,4 @@ export class Post {
   @Field()
   updatedAt: Date;
 
-  @Field(() => User)
-  user?: User;
 }

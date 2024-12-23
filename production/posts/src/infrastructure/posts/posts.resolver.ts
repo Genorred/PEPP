@@ -1,4 +1,4 @@
-import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver, ResolveReference } from "@nestjs/graphql";
 import { PostsService } from "./posts.service";
 import { Post } from "../../domain/entities/post.entity";
 import { CreatePostInput } from "./dto/create-post.input";
@@ -15,6 +15,8 @@ import { ConfigType } from "@nestjs/config";
 import { FindAllPostsInput } from "./dto/_nextjs_find-posts.input";
 import { FindAlgorithmPostsInput } from "./dto/find-algorithm-posts.input";
 import { Recommendations } from "./model/recommendations.response";
+
+import { Comment } from "../../domain/entities/comment.entity";
 
 @Resolver(() => Post)
 export class PostsResolver {
@@ -94,5 +96,11 @@ export class PostsResolver {
   @ResolveField(() => User)
   user(@Parent() post: Post): any {
     return { __typename: "User", id: post.userId };
+  }
+  @ResolveReference()
+  async resolveReference(reference: { __typename: string; id: number }): Promise<Post> {
+    return this.postsService.findOne({
+      id: reference.id
+    });
   }
 }

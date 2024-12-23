@@ -3,6 +3,37 @@ schema {
   mutation: Mutation
 }
 
+type Comment {
+  createdAt: DateTime!
+  dislikes: Int!
+  id: Int!
+  likes: Int!
+  message: String!
+  parent: Comment
+  parentId: Int!
+  post: [Post!]!
+  postId: Int!
+  postVersion: Int!
+  repliesQuantity: Int!
+  respondedCommentId: Int
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+}
+
+type CommentsByPost {
+  data: [Comment!]!
+  totalPages: Int!
+}
+
+input CreateCommentInput {
+  message: String!
+  parentId: Int
+  """Example field (placeholder)"""
+  postId: Int!
+  respondedCommentId: Int
+}
+
 input CreatePostInput {
   body: JSONObject!
   description: String
@@ -68,6 +99,16 @@ input FindPostInput {
   version: Int
 }
 
+input GetByParentCommentInput {
+  parentId: Int!
+  skipPages: Int
+}
+
+input GetByPostInput {
+  postId: Int!
+  skipPages: Int
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -84,12 +125,15 @@ input LoginInput {
 }
 
 type Mutation {
+  createComment(createCommentInput: CreateCommentInput!): Comment!
   createPost(createPostInput: CreatePostInput!): Post!
   createVersionPost(createVersionPostInput: CreateVersionPostInput!): Post!
   publish(publishInput: Int!): Post!
   register(registerInput: CreateUserInput!): User!
+  removeComment(id: Int!): Comment!
   removePost(id: Int!): Post!
   removeUser(id: Int!): User!
+  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updatePost(updatePostInput: UpdatePostInput!): Post!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
@@ -120,9 +164,12 @@ type Post {
 type Query {
   algoPosts(findAlgorithmInput: FindAlgorithmPostsInput!): Recommendations!
   allPosts(findAllPostsInput: FindAllPostsInput!): [Post!]!
+  comment(id: Int!): Comment!
+  comments(postComments: GetByPostInput!): CommentsByPost!
   draft(findDraft: FindPostInput!): Post!
   login(loginInput: LoginInput!): User!
   post(findOne: FindPostInput!): Post!
+  replies(postComments: GetByParentCommentInput!): CommentsByPost!
   topics(title: String): [Topic!]!
   user(loginInput: FindOneUserInput!): User!
   userDrafts: [Post!]!
@@ -146,6 +193,15 @@ type Topic {
   updatedAt: DateTime!
 }
 
+input UpdateCommentInput {
+  id: Int!
+  message: String
+  parentId: Int
+  """Example field (placeholder)"""
+  postId: Int
+  respondedCommentId: Int
+}
+
 input UpdatePostInput {
   body: JSONObject
   description: String
@@ -167,6 +223,7 @@ input UpdateUserInput {
 }
 
 type User {
+  comments: [Comment!]!
   createdAt: DateTime!
   email: String!
   google_id: String!

@@ -22,6 +22,14 @@ export type Scalars = {
   JSONObject: { input: any; output: any; }
 };
 
+export type CreateCommentInput = {
+  message: Scalars['String']['input'];
+  parentId?: InputMaybe<Scalars['Int']['input']>;
+  /** Example field (placeholder) */
+  postId: Scalars['Int']['input'];
+  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type CreatePostInput = {
   body: Scalars['JSONObject']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
@@ -82,6 +90,16 @@ export type FindPostInput = {
   version?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type GetByParentCommentInput = {
+  parentId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type GetByPostInput = {
+  postId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type LoginInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -91,6 +109,15 @@ export enum SortOrder {
   Asc = 'ASC',
   Desc = 'DESC'
 }
+
+export type UpdateCommentInput = {
+  id: Scalars['Int']['input'];
+  message?: InputMaybe<Scalars['String']['input']>;
+  parentId?: InputMaybe<Scalars['Int']['input']>;
+  /** Example field (placeholder) */
+  postId?: InputMaybe<Scalars['Int']['input']>;
+  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
+};
 
 export type UpdatePostInput = {
   body?: InputMaybe<Scalars['JSONObject']['input']>;
@@ -120,6 +147,16 @@ export type PostsIdQueryVariables = Exact<{
 
 export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number, version: number }> };
 
+export type CreateCommentMutationVariables = Exact<{
+  message: Scalars['String']['input'];
+  parentId?: InputMaybe<Scalars['Int']['input']>;
+  postId: Scalars['Int']['input'];
+  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: number } };
+
 export type CreatePostMutationVariables = Exact<{
   body: Scalars['JSONObject']['input'];
   title: Scalars['String']['input'];
@@ -143,6 +180,22 @@ export type CreateVersionPostMutationVariables = Exact<{
 
 
 export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersionPost: { __typename?: 'Post', id: number } };
+
+export type GetCommentsByParentIdQueryVariables = Exact<{
+  parentId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetCommentsByParentIdQuery = { __typename?: 'Query', replies: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', respondedCommentId?: number | null, id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, postVersion: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img: string } }> } };
+
+export type GetCommentsByPostIdQueryVariables = Exact<{
+  postId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetCommentsByPostIdQuery = { __typename?: 'Query', comments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, postVersion: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img: string } }> } };
 
 export type DraftQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -241,6 +294,15 @@ export const PostsIdDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<PostsIdQuery, PostsIdQueryVariables>;
+export const CreateCommentDocument = new TypedDocumentString(`
+    mutation createComment($message: String!, $parentId: Int, $postId: Int!, $respondedCommentId: Int) {
+  createComment(
+    createCommentInput: {message: $message, postId: $postId, parentId: $parentId, respondedCommentId: $respondedCommentId}
+  ) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<CreateCommentMutation, CreateCommentMutationVariables>;
 export const CreatePostDocument = new TypedDocumentString(`
     mutation createPost($body: JSONObject!, $title: String!, $isPublished: Boolean, $topics: [String!], $subTopics: [String!], $isDraft: Boolean) {
   createPost(
@@ -259,6 +321,49 @@ export const CreateVersionPostDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CreateVersionPostMutation, CreateVersionPostMutationVariables>;
+export const GetCommentsByParentIdDocument = new TypedDocumentString(`
+    query getCommentsByParentId($parentId: Int!, $skipPages: Int) {
+  replies(postComments: {parentId: $parentId, skipPages: $skipPages}) {
+    totalPages
+    data {
+      respondedCommentId
+      id
+      message
+      likes
+      dislikes
+      repliesQuantity
+      postVersion
+      user {
+        username
+        img
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetCommentsByParentIdQuery, GetCommentsByParentIdQueryVariables>;
+export const GetCommentsByPostIdDocument = new TypedDocumentString(`
+    query getCommentsByPostId($postId: Int!, $skipPages: Int) {
+  comments(postComments: {postId: $postId, skipPages: $skipPages}) {
+    totalPages
+    data {
+      id
+      message
+      likes
+      dislikes
+      repliesQuantity
+      postVersion
+      user {
+        username
+        img
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetCommentsByPostIdQuery, GetCommentsByPostIdQueryVariables>;
 export const DraftDocument = new TypedDocumentString(`
     query draft($id: Int!, $version: Int) {
   draft(findDraft: {id: $id, version: $version}) {
