@@ -3,9 +3,10 @@ import { AuthContext } from "./auth.context";
 import { JwtModule } from "@nestjs/jwt";
 import authConfig from "../config/authConfig";
 import { ConfigModule, ConfigType } from "@nestjs/config";
+import { REDIS_CLIENT, RedisModule } from "./redis.module";
 
 @Module({
-  imports: [
+  imports: [ RedisModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [authConfig.KEY],
@@ -15,7 +16,7 @@ import { ConfigModule, ConfigType } from "@nestjs/config";
       })
     })
   ],
-  providers: [AuthContext],
+  providers: [AuthContext, RedisModule],
   exports: [AuthContext]
 })
 export class AuthModule {

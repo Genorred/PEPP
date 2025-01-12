@@ -128,8 +128,10 @@ type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
   createPost(createPostInput: CreatePostInput!): Post!
   createVersionPost(createVersionPostInput: CreateVersionPostInput!): Post!
+  login(loginInput: LoginInput!): UserResponse!
+  logout: String!
   publish(publishInput: Int!): Post!
-  register(registerInput: CreateUserInput!): User!
+  register(registerInput: CreateUserInput!): UserResponse!
   removeComment(id: Int!): Comment!
   removePost(id: Int!): Post!
   removeUser(id: Int!): User!
@@ -167,7 +169,6 @@ type Query {
   comment(id: Int!): Comment!
   comments(postComments: GetByPostInput!): CommentsByPost!
   draft(findDraft: FindPostInput!): Post!
-  login(loginInput: LoginInput!): User!
   post(findOne: FindPostInput!): Post!
   replies(postComments: GetByParentCommentInput!): CommentsByPost!
   topics(title: String): [Topic!]!
@@ -232,6 +233,18 @@ type User {
   occupation: String
   password: String!
   posts: [Post!]!
+  role: String!
+  updatedAt: DateTime!
+  username: String!
+}
+
+type UserResponse {
+  createdAt: DateTime!
+  email: String!
+  google_id: String!
+  id: Int!
+  img: String!
+  occupation: String
   role: String!
   updatedAt: DateTime!
   username: String!

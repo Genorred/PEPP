@@ -44,7 +44,7 @@ const PostsList = () => {
 
   return (
     <>
-      {data?.pages
+      {data?.pages[0].algoPosts.totalPages
         ?
         <>
           <Container className="flex gap-4 flex-wrap" variant={"section"}>

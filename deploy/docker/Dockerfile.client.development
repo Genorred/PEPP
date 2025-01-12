@@ -8,7 +8,8 @@ ENV PATH="$PNPM_HOME:$PATH"
 
 RUN corepack enable
 
-COPY . .
+COPY ./client ./client
+COPY ./tsconfig.client.run.json ./tsconfig.client.json
 
 WORKDIR /usr/app/client
 

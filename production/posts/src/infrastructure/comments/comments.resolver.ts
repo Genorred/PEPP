@@ -3,7 +3,7 @@ import { CommentsService } from './comments.service';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { UpdateCommentInput } from './dto/update-comment.input';
 import { JwtPayload } from "@_shared/entities/jwt.entity";
-import { CurrentUser } from "@_shared/auth-guard/CurrentUser";
+import { CurrentUser, CurrentUserI } from "@_shared/auth-guard/CurrentUser";
 import useAuth from "@_shared/auth-guard/useAuth";
 import { GetByPostInput } from "./dto/get-by-post.input";
 import { User } from "../../domain/entities/user.entity";
@@ -18,7 +18,7 @@ export class CommentsResolver {
 
   @useAuth()
   @Mutation(() => Comment)
-  createComment(@Args('createCommentInput') createCommentInput: CreateCommentInput, @CurrentUser() user: JwtPayload) {
+  createComment(@Args('createCommentInput') createCommentInput: CreateCommentInput, @CurrentUser() user: CurrentUserI) {
     return this.commentsService.create({...createCommentInput, userId: user.sub });
   }
 

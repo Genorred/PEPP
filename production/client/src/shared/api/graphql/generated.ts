@@ -132,8 +132,10 @@ export type Mutation = {
   createComment: Comment;
   createPost: Post;
   createVersionPost: Post;
+  login: UserResponse;
+  logout: Scalars['String']['output'];
   publish: Post;
-  register: User;
+  register: UserResponse;
   removeComment: Comment;
   removePost: Post;
   removeUser: User;
@@ -155,6 +157,11 @@ export type MutationCreatePostArgs = {
 
 export type MutationCreateVersionPostArgs = {
   createVersionPostInput: CreateVersionPostInput;
+};
+
+
+export type MutationLoginArgs = {
+  loginInput: LoginInput;
 };
 
 
@@ -228,7 +235,6 @@ export type Query = {
   comment: Comment;
   comments: CommentsByPost;
   draft: Post;
-  login: User;
   post: Post;
   replies: CommentsByPost;
   topics: Array<Topic>;
@@ -261,11 +267,6 @@ export type QueryCommentsArgs = {
 
 export type QueryDraftArgs = {
   findDraft: FindPostInput;
-};
-
-
-export type QueryLoginArgs = {
-  loginInput: LoginInput;
 };
 
 
@@ -361,6 +362,19 @@ export type User = {
   username: Scalars['String']['output'];
 };
 
+export type UserResponse = {
+  __typename?: 'UserResponse';
+  createdAt: Scalars['DateTime']['output'];
+  email: Scalars['String']['output'];
+  google_id: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  img: Scalars['String']['output'];
+  occupation?: Maybe<Scalars['String']['output']>;
+  role: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  username: Scalars['String']['output'];
+};
+
 export type PostsIdQueryVariables = Exact<{
   token: Scalars['String']['input'];
   isArchived?: InputMaybe<Scalars['Boolean']['input']>;
@@ -447,6 +461,19 @@ export type TopicsQueryVariables = Exact<{
 
 export type TopicsQuery = { __typename?: 'Query', topics: Array<{ __typename?: 'Topic', title: string }> };
 
+export type LoginMutationVariables = Exact<{
+  password: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any } };
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: string };
+
 export type PostRecommendationsQueryVariables = Exact<{
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
@@ -479,7 +506,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', username: string, email: string, id: number, createdAt: any } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any } };
 
 export type UpdatePostMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -951,6 +978,55 @@ useInfiniteTopicsQuery.getKey = (variables?: TopicsQueryVariables) => variables 
 
 
 useTopicsQuery.fetcher = (variables?: TopicsQueryVariables, options?: RequestInit['headers']) => fetcher<TopicsQuery, TopicsQueryVariables>(TopicsDocument, variables, options);
+
+export const LoginDocument = `
+    mutation login($password: String!, $email: String!) {
+  login(loginInput: {email: $email, password: $password}) {
+    username
+    email
+    id
+    createdAt
+  }
+}
+    `;
+
+export const useLoginMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<LoginMutation, TError, LoginMutationVariables, TContext>) => {
+    
+    return useMutation<LoginMutation, TError, LoginMutationVariables, TContext>(
+      ['login'],
+      (variables?: LoginMutationVariables) => fetcher<LoginMutation, LoginMutationVariables>(LoginDocument, variables)(),
+      options
+    )};
+
+useLoginMutation.getKey = () => ['login'];
+
+
+useLoginMutation.fetcher = (variables: LoginMutationVariables, options?: RequestInit['headers']) => fetcher<LoginMutation, LoginMutationVariables>(LoginDocument, variables, options);
+
+export const LogoutDocument = `
+    mutation logout {
+  logout
+}
+    `;
+
+export const useLogoutMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<LogoutMutation, TError, LogoutMutationVariables, TContext>) => {
+    
+    return useMutation<LogoutMutation, TError, LogoutMutationVariables, TContext>(
+      ['logout'],
+      (variables?: LogoutMutationVariables) => fetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables)(),
+      options
+    )};
+
+useLogoutMutation.getKey = () => ['logout'];
+
+
+useLogoutMutation.fetcher = (variables?: LogoutMutationVariables, options?: RequestInit['headers']) => fetcher<LogoutMutation, LogoutMutationVariables>(LogoutDocument, variables, options);
 
 export const PostRecommendationsDocument = `
     query postRecommendations($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $topics: [String!], $search: String) {

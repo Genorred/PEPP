@@ -4,7 +4,7 @@ import { Post } from "../../domain/entities/post.entity";
 import { CreatePostInput } from "./dto/create-post.input";
 import { UpdatePostInput } from "./dto/update-post.input";
 import { User } from "../../domain/entities/user.entity";
-import { CurrentUser } from "@_shared/auth-guard/CurrentUser";
+import { CurrentUser, CurrentUserI } from "@_shared/auth-guard/CurrentUser";
 import { JwtPayload } from "@_shared/entities/jwt.entity";
 import UseAuth from "@_shared/auth-guard/useAuth";
 import { CreateVersionPostInput } from "./dto/create-version-post.input";
@@ -26,13 +26,13 @@ export class PostsResolver {
 
   @Mutation(() => Post)
   @UseAuth()
-  async createPost(@Args("createPostInput") createPostInput: CreatePostInput, @CurrentUser() user: JwtPayload) {
+  async createPost(@Args("createPostInput") createPostInput: CreatePostInput, @CurrentUser() user: CurrentUserI) {
     return this.postsService.create({ ...createPostInput, userId: user.sub });
   }
 
   @Mutation(() => Post)
   @UseAuth()
-  createVersionPost(@Args("createVersionPostInput") createPostInput: CreateVersionPostInput, @CurrentUser() user: JwtPayload) {
+  createVersionPost(@Args("createVersionPostInput") createPostInput: CreateVersionPostInput, @CurrentUser() user: CurrentUserI) {
     return this.postsService.createVersion({ ...createPostInput, userId: user.sub });
   }
 
@@ -43,13 +43,13 @@ export class PostsResolver {
 
   @Query(() => [Post], { name: "userDrafts" })
   @UseAuth()
-  findUserDrafts(@CurrentUser() user: JwtPayload) {
+  findUserDrafts(@CurrentUser() user: CurrentUserI) {
     return this.postsService.findMany({ userId: user.sub, isDraft: true });
   }
 
   @Query(() => Recommendations, { name: "algoPosts" })
-  findAlgorithmPosts(@Args("findAlgorithmInput") findAlgorithmInput: FindAlgorithmPostsInput, @CurrentUser() user: JwtPayload) {
-    return this.postsService.recommendations({ ...findAlgorithmInput, userId: user.sub });
+  findAlgorithmPosts(@Args("findAlgorithmInput") findAlgorithmInput: FindAlgorithmPostsInput, @CurrentUser() user: CurrentUserI) {
+    return this.postsService.recommendations({ ...findAlgorithmInput, userId: user?.sub });
   }
 
   @Query(() => Post, { name: "post" })
@@ -58,7 +58,7 @@ export class PostsResolver {
   }
 
   @Query(() => Post, { name: "draft" })
-  async findDraft(@Args("findDraft") findDraft: FindPostInput, @CurrentUser() user: JwtPayload) {
+  async findDraft(@Args("findDraft") findDraft: FindPostInput, @CurrentUser() user: CurrentUserI) {
     const draft = await this.postsService.findOne({ ...findDraft, isDraft: true });
     if (draft?.userId === user.sub) {
       return draft;
@@ -68,13 +68,13 @@ export class PostsResolver {
   }
 
   @Mutation(() => Post)
-  async updatePost(@Args("updatePostInput") updatePostInput: UpdatePostInput, @CurrentUser() user: JwtPayload) {
-    return this.postsService.update({ ...updatePostInput, userId: user.sub });
+  async updatePost(@Args("updatePostInput") updatePostInput: UpdatePostInput, @CurrentUser() user: CurrentUserI) {
+    return this.postsService.update({ ...updatePostInput, userId: user?.sub });
   }
 
   @Mutation(() => Post)
-  async publish(@Args("publishInput", { type: () => Int }) postId: number, @CurrentUser() user: JwtPayload) {
-    return this.postsService.publishVersion(postId, user.sub);
+  async publish(@Args("publishInput", { type: () => Int }) postId: number, @CurrentUser() user: CurrentUserI) {
+    return this.postsService.publishVersion(postId, user?.sub);
   }
 
   @Mutation(() => Post)

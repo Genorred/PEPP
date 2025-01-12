@@ -8,7 +8,7 @@ import { TopicsRepository } from "../../domain/repositories/db/topics.repository
 import { FindPostInput } from "./dto/find-post.input";
 import { FindAlgorithmPostsInput } from "./dto/find-algorithm-posts.input";
 import { SearchService } from "../search/search.service";
-import { PreferencesRepository } from "../../domain/repositories/elastic/preferences.repository";
+import { PreferencesRepository } from "../../domain/repositories/redis/preferences.repository";
 import { Post } from "../../domain/entities/post.entity";
 
 @Injectable()
@@ -75,7 +75,7 @@ export class PostsService {
     }
   }
 
-  findMany(findManyPostInput: PartialPostInput & Parameters<typeof this.prismaService.post.findMany>['0']['where']) {
+  findMany(findManyPostInput: PartialPostInput & Parameters<typeof this.prismaService.post.findMany>["0"]["where"]) {
     const { topics, subTopics, ...other } = findManyPostInput;
     const where: Parameters<typeof this.prismaService.post.findMany>["0"]["where"] = { ...other };
     where.AND = [
@@ -190,10 +190,15 @@ export class PostsService {
     return this.prismaService.post.delete({ where: { id } });
   }
 
-  async recommendations(recommendationsInput: FindAlgorithmPostsInput & { userId: number }) {
+  async recommendations(recommendationsInput: FindAlgorithmPostsInput & { userId?: number }) {
     const { userId, skipPages, ...data } = recommendationsInput;
     const { dislikedPosts, likedPosts, pressedPosts, recentlyShowedPosts } =
-      await this.preferencesService.get(userId, !skipPages);
+      ( userId ? await this.preferencesService.get(userId, !skipPages) : {
+        likedPosts: [],
+        recentlyShowedPosts: [],
+        dislikedPosts: [],
+        pressedPosts: [],
+      })
     console.log("input", recommendationsInput);
     const { totalPages, data: elasticPosts } = await this.searchService.search({
       ...data,
@@ -203,10 +208,13 @@ export class PostsService {
       pressedPosts,
       recentlyShowedPosts
     });
-    void this.preferencesService.setRecentlyShowed(userId, elasticPosts);
-    const posts = await this.findMany({id: {
-      in: elasticPosts.map(post => Number(post.id))
-      }})
+    if (userId)
+      void this.preferencesService.setRecentlyShowed(userId, elasticPosts);
+    const posts = await this.findMany({
+      id: {
+        in: elasticPosts.map(post => Number(post.id))
+      }
+    });
     console.log("response", totalPages, posts);
     return {
       totalPages,

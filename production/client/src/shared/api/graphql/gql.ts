@@ -25,6 +25,8 @@ const documents = {
     "\n    query drafts {\n        userDrafts {\n            id\n            createdAt\n            img\n            title\n            updatedAt\n        }\n    }\n": types.DraftsDocument,
     "\n    query post($id: Int!, $version: Int) {\n        post(findOne: {id: $id, version: $version}) {\n            body\n            createdAt\n            title\n            user {\n                username\n                img\n                id\n            }\n            topics {\n                title\n            }\n            subTopics {\n                title\n            }\n            rating\n            minutes\n            version\n            commentsQuantity\n            reviewsQuantity\n            description\n        }\n    }\n": types.PostDocument,
     "\n    query topics($title: String) {\n        topics(title: $title) {\n            title\n        }\n    }\n": types.TopicsDocument,
+    "\n    mutation login($password: String!, $email: String!) {\n        login(loginInput: {\n            email: $email\n            password: $password\n        }) {\n            username\n            email\n            id\n            createdAt\n        }\n    }\n": types.LoginDocument,
+    "\n    mutation logout {\n        logout \n    }\n": types.LogoutDocument,
     "\n    query postRecommendations($createdAt: SortOrder, $rating: SortOrder,\n        $skipPages: Int, $topics: [String!], $search: String) {\n\n        algoPosts (findAlgorithmInput: {\n            createdAt: $createdAt,\n            rating: $rating,\n            skipPages: $skipPages,\n            topics: $topics,\n            searchValue: $search\n        }) {\n            totalPages,\n            data {\n                id,\n                rating,\n                commentsQuantity,\n                reviewsQuantity,\n                img,\n                minutes,\n                title,\n                createdAt,\n                userId,\n                description,\n                version,\n                updatedAt\n                user {\n                    username\n                    occupation\n                    img\n                }\n                topics {\n                    title\n                }\n                subTopics {\n                    title\n                }\n            }\n\n\n        }\n    }\n": types.PostRecommendationsDocument,
     "\n    mutation publishDraft($postId: Int!) {\n        publish(publishInput: $postId) {\n            id\n        }\n    }\n": types.PublishDraftDocument,
     "\n    mutation publishPostVersion($postId: Int!) {\n        publish(publishInput: $postId) {\n            id\n        }\n    }\n": types.PublishPostVersionDocument,
@@ -72,6 +74,14 @@ export function graphql(source: "\n    query post($id: Int!, $version: Int) {\n 
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    query topics($title: String) {\n        topics(title: $title) {\n            title\n        }\n    }\n"): typeof import('./graphql').TopicsDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation login($password: String!, $email: String!) {\n        login(loginInput: {\n            email: $email\n            password: $password\n        }) {\n            username\n            email\n            id\n            createdAt\n        }\n    }\n"): typeof import('./graphql').LoginDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation logout {\n        logout \n    }\n"): typeof import('./graphql').LogoutDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

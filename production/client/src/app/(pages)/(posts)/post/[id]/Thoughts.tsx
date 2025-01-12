@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import { Variants, variants } from "@/entities/Post/ui/consts";
-import { Comment } from "@/app/(pages)/(posts)/post/[id]/Comment";
+import { CommentTemplate } from "@/app/(pages)/(posts)/post/[id]/CommentTemplate";
 import Comments from "@/app/(pages)/(posts)/post/[id]/Comments";
 
 const Thoughts = ({postId}: {

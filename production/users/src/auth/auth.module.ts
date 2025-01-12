@@ -10,9 +10,10 @@ import { SetAuthCookieService } from "./set-auth-cookie.service";
 import { ConfigModule, ConfigType } from "@nestjs/config";
 import authConfig from "../config/auth.config";
 import { SetAuthTokens } from "./auth-flow-guard/set-auth-tokens";
+import { RedisModule } from "./redis.module";
 
 @Module({
-  imports: [UsersModule, PassportModule,
+  imports: [UsersModule, PassportModule, RedisModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [authConfig.KEY],
@@ -22,7 +23,8 @@ import { SetAuthTokens } from "./auth-flow-guard/set-auth-tokens";
       })
     })],
   controllers: [GoogleController],
-  providers: [AuthService, AuthResolver, GoogleStrategy, SetAuthCookieService, SetAuthTokens]
+  providers: [AuthService, AuthResolver, GoogleStrategy, SetAuthCookieService, SetAuthTokens,
+  ]
 })
 export class AuthModule {
 }

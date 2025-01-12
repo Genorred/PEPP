@@ -38,6 +38,16 @@ export class CommentsService {
         } : undefined)
       }
     } as const;
+    const postUpdate = this.prismaService.post.update({
+      where: {
+        id: postId
+      },
+      data: {
+        commentsQuantity: {
+          increment: 1
+        }
+      }
+    })
     if (parentId) {
       const [comment, respondedComment] = await this.prismaService.$transaction([
         this.prismaService.comment.create({
@@ -55,11 +65,16 @@ export class CommentsService {
               increment: 1
             }
           }
-        })
+        }),
+        postUpdate
       ]);
       return comment;
     } else {
-      this.prismaService.comment.create(query);
+      const [comment, post] = await this.prismaService.$transaction([
+        this.prismaService.comment.create(query),
+        postUpdate
+      ])
+      return comment;
     }
 
   }

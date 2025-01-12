@@ -7,8 +7,6 @@ import { usePostQuery } from "@/shared/api/graphql/generated";
 import { PostInfo } from "@/widgets/PostInfo/ui/PostInfo";
 import Container from "@/shared/ui/Container";
 import Thoughts from "@/app/(pages)/(posts)/post/[id]/Thoughts";
-import { variants } from "@/entities/Post/ui/consts";
-import { Tabs } from "@/shared/ui/tabs";
 
 const ViewPost = ({ post, id }: {
   id: number
@@ -23,8 +21,7 @@ const ViewPost = ({ post, id }: {
     <Container>
       <PostInfo {...post.post} id={id} />
       <Editor readOnly={true} />
-
-        <Thoughts postId={id}/>
+      <Thoughts postId={id} />
     </Container>
   );
 };

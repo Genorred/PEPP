@@ -1,9 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/shared/api/graphql/generated";
 import { rootReducer } from "@/shared/lib/redux";
+import { refreshTokenLife } from "@_config/auth";
 
 type State = {
-  user: Partial<User> | null
+  user: Partial<User> & {
+    expireDate: number
+  } | null
 };
 
 const initialUserState: State = {
@@ -18,7 +21,10 @@ export const userSlice = createSlice({
   },
   reducers: {
     setUser: (state, action: PayloadAction<Partial<User> | null>) => {
-      state.user = action.payload;
+      state.user = {
+        ...action.payload,
+        expireDate: Date.now() + refreshTokenLife
+      };
     }
   }
 }).injectInto(rootReducer);

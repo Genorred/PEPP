@@ -8,11 +8,12 @@ import { AuthContext } from "./auth/auth.context";
 import { AuthModule } from "./auth/auth.module";
 import { JwtModule } from "@nestjs/jwt";
 import microservicesConfig from "./config/microservicesConfig";
+import redisConfig from "./config/redis.config";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [authConfig, microservicesConfig],
+      load: [authConfig, microservicesConfig, redisConfig],
       expandVariables: true,
       cache: true,
       isGlobal: true
@@ -41,19 +42,29 @@ import microservicesConfig from "./config/microservicesConfig";
             supergraphSdl: new IntrospectAndCompose({
               subgraphs,
               subgraphHealthCheck: true,
-              pollIntervalInMs: 5000,
+              pollIntervalInMs: 5000
             }),
             buildService({ url }) {
               return new RemoteGraphQLDataSource({
                 url,
                 willSendRequest({ request, context }) {
+                  request.http.headers.set('cookies',
+                    context?.cookies ? JSON.stringify(context.cookies) : null)
                   request.http.headers.set(
                     "user",
-                    context.user ? JSON.stringify(context.user) : null
+                    context?.user ? JSON.stringify(context.user) : null
                   );
+                },
+                didReceiveResponse({response, context}){
+                  // @ts-ignore
+                  const cookies = response.http.headers?.raw()['set-cookie'] as string[]
+                  if (cookies) {
+                    context?.req.res.append('set-cookie', cookies)
+                  }
+                  return response
                 }
               });
-            }
+            },
           }
         };
       }

@@ -11,6 +11,8 @@ import authConfig from "./config/auth.config";
 import clientConfig from "./config/client.config";
 import { LoggerModule } from "nestjs-pino";
 import { LoggerOptions } from "@_shared/modules/logger-module";
+import { RedisModule } from "./auth/redis.module";
+import redisConfig from "./config/redis.config";
 
 @Module({
   imports: [
@@ -22,7 +24,7 @@ import { LoggerOptions } from "@_shared/modules/logger-module";
       context: ({ req, res }) => ({ req, res })
     }),
     ConfigModule.forRoot({
-      load: [googleConfig, authConfig, clientConfig],
+      load: [googleConfig, authConfig, clientConfig, redisConfig],
       expandVariables: true,
       cache: true,
       isGlobal: true
@@ -30,7 +32,7 @@ import { LoggerOptions } from "@_shared/modules/logger-module";
     LoggerModule.forRoot(LoggerOptions),
     PrismaModule,
     UsersModule,
-    AuthModule
+    AuthModule,
   ],
   providers: [PrismaService]
 })

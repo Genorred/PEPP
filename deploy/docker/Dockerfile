@@ -13,7 +13,6 @@ FROM base AS build
 WORKDIR /usr/app
 COPY ./${SERVICE_NAME} ./${SERVICE_NAME}
 COPY ./tsconfig.run.json ./tsconfig.json
-COPY ./shared/src ./${SERVICE_NAME}/src/shared
 
 WORKDIR /usr/app/${SERVICE_NAME}
 
@@ -36,7 +35,5 @@ RUN if [ "$SERVICE_NAME" != "gateway" ]; then \
     fi
 VOLUME [ "/usr/app/${SERVICE_NAME}/node_modules" ]
 
-COPY ./shared/scripts ./scripts
-
 EXPOSE 8080
-CMD ["./scripts/prod.sh"]
+CMD ["./src/_shared/scripts/prod.sh"]

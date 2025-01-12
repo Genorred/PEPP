@@ -10,5 +10,6 @@ export const hosts = {
   gateway: "gateway",
   client: "client",
   es01: "es01",
-  redis: "redis"
+  redis_posts: "redis_posts",
+  redis_auth: 'redis_auth',
 } as const;

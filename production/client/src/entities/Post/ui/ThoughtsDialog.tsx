@@ -27,14 +27,14 @@ export const ThoughtsDialog = ({
           <DialogTrigger asChild>
             <Button variant="outline">
               <MessageCircleIcon className="w-4 h-4 mr-2" />
-              {variants.comments} ({commentsQuantity})
+              {variants.comments} ({commentsQuantity || 0})
             </Button>
           </DialogTrigger>
           :
           <DialogTrigger asChild>
             <Button variant="outline">
               <FileTextIcon className="w-4 h-4 mr-2" />
-              {variants.reviews} ({reviewsQuantity})
+              {variants.reviews} ({reviewsQuantity || 0})
             </Button>
           </DialogTrigger>
         }

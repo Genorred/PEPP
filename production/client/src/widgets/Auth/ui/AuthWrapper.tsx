@@ -22,11 +22,11 @@ const AuthWrapper = ({ children, returnUrl }: {
 
   return (
     <Container>
-      <h1 className="bold mb-3 mt-3">
+      <h1 className="bold text-3xl mb-3 mt-3 text-center">
         Join PEPP
       </h1>
       {children}
-      <div className="flex mt-5">
+      <div className="flex mt-5 justify-center">
         <Button onClick={SignWithGoogle}>
           <div className="flex justify-center items-center gap-2">
             <Image src={GoogleIcon.src} alt={"google icon"} width={32} height={32} />

@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { Textarea } from "@/shared/ui/textarea";
 import { Button } from "@/shared/ui/button";
 import { useCreateCommentMutation } from "@/shared/api/graphql/generated";
 
-const CommentForm = ({ postId, respondedCommentId, state, parentId }: {
+const CommentForm = ({ postId, respondedCommentId, isReplyingState, parentId }: {
   postId: number
   parentId?: number
   respondedCommentId?: number
-  state?: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
+  isReplyingState?: [boolean, Dispatch<SetStateAction<boolean>>];
 }) => {
-  const [isWriting, setIsWriting] = state ?? useState(false);
+  const [isWriting, setIsWriting] = isReplyingState?? useState(false);
   const [replyMessage, setReplyMessage] = useState("");
   const { mutate: createComment } = useCreateCommentMutation();
 

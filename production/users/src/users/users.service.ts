@@ -1,12 +1,15 @@
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Inject, Injectable } from "@nestjs/common";
 import { CreateUserInput } from "./dto/create-user.input";
 import { UpdateUserInput } from "./dto/update-user.input";
 import { PrismaService } from "../prisma/prisma.service";
 import { User } from "./entities/user.entity";
+import { RedisClientConnectionType } from "@keyv/redis";
+import { REDIS_CLIENT } from "../auth/redis.module";
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {
+  constructor(private prisma: PrismaService,
+  ) {
   }
 
   async create(createUserInput: CreateUserInput) {

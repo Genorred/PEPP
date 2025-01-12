@@ -20,7 +20,7 @@ export const RedisClientProvider: Provider = {
     isGlobal: true,
     imports: [ConfigModule],
     useFactory: async (configService: ConfigType<typeof redisConfig>) => {
-      const redisURI = `redis://:${configService.password}@${hosts.redis}:6379`; // Replace with your Redis URI
+      const redisURI = `redis://:${configService.password}@${hosts.redis_posts}:6379`; // Replace with your Redis URI
       const keyvRedis = new KeyvRedis(redisURI);
       const keyv = new Keyv({ store: keyvRedis });
       await keyvRedis.client.connect();

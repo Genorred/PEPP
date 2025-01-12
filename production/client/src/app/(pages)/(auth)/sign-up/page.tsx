@@ -46,7 +46,8 @@ const Page = () => {
 
   const { mutate: registerUser, isError, error } = useRegisterMutation({
     onSuccess: data => {
-      dispatch(userSlice.actions.setUser(data.register));
+      const { __typename, ...result } = data.register;
+      dispatch(userSlice.actions.setUser(result));
     }
   });
 
@@ -58,7 +59,7 @@ const Page = () => {
     <AuthWrapper returnUrl={returnUrl}>
       <Form {...form}>
         {isError && "WOAAAAH"}
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 px-4">
           <FormField
             control={form.control}
             name="username"
@@ -102,8 +103,8 @@ const Page = () => {
             )}
           />
           {getGraphqlErrors(error).map((error) => (
-            <p className='text-sm font-medium text-destructive'
-            key={error.message}>
+            <p className="text-sm font-medium text-destructive"
+               key={error.message}>
               {error.message}
             </p>
           ))}

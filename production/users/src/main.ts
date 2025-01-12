@@ -1,19 +1,19 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { Logger } from "nestjs-pino";
-import { ValidationPipe } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 
 async function bootstrap() {
-  const port = process.env.USERS_SERVICE_PORT || 5000;
-  const app = await NestFactory.create(AppModule, {
-    cors: {
-      origin: "http://localhost:3000",
-      credentials: true
-    }
+  const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  // const clientUrl = configService.get<string>('CLIENT_URL') || 'http://localhost:9898';
+  // console.log(clientUrl);
+  app.enableCors({
+    origin: true,
+    credentials: true
   });
   app.useLogger(app.get(Logger));
-  console.log(port);
-  console.log(port);
+  const port = configService.get<number>('USERS_SERVICE_PORT') || 8080;
   await app.listen(port, () => {
     console.log("server started on port " + port);
   });

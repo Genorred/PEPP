@@ -1,10 +1,11 @@
 import React from "react";
-import { Comment } from "./Comment";
+import { CommentTemplate } from "./CommentTemplate";
 import { GetCommentsByPostIdQueryVariables, useInfiniteGetCommentsByPostIdQuery } from "@/shared/api/graphql/generated";
 import { useIntersectionObserver } from "usehooks-ts";
 import { Textarea } from "@/shared/ui/textarea";
 import { Button } from "@/shared/ui/button";
 import CommentForm from "./CommentForm";
+import Comment from "./Comment";
 
 const Comments = ({ postId }: {
   postId: number

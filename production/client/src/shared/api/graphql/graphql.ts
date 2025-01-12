@@ -225,6 +225,19 @@ export type TopicsQueryVariables = Exact<{
 
 export type TopicsQuery = { __typename?: 'Query', topics: Array<{ __typename?: 'Topic', title: string }> };
 
+export type LoginMutationVariables = Exact<{
+  password: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any } };
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: string };
+
 export type PostRecommendationsQueryVariables = Exact<{
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
@@ -257,7 +270,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'User', username: string, email: string, id: number, createdAt: any } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any } };
 
 export type UpdatePostMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -426,6 +439,21 @@ export const TopicsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<TopicsQuery, TopicsQueryVariables>;
+export const LoginDocument = new TypedDocumentString(`
+    mutation login($password: String!, $email: String!) {
+  login(loginInput: {email: $email, password: $password}) {
+    username
+    email
+    id
+    createdAt
+  }
+}
+    `) as unknown as TypedDocumentString<LoginMutation, LoginMutationVariables>;
+export const LogoutDocument = new TypedDocumentString(`
+    mutation logout {
+  logout
+}
+    `) as unknown as TypedDocumentString<LogoutMutation, LogoutMutationVariables>;
 export const PostRecommendationsDocument = new TypedDocumentString(`
     query postRecommendations($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $topics: [String!], $search: String) {
   algoPosts(
