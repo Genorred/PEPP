@@ -5,7 +5,6 @@ import {
   useUpdatePostMutation
 } from "@/shared/api/graphql/generated";
 import { HandleWorkFormT } from "@/features/Editor/ui/SaveWork";
-import { apiClient } from "@/shared/api/base";
 import { useEditorRef } from "@udecode/plate-common/react";
 import { getChangedFields } from "@/shared/utils/getChangedFields";
 import { BaseSyntheticEvent } from "react";
@@ -14,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { focusedPostSlice, mutatedData } from "@/features/Editor/model/focused-post.slice";
 import { useFetchPostQuery } from "@/features/Editor/lib/useFetchPostQuery";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export type CreatePostParams = Parameters<ReturnType<typeof useCreatePostMutation>["mutateAsync"]>["0"]
 const useSavePost = () => {
@@ -36,21 +36,26 @@ const useSavePost = () => {
       const name: (typeof buttonNames)[keyof typeof buttonNames] = event.nativeEvent?.submitter.name; // Кнопка, вызвавшая сабмит
       console.log("Кнопка вызвавшая сабмит:", name);
       if (name === buttonNames.publish) {
+        let idToNav: number
 
         if (data.versionId) { // works
           publishVersion({
             postId: data.versionId
-          }).then(() => {
+          }).then((result) => {
+            toast.success("The post version was successfully created!");
             dispatch(focusedPostSlice.actions.setVersionId(null));
             dispatch(focusedPostSlice.actions.setDraftId(null));
+            router.push("/post/" + result.publish.id);
           });
         } else if (data.draftId) {// works
           update({
             id: data.draftId,
             isPublished: true
           }).then((result) => {
+            toast.success("The draft was successfully published!");
             dispatch(focusedPostSlice.actions.setSourceId(result.updatePost.id));
             dispatch(focusedPostSlice.actions.setDraftId(null));
+            router.push("/post/" + result.updatePost.id);
           });
         } else if (data.sourceId) {
           const variables = {
@@ -60,8 +65,9 @@ const useSavePost = () => {
             body: plateState.children as any
           };
           createVersionPost(variables).then((result) => {
+            toast.success("The post version was successfully published!");
             dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
-            router.push('/post/' + result.createVersionPost.id)
+            router.push("/post/" + result.createVersionPost.id);
           });
         } else {//works
           const variables = {
@@ -70,9 +76,10 @@ const useSavePost = () => {
             isPublished: true
           };
           createPost(variables).then((result) => {
+            toast.success("The post was successfully published!");
             dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
             dispatch(focusedPostSlice.actions.setSourceId(result.createPost.id));
-            router.push('/post/' + result.createPost.id)
+            router.push("/post/" + result.createPost.id);
           });
         }
       } else {
@@ -91,6 +98,7 @@ const useSavePost = () => {
             id: data.draftId || data.versionId as number,
             ...variables
           }).then(() => {
+            toast.success("The draft was successfully updated!");
             dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
           });
         } else if (data.sourceId) {// works
@@ -100,6 +108,7 @@ const useSavePost = () => {
             postId: data.sourceId,
             body: plateState.children as any
           }).then((result) => {
+            toast.success("The post version was successfully saved!");
             dispatch(focusedPostSlice.actions.setVersionId(result.createVersionPost.id));
           });
         } else {
@@ -108,6 +117,7 @@ const useSavePost = () => {
             body: plateState.children as any,
             isDraft: true
           }).then((result) => {
+            toast.success("The draft was successfully saved!");
             dispatch(focusedPostSlice.actions.setDraftId(result.createPost.id));
           });
         }
