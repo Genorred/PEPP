@@ -10,10 +10,6 @@ export class Post {
   id: number;
   @Field()
   version: number;
-  @Field({ nullable: true })
-  postId?: number;
-  @Field()
-  isArchived: boolean;
   @Field(() => Int, { nullable: true })
   minutes?: number;
   @Field()
@@ -38,10 +34,6 @@ export class Post {
   userId: number;
   @Field(() => User)
   user?: User;
-  @Field(() => Boolean)
-  isPublished: boolean;
-  @Field(() => Boolean)
-  isDraft: boolean;
 
   @Field()
   createdAt: Date;

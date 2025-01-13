@@ -1,15 +1,16 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
-import { CreatePostInputService } from "./dto/create-post.input";
-import { UpdatePostInputService } from "./dto/update-post.input";
-import { PrismaService } from "../../domain/kernel/prisma/prisma.service";
-import { PartialPostInput } from "./dto/partial-post.input";
-import { CreateVersionPostInputService } from "./dto/create-version-post.input";
-import { TopicsRepository } from "../../domain/repositories/db/topics.repository";
-import { FindPostInput } from "./dto/find-post.input";
-import { FindAlgorithmPostsInput } from "./dto/find-algorithm-posts.input";
+import { CreatePostInputService } from "../../domain/dto/posts/create-post.input";
+import { UpdatePostInputService } from "../../domain/dto/posts/update-post.input";
+import { PrismaService } from "../repositories/prismaDb/prisma.service";
+import { PartialPostInput } from "../../domain/dto/posts/partial-post.input";
+import { CreateVersionPostInputService } from "../../domain/dto/posts/create-version-post.input";
+import { TopicsRepository } from "../repositories/prismaDb/topics/topics.repository";
+import { FindPostInput } from "../../domain/dto/posts/find-post.input";
+import { FindAlgorithmPostsInput } from "../../domain/dto/posts/find-algorithm-posts.input";
 import { SearchService } from "../search/search.service";
-import { PreferencesRepository } from "../../domain/repositories/redis/preferences.repository";
-import { Post } from "../../domain/entities/post.entity";
+import { PreferencesRepository } from "../repositories/redis/preferences.repository";
+import {CurrentUserExtendT} from '@_shared/auth-guard/CurrentUserExtendT'
+import { PublishPostInput } from "../../domain/dto/posts/publish-post.input";
 
 @Injectable()
 export class PostsService {
@@ -19,19 +20,54 @@ export class PostsService {
               private readonly preferencesService: PreferencesRepository) {
   }
 
-  async create(createPostInput: CreatePostInputService) {
-    const { topics, subTopics, isPublished, ...data } = createPostInput;
+  async publish(createPostInput: CreatePostInputService) {
+    const { topics, subTopics, ...data } = createPostInput;
     const post = await this.prismaService.post.create({
       data: {
         ...data,
-        isPublished: !data?.isDraft && isPublished, // draft can't be published
         ...this.topicsRepository.connectOrCreateTopics(topics, subTopics)
       }
     });
-    if (isPublished) {
-      void this.searchService.indexPost(post);
-    }
+    void this.searchService.indexPost(post);
     return post;
+  }
+
+  createDraft(createPostInput: CreatePostInputService) {
+    const { topics, subTopics, ...data } = createPostInput;
+    return this.prismaService.draft.create({
+      data: {
+        ...data,
+        ...this.topicsRepository.connectOrCreateTopics(topics, subTopics)
+      }
+    });
+  }
+  async publishDraft(createPostInput: CurrentUserExtendT<PublishPostInput>) {
+    const { topics, subTopics, id, ...data } = createPostInput;
+    const draft = await this.prismaService.draft.findFirst({
+      where: {
+        id
+      }
+    })
+    if (draft.version === 1) {
+      return this.prismaService.post.create({
+        data: {
+          ...draft,
+          ...data,
+          ...this.topicsRepository.connectOrCreateTopics(topics, subTopics)
+        }
+      });
+    } else {
+      return this.prismaService.post.update({
+        where: {
+          id: draft.postId
+        },
+        data: {
+          ...draft,
+          ...data,
+          ...this.topicsRepository.connectOrCreateTopics(topics, subTopics)
+        }
+      });
+    }
   }
 
   async createVersion(createVersionPostInput: CreateVersionPostInputService) {
@@ -193,12 +229,12 @@ export class PostsService {
   async recommendations(recommendationsInput: FindAlgorithmPostsInput & { userId?: number }) {
     const { userId, skipPages, ...data } = recommendationsInput;
     const { dislikedPosts, likedPosts, pressedPosts, recentlyShowedPosts } =
-      ( userId ? await this.preferencesService.get(userId, !skipPages) : {
+      (userId ? await this.preferencesService.get(userId, !skipPages) : {
         likedPosts: [],
         recentlyShowedPosts: [],
         dislikedPosts: [],
-        pressedPosts: [],
-      })
+        pressedPosts: []
+      });
     console.log("input", recommendationsInput);
     const { totalPages, data: elasticPosts } = await this.searchService.search({
       ...data,

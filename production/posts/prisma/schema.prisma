@@ -15,20 +15,61 @@ datasource db {
 }
 
 model Topic {
-  title    String @id
-  posts    Post[] @relation(name: "topic")
-  postsSub Post[] @relation(name: "subTopic")
+  title      String    @id
+  posts      Post[]    @relation(name: "postTopics")
+  postsSub   Post[]    @relation(name: "postSubTopics")
+  drafts     Draft[]   @relation(name: "draftTopics")
+  draftsSub  Draft[]   @relation(name: "draftSubTopics")
+  version    Version[] @relation(name: "versionTopics")
+  versionSub Version[] @relation(name: "versionSubTopics")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
+model Version {
+  id               Int      @id @default(autoincrement())
+  version          Int      @default(1)
+  title            String
+  description      String?
+  img              String?
+  body             Json[]
+  userId           Int
+  rating           Int?
+  commentsQuantity Int?
+  reviewsQuantity  Int?
+  minutes          Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  actualPost Post?     @relation(fields: [postId], references: [id], name: "versionActualPost")
+  postId     Int?
+  topics     Topic[]   @relation(name: "versionTopics")
+  subTopics  Topic[]   @relation(name: "versionSubTopics")
+  comments   Comment[] @relation(name: "versionComments")
+}
+
+model Draft {
+  id          Int      @id @default(autoincrement())
+  version     Int      @default(1)
+  title       String
+  description String?
+  img         String?
+  body        Json[]
+  minutes     Int?
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  actualPost Post?   @relation(fields: [postId], references: [id], name: "draftActualPost")
+  postId     Int?
+  topics     Topic[] @relation(name: "draftTopics")
+  subTopics  Topic[] @relation(name: "draftSubTopics")
+}
+
 model Post {
   id               Int      @id @default(autoincrement())
   version          Int      @default(1)
-  isArchived       Boolean  @default(false)
-  isDraft          Boolean  @default(false)
-  isPublished      Boolean  @default(false)
   title            String
   description      String?
   rating           Int?
@@ -41,14 +82,11 @@ model Post {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  // if version
-  actualPost Post?  @relation(fields: [postId], references: [id], name: "actualPost")
-  postId     Int?
-  versions   Post[] @relation(name: "actualPost")
-
-  topics    Topic[]   @relation(name: "topic")
-  subTopics Topic[]   @relation(name: "subTopic")
-  comments  Comment[] @relation(name: "comments")
+  versions  Draft[]   @relation(name: "draftActualPost")
+  archives  Version[] @relation(name: "versionActualPost")
+  topics    Topic[]   @relation(name: "postTopics")
+  subTopics Topic[]   @relation(name: "postSubTopics")
+  comments  Comment[] @relation(name: "postComments")
 }
 
 model Comment {
@@ -62,9 +100,10 @@ model Comment {
   repliesQuantity    Int      @default(0)
   respondedCommentId Int?
 
-  post        Post @relation(fields: [postId], references: [id], name: "comments")
-  postId      Int
-  postVersion Int
+  post      Post    @relation(fields: [postId], references: [id], name: "postComments")
+  postId    Int
+  version   Version @relation(fields: [versionId], references: [id], name: "versionComments")
+  versionId Int
 
   replies  Comment[] @relation(name: "replies")
   parentId Int?

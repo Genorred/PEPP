@@ -1,5 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { TopicsResolver } from "./topics.resolver";
+import { TopicsResolver } from "../../interfaces/resolvers/topics.resolver";
 import { TopicsService } from "./topics.service";
 
 describe("TopicsResolver", () => {

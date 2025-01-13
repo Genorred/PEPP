@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { CreateCommentInput } from "./dto/create-comment.input";
-import { UpdateCommentInput } from "./dto/update-comment.input";
-import { PrismaService } from "../../domain/kernel/prisma/prisma.service";
-import { GetByPostInput } from "./dto/get-by-post.input";
-import { CommentsByPost } from "./model/recommendations.response";
+import { CreateCommentInput } from "../../domain/dto/comments/create-comment.input";
+import { UpdateCommentInput } from "../../domain/dto/comments/update-comment.input";
+import { PrismaService } from "../repositories/prismaDb/prisma.service";
+import { GetByPostInput } from "../../domain/dto/comments/get-by-post.input";
+import { CommentsByPost } from "../../domain/response/comments-by-post.response";
 import { Prisma } from ".prisma/client";
-import { GetByParentCommentInput } from "./dto/get-by-parent-comment.input";
+import { GetByParentCommentInput } from "../../domain/dto/comments/get-by-parent-comment.input";
 
 const page = 20;
 

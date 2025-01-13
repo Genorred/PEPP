@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { ElasticsearchService } from "@nestjs/elasticsearch";
-import { Mapping } from "../../domain/repositories/elastic/mapping";
+import { Mapping } from "../repositories/elastic/mapping";
 import { SearchQueryBuilderService } from "./searchQueryBuilder";
-import { ElasticPost } from "./entities/elastic_post.entity";
-import { SearchDto } from "./dto/search.dto";
-import { IndexDto } from "./dto/index.dto";
+import { SearchPost } from "../../domain/entities/search_post.entity";
+import { SearchDto } from "../../domain/dto/search_posts/search.dto";
+import { IndexDto } from "../../domain/dto/search_posts/index.dto";
 import { RedisClientConnectionType } from "@keyv/redis";
-import { REDIS_CLIENT } from "../../domain/kernel/redis.module";
+import { REDIS_CLIENT } from "../../interfaces/modules/redis.module";
 
 const index = "posts";
 
@@ -52,7 +52,7 @@ export class SearchService {
           createdAt,
           topics,
           description,
-        } as ElasticPost
+        } as SearchPost
       });
     } catch (err) {
       throw err;
@@ -73,7 +73,7 @@ export class SearchService {
       return await this.esService.update({
           index,
           id: id.toString(),
-          doc: data as ElasticPost
+          doc: data as SearchPost
         }
       );
     } catch (err) {
@@ -88,7 +88,7 @@ export class SearchService {
       const v = this.builderService.buildSearchQuery(searchParam)
       console.log('query', v);
       console.log('sort', this.builderService.sortSearchQuery(searchParam));
-      const { hits: parentHits } = await this.esService.search<ElasticPost>({
+      const { hits: parentHits } = await this.esService.search<SearchPost>({
         index,
         sort: this.builderService.sortSearchQuery(searchParam),
         query: this.builderService.buildSearchQuery(searchParam),

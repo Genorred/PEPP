@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { QueryDslQueryContainer, Sort } from "@elastic/elasticsearch/lib/api/typesWithBodyKey";
-import { ElasticKey, ElasticKeys } from "./entities/elastic_post.entity";
-import { SearchDto } from "./dto/search.dto";
+import { SearchPostKey, SearchPostKeys } from "../../domain/entities/search_post.entity";
+import { SearchDto } from "../../domain/dto/search_posts/search.dto";
 
 @Injectable()
 export class SearchQueryBuilderService {
@@ -37,7 +37,7 @@ export class SearchQueryBuilderService {
     if (searchValue) {
       mustQueries.push({
         multi_match: {
-          fields: ["title^2", "description"] as ElasticKeys,
+          fields: ["title^2", "description"] as SearchPostKeys,
           query: searchValue,
           tie_breaker: 0.3
         }
@@ -74,7 +74,7 @@ export class SearchQueryBuilderService {
         functions: [
           {
             field_value_factor: {
-              field: "rating" as ElasticKey,
+              field: "rating" as SearchPostKey,
               factor: 1,
               modifier: "none",
               missing: 2.5

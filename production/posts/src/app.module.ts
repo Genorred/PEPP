@@ -1,12 +1,14 @@
 import { Module } from "@nestjs/common";
-import { PrismaModule } from "./domain/kernel/prisma/prisma.module";
-import { PostsModule } from "./infrastructure/posts/posts.module";
-import { TopicsModule } from "./infrastructure/topics/topics.module";
-import { SearchModule } from "./infrastructure/search/search.module";
-import { RedisModule } from "./domain/kernel/redis.module";
+import { PrismaModule } from "./interfaces/prisma.module";
+import { PostsModule } from "./interfaces/modules/posts.module";
+import { TopicsModule } from "./interfaces/modules/topics.module";
+import { SearchModule } from "./interfaces/modules/search.module";
+import { RedisModule } from "./interfaces/modules/redis.module";
 import { ConfigModuleInitializer } from "./infrastructure/config/index.module";
-import { GraphQLModuleInitializer } from "./infrastructure/graphql/graphql.module";
-import { CommentsModule } from './infrastructure/comments/comments.module';
+import { GraphQLModuleInitializer } from "./interfaces/modules/graphql.module";
+import { CommentsModule } from './interfaces/modules/comments.module';
+import { DraftsModule } from './interfaces/modules/drafts.module';
+import { VersionsModule } from './interfaces/modules/versions.module';
 
 @Module({
   imports: [
@@ -18,7 +20,9 @@ import { CommentsModule } from './infrastructure/comments/comments.module';
     TopicsModule,
     SearchModule,
     RedisModule,
-    CommentsModule
+    CommentsModule,
+    DraftsModule,
+    VersionsModule
   ]
 })
 export class AppModule {

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { PostsResolver } from "./posts.resolver";
+import { PostsResolver } from "../../interfaces/resolvers/posts.resolver";
 import { PostsService } from "./posts.service";
 
 describe("PostsResolver", () => {
