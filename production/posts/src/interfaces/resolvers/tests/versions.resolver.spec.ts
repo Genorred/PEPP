@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { VersionsResolver } from '../interfaces/resolvers/versions.resolver';
-import { VersionsService } from './versions.service';
+import { VersionsResolver } from '../versions.resolver';
+import { VersionsService } from '../../../versions/versions.service';
 
 describe('VersionsResolver', () => {
   let resolver: VersionsResolver;

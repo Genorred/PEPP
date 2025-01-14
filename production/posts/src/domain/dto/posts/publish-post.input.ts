@@ -4,7 +4,7 @@ import { CreatePostInput } from "./create-post.input";
 import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
 
 @InputType()
-export class PublishPostInput extends CreatePostInput {
+export class UpdatePostInput extends CreatePostInput {
   @Field(() => Int)
   id: number;
 }

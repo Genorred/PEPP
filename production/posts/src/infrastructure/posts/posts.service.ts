@@ -10,7 +10,7 @@ import { FindAlgorithmPostsInput } from "../../domain/dto/posts/find-algorithm-p
 import { SearchService } from "../search/search.service";
 import { PreferencesRepository } from "../repositories/redis/preferences.repository";
 import {CurrentUserExtendT} from '@_shared/auth-guard/CurrentUserExtendT'
-import { PublishPostInput } from "../../domain/dto/posts/publish-post.input";
+import { UpdatePostInput } from "../../domain/dto/posts/publish-post.input";
 
 @Injectable()
 export class PostsService {
@@ -41,7 +41,7 @@ export class PostsService {
       }
     });
   }
-  async publishDraft(createPostInput: CurrentUserExtendT<PublishPostInput>) {
+  async publishDraft(createPostInput: CurrentUserExtendT<UpdatePostInput>) {
     const { topics, subTopics, id, ...data } = createPostInput;
     const draft = await this.prismaService.draft.findFirst({
       where: {

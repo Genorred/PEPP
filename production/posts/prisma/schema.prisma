@@ -100,10 +100,10 @@ model Comment {
   repliesQuantity    Int      @default(0)
   respondedCommentId Int?
 
-  post      Post    @relation(fields: [postId], references: [id], name: "postComments")
+  post      Post     @relation(fields: [postId], references: [id], name: "postComments")
   postId    Int
-  version   Version @relation(fields: [versionId], references: [id], name: "versionComments")
-  versionId Int
+  version   Version? @relation(fields: [versionId], references: [id], name: "versionComments")
+  versionId Int?
 
   replies  Comment[] @relation(name: "replies")
   parentId Int?

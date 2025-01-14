@@ -31,8 +31,6 @@ export class Comment {
 
   @Field(() => Int)
   postId: number;
-  @Field(() => Int)
-  postVersion: number;
   // @Field(() => [Comment])
   // replies?: Comment[];
   @Field(() => Int)

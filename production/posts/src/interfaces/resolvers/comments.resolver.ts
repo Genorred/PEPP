@@ -1,5 +1,5 @@
 import { Resolver, Query, Mutation, Args, Int, ResolveField, Parent, ResolveReference } from "@nestjs/graphql";
-import { CommentsService } from '../../infrastructure/comments/comments.service';
+import { CommentsService } from '../../domain/domain_services/comments.service';
 import { CreateCommentInput } from '../../domain/dto/comments/create-comment.input';
 import { UpdateCommentInput } from '../../domain/dto/comments/update-comment.input';
 import { JwtPayload } from "@_shared/entities/jwt.entity";
@@ -11,15 +11,18 @@ import { Post } from "../../domain/entities/post.entity";
 import { Comment } from "../../domain/entities/comment.entity";
 import { CommentsByPost } from "../../domain/response/comments-by-post.response";
 import { GetByParentCommentInput } from "../../domain/dto/comments/get-by-parent-comment.input";
+import { CommentsRepository } from "../../domain/repositories/comments/comments.repository";
 
 @Resolver(() => Comment)
 export class CommentsResolver {
-  constructor(private readonly commentsService: CommentsService) {}
+  constructor(private readonly commentsService: CommentsService,
+              private readonly commentsRepository: CommentsRepository,
+              ) {}
 
   @useAuth()
   @Mutation(() => Comment)
   createComment(@Args('createCommentInput') createCommentInput: CreateCommentInput, @CurrentUser() user: CurrentUserI) {
-    return this.commentsService.create({...createCommentInput, userId: user.sub });
+    return this.commentsService.addCommentToPost({...createCommentInput, userId: user.sub });
   }
 
   @Query(() => CommentsByPost, { name: 'comments' })
@@ -34,17 +37,17 @@ export class CommentsResolver {
 
   @Query(() => Comment, { name: 'comment' })
   findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.commentsService.findOne(id);
+    return this.commentsRepository.findOne(id);
   }
 
   @Mutation(() => Comment)
   updateComment(@Args('updateCommentInput') updateCommentInput: UpdateCommentInput) {
-    return this.commentsService.update(updateCommentInput.id, updateCommentInput);
+    return this.commentsRepository.update(updateCommentInput.id, updateCommentInput);
   }
 
   @Mutation(() => Comment)
   removeComment(@Args('id', { type: () => Int }) id: number) {
-    return this.commentsService.remove(id);
+    return this.commentsRepository.remove(id);
   }
 
   @ResolveField(() => User)
@@ -61,6 +64,6 @@ export class CommentsResolver {
   }
   @ResolveReference()
   async resolveReference(reference: { __typename: string; id: number }): Promise<Comment> {
-    return this.commentsService.findOne(reference.id);
+    return this.commentsRepository.findOne(reference.id);
   }
 }
