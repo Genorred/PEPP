@@ -1,12 +1,12 @@
 import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
-import { UsersService } from "../users/users.service";
+import { UsersRepositoryImpl } from "../infrastructure/repositories/users.repository.impl";
 import { JwtService } from "@nestjs/jwt";
-import { LoginInput } from "./dto/login.input";
+import { LoginInput } from "../domain/dto/input/auth/login.input";
 import * as bcrypt from "bcrypt";
-import { CreateUserInput } from "../users/dto/create-user.input";
+import { CreateUserInput } from "../domain/dto/input/users/create-user.input";
 import { SetAuthTokens } from "./auth-flow-guard/set-auth-tokens";
 import { CustomContext } from "@_shared/types/CustomContext";
-import { REDIS_CLIENT } from "./redis.module";
+import { REDIS_CLIENT } from "../interfaces/modules/redis.module";
 import { RedisClientConnectionType } from "@keyv/redis";
 import getCookies from "@_shared/utils/getCookies";
 import { ConfigService } from "@nestjs/config";
@@ -15,7 +15,7 @@ import { getCookiesOptions } from "@_config/auth";
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    private usersService: UsersRepositoryImpl,
     private jwtService: JwtService,
     private SetAuthTokens: SetAuthTokens,
     @Inject(REDIS_CLIENT) private redisClient: RedisClientConnectionType,

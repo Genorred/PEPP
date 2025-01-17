@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "../../users/entities/user.entity";
+import { User } from "../../domain/entities/user.entity";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
-import { SetAuthCookieService } from "../set-auth-cookie.service";
+import { TokenService } from "../../domain/domain-service/token.service";
 import { Response } from "express";
 import { accessTokenLife, getCookiesOptions, refreshTokenLife } from "@_config/auth";
 
@@ -10,7 +10,7 @@ import { accessTokenLife, getCookiesOptions, refreshTokenLife } from "@_config/a
 export class SetAuthTokens {
   constructor(private jwtService: JwtService,
               private configService: ConfigService,
-              private setAuthService: SetAuthCookieService) {
+              private setAuthService: TokenService) {
   }
 
   setTokens(user: Pick<User, "id" | "username" | "role">, response: Response) {

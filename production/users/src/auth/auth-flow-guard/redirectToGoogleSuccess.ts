@@ -2,14 +2,14 @@ import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } fr
 import { ConfigType } from "@nestjs/config";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
-import { User } from "../../users/entities/user.entity";
-import { SetAuthCookieService } from "../set-auth-cookie.service";
-import clientConfig from "../../config/client.config";
+import { User } from "../../domain/entities/user.entity";
+import { TokenService } from "../../domain/domain-service/token.service";
+import clientConfig from "../../infrastructure/config/client.config";
 import { SetAuthTokens } from "./set-auth-tokens";
 
 @Injectable()
 export class RedirectToGoogleSuccess implements NestInterceptor {
-  constructor(private setAuthService: SetAuthCookieService,
+  constructor(private setAuthService: TokenService,
               @Inject(clientConfig.KEY) private clientService: ConfigType<typeof clientConfig>,
               private setAuthTokens: SetAuthTokens) {
   }

@@ -19,7 +19,7 @@ WORKDIR /usr/app/${SERVICE_NAME}
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 RUN if [ "$SERVICE_NAME" != "gateway" ]; then \
-    npx prisma generate; \
+    npx prismaDb generate; \
     fi
 
 RUN npx nest build
@@ -31,7 +31,7 @@ COPY ./${SERVICE_NAME} ./
 COPY --from=build /usr/app/${SERVICE_NAME}/dist ./dist
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --prod
 RUN if [ "$SERVICE_NAME" != "gateway" ]; then \
-    npx prisma generate; \
+    npx prismaDb generate; \
     fi
 VOLUME [ "/usr/app/${SERVICE_NAME}/node_modules" ]
 

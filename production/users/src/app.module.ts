@@ -1,18 +1,18 @@
 import { Module } from "@nestjs/common";
-import { PrismaService } from "./prisma/prisma.service";
-import { PrismaModule } from "./prisma/prisma.module";
-import { UsersModule } from "./users/users.module";
+import { PrismaService } from "./infrastructure/repositories/prismaDb/prisma.service";
+import { PrismaModule } from "./interfaces/modules/prisma.module";
+import { UsersModule } from "./interfaces/modules/users.module";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloFederationDriver, ApolloFederationDriverConfig } from "@nestjs/apollo";
 import { ConfigModule } from "@nestjs/config";
-import { AuthModule } from "./auth/auth.module";
-import googleConfig from "./config/google.config";
-import authConfig from "./config/auth.config";
-import clientConfig from "./config/client.config";
+import { AuthModule } from "./interfaces/modules/auth.module";
+import googleConfig from "./infrastructure/config/google.config";
+import authConfig from "./infrastructure/config/auth.config";
+import clientConfig from "./infrastructure/config/client.config";
 import { LoggerModule } from "nestjs-pino";
 import { LoggerOptions } from "@_shared/modules/logger-module";
-import { RedisModule } from "./auth/redis.module";
-import redisConfig from "./config/redis.config";
+import { RedisModule } from "./interfaces/modules/redis.module";
+import redisConfig from "./infrastructure/config/redis.config";
 
 @Module({
   imports: [

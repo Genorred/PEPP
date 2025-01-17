@@ -14,7 +14,7 @@ RUN pnpm install
 
 COPY prisma prisma
 
-RUN pnpm dlx prisma generate
+RUN pnpm dlx prismaDb generate
 
 COPY . .
 
