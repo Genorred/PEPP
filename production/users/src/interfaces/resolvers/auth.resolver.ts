@@ -7,10 +7,11 @@ import { Credentials, CustomContext } from "@_shared/types/CustomContext";
 import { UserResponse } from "../../domain/dto/response/returned-user.response";
 import getCookies from "@_shared/utils/getCookies";
 import { UnauthorizedException } from "@nestjs/common";
+import { AuthUseCase } from "../../application/auth.use-case";
 
 @Resolver()
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) {
+  constructor(private readonly authService: AuthUseCase) {
   }
 
   @Mutation(returns => UserResponse)

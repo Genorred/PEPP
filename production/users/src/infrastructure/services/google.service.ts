@@ -1,13 +1,13 @@
-import googleConfig from "../infrastructure/config/google.config";
+import googleConfig from "../config/google.config";
 import { Inject, Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ConfigType } from "@nestjs/config";
 import { Profile, Strategy, VerifyCallback } from "passport-google-oauth20";
 import { Request } from "express";
-import { UsersRepository } from "../domain/repositories/users.repository";
+import { UsersRepository } from "../../domain/repositories/users.repository";
 
 @Injectable()
-export class GoogleUseCase extends PassportStrategy(Strategy, "google") {
+export class GoogleService extends PassportStrategy(Strategy, "google") {
   constructor(
     @Inject(googleConfig.KEY) private configService: ConfigType<typeof googleConfig>,
     private usersService: UsersRepository

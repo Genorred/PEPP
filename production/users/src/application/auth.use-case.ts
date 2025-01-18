@@ -1,23 +1,21 @@
 import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
-import { UsersRepositoryImpl } from "../infrastructure/repositories/users.repository.impl";
-import { JwtService } from "@nestjs/jwt";
 import { LoginInput } from "../domain/dto/input/auth/login.input";
 import * as bcrypt from "bcrypt";
 import { CustomContext } from "@_shared/types/CustomContext";
-import { RedisClientConnectionType } from "@keyv/redis";
 import getCookies from "@_shared/utils/getCookies";
 import { ConfigService } from "@nestjs/config";
-import { getCookiesOptions } from "@_config/auth";
 import { UsersRepository } from "../domain/repositories/users.repository";
 import { CreateUserInput } from "../domain/dto/input/users/create-user.input";
 import { TokenService } from "../domain/domain-service/token.service";
+import { CacheRepository } from "../domain/repositories/cache.repository";
 
 @Injectable()
 export class AuthUseCase {
   constructor(
     private usersService: UsersRepository,
-    private jwtService: JwtService,
-    private readonly tokenService: TokenService
+    private readonly tokenService: TokenService,
+    private readonly cacheRepository: CacheRepository,
+    private configService: ConfigService,
   ) {
   }
 
@@ -31,20 +29,34 @@ export class AuthUseCase {
     if (!user) {
       throw new Error("error creating user");
     }
-    this.tokenService.setTokens(user, context.res as Response);
+    this.tokenService.setTokens(user, context.res);
     console.log("goal");
     return user;
   }
 
-  async login(loginInput: LoginInput) {
+  async login(loginInput: LoginInput, context: CustomContext) {
     const { password, ...user } = await this.validateUser(loginInput);
     if (!user) {
       throw new UnauthorizedException();
     }
+    this.tokenService.setTokens(user, context.res);
     return user;
   }
 
-  async validateUser(loginInput: LoginInput) {
+  public async logout(context: CustomContext) {
+    const token = getCookies(context).refreshToken;
+    if (token) {
+      const decoded = this.tokenService.verify(token);
+      const PX = new Date().getTime() - new Date(Number(decoded.exp as string)).getTime();
+      await this.cacheRepository.set(token, 0, PX);
+
+      this.tokenService.removeTokens(context.res)
+    } else {
+      throw new UnauthorizedException();
+    }
+  }
+
+  private async validateUser(loginInput: LoginInput) {
     const { password, email } = loginInput;
 
     const user = await this.usersService.findOne({ email });
@@ -52,25 +64,6 @@ export class AuthUseCase {
       return user;
     }
     return null;
-  }
-
-  public async logout(context: CustomContext) {
-    const token = getCookies(context).refreshToken;
-    if (token) {
-      const decoded = this.jwtService.verify(token);
-      const PX = new Date().getTime() -
-        new Date(Number(decoded.exp as string)).getTime();
-      const isOk = await this.redisClient.set(token, 0, {
-        PX
-      });
-
-      const cookiesOptions = getCookiesOptions(this.configService.get("NODE_ENV"));
-      context.res.clearCookie("refreshToken", cookiesOptions);
-      context.res.clearCookie("accessToken", cookiesOptions);
-      return isOk;
-    } else {
-      throw new UnauthorizedException();
-    }
   }
 
 }

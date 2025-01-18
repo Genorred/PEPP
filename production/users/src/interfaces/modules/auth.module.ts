@@ -5,12 +5,13 @@ import { JwtModule } from "@nestjs/jwt";
 import { AuthResolver } from "../resolvers/auth.resolver";
 import { GoogleController } from "../resolvers/google.controller";
 import { PassportModule } from "@nestjs/passport";
-import { GoogleUseCase } from "../../application/google.use-case";
+import { GoogleService } from "../../infrastructure/services/google.service";
 import { TokenService } from "../../domain/domain-service/token.service";
 import { ConfigModule, ConfigType } from "@nestjs/config";
 import authConfig from "../../infrastructure/config/auth.config";
 import { SetAuthTokens } from "../../auth/auth-flow-guard/set-auth-tokens";
 import { RedisModule } from "./redis.module";
+import { AuthUseCase } from "../../application/auth.use-case";
 
 @Module({
   imports: [UsersModule, PassportModule, RedisModule,
@@ -23,7 +24,7 @@ import { RedisModule } from "./redis.module";
       })
     })],
   controllers: [GoogleController],
-  providers: [AuthService, AuthResolver, GoogleUseCase, TokenService, SetAuthTokens,
+  providers: [AuthUseCase, AuthResolver, GoogleService, TokenService, SetAuthTokens,
   ]
 })
 export class AuthModule {

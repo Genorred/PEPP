@@ -1,6 +1,6 @@
 import { Controller, Get, Req, UseGuards, UseInterceptors } from "@nestjs/common";
 import { GoogleGuard } from "../../auth/auth-flow-guard/google.guard";
-import { RedirectToGoogleSuccess } from "../../auth/auth-flow-guard/redirectToGoogleSuccess";
+import { RedirectToGoogleSuccessInterceptor } from "../../infrastructure/interceptors/redirect-to-google-success.interceptor";
 
 @Controller("auth")
 export class GoogleController {
@@ -12,7 +12,7 @@ export class GoogleController {
 
   @Get("google/callback")
   @UseGuards(GoogleGuard)
-  @UseInterceptors(RedirectToGoogleSuccess)
+  @UseInterceptors(RedirectToGoogleSuccessInterceptor)
   async googleAuthRedirect() {
     // handles callback after auth
   }

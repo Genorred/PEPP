@@ -36,4 +36,4 @@ RUN if [ "$SERVICE_NAME" != "gateway" ]; then \
 VOLUME [ "/usr/app/${SERVICE_NAME}/node_modules" ]
 
 EXPOSE 8080
-CMD ["./src/_shared/scripts/prod.sh"]
+CMD sh ./src/_shared/scripts/prod.sh

@@ -1,15 +1,15 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { GoogleUseCase } from "./google.use-case";
+import { AuthUseCase } from "./auth.use-case";
 
-describe("GoogleService", () => {
-  let service: GoogleUseCase;
+describe("AuthUseCase", () => {
+  let service: AuthUseCase;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [GoogleUseCase]
+      providers: [AuthUseCase]
     }).compile();
 
-    service = module.get<GoogleUseCase>(GoogleUseCase);
+    service = module.get<AuthUseCase>(AuthUseCase);
   });
 
   it("should be defined", () => {
