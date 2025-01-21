@@ -1,8 +1,21 @@
-import { Module } from '@nestjs/common';
-import { VersionsService } from '../../versions/versions.service';
-import { VersionsResolver } from '../resolvers/versions.resolver';
+import { Module } from "@nestjs/common";
+import { VersionsResolver } from "../resolvers/versions.resolver";
+import { VersionsRepositoryImpl } from "../../infrastructure/repository-impls/versions.repository.impl";
+import { VersionsRepository } from "../../domain/repositories/versions/versions.repository";
+import { PostsRepository } from "../../domain/repositories/posts/posts.repository";
+import { PostsRepositoryImpl } from "../../infrastructure/repository-impls/posts.repository.impl";
+import { PostsModule } from "./posts.module";
+import { VersionsUseCase } from "../../application/versions.use-case";
+import { PrismaModule } from "../prisma.module";
 
 @Module({
-  providers: [VersionsResolver, VersionsService],
+  providers: [VersionsResolver, VersionsUseCase,  {
+    provide: VersionsRepository,
+    useClass: VersionsRepositoryImpl
+  }],
+  imports: [PostsModule, PrismaModule],
+  exports: [VersionsRepository]
 })
-export class VersionsModule {}
+
+export class VersionsModule {
+}

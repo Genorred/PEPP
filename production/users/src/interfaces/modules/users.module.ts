@@ -10,7 +10,7 @@ import { UsersRepository } from "../../domain/repositories/users.repository";
     useClass: UsersRepositoryImpl
   }],
   imports: [PrismaModule],
-  exports: [UsersRepositoryImpl]
+  exports: [UsersRepository]
 })
 export class UsersModule {
 }

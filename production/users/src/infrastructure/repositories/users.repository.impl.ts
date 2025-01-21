@@ -3,8 +3,6 @@ import { CreateUserInput } from "../../domain/dto/input/users/create-user.input"
 import { UpdateUserInput } from "../../domain/dto/input/users/update-user.input";
 import { PrismaService } from "./prismaDb/prisma.service";
 import { User } from "../../domain/entities/user.entity";
-import { RedisClientConnectionType } from "@keyv/redis";
-import { REDIS_CLIENT } from "../../interfaces/modules/redis.module";
 import { UsersRepository } from "../../domain/repositories/users.repository";
 
 @Injectable()

@@ -1,0 +1,117 @@
+import { PostsRepository } from "../domain/repositories/posts/posts.repository";
+import { SearchRepository } from "../domain/repositories/posts/search.repository";
+import { PreferencesRepository } from "../domain/repositories/posts/preferenses.repository";
+import { CreatePostInput, CreatePostInputService } from "../domain/dto/posts/create-post.input";
+import { Inject, UnauthorizedException } from "@nestjs/common";
+import { FindAllPostsInput } from "../domain/dto/posts/_nextjs_find-posts.input";
+import FRONTEND_SERVER from "../infrastructure/config/frontend-server";
+import { ConfigType } from "@nestjs/config";
+import { FindPostInput, FindPostInputService } from "../domain/dto/posts/find-post.input";
+import { FindAlgorithmPostsInput } from "../domain/dto/posts/find-algorithm-posts.input";
+import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
+import { RemovePostInputService } from "../domain/dto/posts/remove-post.input";
+import { PostsSecurityCheckService } from "../domain/domain_services/posts.security.check.service";
+import { UpdatePostInput, UpdatePostInputService } from "../interfaces/dto/posts/update-post.input";
+import { ClientCacheRepository } from "../domain/repositories/client.cache.repository";
+
+export class PostsUseCase {
+  constructor(
+    private readonly postsRepository: PostsRepository,
+    private readonly clientCacheRepository: ClientCacheRepository,
+    private readonly searchService: SearchRepository,
+    @Inject(FRONTEND_SERVER.KEY) private readonly configService: ConfigType<typeof FRONTEND_SERVER>,
+    private readonly postsSecurityCheckService: PostsSecurityCheckService,
+    private readonly preferencesService: PreferencesRepository) {
+  }
+
+  async create(createPostInput: CreatePostInputService) {
+    const post = await this.postsRepository.create(createPostInput);
+    void this.searchService.indexPost(post);
+    return post;
+  }
+
+  findAll(findAllPostsInput: FindAllPostsInput) {
+    const { token } = findAllPostsInput;
+    if (this.configService.token === token) {
+      return this.postsRepository.findMany();
+    } else {
+      throw new UnauthorizedException();
+    }
+  }
+
+  findUserPosts(userId: number) {
+    return this.postsRepository.findMany({
+      userId
+    });
+  }
+
+  async findOne(input: FindPostInputService) {
+    const { userId, id } = input;
+    const post = await this.postsRepository.findOne({ id });
+    this.postsSecurityCheckService.ifShouldBeForbidden(post, userId);
+    return post;
+  }
+
+  async update(updatePostInput: UpdatePostInputService) {
+    const { id, ...body } = updatePostInput;
+    const post = await this.postsRepository.update({ ...body, id });
+    await this.searchService.updatePost(post);
+    return post;
+  }
+
+  async hide(id: number, userId: number) {
+    await Promise.all([
+      this.postsRepository.update({ id, userId, isHidden: true }),
+      this.searchService.deletePost(id),
+      this.clientCacheRepository.removePost(id)
+    ]);
+  }
+
+  async expose(id: number, userId: number) {
+    const post = await this.postsRepository.update({ id, userId, isHidden: false });
+    await Promise.all([
+      this.clientCacheRepository.addPost(id),
+      this.searchService.indexPost(post)
+    ]);
+  }
+
+  remove(input: RemovePostInputService) {
+    return this.postsRepository.remove(input);
+  }
+
+  async recommendations(recommendationsInput: CurrentUserExtendT<FindAlgorithmPostsInput>) {
+    const { userId, skipPages, ...data } = recommendationsInput;
+    const { dislikedPosts, likedPosts, pressedPosts, recentlyShowedPosts } =
+      (userId ? await this.preferencesService.get(userId, !skipPages) : {
+        likedPosts: [],
+        recentlyShowedPosts: [],
+        dislikedPosts: [],
+        pressedPosts: []
+      });
+    console.log("input", recommendationsInput);
+    const { totalPages, data: elasticPosts } = await this.searchService.search({
+      ...data,
+      skipPages,
+      likedPosts,
+      dislikedPosts,
+      pressedPosts,
+      recentlyShowedPosts
+    });
+    if (userId)
+      void this.preferencesService.setRecentlyShowed(userId, elasticPosts);
+    const posts = await this.postsRepository.findMany({
+      ids: elasticPosts.map(post => Number(post.id))
+    });
+    console.log("response", totalPages, posts);
+    return {
+      totalPages,
+      data: posts
+    };
+  }
+
+
+// removeMany(removeManyPostInput: PartialPostInput) {
+//   return this.prismaService.post.deleteMany({ where: removeManyPostInput });
+// }
+
+}

@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { AuthService } from "../../auth/auth.service";
 import { UsersModule } from "./users.module";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthResolver } from "../resolvers/auth.resolver";
@@ -9,9 +8,9 @@ import { GoogleService } from "../../infrastructure/services/google.service";
 import { TokenService } from "../../domain/domain-service/token.service";
 import { ConfigModule, ConfigType } from "@nestjs/config";
 import authConfig from "../../infrastructure/config/auth.config";
-import { SetAuthTokens } from "../../auth/auth-flow-guard/set-auth-tokens";
 import { RedisModule } from "./redis.module";
 import { AuthUseCase } from "../../application/auth.use-case";
+import { TokenServiceImpl } from "../../infrastructure/services/token.service.impl";
 
 @Module({
   imports: [UsersModule, PassportModule, RedisModule,
@@ -24,7 +23,10 @@ import { AuthUseCase } from "../../application/auth.use-case";
       })
     })],
   controllers: [GoogleController],
-  providers: [AuthUseCase, AuthResolver, GoogleService, TokenService, SetAuthTokens,
+  providers: [AuthUseCase, AuthResolver, GoogleService, {
+    provide: TokenService,
+    useClass: TokenServiceImpl
+  }
   ]
 })
 export class AuthModule {

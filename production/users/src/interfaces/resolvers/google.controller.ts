@@ -1,5 +1,5 @@
 import { Controller, Get, Req, UseGuards, UseInterceptors } from "@nestjs/common";
-import { GoogleGuard } from "../../auth/auth-flow-guard/google.guard";
+import { GoogleGuard } from "../../infrastructure/guards/google.guard";
 import { RedirectToGoogleSuccessInterceptor } from "../../infrastructure/interceptors/redirect-to-google-success.interceptor";
 
 @Controller("auth")

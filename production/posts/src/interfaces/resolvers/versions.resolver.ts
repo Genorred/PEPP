@@ -1,35 +1,21 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { VersionsService } from '../../versions/versions.service';
-import { Version } from '../../versions/entities/version.entity';
-import { CreateVersionInput } from '../../versions/dto/create-version.input';
-import { UpdateVersionInput } from '../../versions/dto/update-version.input';
+import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
+import { FindByPostInput } from "../dto/versions/find-by-post.input";
+import { FindOneVersionInput } from "../../domain/dto/versions/find-one-version.input";
+import { Version } from "../../domain/entities/version.entity";
+import { VersionsUseCase } from "../../application/versions.use-case";
 
 @Resolver(() => Version)
 export class VersionsResolver {
-  constructor(private readonly versionsService: VersionsService) {}
-
-  @Mutation(() => Version)
-  createVersion(@Args('createVersionInput') createVersionInput: CreateVersionInput) {
-    return this.versionsService.create(createVersionInput);
+  constructor(private readonly versionsService: VersionsUseCase) {
   }
 
-  @Query(() => [Version], { name: 'versions' })
-  findAll() {
-    return this.versionsService.findAll();
+  @Query(() => [Version])
+  findByPost(@Args("findByPostInput") findByPostInput: FindByPostInput): Promise<Version[]> {
+    return this.versionsService.findByPost(findByPostInput);
   }
 
-  @Query(() => Version, { name: 'version' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.versionsService.findOne(id);
-  }
-
-  @Mutation(() => Version)
-  updateVersion(@Args('updateVersionInput') updateVersionInput: UpdateVersionInput) {
-    return this.versionsService.update(updateVersionInput.id, updateVersionInput);
-  }
-
-  @Mutation(() => Version)
-  removeVersion(@Args('id', { type: () => Int }) id: number) {
-    return this.versionsService.remove(id);
+  @Query(() => [Version], { name: "version" })
+  findOne(@Args("findOne") findOneVersion: FindOneVersionInput): Promise<Version> {
+    return this.versionsService.findOne(findOneVersion);
   }
 }

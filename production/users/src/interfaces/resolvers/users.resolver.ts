@@ -5,10 +5,11 @@ import { UpdateUserInput } from "../../domain/dto/input/users/update-user.input"
 import { FindOneUserInput } from "./dto-inputs/find-one-user.input";
 import { FindManyUserInput } from "../../domain/dto/input/users/find-many-user.input";
 import UseRoles from "@_shared/auth-guard/useRoles";
+import { UsersRepository } from "../../domain/repositories/users.repository";
 
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(private readonly usersService: UsersRepositoryImpl) {
+  constructor(private readonly usersService: UsersRepository) {
   }
 
   @UseRoles("USER")

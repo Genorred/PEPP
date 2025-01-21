@@ -5,8 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prismaDb-client-js"
-  output   = "../node_modules/.prismaDb/client"
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -20,8 +20,6 @@ model Topic {
   postsSub   Post[]    @relation(name: "postSubTopics")
   drafts     Draft[]   @relation(name: "draftTopics")
   draftsSub  Draft[]   @relation(name: "draftSubTopics")
-  version    Version[] @relation(name: "versionTopics")
-  versionSub Version[] @relation(name: "versionSubTopics")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -44,8 +42,6 @@ model Version {
 
   actualPost Post?     @relation(fields: [postId], references: [id], name: "versionActualPost")
   postId     Int?
-  topics     Topic[]   @relation(name: "versionTopics")
-  subTopics  Topic[]   @relation(name: "versionSubTopics")
   comments   Comment[] @relation(name: "versionComments")
 }
 
@@ -81,6 +77,7 @@ model Post {
   userId           Int
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  isHidden         Boolean? @default(false)
 
   versions  Draft[]   @relation(name: "draftActualPost")
   archives  Version[] @relation(name: "versionActualPost")

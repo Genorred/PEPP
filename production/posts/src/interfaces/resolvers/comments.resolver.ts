@@ -1,5 +1,5 @@
 import { Resolver, Query, Mutation, Args, Int, ResolveField, Parent, ResolveReference } from "@nestjs/graphql";
-import { CommentsService } from '../../domain/domain_services/comments.service';
+import { CommentsUseCase } from '../../application/comments.use-case';
 import { CreateCommentInput } from '../../domain/dto/comments/create-comment.input';
 import { UpdateCommentInput } from '../../domain/dto/comments/update-comment.input';
 import { JwtPayload } from "@_shared/entities/jwt.entity";
@@ -9,13 +9,13 @@ import { GetByPostInput } from "../../domain/dto/comments/get-by-post.input";
 import { User } from "../../domain/entities/user.entity";
 import { Post } from "../../domain/entities/post.entity";
 import { Comment } from "../../domain/entities/comment.entity";
-import { CommentsByPost } from "../../domain/response/comments-by-post.response";
+import { CommentsByPost } from "../../domain/dto/comments/output/comments-by-post.output";
 import { GetByParentCommentInput } from "../../domain/dto/comments/get-by-parent-comment.input";
 import { CommentsRepository } from "../../domain/repositories/comments/comments.repository";
 
 @Resolver(() => Comment)
 export class CommentsResolver {
-  constructor(private readonly commentsService: CommentsService,
+  constructor(private readonly commentsService: CommentsUseCase,
               private readonly commentsRepository: CommentsRepository,
               ) {}
 

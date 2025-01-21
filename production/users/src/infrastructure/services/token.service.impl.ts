@@ -1,11 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "@_shared/entities/jwt.entity";
-import { REDIS_CLIENT } from "../../interfaces/modules/redis.module";
-import { RedisClientConnectionType } from "@keyv/redis";
 import { TokenService } from "../../domain/domain-service/token.service";
 import e, { CookieOptions, Response } from "express";
-import { accessTokenLife, refreshTokenLife } from "@_config/auth";
+import { accessTokenLife, getCookiesOptions, refreshTokenLife } from "@_config/auth";
 import { ConfigService } from "@nestjs/config";
 import { User } from "../../domain/entities/user.entity";
 
@@ -15,10 +13,7 @@ export class TokenServiceImpl implements TokenService {
 
   constructor(private jwtService: JwtService,
               private configService: ConfigService,) {
-    this.cookiesOptions = {
-      httpOnly: true,
-      secure: this.configService.get("NODE_ENV") === "production"
-    }
+    this.cookiesOptions = getCookiesOptions(this.configService.get("NODE_ENV"))
   }
 
   verify(token: string): Record<string, any> {

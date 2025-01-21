@@ -1,5 +1,5 @@
 import { FindAlgorithmPostsInput } from "../posts/find-algorithm-posts.input";
-import { PreferencesRepository } from "../../../infrastructure/repositories/redis/preferences.repository";
+import { PreferencesRepositoryImpl } from "../../../infrastructure/repository-impls/preferences.repository.impl";
+import { Preferences } from "../../entities/preferences.entity";
 
-export type SearchDto = FindAlgorithmPostsInput &
-  Awaited<ReturnType<PreferencesRepository["get"]>>
+export type SearchDto = FindAlgorithmPostsInput & Preferences

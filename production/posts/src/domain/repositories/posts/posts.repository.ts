@@ -2,22 +2,28 @@ import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
 import { CreateCommentInput } from "../../dto/comments/create-comment.input";
 import { Comment } from "../../entities/comment.entity";
 import { GetByPostInput } from "../../dto/comments/get-by-post.input";
-import { CommentsByPost } from "../../response/comments-by-post.response";
+import { CommentsByPost } from "../../dto/comments/output/comments-by-post.output";
 import { GetByParentCommentInput } from "../../dto/comments/get-by-parent-comment.input";
-import { CreatePostInput } from "../../dto/posts/create-post.input";
+import { CreatePostInput, CreatePostInputService } from "../../dto/posts/create-post.input";
 import { UpdatePostInput } from "../../dto/posts/publish-post.input";
 import { Post } from "../../entities/post.entity";
+import { FindManyInput } from "../../dto/posts/find-many.input";
+import { RemovePostInputService } from "../../dto/posts/remove-post.input";
+import { FindPostInput, FindPostInputService } from "../../dto/posts/find-post.input";
+import { UpdatePostInputService } from "../../dto/posts/update-post.input";
 
-export interface PostsRepository {
-  create(input: CurrentUserExtendT<CreatePostInput>): Promise<Comment>;
+export abstract class PostsRepository {
+  abstract create(input: CreatePostInputService): Promise<Post>;
 
-  findOne(id: number): Promise<Comment>;
+  abstract findOne(input: FindPostInput): Promise<Post>;
 
-  update(input: UpdatePostInput): Promise<Comment>;
+  abstract findMany(input?: FindManyInput): Promise<Post[]>;
 
-  remove(input: CurrentUserExtendT<{ id: number }>): Promise<Comment>;
+  abstract update(input: UpdatePostInputService): Promise<Post>;
 
-  incrementComments(postId: number): Promise<Post>;
+  abstract remove(input: RemovePostInputService): Promise<Post>;
 
-  getCommentsQuantity(postId: number): Promise<number>;
+  abstract incrementComments(postId: number): Promise<Post>;
+
+  abstract getCommentsQuantity(postId: number): Promise<number>;
 }

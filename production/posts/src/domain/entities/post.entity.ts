@@ -34,6 +34,8 @@ export class Post {
   userId: number;
   @Field(() => User)
   user?: User;
+  @Field()
+  isHidden: boolean;
 
   @Field()
   createdAt: Date;
