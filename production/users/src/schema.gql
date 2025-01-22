@@ -50,7 +50,7 @@ type Mutation {
     login(loginInput: LoginInput!): Token!
     register(registerInput: CreateUserInput!): Token!
     createPost(createPostInput: CreatePostInput!): Post!
-    updatePost(updatePostInput: UpdatePostInput!): Post!
+    createVersion(updatePostInput: UpdatePostInput!): Post!
     removePost(id: Int!): Post!
 }
 

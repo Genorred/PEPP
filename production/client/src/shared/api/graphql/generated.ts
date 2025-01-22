@@ -30,7 +30,6 @@ export type Comment = {
   parentId: Scalars['Int']['output'];
   post: Array<Post>;
   postId: Scalars['Int']['output'];
-  postVersion: Scalars['Int']['output'];
   repliesQuantity: Scalars['Int']['output'];
   respondedCommentId?: Maybe<Scalars['Int']['output']>;
   updatedAt: Scalars['DateTime']['output'];
@@ -46,20 +45,32 @@ export type CommentsByPost = {
 
 export type CreateCommentInput = {
   message: Scalars['String']['input'];
-  parentId?: InputMaybe<Scalars['Int']['input']>;
-  /** Example field (placeholder) */
   postId: Scalars['Int']['input'];
-  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type CreateDraftInput = {
+  body: Scalars['JSONObject']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  postId?: InputMaybe<Scalars['Int']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title: Scalars['String']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type CreatePostInput = {
   body: Scalars['JSONObject']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
-  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
-  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
+  isHidden?: InputMaybe<Scalars['Boolean']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   title: Scalars['String']['input'];
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type CreateReplyInput = {
+  message: Scalars['String']['input'];
+  parentId: Scalars['Int']['input'];
+  postId: Scalars['Int']['input'];
+  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type CreateUserInput = {
@@ -70,15 +81,22 @@ export type CreateUserInput = {
   username: Scalars['String']['input'];
 };
 
-export type CreateVersionPostInput = {
-  body: Scalars['JSONObject']['input'];
-  description?: InputMaybe<Scalars['String']['input']>;
-  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
-  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
-  postId: Scalars['Float']['input'];
-  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
-  title: Scalars['String']['input'];
-  topics?: InputMaybe<Array<Scalars['String']['input']>>;
+export type Draft = {
+  __typename?: 'Draft';
+  body: Array<Scalars['JSON']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  img?: Maybe<Scalars['String']['output']>;
+  minutes?: Maybe<Scalars['Int']['output']>;
+  postId: Scalars['Int']['output'];
+  subTopics?: Maybe<Array<Topic>>;
+  title: Scalars['String']['output'];
+  topics?: Maybe<Array<Topic>>;
+  updatedAt: Scalars['DateTime']['output'];
+  user: User;
+  userId: Scalars['Int']['output'];
+  version: Scalars['Float']['output'];
 };
 
 export type FindAlgorithmPostsInput = {
@@ -94,6 +112,14 @@ export type FindAllPostsInput = {
   token: Scalars['String']['input'];
 };
 
+export type FindByPostInput = {
+  postId: Scalars['Int']['input'];
+};
+
+export type FindDraftInput = {
+  id: Scalars['Int']['input'];
+};
+
 export type FindManyUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   google_id?: InputMaybe<Scalars['String']['input']>;
@@ -107,9 +133,16 @@ export type FindOneUserInput = {
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type FindOneVersionInput = {
+  id: Scalars['Int']['input'];
+};
+
 export type FindPostInput = {
   id: Scalars['Int']['input'];
-  version?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type FindUserPostsInput = {
+  userId: Scalars['Int']['input'];
 };
 
 export type GetByParentCommentInput = {
@@ -122,6 +155,12 @@ export type GetByPostInput = {
   skipPages?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type GqlCreateVersionInput = {
+  body: Scalars['JSONObject']['input'];
+  postId: Scalars['Int']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type LoginInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -130,16 +169,22 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   createComment: Comment;
+  createDraft: Draft;
   createPost: Post;
-  createVersionPost: Post;
+  createReply: Comment;
+  createVersion: Version;
+  expose: Post;
+  hide: Post;
   login: UserResponse;
   logout: Scalars['String']['output'];
-  publish: Post;
+  publishDraft: Post;
   register: UserResponse;
   removeComment: Comment;
+  removeDraft: Draft;
   removePost: Post;
   removeUser: User;
   updateComment: Comment;
+  updateDraft: Draft;
   updatePost: Post;
   updateUser: User;
 };
@@ -150,13 +195,33 @@ export type MutationCreateCommentArgs = {
 };
 
 
+export type MutationCreateDraftArgs = {
+  createDraftInput: CreateDraftInput;
+};
+
+
 export type MutationCreatePostArgs = {
   createPostInput: CreatePostInput;
 };
 
 
-export type MutationCreateVersionPostArgs = {
-  createVersionPostInput: CreateVersionPostInput;
+export type MutationCreateReplyArgs = {
+  createReplyInput: CreateReplyInput;
+};
+
+
+export type MutationCreateVersionArgs = {
+  createVersionInput: GqlCreateVersionInput;
+};
+
+
+export type MutationExposeArgs = {
+  exposePostInput: Scalars['Float']['input'];
+};
+
+
+export type MutationHideArgs = {
+  hidePostInput: Scalars['Float']['input'];
 };
 
 
@@ -165,8 +230,8 @@ export type MutationLoginArgs = {
 };
 
 
-export type MutationPublishArgs = {
-  publishInput: Scalars['Int']['input'];
+export type MutationPublishDraftArgs = {
+  publishDraftInput: UpdateDraftInput;
 };
 
 
@@ -180,8 +245,13 @@ export type MutationRemoveCommentArgs = {
 };
 
 
+export type MutationRemoveDraftArgs = {
+  removeDraftInput: RemovePostInput;
+};
+
+
 export type MutationRemovePostArgs = {
-  id: Scalars['Int']['input'];
+  removePostInput: RemovePostInput;
 };
 
 
@@ -192,6 +262,11 @@ export type MutationRemoveUserArgs = {
 
 export type MutationUpdateCommentArgs = {
   updateCommentInput: UpdateCommentInput;
+};
+
+
+export type MutationUpdateDraftArgs = {
+  updateDraftInput: UpdateDraftInput;
 };
 
 
@@ -212,11 +287,8 @@ export type Post = {
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   img?: Maybe<Scalars['String']['output']>;
-  isArchived: Scalars['Boolean']['output'];
-  isDraft: Scalars['Boolean']['output'];
-  isPublished: Scalars['Boolean']['output'];
+  isHidden: Scalars['Boolean']['output'];
   minutes?: Maybe<Scalars['Int']['output']>;
-  postId?: Maybe<Scalars['Float']['output']>;
   rating?: Maybe<Scalars['Int']['output']>;
   reviewsQuantity?: Maybe<Scalars['Int']['output']>;
   subTopics?: Maybe<Array<Topic>>;
@@ -230,23 +302,20 @@ export type Post = {
 
 export type Query = {
   __typename?: 'Query';
-  algoPosts: Recommendations;
   allPosts: Array<Post>;
   comment: Comment;
   comments: CommentsByPost;
-  draft: Post;
+  draft: Draft;
+  findByPost: Array<Version>;
   post: Post;
+  postsRecommendations: Recommendations;
   replies: CommentsByPost;
   topics: Array<Topic>;
   user: User;
-  userDrafts: Array<Post>;
+  userDrafts: Array<Draft>;
   userPosts: Array<Post>;
   users: Array<User>;
-};
-
-
-export type QueryAlgoPostsArgs = {
-  findAlgorithmInput: FindAlgorithmPostsInput;
+  version: Array<Version>;
 };
 
 
@@ -261,22 +330,32 @@ export type QueryCommentArgs = {
 
 
 export type QueryCommentsArgs = {
-  postComments: GetByPostInput;
+  getCommentsByPostInput: GetByPostInput;
 };
 
 
 export type QueryDraftArgs = {
-  findDraft: FindPostInput;
+  findDraftInput: FindDraftInput;
+};
+
+
+export type QueryFindByPostArgs = {
+  findVersionByPostInput: FindByPostInput;
 };
 
 
 export type QueryPostArgs = {
-  findOne: FindPostInput;
+  findPostInput: FindPostInput;
+};
+
+
+export type QueryPostsRecommendationsArgs = {
+  postRecommendationsInput: FindAlgorithmPostsInput;
 };
 
 
 export type QueryRepliesArgs = {
-  postComments: GetByParentCommentInput;
+  getRepliesByCommentInput: GetByParentCommentInput;
 };
 
 
@@ -291,7 +370,7 @@ export type QueryUserArgs = {
 
 
 export type QueryUserPostsArgs = {
-  userId: Scalars['Int']['input'];
+  findUserPostsInput: FindUserPostsInput;
 };
 
 
@@ -299,10 +378,19 @@ export type QueryUsersArgs = {
   findManyInput: FindManyUserInput;
 };
 
+
+export type QueryVersionArgs = {
+  findVersionInput: FindOneVersionInput;
+};
+
 export type Recommendations = {
   __typename?: 'Recommendations';
   data: Array<Post>;
   totalPages: Scalars['Int']['output'];
+};
+
+export type RemovePostInput = {
+  id: Scalars['Int']['input'];
 };
 
 export enum SortOrder {
@@ -320,18 +408,22 @@ export type Topic = {
 export type UpdateCommentInput = {
   id: Scalars['Int']['input'];
   message?: InputMaybe<Scalars['String']['input']>;
-  parentId?: InputMaybe<Scalars['Int']['input']>;
-  /** Example field (placeholder) */
   postId?: InputMaybe<Scalars['Int']['input']>;
-  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type UpdateDraftInput = {
+  body?: InputMaybe<Scalars['JSONObject']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type UpdatePostInput = {
   body?: InputMaybe<Scalars['JSONObject']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
-  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
-  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -375,6 +467,27 @@ export type UserResponse = {
   username: Scalars['String']['output'];
 };
 
+export type Version = {
+  __typename?: 'Version';
+  body: Array<Scalars['JSON']['output']>;
+  commentsQuantity?: Maybe<Scalars['Int']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  img?: Maybe<Scalars['String']['output']>;
+  minutes?: Maybe<Scalars['Int']['output']>;
+  postId: Scalars['Int']['output'];
+  rating?: Maybe<Scalars['Int']['output']>;
+  reviewsQuantity?: Maybe<Scalars['Int']['output']>;
+  subTopics?: Maybe<Array<Topic>>;
+  title: Scalars['String']['output'];
+  topics?: Maybe<Array<Topic>>;
+  updatedAt: Scalars['DateTime']['output'];
+  user: User;
+  userId: Scalars['Int']['output'];
+  version: Scalars['Float']['output'];
+};
+
 export type PostsIdQueryVariables = Exact<{
   token: Scalars['String']['input'];
   isArchived?: InputMaybe<Scalars['Boolean']['input']>;
@@ -385,45 +498,61 @@ export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?
 
 export type CreateCommentMutationVariables = Exact<{
   message: Scalars['String']['input'];
-  parentId?: InputMaybe<Scalars['Int']['input']>;
   postId: Scalars['Int']['input'];
-  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
 export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: number } };
 
+export type CreateDraftMutationVariables = Exact<{
+  body: Scalars['JSONObject']['input'];
+  title: Scalars['String']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type CreateDraftMutation = { __typename?: 'Mutation', createDraft: { __typename?: 'Draft', id: number } };
+
 export type CreatePostMutationVariables = Exact<{
   body: Scalars['JSONObject']['input'];
   title: Scalars['String']['input'];
-  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
 export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number } };
 
-export type CreateVersionPostMutationVariables = Exact<{
+export type CreateReplyMutationVariables = Exact<{
+  message: Scalars['String']['input'];
+  parentId: Scalars['Int']['input'];
+  postId: Scalars['Int']['input'];
+  respondedCommentId: Scalars['Int']['input'];
+}>;
+
+
+export type CreateReplyMutation = { __typename?: 'Mutation', createReply: { __typename?: 'Comment', id: number } };
+
+export type CreateVersionDraftMutationVariables = Exact<{
   body: Scalars['JSONObject']['input'];
   title: Scalars['String']['input'];
-  postId: Scalars['Float']['input'];
-  published: Scalars['Boolean']['input'];
+  postId: Scalars['Int']['input'];
   topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersionPost: { __typename?: 'Post', id: number } };
+export type CreateVersionDraftMutation = { __typename?: 'Mutation', createDraft: { __typename?: 'Draft', id: number } };
 
-export type GetCommentsByParentIdQueryVariables = Exact<{
-  parentId: Scalars['Int']['input'];
-  skipPages?: InputMaybe<Scalars['Int']['input']>;
+export type CreateVersionPostMutationVariables = Exact<{
+  postId: Scalars['Int']['input'];
+  body: Scalars['JSONObject']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetCommentsByParentIdQuery = { __typename?: 'Query', replies: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', respondedCommentId?: number | null, id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, postVersion: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img: string } }> } };
+export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersion: { __typename?: 'Version', id: number } };
 
 export type GetCommentsByPostIdQueryVariables = Exact<{
   postId: Scalars['Int']['input'];
@@ -431,7 +560,7 @@ export type GetCommentsByPostIdQueryVariables = Exact<{
 }>;
 
 
-export type GetCommentsByPostIdQuery = { __typename?: 'Query', comments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, postVersion: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img: string } }> } };
+export type GetCommentsByPostIdQuery = { __typename?: 'Query', comments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img: string } }> } };
 
 export type DraftQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -439,12 +568,12 @@ export type DraftQueryVariables = Exact<{
 }>;
 
 
-export type DraftQuery = { __typename?: 'Query', draft: { __typename?: 'Post', id: number, body: Array<any>, createdAt: any, img?: string | null, title: string, updatedAt: any, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
+export type DraftQuery = { __typename?: 'Query', draft: { __typename?: 'Draft', id: number, body: Array<any>, createdAt: any, img?: string | null, title: string, updatedAt: any, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
 
 export type DraftsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type DraftsQuery = { __typename?: 'Query', userDrafts: Array<{ __typename?: 'Post', id: number, createdAt: any, img?: string | null, title: string, updatedAt: any }> };
+export type DraftsQuery = { __typename?: 'Query', userDrafts: Array<{ __typename?: 'Draft', id: number, createdAt: any, img?: string | null, title: string, updatedAt: any }> };
 
 export type PostQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -453,6 +582,14 @@ export type PostQueryVariables = Exact<{
 
 
 export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, rating?: number | null, minutes?: number | null, version: number, commentsQuantity?: number | null, reviewsQuantity?: number | null, description?: string | null, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
+
+export type GetRepliesQueryVariables = Exact<{
+  parentId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetRepliesQuery = { __typename?: 'Query', replies: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', respondedCommentId?: number | null, id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img: string } }> } };
 
 export type TopicsQueryVariables = Exact<{
   title?: InputMaybe<Scalars['String']['input']>;
@@ -483,21 +620,18 @@ export type PostRecommendationsQueryVariables = Exact<{
 }>;
 
 
-export type PostRecommendationsQuery = { __typename?: 'Query', algoPosts: { __typename?: 'Recommendations', totalPages: number, data: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img: string }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
+export type PostRecommendationsQuery = { __typename?: 'Query', postsRecommendations: { __typename?: 'Recommendations', totalPages: number, data: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img: string }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
 
 export type PublishDraftMutationVariables = Exact<{
-  postId: Scalars['Int']['input'];
+  id: Scalars['Int']['input'];
+  body?: InputMaybe<Scalars['JSONObject']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type PublishDraftMutation = { __typename?: 'Mutation', publish: { __typename?: 'Post', id: number } };
-
-export type PublishPostVersionMutationVariables = Exact<{
-  postId: Scalars['Int']['input'];
-}>;
-
-
-export type PublishPostVersionMutation = { __typename?: 'Mutation', publish: { __typename?: 'Post', id: number } };
+export type PublishDraftMutation = { __typename?: 'Mutation', publishDraft: { __typename?: 'Post', id: number } };
 
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String']['input'];
@@ -508,17 +642,16 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any } };
 
-export type UpdatePostMutationVariables = Exact<{
+export type UpdateDraftMutationVariables = Exact<{
   id: Scalars['Int']['input'];
   body?: InputMaybe<Scalars['JSONObject']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
-export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: number } };
+export type UpdateDraftMutation = { __typename?: 'Mutation', updateDraft: { __typename?: 'Draft', id: number } };
 
 
 
@@ -569,10 +702,8 @@ useInfinitePostsIdQuery.getKey = (variables: PostsIdQueryVariables) => ['postsId
 usePostsIdQuery.fetcher = (variables: PostsIdQueryVariables, options?: RequestInit['headers']) => fetcher<PostsIdQuery, PostsIdQueryVariables>(PostsIdDocument, variables, options);
 
 export const CreateCommentDocument = `
-    mutation createComment($message: String!, $parentId: Int, $postId: Int!, $respondedCommentId: Int) {
-  createComment(
-    createCommentInput: {message: $message, postId: $postId, parentId: $parentId, respondedCommentId: $respondedCommentId}
-  ) {
+    mutation createComment($message: String!, $postId: Int!) {
+  createComment(createCommentInput: {message: $message, postId: $postId}) {
     id
   }
 }
@@ -594,10 +725,36 @@ useCreateCommentMutation.getKey = () => ['createComment'];
 
 useCreateCommentMutation.fetcher = (variables: CreateCommentMutationVariables, options?: RequestInit['headers']) => fetcher<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, variables, options);
 
+export const CreateDraftDocument = `
+    mutation createDraft($body: JSONObject!, $title: String!, $topics: [String!], $subTopics: [String!]) {
+  createDraft(
+    createDraftInput: {body: $body, title: $title, topics: $topics, subTopics: $subTopics}
+  ) {
+    id
+  }
+}
+    `;
+
+export const useCreateDraftMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateDraftMutation, TError, CreateDraftMutationVariables, TContext>) => {
+    
+    return useMutation<CreateDraftMutation, TError, CreateDraftMutationVariables, TContext>(
+      ['createDraft'],
+      (variables?: CreateDraftMutationVariables) => fetcher<CreateDraftMutation, CreateDraftMutationVariables>(CreateDraftDocument, variables)(),
+      options
+    )};
+
+useCreateDraftMutation.getKey = () => ['createDraft'];
+
+
+useCreateDraftMutation.fetcher = (variables: CreateDraftMutationVariables, options?: RequestInit['headers']) => fetcher<CreateDraftMutation, CreateDraftMutationVariables>(CreateDraftDocument, variables, options);
+
 export const CreatePostDocument = `
-    mutation createPost($body: JSONObject!, $title: String!, $isPublished: Boolean, $topics: [String!], $subTopics: [String!], $isDraft: Boolean) {
+    mutation createPost($body: JSONObject!, $title: String!, $topics: [String!], $subTopics: [String!]) {
   createPost(
-    createPostInput: {body: $body, isDraft: $isDraft, isPublished: $isPublished, title: $title, topics: $topics, subTopics: $subTopics}
+    createPostInput: {body: $body, title: $title, topics: $topics, subTopics: $subTopics}
   ) {
     id
   }
@@ -620,11 +777,61 @@ useCreatePostMutation.getKey = () => ['createPost'];
 
 useCreatePostMutation.fetcher = (variables: CreatePostMutationVariables, options?: RequestInit['headers']) => fetcher<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument, variables, options);
 
-export const CreateVersionPostDocument = `
-    mutation createVersionPost($body: JSONObject!, $title: String!, $postId: Float!, $published: Boolean!, $topics: [String!], $subTopics: [String!]) {
-  createVersionPost(
-    createVersionPostInput: {body: $body, title: $title, postId: $postId, isPublished: $published, topics: $topics, subTopics: $subTopics}
+export const CreateReplyDocument = `
+    mutation createReply($message: String!, $parentId: Int!, $postId: Int!, $respondedCommentId: Int!) {
+  createReply(
+    createReplyInput: {message: $message, postId: $postId, parentId: $parentId, respondedCommentId: $respondedCommentId}
   ) {
+    id
+  }
+}
+    `;
+
+export const useCreateReplyMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateReplyMutation, TError, CreateReplyMutationVariables, TContext>) => {
+    
+    return useMutation<CreateReplyMutation, TError, CreateReplyMutationVariables, TContext>(
+      ['createReply'],
+      (variables?: CreateReplyMutationVariables) => fetcher<CreateReplyMutation, CreateReplyMutationVariables>(CreateReplyDocument, variables)(),
+      options
+    )};
+
+useCreateReplyMutation.getKey = () => ['createReply'];
+
+
+useCreateReplyMutation.fetcher = (variables: CreateReplyMutationVariables, options?: RequestInit['headers']) => fetcher<CreateReplyMutation, CreateReplyMutationVariables>(CreateReplyDocument, variables, options);
+
+export const CreateVersionDraftDocument = `
+    mutation createVersionDraft($body: JSONObject!, $title: String!, $postId: Int!, $topics: [String!], $subTopics: [String!]) {
+  createDraft(
+    createDraftInput: {body: $body, title: $title, postId: $postId, topics: $topics, subTopics: $subTopics}
+  ) {
+    id
+  }
+}
+    `;
+
+export const useCreateVersionDraftMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<CreateVersionDraftMutation, TError, CreateVersionDraftMutationVariables, TContext>) => {
+    
+    return useMutation<CreateVersionDraftMutation, TError, CreateVersionDraftMutationVariables, TContext>(
+      ['createVersionDraft'],
+      (variables?: CreateVersionDraftMutationVariables) => fetcher<CreateVersionDraftMutation, CreateVersionDraftMutationVariables>(CreateVersionDraftDocument, variables)(),
+      options
+    )};
+
+useCreateVersionDraftMutation.getKey = () => ['createVersionDraft'];
+
+
+useCreateVersionDraftMutation.fetcher = (variables: CreateVersionDraftMutationVariables, options?: RequestInit['headers']) => fetcher<CreateVersionDraftMutation, CreateVersionDraftMutationVariables>(CreateVersionDraftDocument, variables, options);
+
+export const CreateVersionPostDocument = `
+    mutation createVersionPost($postId: Int!, $body: JSONObject!, $title: String) {
+  createVersion(createVersionInput: {postId: $postId, body: $body, title: $title}) {
     id
   }
 }
@@ -646,69 +853,9 @@ useCreateVersionPostMutation.getKey = () => ['createVersionPost'];
 
 useCreateVersionPostMutation.fetcher = (variables: CreateVersionPostMutationVariables, options?: RequestInit['headers']) => fetcher<CreateVersionPostMutation, CreateVersionPostMutationVariables>(CreateVersionPostDocument, variables, options);
 
-export const GetCommentsByParentIdDocument = `
-    query getCommentsByParentId($parentId: Int!, $skipPages: Int) {
-  replies(postComments: {parentId: $parentId, skipPages: $skipPages}) {
-    totalPages
-    data {
-      respondedCommentId
-      id
-      message
-      likes
-      dislikes
-      repliesQuantity
-      postVersion
-      user {
-        username
-        img
-      }
-      createdAt
-      updatedAt
-    }
-  }
-}
-    `;
-
-export const useGetCommentsByParentIdQuery = <
-      TData = GetCommentsByParentIdQuery,
-      TError = unknown
-    >(
-      variables: GetCommentsByParentIdQueryVariables,
-      options?: UseQueryOptions<GetCommentsByParentIdQuery, TError, TData>
-    ) => {
-    
-    return useQuery<GetCommentsByParentIdQuery, TError, TData>(
-      ['getCommentsByParentId', variables],
-      fetcher<GetCommentsByParentIdQuery, GetCommentsByParentIdQueryVariables>(GetCommentsByParentIdDocument, variables),
-      options
-    )};
-
-useGetCommentsByParentIdQuery.document = GetCommentsByParentIdDocument;
-
-useGetCommentsByParentIdQuery.getKey = (variables: GetCommentsByParentIdQueryVariables) => ['getCommentsByParentId', variables];
-
-export const useInfiniteGetCommentsByParentIdQuery = <
-      TData = GetCommentsByParentIdQuery,
-      TError = unknown
-    >(
-      variables: GetCommentsByParentIdQueryVariables,
-      options?: UseInfiniteQueryOptions<GetCommentsByParentIdQuery, TError, TData>
-    ) => {
-    
-    return useInfiniteQuery<GetCommentsByParentIdQuery, TError, TData>(
-      ['getCommentsByParentId.infinite', variables],
-      (metaData) => fetcher<GetCommentsByParentIdQuery, GetCommentsByParentIdQueryVariables>(GetCommentsByParentIdDocument, {...variables, ...(metaData.pageParam ?? {})})(),
-      options
-    )};
-
-useInfiniteGetCommentsByParentIdQuery.getKey = (variables: GetCommentsByParentIdQueryVariables) => ['getCommentsByParentId.infinite', variables];
-
-
-useGetCommentsByParentIdQuery.fetcher = (variables: GetCommentsByParentIdQueryVariables, options?: RequestInit['headers']) => fetcher<GetCommentsByParentIdQuery, GetCommentsByParentIdQueryVariables>(GetCommentsByParentIdDocument, variables, options);
-
 export const GetCommentsByPostIdDocument = `
     query getCommentsByPostId($postId: Int!, $skipPages: Int) {
-  comments(postComments: {postId: $postId, skipPages: $skipPages}) {
+  comments(getCommentsByPostInput: {postId: $postId, skipPages: $skipPages}) {
     totalPages
     data {
       id
@@ -716,7 +863,6 @@ export const GetCommentsByPostIdDocument = `
       likes
       dislikes
       repliesQuantity
-      postVersion
       user {
         username
         img
@@ -767,7 +913,7 @@ useGetCommentsByPostIdQuery.fetcher = (variables: GetCommentsByPostIdQueryVariab
 
 export const DraftDocument = `
     query draft($id: Int!, $version: Int) {
-  draft(findDraft: {id: $id, version: $version}) {
+  draft(findDraftInput: {id: $id}) {
     id
     body
     createdAt
@@ -872,7 +1018,7 @@ useDraftsQuery.fetcher = (variables?: DraftsQueryVariables, options?: RequestIni
 
 export const PostDocument = `
     query post($id: Int!, $version: Int) {
-  post(findOne: {id: $id, version: $version}) {
+  post(findPostInput: {id: $id}) {
     body
     createdAt
     title
@@ -933,6 +1079,65 @@ useInfinitePostQuery.getKey = (variables: PostQueryVariables) => ['post.infinite
 
 
 usePostQuery.fetcher = (variables: PostQueryVariables, options?: RequestInit['headers']) => fetcher<PostQuery, PostQueryVariables>(PostDocument, variables, options);
+
+export const GetRepliesDocument = `
+    query getReplies($parentId: Int!, $skipPages: Int) {
+  replies(getRepliesByCommentInput: {parentId: $parentId, skipPages: $skipPages}) {
+    totalPages
+    data {
+      respondedCommentId
+      id
+      message
+      likes
+      dislikes
+      repliesQuantity
+      user {
+        username
+        img
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+export const useGetRepliesQuery = <
+      TData = GetRepliesQuery,
+      TError = unknown
+    >(
+      variables: GetRepliesQueryVariables,
+      options?: UseQueryOptions<GetRepliesQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetRepliesQuery, TError, TData>(
+      ['getReplies', variables],
+      fetcher<GetRepliesQuery, GetRepliesQueryVariables>(GetRepliesDocument, variables),
+      options
+    )};
+
+useGetRepliesQuery.document = GetRepliesDocument;
+
+useGetRepliesQuery.getKey = (variables: GetRepliesQueryVariables) => ['getReplies', variables];
+
+export const useInfiniteGetRepliesQuery = <
+      TData = GetRepliesQuery,
+      TError = unknown
+    >(
+      variables: GetRepliesQueryVariables,
+      options?: UseInfiniteQueryOptions<GetRepliesQuery, TError, TData>
+    ) => {
+    
+    return useInfiniteQuery<GetRepliesQuery, TError, TData>(
+      ['getReplies.infinite', variables],
+      (metaData) => fetcher<GetRepliesQuery, GetRepliesQueryVariables>(GetRepliesDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    )};
+
+useInfiniteGetRepliesQuery.getKey = (variables: GetRepliesQueryVariables) => ['getReplies.infinite', variables];
+
+
+useGetRepliesQuery.fetcher = (variables: GetRepliesQueryVariables, options?: RequestInit['headers']) => fetcher<GetRepliesQuery, GetRepliesQueryVariables>(GetRepliesDocument, variables, options);
 
 export const TopicsDocument = `
     query topics($title: String) {
@@ -1030,8 +1235,8 @@ useLogoutMutation.fetcher = (variables?: LogoutMutationVariables, options?: Requ
 
 export const PostRecommendationsDocument = `
     query postRecommendations($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $topics: [String!], $search: String) {
-  algoPosts(
-    findAlgorithmInput: {createdAt: $createdAt, rating: $rating, skipPages: $skipPages, topics: $topics, searchValue: $search}
+  postsRecommendations(
+    postRecommendationsInput: {createdAt: $createdAt, rating: $rating, skipPages: $skipPages, topics: $topics, searchValue: $search}
   ) {
     totalPages
     data {
@@ -1101,8 +1306,10 @@ useInfinitePostRecommendationsQuery.getKey = (variables?: PostRecommendationsQue
 usePostRecommendationsQuery.fetcher = (variables?: PostRecommendationsQueryVariables, options?: RequestInit['headers']) => fetcher<PostRecommendationsQuery, PostRecommendationsQueryVariables>(PostRecommendationsDocument, variables, options);
 
 export const PublishDraftDocument = `
-    mutation publishDraft($postId: Int!) {
-  publish(publishInput: $postId) {
+    mutation publishDraft($id: Int!, $body: JSONObject, $title: String, $topics: [String!], $subTopics: [String!]) {
+  publishDraft(
+    publishDraftInput: {id: $id, body: $body, title: $title, topics: $topics, subTopics: $subTopics}
+  ) {
     id
   }
 }
@@ -1123,30 +1330,6 @@ usePublishDraftMutation.getKey = () => ['publishDraft'];
 
 
 usePublishDraftMutation.fetcher = (variables: PublishDraftMutationVariables, options?: RequestInit['headers']) => fetcher<PublishDraftMutation, PublishDraftMutationVariables>(PublishDraftDocument, variables, options);
-
-export const PublishPostVersionDocument = `
-    mutation publishPostVersion($postId: Int!) {
-  publish(publishInput: $postId) {
-    id
-  }
-}
-    `;
-
-export const usePublishPostVersionMutation = <
-      TError = unknown,
-      TContext = unknown
-    >(options?: UseMutationOptions<PublishPostVersionMutation, TError, PublishPostVersionMutationVariables, TContext>) => {
-    
-    return useMutation<PublishPostVersionMutation, TError, PublishPostVersionMutationVariables, TContext>(
-      ['publishPostVersion'],
-      (variables?: PublishPostVersionMutationVariables) => fetcher<PublishPostVersionMutation, PublishPostVersionMutationVariables>(PublishPostVersionDocument, variables)(),
-      options
-    )};
-
-usePublishPostVersionMutation.getKey = () => ['publishPostVersion'];
-
-
-usePublishPostVersionMutation.fetcher = (variables: PublishPostVersionMutationVariables, options?: RequestInit['headers']) => fetcher<PublishPostVersionMutation, PublishPostVersionMutationVariables>(PublishPostVersionDocument, variables, options);
 
 export const RegisterDocument = `
     mutation register($username: String!, $password: String!, $email: String!) {
@@ -1177,31 +1360,31 @@ useRegisterMutation.getKey = () => ['register'];
 
 useRegisterMutation.fetcher = (variables: RegisterMutationVariables, options?: RequestInit['headers']) => fetcher<RegisterMutation, RegisterMutationVariables>(RegisterDocument, variables, options);
 
-export const UpdatePostDocument = `
-    mutation updatePost($id: Int!, $body: JSONObject, $title: String, $topics: [String!], $subTopics: [String!], $isPublished: Boolean) {
-  updatePost(
-    updatePostInput: {id: $id, topics: $topics, subTopics: $subTopics, isPublished: $isPublished, body: $body, title: $title}
+export const UpdateDraftDocument = `
+    mutation updateDraft($id: Int!, $body: JSONObject, $title: String, $topics: [String!], $subTopics: [String!]) {
+  updateDraft(
+    updateDraftInput: {id: $id, topics: $topics, subTopics: $subTopics, body: $body, title: $title}
   ) {
     id
   }
 }
     `;
 
-export const useUpdatePostMutation = <
+export const useUpdateDraftMutation = <
       TError = unknown,
       TContext = unknown
-    >(options?: UseMutationOptions<UpdatePostMutation, TError, UpdatePostMutationVariables, TContext>) => {
+    >(options?: UseMutationOptions<UpdateDraftMutation, TError, UpdateDraftMutationVariables, TContext>) => {
     
-    return useMutation<UpdatePostMutation, TError, UpdatePostMutationVariables, TContext>(
-      ['updatePost'],
-      (variables?: UpdatePostMutationVariables) => fetcher<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument, variables)(),
+    return useMutation<UpdateDraftMutation, TError, UpdateDraftMutationVariables, TContext>(
+      ['updateDraft'],
+      (variables?: UpdateDraftMutationVariables) => fetcher<UpdateDraftMutation, UpdateDraftMutationVariables>(UpdateDraftDocument, variables)(),
       options
     )};
 
-useUpdatePostMutation.getKey = () => ['updatePost'];
+useUpdateDraftMutation.getKey = () => ['updateDraft'];
 
 
-useUpdatePostMutation.fetcher = (variables: UpdatePostMutationVariables, options?: RequestInit['headers']) => fetcher<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument, variables, options);
+useUpdateDraftMutation.fetcher = (variables: UpdateDraftMutationVariables, options?: RequestInit['headers']) => fetcher<UpdateDraftMutation, UpdateDraftMutationVariables>(UpdateDraftDocument, variables, options);
 
 
       export type PossibleTypesResultData = {

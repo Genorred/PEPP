@@ -1,8 +1,8 @@
 import {
+  useCreateDraftMutation,
   useCreatePostMutation,
-  useCreateVersionPostMutation,
-  usePublishPostVersionMutation,
-  useUpdatePostMutation
+  useCreateVersionDraftMutation, useCreateVersionPostMutation, usePublishDraftMutation,
+  useUpdateDraftMutation,
 } from "@/shared/api/graphql/generated";
 import { HandleWorkFormT } from "@/features/Editor/ui/SaveWork";
 import { useEditorRef } from "@udecode/plate-common/react";
@@ -14,6 +14,7 @@ import { focusedPostSlice, mutatedData } from "@/features/Editor/model/focused-p
 import { useFetchPostQuery } from "@/features/Editor/lib/useFetchPostQuery";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useGetUpdatedFields } from "./useGetUpdatedFields";
 
 export type CreatePostParams = Parameters<ReturnType<typeof useCreatePostMutation>["mutateAsync"]>["0"]
 const useSavePost = () => {
@@ -21,14 +22,16 @@ const useSavePost = () => {
     const plateState = useEditorRef();
 
     const { mutateAsync: createPost } = useCreatePostMutation();
+    const { mutateAsync: createVersionDraft } = useCreateVersionDraftMutation();
+    const { mutateAsync: createDraft } = useCreateDraftMutation();
     const { mutateAsync: createVersionPost } = useCreateVersionPostMutation();
-    const { mutateAsync: update } = useUpdatePostMutation();
-    const { mutateAsync: publishVersion } = usePublishPostVersionMutation();
+    const { mutateAsync: updateDraft } = useUpdateDraftMutation();
+    const { mutateAsync: publishDraft } = usePublishDraftMutation();
 
     const router = useRouter();
     const dispatch = useDispatch();
     const data = useSelector(focusedPostSlice.selectors.all);
-    const initialData = useFetchPostQuery(data.initialDataQueryKey);
+    const getUpdatedFields = useGetUpdatedFields();
 
 
     return function onSubmit(values: HandleWorkFormT, event?: BaseSyntheticEvent<object, any, any>) {
@@ -36,26 +39,16 @@ const useSavePost = () => {
       const name: (typeof buttonNames)[keyof typeof buttonNames] = event.nativeEvent?.submitter.name; // Кнопка, вызвавшая сабмит
       console.log("Кнопка вызвавшая сабмит:", name);
       if (name === buttonNames.publish) {
-        let idToNav: number
 
-        if (data.versionId) { // works
-          publishVersion({
-            postId: data.versionId
+        if (data.versionId || data.draftId) { // works
+          publishDraft({
+            ...getUpdatedFields(values),
+            id: data.versionId || data.draftId as number
           }).then((result) => {
             toast.success("The post version was successfully created!");
             dispatch(focusedPostSlice.actions.setVersionId(null));
             dispatch(focusedPostSlice.actions.setDraftId(null));
-            router.push("/post/" + result.publish.id);
-          });
-        } else if (data.draftId) {// works
-          update({
-            id: data.draftId,
-            isPublished: true
-          }).then((result) => {
-            toast.success("The draft was successfully published!");
-            dispatch(focusedPostSlice.actions.setSourceId(result.updatePost.id));
-            dispatch(focusedPostSlice.actions.setDraftId(null));
-            router.push("/post/" + result.updatePost.id);
+            router.push("/post/" + result.publishDraft.id);
           });
         } else if (data.sourceId) {
           const variables = {
@@ -67,13 +60,12 @@ const useSavePost = () => {
           createVersionPost(variables).then((result) => {
             toast.success("The post version was successfully published!");
             dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
-            router.push("/post/" + result.createVersionPost.id);
+            router.push("/post/" + result.createVersion.id);
           });
         } else {//works
           const variables = {
             ...values,
-            body: plateState.children as any,
-            isPublished: true
+            body: plateState.children as any
           };
           createPost(variables).then((result) => {
             toast.success("The post was successfully published!");
@@ -84,17 +76,9 @@ const useSavePost = () => {
         }
       } else {
         if (data.draftId || data.versionId) { // just update
-          const variables = getChangedFields<mutatedData>({
-              title: data?.mutatedData?.title ?? initialData?.title!,
-              topics: data?.mutatedData?.topics ?? initialData?.topics?.map(topic => topic.title) ?? [],
-              subTopics: data?.mutatedData?.subTopics ?? initialData?.subTopics?.map(topic => topic.title) ?? [],
-              body: data?.mutatedData?.body ?? initialData?.body
-            }, {
-              ...values,
-              body: plateState.children as any
-            }
-          );
-          update({
+          const variables = getUpdatedFields(values)
+
+          updateDraft({
             id: data.draftId || data.versionId as number,
             ...variables
           }).then(() => {
@@ -102,23 +86,21 @@ const useSavePost = () => {
             dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
           });
         } else if (data.sourceId) {// works
-          createVersionPost({
+          createVersionDraft({
             ...values,
-            published: false,
             postId: data.sourceId,
             body: plateState.children as any
           }).then((result) => {
             toast.success("The post version was successfully saved!");
-            dispatch(focusedPostSlice.actions.setVersionId(result.createVersionPost.id));
+            dispatch(focusedPostSlice.actions.setVersionId(result.createDraft.id));
           });
         } else {
-          createPost({
+          createDraft({
             ...values,
-            body: plateState.children as any,
-            isDraft: true
+            body: plateState.children as any
           }).then((result) => {
             toast.success("The draft was successfully saved!");
-            dispatch(focusedPostSlice.actions.setDraftId(result.createPost.id));
+            dispatch(focusedPostSlice.actions.setDraftId(result.createDraft.id));
           });
         }
       }

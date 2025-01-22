@@ -3,7 +3,6 @@ import { LoginInput } from "../domain/dto/input/auth/login.input";
 import * as bcrypt from "bcrypt";
 import { CustomContext } from "@_shared/types/CustomContext";
 import getCookies from "@_shared/utils/getCookies";
-import { ConfigService } from "@nestjs/config";
 import { UsersRepository } from "../domain/repositories/users.repository";
 import { CreateUserInput } from "../domain/dto/input/users/create-user.input";
 import { TokenService } from "../domain/domain-service/token.service";
@@ -15,7 +14,6 @@ export class AuthUseCase {
     private usersService: UsersRepository,
     private readonly tokenService: TokenService,
     private readonly cacheRepository: CacheRepository,
-    private configService: ConfigService,
   ) {
   }
 
@@ -49,8 +47,8 @@ export class AuthUseCase {
       const decoded = this.tokenService.verify(token);
       const PX = new Date().getTime() - new Date(Number(decoded.exp as string)).getTime();
       await this.cacheRepository.set(token, 0, PX);
-
       this.tokenService.removeTokens(context.res)
+      return 'success'
     } else {
       throw new UnauthorizedException();
     }

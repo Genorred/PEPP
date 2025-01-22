@@ -6,27 +6,45 @@ import { VersionsRepository } from "../domain/repositories/versions/versions.rep
 import { PostsRepository } from "../domain/repositories/posts/posts.repository";
 import { ForbiddenException } from "@nestjs/common";
 import { VersionIsHiddenService } from "../domain/domain_services/version-is-hidden.service";
+import { Transaction } from "../domain/repositories/transaction";
+import { CreateVersionInput } from "./dto/create-version.input";
 
 export class VersionsUseCase {
   constructor(
     private readonly versionsRepository: VersionsRepository,
     private readonly postsRepository: PostsRepository,
+    private readonly transaction: Transaction,
     private readonly versionIdHiddenService: VersionIsHiddenService
   ) {
   }
 
-  async findByPost(@Args("findByPostInput") findByPostInput: FindByPostInput): Promise<Version[]> {
+  async create(createVersionInput: CreateVersionInput) {
+    const { postId, ...data } = createVersionInput;
+    const post = await this.postsRepository.findOne({
+      id: postId
+    });
+    return (await this.transaction.exec([
+      this.postsRepository.update({
+        id: postId,
+        ...data,
+        version: post.version + 1
+      }),
+      this.versionsRepository.create({ postId, ...post })
+    ]))[0];
+  }
+
+  async findByPost(findByPostInput: FindByPostInput): Promise<Version[]> {
     const { postId } = findByPostInput;
     const versions = await this.versionsRepository.findMany({ postId });
     const post = await this.postsRepository.findOne({ id: versions[0].postId });
-    this.versionIdHiddenService.isHidden(post)
+    this.versionIdHiddenService.isHidden(post);
     return versions;
   }
 
-  async findOne(@Args("findOne") findOneVersion: FindOneVersionInput): Promise<Version> {
+  async findOne(findOneVersion: FindOneVersionInput): Promise<Version> {
     const version = await this.versionsRepository.findOne(findOneVersion);
     const post = await this.postsRepository.findOne({ id: version.postId });
-    this.versionIdHiddenService.isHidden(post)
-    return version
+    this.versionIdHiddenService.isHidden(post);
+    return version;
   }
 }

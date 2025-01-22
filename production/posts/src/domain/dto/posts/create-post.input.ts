@@ -14,7 +14,7 @@ export class CreatePostInput {
   topics?: string[];
   @Field(() => [String], { nullable: true })
   subTopics?: string[];
-  @Field()
+  @Field( { nullable: true } )
   isHidden?: boolean;
 }
 

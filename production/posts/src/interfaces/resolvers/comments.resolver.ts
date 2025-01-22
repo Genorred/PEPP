@@ -12,6 +12,7 @@ import { Comment } from "../../domain/entities/comment.entity";
 import { CommentsByPost } from "../../domain/dto/comments/output/comments-by-post.output";
 import { GetByParentCommentInput } from "../../domain/dto/comments/get-by-parent-comment.input";
 import { CommentsRepository } from "../../domain/repositories/comments/comments.repository";
+import { CreateReplyInput } from "../../domain/dto/comments/create-reply.input";
 
 @Resolver(() => Comment)
 export class CommentsResolver {
@@ -25,13 +26,19 @@ export class CommentsResolver {
     return this.commentsService.addCommentToPost({...createCommentInput, userId: user.sub });
   }
 
+  @useAuth()
+  @Mutation(() => Comment)
+  createReply(@Args('createReplyInput') createReplyInput: CreateReplyInput, @CurrentUser() user: CurrentUserI) {
+    return this.commentsService.addReplyToPostComment({...createReplyInput, userId: user.sub });
+  }
+
   @Query(() => CommentsByPost, { name: 'comments' })
-  getByPost(@Args('postComments') getByPostInput: GetByPostInput) {
+  getByPost(@Args('getCommentsByPostInput') getByPostInput: GetByPostInput) {
     return this.commentsService.getByPost(getByPostInput);
   }
 
   @Query(() => CommentsByPost, { name: 'replies' })
-  getByParentComment(@Args('postComments') getByPostInput: GetByParentCommentInput) {
+  getByParentComment(@Args('getRepliesByCommentInput') getByPostInput: GetByParentCommentInput) {
     return this.commentsService.getByParentComment(getByPostInput);
   }
 

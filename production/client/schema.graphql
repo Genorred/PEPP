@@ -13,7 +13,6 @@ type Comment {
   parentId: Int!
   post: [Post!]!
   postId: Int!
-  postVersion: Int!
   repliesQuantity: Int!
   respondedCommentId: Int
   updatedAt: DateTime!
@@ -28,20 +27,32 @@ type CommentsByPost {
 
 input CreateCommentInput {
   message: String!
-  parentId: Int
-  """Example field (placeholder)"""
   postId: Int!
-  respondedCommentId: Int
+}
+
+input CreateDraftInput {
+  body: JSONObject!
+  description: String
+  postId: Int
+  subTopics: [String!]
+  title: String!
+  topics: [String!]
 }
 
 input CreatePostInput {
   body: JSONObject!
   description: String
-  isDraft: Boolean
-  isPublished: Boolean
+  isHidden: Boolean
   subTopics: [String!]
   title: String!
   topics: [String!]
+}
+
+input CreateReplyInput {
+  message: String!
+  parentId: Int!
+  postId: Int!
+  respondedCommentId: Int
 }
 
 input CreateUserInput {
@@ -52,21 +63,27 @@ input CreateUserInput {
   username: String!
 }
 
-input CreateVersionPostInput {
-  body: JSONObject!
-  description: String
-  isDraft: Boolean
-  isPublished: Boolean
-  postId: Float!
-  subTopics: [String!]
-  title: String!
-  topics: [String!]
-}
-
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type Draft {
+  body: [JSON!]!
+  createdAt: DateTime!
+  description: String
+  id: Int!
+  img: String
+  minutes: Int
+  postId: Int!
+  subTopics: [Topic!]
+  title: String!
+  topics: [Topic!]
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+  version: Float!
+}
 
 input FindAlgorithmPostsInput {
   createdAt: SortOrder
@@ -79,6 +96,14 @@ input FindAlgorithmPostsInput {
 input FindAllPostsInput {
   isArchived: Boolean
   token: String!
+}
+
+input FindByPostInput {
+  postId: Int!
+}
+
+input FindDraftInput {
+  id: Int!
 }
 
 input FindManyUserInput {
@@ -94,9 +119,16 @@ input FindOneUserInput {
   username: String
 }
 
+input FindOneVersionInput {
+  id: Int!
+}
+
 input FindPostInput {
   id: Int!
-  version: Int
+}
+
+input FindUserPostsInput {
+  userId: Int!
 }
 
 input GetByParentCommentInput {
@@ -107,6 +139,12 @@ input GetByParentCommentInput {
 input GetByPostInput {
   postId: Int!
   skipPages: Int
+}
+
+input GqlCreateVersionInput {
+  body: JSONObject!
+  postId: Int!
+  title: String
 }
 
 """
@@ -126,16 +164,22 @@ input LoginInput {
 
 type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
+  createDraft(createDraftInput: CreateDraftInput!): Draft!
   createPost(createPostInput: CreatePostInput!): Post!
-  createVersionPost(createVersionPostInput: CreateVersionPostInput!): Post!
+  createReply(createReplyInput: CreateReplyInput!): Comment!
+  createVersion(createVersionInput: GqlCreateVersionInput!): Version!
+  expose(exposePostInput: Float!): Post!
+  hide(hidePostInput: Float!): Post!
   login(loginInput: LoginInput!): UserResponse!
   logout: String!
-  publish(publishInput: Int!): Post!
+  publishDraft(publishDraftInput: UpdateDraftInput!): Post!
   register(registerInput: CreateUserInput!): UserResponse!
   removeComment(id: Int!): Comment!
-  removePost(id: Int!): Post!
+  removeDraft(removeDraftInput: RemovePostInput!): Draft!
+  removePost(removePostInput: RemovePostInput!): Post!
   removeUser(id: Int!): User!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
+  updateDraft(updateDraftInput: UpdateDraftInput!): Draft!
   updatePost(updatePostInput: UpdatePostInput!): Post!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
@@ -147,11 +191,8 @@ type Post {
   description: String
   id: Int!
   img: String
-  isArchived: Boolean!
-  isDraft: Boolean!
-  isPublished: Boolean!
+  isHidden: Boolean!
   minutes: Int
-  postId: Float
   rating: Int
   reviewsQuantity: Int
   subTopics: [Topic!]
@@ -164,23 +205,29 @@ type Post {
 }
 
 type Query {
-  algoPosts(findAlgorithmInput: FindAlgorithmPostsInput!): Recommendations!
   allPosts(findAllPostsInput: FindAllPostsInput!): [Post!]!
   comment(id: Int!): Comment!
-  comments(postComments: GetByPostInput!): CommentsByPost!
-  draft(findDraft: FindPostInput!): Post!
-  post(findOne: FindPostInput!): Post!
-  replies(postComments: GetByParentCommentInput!): CommentsByPost!
+  comments(getCommentsByPostInput: GetByPostInput!): CommentsByPost!
+  draft(findDraftInput: FindDraftInput!): Draft!
+  findByPost(findVersionByPostInput: FindByPostInput!): [Version!]!
+  post(findPostInput: FindPostInput!): Post!
+  postsRecommendations(postRecommendationsInput: FindAlgorithmPostsInput!): Recommendations!
+  replies(getRepliesByCommentInput: GetByParentCommentInput!): CommentsByPost!
   topics(title: String): [Topic!]!
   user(loginInput: FindOneUserInput!): User!
-  userDrafts: [Post!]!
-  userPosts(userId: Int!): [Post!]!
+  userDrafts: [Draft!]!
+  userPosts(findUserPostsInput: FindUserPostsInput!): [Post!]!
   users(findManyInput: FindManyUserInput!): [User!]!
+  version(findVersionInput: FindOneVersionInput!): [Version!]!
 }
 
 type Recommendations {
   data: [Post!]!
   totalPages: Int!
+}
+
+input RemovePostInput {
+  id: Int!
 }
 
 enum SortOrder {
@@ -197,18 +244,22 @@ type Topic {
 input UpdateCommentInput {
   id: Int!
   message: String
-  parentId: Int
-  """Example field (placeholder)"""
   postId: Int
-  respondedCommentId: Int
+}
+
+input UpdateDraftInput {
+  body: JSONObject
+  description: String
+  id: Int!
+  subTopics: [String!]
+  title: String
+  topics: [String!]
 }
 
 input UpdatePostInput {
   body: JSONObject
   description: String
   id: Int!
-  isDraft: Boolean
-  isPublished: Boolean
   subTopics: [String!]
   title: String
   topics: [String!]
@@ -248,4 +299,24 @@ type UserResponse {
   role: String!
   updatedAt: DateTime!
   username: String!
+}
+
+type Version {
+  body: [JSON!]!
+  commentsQuantity: Int
+  createdAt: DateTime!
+  description: String
+  id: Int!
+  img: String
+  minutes: Int
+  postId: Int!
+  rating: Int
+  reviewsQuantity: Int
+  subTopics: [Topic!]
+  title: String!
+  topics: [Topic!]
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+  version: Float!
 }

@@ -10,11 +10,11 @@ import { PublishDraftInputService } from "../domain/dto/drafts/publish-draft.inp
 import { DraftsRepository } from "../domain/repositories/drafts/drafts.repository";
 import { UpdateDraftInputService } from "../domain/dto/drafts/update-draft.input";
 import { Post } from "../domain/entities/post.entity";
-import { CreateDraftInputService } from "../domain/dto/drafts/create-draft.input";
 import { Draft } from "../domain/entities/draft.entity";
 import { FindDraftInputService } from "../domain/dto/drafts/find-draft.input";
 import { VersionsRepository } from "../domain/repositories/versions/versions.repository";
 import { Transaction } from "../domain/repositories/transaction";
+import { CreateDraftInputService } from "./dto/crate-draft.input";
 
 @Injectable()
 export class DraftsUseCase {
@@ -32,7 +32,7 @@ export class DraftsUseCase {
       const post = await this.postsRepository.findOne({ id: input.postId });
       version = post.version;
     }
-    return this.draftsRepository.create({ version, ...input });
+    return this.draftsRepository.create({ version: version + 1, ...input });
   }
 
   async publishDraft(publishDraftInput: UpdateDraftInputService) {

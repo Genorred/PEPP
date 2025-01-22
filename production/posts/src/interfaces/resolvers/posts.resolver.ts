@@ -1,13 +1,11 @@
 import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver, ResolveReference } from "@nestjs/graphql";
 import { Post } from "../../domain/entities/post.entity";
 import { CreatePostInput } from "../../domain/dto/posts/create-post.input";
-import { UpdatePostInput } from "../../domain/dto/posts/update-post.input";
 import { User } from "../../domain/entities/user.entity";
 import { CurrentUser, CurrentUserI } from "@_shared/auth-guard/CurrentUser";
 import { JwtPayload } from "@_shared/entities/jwt.entity";
 import UseAuth from "@_shared/auth-guard/useAuth";
 import { CreateVersionPostInput } from "../../domain/dto/posts/create-version-post.input";
-import { FindPostInput } from "../../domain/dto/posts/find-post.input";
 import { Inject, UnauthorizedException } from "@nestjs/common";
 import FRONTEND_SERVER from "../../infrastructure/config/frontend-server";
 import { ConfigType } from "@nestjs/config";
@@ -19,6 +17,9 @@ import { Comment } from "../../domain/entities/comment.entity";
 import { PostsUseCase } from "../../application/posts.use-case";
 import { RemovePostInput } from "../../domain/dto/posts/remove-post.input";
 import { PostsRepository } from "../../domain/repositories/posts/posts.repository";
+import { FindUserPostsInput } from "../dto/posts/find-user-posts-input";
+import { FindPostInput } from "../dto/posts/find-post.input";
+import { UpdatePostInput } from "../dto/posts/update-post.input";
 
 @Resolver(() => Post)
 export class PostsResolver {
@@ -34,18 +35,18 @@ export class PostsResolver {
   }
 
   @Query(() => [Post], { name: "userPosts" })
-  findUserPosts(@Args("userId", { type: () => Int }) userId: number) {
-    return this.postsService.findUserPosts(userId);
+  findUserPosts(@Args("findUserPostsInput") findUserPostsInput: FindUserPostsInput ) {
+    return this.postsService.findUserPosts(findUserPostsInput.userId);
   }
 
-  @Query(() => Recommendations, { name: "algoPosts" })
-  recommendations(@Args("findAlgorithmInput") findAlgorithmInput: FindAlgorithmPostsInput, @CurrentUser() user: CurrentUserI) {
+  @Query(() => Recommendations, { name: "postsRecommendations" })
+  recommendations(@Args("postRecommendationsInput") findAlgorithmInput: FindAlgorithmPostsInput, @CurrentUser() user: CurrentUserI) {
     return this.postsService.recommendations({ ...findAlgorithmInput, userId: user?.sub });
   }
 
   @Query(() => Post, { name: "post" })
-  findOne(@Args("findOne") id: number, @CurrentUser() user: CurrentUserI) {
-    return this.postsService.findOne({ id, userId: user?.sub });
+  findOne(@Args("findPostInput") findPostInput: FindPostInput, @CurrentUser() user: CurrentUserI) {
+    return this.postsService.findOne({ ...findPostInput, userId: user?.sub });
   }
 
   @Mutation(() => Post)
@@ -54,12 +55,12 @@ export class PostsResolver {
   }
 
   @Mutation(() => Post, { name: "hide" })
-  hide(@Args("findOne") id: number, @CurrentUser() user: CurrentUserI) {
+  hide(@Args("hidePostInput") id: number, @CurrentUser() user: CurrentUserI) {
     return this.postsService.hide(id, user?.sub);
   }
 
   @Mutation(() => Post, { name: "expose" })
-  expose(@Args("findOne") id: number, @CurrentUser() user: CurrentUserI) {
+  expose(@Args("exposePostInput") id: number, @CurrentUser() user: CurrentUserI) {
     return this.postsService.expose(id, user?.sub);
   }
 

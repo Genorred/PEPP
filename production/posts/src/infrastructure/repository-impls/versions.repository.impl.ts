@@ -11,8 +11,16 @@ export class VersionsRepositoryImpl implements VersionsRepository {
   }
 
   create(createVersionInput: CreateVersionInput): Promise<Version> {
+    const { postId, ...data } = createVersionInput
     return this.prismaService.version.create({
-      data: createVersionInput
+      data: {
+        actualPost: {
+          connect: {
+            id: postId
+          }
+        },
+        ...data
+      }
     })
   }
 

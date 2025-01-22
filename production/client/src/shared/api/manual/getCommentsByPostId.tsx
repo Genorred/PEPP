@@ -2,7 +2,7 @@ import { graphql } from "@/shared/api/graphql";
 
 const getCommentsByPostId = graphql(`
     query getCommentsByPostId($postId: Int!, $skipPages: Int) {
-        comments(postComments: {
+        comments(getCommentsByPostInput: {
             postId: $postId
             skipPages: $skipPages
         }) {
@@ -13,7 +13,6 @@ const getCommentsByPostId = graphql(`
                 likes
                 dislikes
                 repliesQuantity
-                postVersion
                 user {
                     username
                     img

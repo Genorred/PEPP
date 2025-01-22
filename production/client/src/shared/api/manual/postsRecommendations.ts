@@ -4,7 +4,7 @@ const getPostsRecommendations = graphql(`
     query postRecommendations($createdAt: SortOrder, $rating: SortOrder,
         $skipPages: Int, $topics: [String!], $search: String) {
 
-        algoPosts (findAlgorithmInput: {
+        postsRecommendations (postRecommendationsInput: {
             createdAt: $createdAt,
             rating: $rating,
             skipPages: $skipPages,

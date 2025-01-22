@@ -11,8 +11,8 @@ import { FindAlgorithmPostsInput } from "../domain/dto/posts/find-algorithm-post
 import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
 import { RemovePostInputService } from "../domain/dto/posts/remove-post.input";
 import { PostsSecurityCheckService } from "../domain/domain_services/posts.security.check.service";
-import { UpdatePostInput, UpdatePostInputService } from "../interfaces/dto/posts/update-post.input";
 import { ClientCacheRepository } from "../domain/repositories/client.cache.repository";
+import { UpdatePostInputService } from "../domain/dto/posts/update-post.input";
 
 export class PostsUseCase {
   constructor(

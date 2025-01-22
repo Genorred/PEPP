@@ -24,20 +24,32 @@ export type Scalars = {
 
 export type CreateCommentInput = {
   message: Scalars['String']['input'];
-  parentId?: InputMaybe<Scalars['Int']['input']>;
-  /** Example field (placeholder) */
   postId: Scalars['Int']['input'];
-  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type CreateDraftInput = {
+  body: Scalars['JSONObject']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  postId?: InputMaybe<Scalars['Int']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title: Scalars['String']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type CreatePostInput = {
   body: Scalars['JSONObject']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
-  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
-  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
+  isHidden?: InputMaybe<Scalars['Boolean']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   title: Scalars['String']['input'];
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type CreateReplyInput = {
+  message: Scalars['String']['input'];
+  parentId: Scalars['Int']['input'];
+  postId: Scalars['Int']['input'];
+  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type CreateUserInput = {
@@ -46,17 +58,6 @@ export type CreateUserInput = {
   img?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   username: Scalars['String']['input'];
-};
-
-export type CreateVersionPostInput = {
-  body: Scalars['JSONObject']['input'];
-  description?: InputMaybe<Scalars['String']['input']>;
-  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
-  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
-  postId: Scalars['Float']['input'];
-  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
-  title: Scalars['String']['input'];
-  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type FindAlgorithmPostsInput = {
@@ -72,6 +73,14 @@ export type FindAllPostsInput = {
   token: Scalars['String']['input'];
 };
 
+export type FindByPostInput = {
+  postId: Scalars['Int']['input'];
+};
+
+export type FindDraftInput = {
+  id: Scalars['Int']['input'];
+};
+
 export type FindManyUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   google_id?: InputMaybe<Scalars['String']['input']>;
@@ -85,9 +94,16 @@ export type FindOneUserInput = {
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type FindOneVersionInput = {
+  id: Scalars['Int']['input'];
+};
+
 export type FindPostInput = {
   id: Scalars['Int']['input'];
-  version?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type FindUserPostsInput = {
+  userId: Scalars['Int']['input'];
 };
 
 export type GetByParentCommentInput = {
@@ -100,9 +116,19 @@ export type GetByPostInput = {
   skipPages?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type GqlCreateVersionInput = {
+  body: Scalars['JSONObject']['input'];
+  postId: Scalars['Int']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type LoginInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type RemovePostInput = {
+  id: Scalars['Int']['input'];
 };
 
 export enum SortOrder {
@@ -113,18 +139,22 @@ export enum SortOrder {
 export type UpdateCommentInput = {
   id: Scalars['Int']['input'];
   message?: InputMaybe<Scalars['String']['input']>;
-  parentId?: InputMaybe<Scalars['Int']['input']>;
-  /** Example field (placeholder) */
   postId?: InputMaybe<Scalars['Int']['input']>;
-  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type UpdateDraftInput = {
+  body?: InputMaybe<Scalars['JSONObject']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type UpdatePostInput = {
   body?: InputMaybe<Scalars['JSONObject']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
-  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
-  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
@@ -149,45 +179,61 @@ export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?
 
 export type CreateCommentMutationVariables = Exact<{
   message: Scalars['String']['input'];
-  parentId?: InputMaybe<Scalars['Int']['input']>;
   postId: Scalars['Int']['input'];
-  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
 export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: number } };
 
+export type CreateDraftMutationVariables = Exact<{
+  body: Scalars['JSONObject']['input'];
+  title: Scalars['String']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type CreateDraftMutation = { __typename?: 'Mutation', createDraft: { __typename?: 'Draft', id: number } };
+
 export type CreatePostMutationVariables = Exact<{
   body: Scalars['JSONObject']['input'];
   title: Scalars['String']['input'];
-  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
   topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  isDraft?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
 export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number } };
 
-export type CreateVersionPostMutationVariables = Exact<{
+export type CreateReplyMutationVariables = Exact<{
+  message: Scalars['String']['input'];
+  parentId: Scalars['Int']['input'];
+  postId: Scalars['Int']['input'];
+  respondedCommentId: Scalars['Int']['input'];
+}>;
+
+
+export type CreateReplyMutation = { __typename?: 'Mutation', createReply: { __typename?: 'Comment', id: number } };
+
+export type CreateVersionDraftMutationVariables = Exact<{
   body: Scalars['JSONObject']['input'];
   title: Scalars['String']['input'];
-  postId: Scalars['Float']['input'];
-  published: Scalars['Boolean']['input'];
+  postId: Scalars['Int']['input'];
   topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersionPost: { __typename?: 'Post', id: number } };
+export type CreateVersionDraftMutation = { __typename?: 'Mutation', createDraft: { __typename?: 'Draft', id: number } };
 
-export type GetCommentsByParentIdQueryVariables = Exact<{
-  parentId: Scalars['Int']['input'];
-  skipPages?: InputMaybe<Scalars['Int']['input']>;
+export type CreateVersionPostMutationVariables = Exact<{
+  postId: Scalars['Int']['input'];
+  body: Scalars['JSONObject']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetCommentsByParentIdQuery = { __typename?: 'Query', replies: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', respondedCommentId?: number | null, id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, postVersion: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img: string } }> } };
+export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersion: { __typename?: 'Version', id: number } };
 
 export type GetCommentsByPostIdQueryVariables = Exact<{
   postId: Scalars['Int']['input'];
@@ -195,7 +241,7 @@ export type GetCommentsByPostIdQueryVariables = Exact<{
 }>;
 
 
-export type GetCommentsByPostIdQuery = { __typename?: 'Query', comments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, postVersion: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img: string } }> } };
+export type GetCommentsByPostIdQuery = { __typename?: 'Query', comments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img: string } }> } };
 
 export type DraftQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -203,12 +249,12 @@ export type DraftQueryVariables = Exact<{
 }>;
 
 
-export type DraftQuery = { __typename?: 'Query', draft: { __typename?: 'Post', id: number, body: Array<any>, createdAt: any, img?: string | null, title: string, updatedAt: any, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
+export type DraftQuery = { __typename?: 'Query', draft: { __typename?: 'Draft', id: number, body: Array<any>, createdAt: any, img?: string | null, title: string, updatedAt: any, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
 
 export type DraftsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type DraftsQuery = { __typename?: 'Query', userDrafts: Array<{ __typename?: 'Post', id: number, createdAt: any, img?: string | null, title: string, updatedAt: any }> };
+export type DraftsQuery = { __typename?: 'Query', userDrafts: Array<{ __typename?: 'Draft', id: number, createdAt: any, img?: string | null, title: string, updatedAt: any }> };
 
 export type PostQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -217,6 +263,14 @@ export type PostQueryVariables = Exact<{
 
 
 export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, rating?: number | null, minutes?: number | null, version: number, commentsQuantity?: number | null, reviewsQuantity?: number | null, description?: string | null, user: { __typename?: 'User', username: string, img: string, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
+
+export type GetRepliesQueryVariables = Exact<{
+  parentId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetRepliesQuery = { __typename?: 'Query', replies: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', respondedCommentId?: number | null, id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img: string } }> } };
 
 export type TopicsQueryVariables = Exact<{
   title?: InputMaybe<Scalars['String']['input']>;
@@ -247,21 +301,18 @@ export type PostRecommendationsQueryVariables = Exact<{
 }>;
 
 
-export type PostRecommendationsQuery = { __typename?: 'Query', algoPosts: { __typename?: 'Recommendations', totalPages: number, data: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img: string }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
+export type PostRecommendationsQuery = { __typename?: 'Query', postsRecommendations: { __typename?: 'Recommendations', totalPages: number, data: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img: string }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
 
 export type PublishDraftMutationVariables = Exact<{
-  postId: Scalars['Int']['input'];
+  id: Scalars['Int']['input'];
+  body?: InputMaybe<Scalars['JSONObject']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type PublishDraftMutation = { __typename?: 'Mutation', publish: { __typename?: 'Post', id: number } };
-
-export type PublishPostVersionMutationVariables = Exact<{
-  postId: Scalars['Int']['input'];
-}>;
-
-
-export type PublishPostVersionMutation = { __typename?: 'Mutation', publish: { __typename?: 'Post', id: number } };
+export type PublishDraftMutation = { __typename?: 'Mutation', publishDraft: { __typename?: 'Post', id: number } };
 
 export type RegisterMutationVariables = Exact<{
   username: Scalars['String']['input'];
@@ -272,17 +323,16 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any } };
 
-export type UpdatePostMutationVariables = Exact<{
+export type UpdateDraftMutationVariables = Exact<{
   id: Scalars['Int']['input'];
   body?: InputMaybe<Scalars['JSONObject']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  isPublished?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
-export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: number } };
+export type UpdateDraftMutation = { __typename?: 'Mutation', updateDraft: { __typename?: 'Draft', id: number } };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -308,57 +358,58 @@ export const PostsIdDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<PostsIdQuery, PostsIdQueryVariables>;
 export const CreateCommentDocument = new TypedDocumentString(`
-    mutation createComment($message: String!, $parentId: Int, $postId: Int!, $respondedCommentId: Int) {
-  createComment(
-    createCommentInput: {message: $message, postId: $postId, parentId: $parentId, respondedCommentId: $respondedCommentId}
-  ) {
+    mutation createComment($message: String!, $postId: Int!) {
+  createComment(createCommentInput: {message: $message, postId: $postId}) {
     id
   }
 }
     `) as unknown as TypedDocumentString<CreateCommentMutation, CreateCommentMutationVariables>;
+export const CreateDraftDocument = new TypedDocumentString(`
+    mutation createDraft($body: JSONObject!, $title: String!, $topics: [String!], $subTopics: [String!]) {
+  createDraft(
+    createDraftInput: {body: $body, title: $title, topics: $topics, subTopics: $subTopics}
+  ) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<CreateDraftMutation, CreateDraftMutationVariables>;
 export const CreatePostDocument = new TypedDocumentString(`
-    mutation createPost($body: JSONObject!, $title: String!, $isPublished: Boolean, $topics: [String!], $subTopics: [String!], $isDraft: Boolean) {
+    mutation createPost($body: JSONObject!, $title: String!, $topics: [String!], $subTopics: [String!]) {
   createPost(
-    createPostInput: {body: $body, isDraft: $isDraft, isPublished: $isPublished, title: $title, topics: $topics, subTopics: $subTopics}
+    createPostInput: {body: $body, title: $title, topics: $topics, subTopics: $subTopics}
   ) {
     id
   }
 }
     `) as unknown as TypedDocumentString<CreatePostMutation, CreatePostMutationVariables>;
-export const CreateVersionPostDocument = new TypedDocumentString(`
-    mutation createVersionPost($body: JSONObject!, $title: String!, $postId: Float!, $published: Boolean!, $topics: [String!], $subTopics: [String!]) {
-  createVersionPost(
-    createVersionPostInput: {body: $body, title: $title, postId: $postId, isPublished: $published, topics: $topics, subTopics: $subTopics}
+export const CreateReplyDocument = new TypedDocumentString(`
+    mutation createReply($message: String!, $parentId: Int!, $postId: Int!, $respondedCommentId: Int!) {
+  createReply(
+    createReplyInput: {message: $message, postId: $postId, parentId: $parentId, respondedCommentId: $respondedCommentId}
   ) {
     id
   }
 }
-    `) as unknown as TypedDocumentString<CreateVersionPostMutation, CreateVersionPostMutationVariables>;
-export const GetCommentsByParentIdDocument = new TypedDocumentString(`
-    query getCommentsByParentId($parentId: Int!, $skipPages: Int) {
-  replies(postComments: {parentId: $parentId, skipPages: $skipPages}) {
-    totalPages
-    data {
-      respondedCommentId
-      id
-      message
-      likes
-      dislikes
-      repliesQuantity
-      postVersion
-      user {
-        username
-        img
-      }
-      createdAt
-      updatedAt
-    }
+    `) as unknown as TypedDocumentString<CreateReplyMutation, CreateReplyMutationVariables>;
+export const CreateVersionDraftDocument = new TypedDocumentString(`
+    mutation createVersionDraft($body: JSONObject!, $title: String!, $postId: Int!, $topics: [String!], $subTopics: [String!]) {
+  createDraft(
+    createDraftInput: {body: $body, title: $title, postId: $postId, topics: $topics, subTopics: $subTopics}
+  ) {
+    id
   }
 }
-    `) as unknown as TypedDocumentString<GetCommentsByParentIdQuery, GetCommentsByParentIdQueryVariables>;
+    `) as unknown as TypedDocumentString<CreateVersionDraftMutation, CreateVersionDraftMutationVariables>;
+export const CreateVersionPostDocument = new TypedDocumentString(`
+    mutation createVersionPost($postId: Int!, $body: JSONObject!, $title: String) {
+  createVersion(createVersionInput: {postId: $postId, body: $body, title: $title}) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<CreateVersionPostMutation, CreateVersionPostMutationVariables>;
 export const GetCommentsByPostIdDocument = new TypedDocumentString(`
     query getCommentsByPostId($postId: Int!, $skipPages: Int) {
-  comments(postComments: {postId: $postId, skipPages: $skipPages}) {
+  comments(getCommentsByPostInput: {postId: $postId, skipPages: $skipPages}) {
     totalPages
     data {
       id
@@ -366,7 +417,6 @@ export const GetCommentsByPostIdDocument = new TypedDocumentString(`
       likes
       dislikes
       repliesQuantity
-      postVersion
       user {
         username
         img
@@ -379,7 +429,7 @@ export const GetCommentsByPostIdDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<GetCommentsByPostIdQuery, GetCommentsByPostIdQueryVariables>;
 export const DraftDocument = new TypedDocumentString(`
     query draft($id: Int!, $version: Int) {
-  draft(findDraft: {id: $id, version: $version}) {
+  draft(findDraftInput: {id: $id}) {
     id
     body
     createdAt
@@ -408,7 +458,7 @@ export const DraftsDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<DraftsQuery, DraftsQueryVariables>;
 export const PostDocument = new TypedDocumentString(`
     query post($id: Int!, $version: Int) {
-  post(findOne: {id: $id, version: $version}) {
+  post(findPostInput: {id: $id}) {
     body
     createdAt
     title
@@ -432,6 +482,27 @@ export const PostDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<PostQuery, PostQueryVariables>;
+export const GetRepliesDocument = new TypedDocumentString(`
+    query getReplies($parentId: Int!, $skipPages: Int) {
+  replies(getRepliesByCommentInput: {parentId: $parentId, skipPages: $skipPages}) {
+    totalPages
+    data {
+      respondedCommentId
+      id
+      message
+      likes
+      dislikes
+      repliesQuantity
+      user {
+        username
+        img
+      }
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetRepliesQuery, GetRepliesQueryVariables>;
 export const TopicsDocument = new TypedDocumentString(`
     query topics($title: String) {
   topics(title: $title) {
@@ -456,8 +527,8 @@ export const LogoutDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<LogoutMutation, LogoutMutationVariables>;
 export const PostRecommendationsDocument = new TypedDocumentString(`
     query postRecommendations($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $topics: [String!], $search: String) {
-  algoPosts(
-    findAlgorithmInput: {createdAt: $createdAt, rating: $rating, skipPages: $skipPages, topics: $topics, searchValue: $search}
+  postsRecommendations(
+    postRecommendationsInput: {createdAt: $createdAt, rating: $rating, skipPages: $skipPages, topics: $topics, searchValue: $search}
   ) {
     totalPages
     data {
@@ -489,19 +560,14 @@ export const PostRecommendationsDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<PostRecommendationsQuery, PostRecommendationsQueryVariables>;
 export const PublishDraftDocument = new TypedDocumentString(`
-    mutation publishDraft($postId: Int!) {
-  publish(publishInput: $postId) {
+    mutation publishDraft($id: Int!, $body: JSONObject, $title: String, $topics: [String!], $subTopics: [String!]) {
+  publishDraft(
+    publishDraftInput: {id: $id, body: $body, title: $title, topics: $topics, subTopics: $subTopics}
+  ) {
     id
   }
 }
     `) as unknown as TypedDocumentString<PublishDraftMutation, PublishDraftMutationVariables>;
-export const PublishPostVersionDocument = new TypedDocumentString(`
-    mutation publishPostVersion($postId: Int!) {
-  publish(publishInput: $postId) {
-    id
-  }
-}
-    `) as unknown as TypedDocumentString<PublishPostVersionMutation, PublishPostVersionMutationVariables>;
 export const RegisterDocument = new TypedDocumentString(`
     mutation register($username: String!, $password: String!, $email: String!) {
   register(
@@ -514,12 +580,12 @@ export const RegisterDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<RegisterMutation, RegisterMutationVariables>;
-export const UpdatePostDocument = new TypedDocumentString(`
-    mutation updatePost($id: Int!, $body: JSONObject, $title: String, $topics: [String!], $subTopics: [String!], $isPublished: Boolean) {
-  updatePost(
-    updatePostInput: {id: $id, topics: $topics, subTopics: $subTopics, isPublished: $isPublished, body: $body, title: $title}
+export const UpdateDraftDocument = new TypedDocumentString(`
+    mutation updateDraft($id: Int!, $body: JSONObject, $title: String, $topics: [String!], $subTopics: [String!]) {
+  updateDraft(
+    updateDraftInput: {id: $id, topics: $topics, subTopics: $subTopics, body: $body, title: $title}
   ) {
     id
   }
 }
-    `) as unknown as TypedDocumentString<UpdatePostMutation, UpdatePostMutationVariables>;
+    `) as unknown as TypedDocumentString<UpdateDraftMutation, UpdateDraftMutationVariables>;

@@ -2,12 +2,13 @@ import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
 import { Draft } from "../../domain/entities/draft.entity";
 import { DraftsUseCase } from "../../application/drafts.use-case";
 import { CurrentUser, CurrentUserI } from "@_shared/auth-guard/CurrentUser";
-import { CreateDraftInput, CreateDraftInputService } from "../../domain/dto/drafts/create-draft.input";
+import { CreateDraftInputService } from "../../domain/dto/drafts/create-draft.input";
 import { UpdateDraftInput, UpdateDraftInputService } from "../../domain/dto/drafts/update-draft.input";
 import { Post } from "../../domain/entities/post.entity";
 import { DraftsRepository } from "../../domain/repositories/drafts/drafts.repository";
 import { RemovePostInput } from "../../domain/dto/posts/remove-post.input";
 import { FindDraftInput } from "../dto/drafts/find-draft.input";
+import { CreateDraftInput } from "../dto/drafts/create-draft.input";
 
 @Resolver(() => Draft)
 export class DraftsResolver {
@@ -25,13 +26,13 @@ export class DraftsResolver {
     return this.draftsService.publishDraft({ ...publishDraftInput, userId: user?.sub });
   }
 
-  @Query(() => [Draft], { name: "drafts" })
+  @Query(() => [Draft], { name: "userDrafts" })
   findByUser(@CurrentUser() user: CurrentUserI): Promise<Draft[]> {
     return this.draftsRepository.findMany({ userId: user?.sub });
   }
 
   @Query(() => Draft, { name: "draft" })
-  findOne(@Args("id") findOneInput: FindDraftInput, @CurrentUser() user: CurrentUserI): Promise<Draft> {
+  findOne(@Args("findDraftInput") findOneInput: FindDraftInput, @CurrentUser() user: CurrentUserI): Promise<Draft> {
     return this.draftsRepository.findOne({ ...findOneInput, userId: user?.sub });
   }
 
@@ -41,7 +42,7 @@ export class DraftsResolver {
   }
 
   @Mutation(() => Draft)
-  removeDraft(@Args("removeInput") removeInput: RemovePostInput, @CurrentUser() user: CurrentUserI): Promise<Draft> {
+  removeDraft(@Args("removeDraftInput") removeInput: RemovePostInput, @CurrentUser() user: CurrentUserI): Promise<Draft> {
     return this.draftsRepository.remove({ ...removeInput, userId: user?.sub });
   }
 }
