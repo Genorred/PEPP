@@ -14,6 +14,9 @@ const config = {
       }
     },
     extend: {
+      maxWidth: {
+        "full-mobile": "min(672px, 100%)"
+      },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans]
       },

@@ -27,7 +27,7 @@ export default function TagsInput({ name, control, placeholder = "Add a tag..." 
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+    setInputValue(e.target.value.slice(0, 30));
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -53,7 +53,8 @@ export default function TagsInput({ name, control, placeholder = "Add a tag..." 
   return (
     <div className="space-y-2">
       <div
-        className="flex flex-wrap items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
+        className="flex flex-wrap items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm
+        ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
         onClick={handleWrapperClick}
       >
         {value.map((tag: string) => (

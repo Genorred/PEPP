@@ -7,12 +7,14 @@ import { CreateVersionInput } from "../../domain/dto/versions/create-version.inp
 import { Post } from "../../domain/entities/post.entity";
 import { GqlCreateVersionInput } from "../dto/versions/create-version.input";
 import { CurrentUser, CurrentUserI } from "@_shared/auth-guard/CurrentUser";
+import useAuth from "@_shared/auth-guard/useAuth";
 
 @Resolver(() => Version)
 export class VersionsResolver {
   constructor(private readonly versionsService: VersionsUseCase) {
   }
 
+  @useAuth()
   @Mutation(() => Version)
   createVersion(@Args('createVersionInput') createVersionInput: GqlCreateVersionInput, @CurrentUser() user: CurrentUserI): Promise<Post> {
     return this.versionsService.create({...createVersionInput, userId: user?.sub });

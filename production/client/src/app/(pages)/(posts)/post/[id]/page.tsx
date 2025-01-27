@@ -18,6 +18,7 @@ export async function generateStaticParams() {
     const data: PostsIdQuery = await serverApiClient.request(PostsIdDocument, {
       token: process.env.NEXTJS_ENDPOINTS
     } as PostsIdQueryVariables);
+    console.log(data);
 
     // const data: PostsIdQuery = await fetch(serverBaseUrl, {
     //   method: "POST",

@@ -13,11 +13,9 @@ import { focusedPostSlice } from "@/features/Editor/model/focused-post.slice";
 
 export const EditPost = () => {
   const queryKey = useSelector(focusedPostSlice.selectors.queryKey);
-  if (queryKey) {
     const data = useFetchPostQuery(queryKey);
     console.log(data, "goalll");
     usePostEditor(data?.body);
-  }
   return (
     <section className={"mt-4 ml-4 relative flex justify-center max-w-full"}
     >

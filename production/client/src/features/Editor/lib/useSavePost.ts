@@ -33,6 +33,11 @@ const useSavePost = () => {
     const data = useSelector(focusedPostSlice.selectors.all);
     const getUpdatedFields = useGetUpdatedFields();
 
+    const navigate = (path: string) => {
+      router.push(path);
+      dispatch(focusedPostSlice.actions.resetAll());
+    }
+
 
     return function onSubmit(values: HandleWorkFormT, event?: BaseSyntheticEvent<object, any, any>) {
       // @ts-ignore
@@ -46,9 +51,7 @@ const useSavePost = () => {
             id: data.versionId || data.draftId as number
           }).then((result) => {
             toast.success("The post version was successfully created!");
-            dispatch(focusedPostSlice.actions.setVersionId(null));
-            dispatch(focusedPostSlice.actions.setDraftId(null));
-            router.push("/post/" + result.publishDraft.id);
+            navigate("/post/" + result.publishDraft.id);
           });
         } else if (data.sourceId) {
           const variables = {
@@ -59,8 +62,7 @@ const useSavePost = () => {
           };
           createVersionPost(variables).then((result) => {
             toast.success("The post version was successfully published!");
-            dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
-            router.push("/post/" + result.createVersion.id);
+            navigate("/post/" + result.createVersion.id);
           });
         } else {//works
           const variables = {
@@ -69,9 +71,7 @@ const useSavePost = () => {
           };
           createPost(variables).then((result) => {
             toast.success("The post was successfully published!");
-            dispatch(focusedPostSlice.actions.spreadMutatedData(variables));
-            dispatch(focusedPostSlice.actions.setSourceId(result.createPost.id));
-            router.push("/post/" + result.createPost.id);
+            navigate("/post/" + result.createPost.id);
           });
         }
       } else {

@@ -9,8 +9,9 @@ const Ssr = async ({ id, data }: {
   id: number
   data: PostQuery;
 }) => {
-  const accessToken = (await cookies()).get("accessToken")?.value;
-  const sub = accessToken && Number(jwt.decode(accessToken));
+  const refreshToken = (await cookies()).get("refreshToken")?.value;
+  const sub = refreshToken && Number(jwt.decode(refreshToken)?.sub);
+  console.log( refreshToken &&jwt.decode(refreshToken));
 
   if (sub === data.post.user.id) {
     return <Edit post={data} id={id} />;

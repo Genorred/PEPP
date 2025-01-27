@@ -52,6 +52,7 @@ export class DraftsRepositoryImpl implements DraftsRepository {
   }
 
   remove(input: RemovePostInputService): Promise<Draft> {
+    console.log('input-xd', input);
     return this.prismaService.draft.delete({
       where: input
     });

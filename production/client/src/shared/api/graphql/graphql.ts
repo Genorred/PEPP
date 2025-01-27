@@ -69,7 +69,6 @@ export type FindAlgorithmPostsInput = {
 };
 
 export type FindAllPostsInput = {
-  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
   token: Scalars['String']['input'];
 };
 
@@ -103,6 +102,7 @@ export type FindPostInput = {
 };
 
 export type FindUserPostsInput = {
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
   userId: Scalars['Int']['input'];
 };
 
@@ -171,11 +171,10 @@ export type UpdateUserInput = {
 
 export type PostsIdQueryVariables = Exact<{
   token: Scalars['String']['input'];
-  isArchived?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
-export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number, version: number }> };
+export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number }> };
 
 export type CreateCommentMutationVariables = Exact<{
   message: Scalars['String']['input'];
@@ -258,7 +257,6 @@ export type DraftsQuery = { __typename?: 'Query', userDrafts: Array<{ __typename
 
 export type PostQueryVariables = Exact<{
   id: Scalars['Int']['input'];
-  version?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -278,6 +276,14 @@ export type TopicsQueryVariables = Exact<{
 
 
 export type TopicsQuery = { __typename?: 'Query', topics: Array<{ __typename?: 'Topic', title: string }> };
+
+export type GetUserPostsQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetUserPostsQuery = { __typename?: 'Query', userPosts: { __typename?: 'Recommendations', totalPages: number, data: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img: string }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String']['input'];
@@ -350,10 +356,9 @@ export class TypedDocumentString<TResult, TVariables>
 }
 
 export const PostsIdDocument = new TypedDocumentString(`
-    query postsId($token: String!, $isArchived: Boolean) {
-  allPosts(findAllPostsInput: {token: $token, isArchived: $isArchived}) {
+    query postsId($token: String!) {
+  allPosts(findAllPostsInput: {token: $token}) {
     id
-    version
   }
 }
     `) as unknown as TypedDocumentString<PostsIdQuery, PostsIdQueryVariables>;
@@ -457,7 +462,7 @@ export const DraftsDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<DraftsQuery, DraftsQueryVariables>;
 export const PostDocument = new TypedDocumentString(`
-    query post($id: Int!, $version: Int) {
+    query post($id: Int!) {
   post(findPostInput: {id: $id}) {
     body
     createdAt
@@ -510,6 +515,38 @@ export const TopicsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<TopicsQuery, TopicsQueryVariables>;
+export const GetUserPostsDocument = new TypedDocumentString(`
+    query getUserPosts($userId: Int!, $skipPages: Int) {
+  userPosts(findUserPostsInput: {userId: $userId, skipPages: $skipPages}) {
+    totalPages
+    data {
+      id
+      rating
+      commentsQuantity
+      reviewsQuantity
+      img
+      minutes
+      title
+      createdAt
+      userId
+      description
+      version
+      updatedAt
+      user {
+        username
+        occupation
+        img
+      }
+      topics {
+        title
+      }
+      subTopics {
+        title
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetUserPostsQuery, GetUserPostsQueryVariables>;
 export const LoginDocument = new TypedDocumentString(`
     mutation login($password: String!, $email: String!) {
   login(loginInput: {email: $email, password: $password}) {

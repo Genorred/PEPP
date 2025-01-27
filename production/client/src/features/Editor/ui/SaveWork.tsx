@@ -29,24 +29,24 @@ const formSchema = z.object({
 });
 export type HandleWorkFormT = z.infer<typeof formSchema>
 const SaveWork = () => {
+  const data = useSelector(focusedPostSlice.selectors.all);
+  const initialData = useFetchPostQuery(data.initialDataQueryKey);
   const form = useForm<HandleWorkFormT>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      topics: [],
-      subTopics: []
+      title: initialData?.title ?? "",
+      topics: initialData?.topics?.map(topic => topic.title) ?? [],
+      subTopics: initialData?.subTopics?.map(topic => topic.title) ?? []
     }
   });
   const onSubmit = useSavePost();
-  const data = useSelector(focusedPostSlice.selectors.all);
-  const initialData = useFetchPostQuery(data.initialDataQueryKey);
   useEffect(() => {
     if (initialData) {
       form.setValue("title", initialData.title);
       form.setValue("topics", initialData.topics?.map(topic => topic.title) ?? []);
       form.setValue("subTopics", initialData.subTopics?.map(topic => topic.title) ?? []);
     }
-  }, []);
+  }, [initialData]);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

@@ -3,7 +3,10 @@ import { CreatePostMutationVariables } from "@/shared/api/graphql/generated";
 import { rootReducer } from "@/shared/lib/redux";
 import { PostKeys } from "@/features/Editor/model/model";
 
-export type mutatedData = Partial<Pick<CreatePostMutationVariables, "body" | "title" | "topics" | "subTopics">>
+export type mutatedData = Partial<Pick<CreatePostMutationVariables, "body" | "title" > & {
+  topics: string[];
+  subTopics: string[];
+}>
 type State = {
   mutatedData?: mutatedData | null
   initialDataQueryKey?: PostKeys | null

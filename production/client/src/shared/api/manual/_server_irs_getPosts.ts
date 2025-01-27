@@ -1,14 +1,12 @@
 import { graphql } from "@/shared/api/graphql";
 
 const getPostsId = graphql(`
-    query postsId ($token: String!, $isArchived: Boolean) {
+    query postsId ($token: String!) {
         allPosts(findAllPostsInput: {
             token: $token
-            isArchived: $isArchived
         })
         {
             id
-            version
         }
     }
 `);

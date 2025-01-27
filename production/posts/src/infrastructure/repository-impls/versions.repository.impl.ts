@@ -5,7 +5,9 @@ import { Version } from "../../domain/entities/version.entity";
 import { FindOneVersionInput } from "../../domain/dto/versions/find-one-version.input";
 import { FindManyInput } from "../../domain/dto/versions/find-many.input";
 import { CreateVersionInput } from "../../domain/dto/versions/create-version.input";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class VersionsRepositoryImpl implements VersionsRepository {
   constructor(private  readonly prismaService: PrismaService) {
   }

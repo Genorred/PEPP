@@ -4,11 +4,12 @@ import { FindByPostInput } from "../interfaces/dto/versions/find-by-post.input";
 import { FindOneVersionInput } from "../domain/dto/versions/find-one-version.input";
 import { VersionsRepository } from "../domain/repositories/versions/versions.repository";
 import { PostsRepository } from "../domain/repositories/posts/posts.repository";
-import { ForbiddenException } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { VersionIsHiddenService } from "../domain/domain_services/version-is-hidden.service";
 import { Transaction } from "../domain/repositories/transaction";
 import { CreateVersionInput } from "./dto/create-version.input";
 
+@Injectable()
 export class VersionsUseCase {
   constructor(
     private readonly versionsRepository: VersionsRepository,
@@ -20,7 +21,7 @@ export class VersionsUseCase {
 
   async create(createVersionInput: CreateVersionInput) {
     const { postId, ...data } = createVersionInput;
-    const post = await this.postsRepository.findOne({
+    const {id: dbId, isHidden, ...post} = await this.postsRepository.findOne({
       id: postId
     });
     return (await this.transaction.exec([

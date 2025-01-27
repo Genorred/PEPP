@@ -20,6 +20,7 @@ import { PostsRepository } from "../../domain/repositories/posts/posts.repositor
 import { FindUserPostsInput } from "../dto/posts/find-user-posts-input";
 import { FindPostInput } from "../dto/posts/find-post.input";
 import { UpdatePostInput } from "../dto/posts/update-post.input";
+import useAuth from "@_shared/auth-guard/useAuth";
 
 @Resolver(() => Post)
 export class PostsResolver {
@@ -34,9 +35,9 @@ export class PostsResolver {
     return this.postsService.create({ ...createPostInput, userId: user.sub });
   }
 
-  @Query(() => [Post], { name: "userPosts" })
+  @Query(() => Recommendations, { name: "userPosts" })
   findUserPosts(@Args("findUserPostsInput") findUserPostsInput: FindUserPostsInput ) {
-    return this.postsService.findUserPosts(findUserPostsInput.userId);
+    return this.postsService.findUserPosts(findUserPostsInput.userId, findUserPostsInput.skipPages);
   }
 
   @Query(() => Recommendations, { name: "postsRecommendations" })
@@ -49,21 +50,25 @@ export class PostsResolver {
     return this.postsService.findOne({ ...findPostInput, userId: user?.sub });
   }
 
+  @useAuth()
   @Mutation(() => Post)
   async updatePost(@Args("updatePostInput") updatePostInput: UpdatePostInput, @CurrentUser() user: CurrentUserI) {
     return this.postsService.update({ ...updatePostInput, userId: user?.sub });
   }
 
+  @useAuth()
   @Mutation(() => Post, { name: "hide" })
   hide(@Args("hidePostInput") id: number, @CurrentUser() user: CurrentUserI) {
     return this.postsService.hide(id, user?.sub);
   }
 
+  @useAuth()
   @Mutation(() => Post, { name: "expose" })
   expose(@Args("exposePostInput") id: number, @CurrentUser() user: CurrentUserI) {
     return this.postsService.expose(id, user?.sub);
   }
 
+  @useAuth()
   @Mutation(() => Post)
   removePost(@Args("removePostInput") input: RemovePostInput, @CurrentUser() user: CurrentUserI) {
     return this.postsService.remove({ ...input, userId: user?.sub });

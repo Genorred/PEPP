@@ -43,8 +43,8 @@ export class SearchRepositoryImpl implements SearchRepository {
         index,
         id: id.toString(),
         document: {
-          topics: mapTopicsToTopicsDto(topics),
-          subTopics: mapTopicsToTopicsDto(subTopics),
+          topics: topics && mapTopicsToTopicsDto(topics),
+          subTopics: subTopics && mapTopicsToTopicsDto(subTopics),
           ...data
         } as SearchPost
       });

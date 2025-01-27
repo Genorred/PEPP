@@ -94,7 +94,6 @@ input FindAlgorithmPostsInput {
 }
 
 input FindAllPostsInput {
-  isArchived: Boolean
   token: String!
 }
 
@@ -128,6 +127,7 @@ input FindPostInput {
 }
 
 input FindUserPostsInput {
+  skipPages: Int
   userId: Int!
 }
 
@@ -216,7 +216,7 @@ type Query {
   topics(title: String): [Topic!]!
   user(loginInput: FindOneUserInput!): User!
   userDrafts: [Draft!]!
-  userPosts(findUserPostsInput: FindUserPostsInput!): [Post!]!
+  userPosts(findUserPostsInput: FindUserPostsInput!): Recommendations!
   users(findManyInput: FindManyUserInput!): [User!]!
   version(findVersionInput: FindOneVersionInput!): [Version!]!
 }

@@ -25,7 +25,7 @@ const PostsList = () => {
     hasNextPage
   } = useInfinitePostRecommendationsQuery(defaultParams, {
     getNextPageParam: (lastPage, allPages) => (
-      lastPage.algoPosts.totalPages - allPages.length > 1 ?
+      lastPage.postsRecommendations.totalPages - allPages.length > 1 ?
         {
           ...defaultParams,
           skipPages: allPages.length
@@ -44,13 +44,13 @@ const PostsList = () => {
 
   return (
     <>
-      {data?.pages[0].algoPosts.totalPages
+      {data?.pages[0].postsRecommendations.totalPages
         ?
         <>
           <Container className="flex gap-4 flex-wrap" variant={"section"}>
             {data.pages.map(posts =>
-              posts.algoPosts.data.map(post =>
-                <Post key={post.id} {...post} />
+              posts.postsRecommendations.data.map(post =>
+                <Post key={post.id} {...post} url={`/post/${post.id}`} />
               )
             )}
           </Container>

@@ -53,16 +53,28 @@ export class PostsRepositoryImpl implements PostsRepository {
   }
 
   findMany(input: FindManyInput): Promise<Post[]> {
-    const { ids, id, ...rest } = input;
+    const { ids, id, take, skip, ...rest } = input;
     return this.prismaService.post.findMany({
       where: {
-
         id: ids ? {
           in: ids
         } : id,
-
         ...rest
-      }
+      },
+      take,
+      skip
+    });
+  }
+
+  count(input: FindManyInput): Promise<number> {
+    const { ids, id, take, skip, ...rest } = input;
+    return this.prismaService.post.count({
+      where: {
+        id: ids ? {
+          in: ids
+        } : id,
+        ...rest
+      },
     });
   }
 

@@ -7,9 +7,10 @@ import { PostsRepositoryImpl } from "../../infrastructure/repository-impls/posts
 import { PostsModule } from "./posts.module";
 import { VersionsUseCase } from "../../application/versions.use-case";
 import { PrismaModule } from "../prisma.module";
+import { VersionIsHiddenService } from "../../domain/domain_services/version-is-hidden.service";
 
 @Module({
-  providers: [VersionsResolver, VersionsUseCase,  {
+  providers: [VersionsResolver, VersionsUseCase, VersionIsHiddenService, {
     provide: VersionsRepository,
     useClass: VersionsRepositoryImpl
   }],

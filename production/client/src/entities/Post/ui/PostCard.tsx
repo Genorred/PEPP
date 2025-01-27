@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardContent, CardFooter } from "@/shared/ui/card";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { Review } from "@/entities/Post/model";
 import Rating from "@/entities/Post/ui/Rating";
@@ -9,6 +9,9 @@ import PostHeader from "@/entities/Post/ui/PostHeader";
 import UserLink from "@/entities/Post/ui/UserLink";
 import ReviewsDialog from "@/entities/Post/ui/ReviewsDialog";
 import { PostRecommendationsQuery } from "@/shared/api/graphql/graphql";
+import { GetUserPostsQuery } from "@/shared/api/graphql/generated";
+import { cn } from "@/shared/lib/utils";
+import { buttonVariants } from "@/shared/ui/button";
 
 const PostCard = ({
                     id,
@@ -25,8 +28,12 @@ const PostCard = ({
                     description,
                     user,
                     version,
-                    updatedAt
-                  }: PostRecommendationsQuery["algoPosts"]['data'][number]) => {
+                    updatedAt,
+                    hideUser
+                  }: (PostRecommendationsQuery["postsRecommendations"]["data"][number] | GetUserPostsQuery["userPosts"]["data"][number]) & {
+  hideUser?: boolean
+}) => {
+  const url = `/post/${id}`;
   const reviewList: Review[] = [
     {
       id: 4234234,
@@ -47,7 +54,6 @@ const PostCard = ({
       review: "The implications for secure communications are enormous!"
     }
   ];
-  const url = `/post/${id}`;
   return (
     <Card id={`${id}`} className="w-full shrink grow basis-[min-content] overflow-hidden relative min-w-72">
       <Link href={url} className="before:inset-0 before:absolute">
@@ -55,7 +61,8 @@ const PostCard = ({
       </Link>
       <CardContent className="pt-4">
         <div className="flex items-center justify-between mb-4">
-          <UserLink userId={userId} userImg={user.img} occupation={user.occupation} username={user.username} />
+          {hideUser ? null : <UserLink userId={userId} userImg={user.img} occupation={user.occupation}
+                                           username={user.username} />}
           {topics && topics.length > 0 && topics.map(topic =>
             <Badge variant="secondary" key={topic.title}>{topic.title}</Badge>
           )}
@@ -76,7 +83,7 @@ const PostCard = ({
             <span>{reviewsQuantity} reviews</span>
           </Link>
         </div>
-        <ReviewsDialog url={url} reviewList={reviewList} />
+          <ReviewsDialog url={url} reviewList={reviewList} />
       </CardContent>
       <CardFooter className="bg-muted/50 text-xs text-muted-foreground">
         Published on August 15, 2023 | {minutes} min read

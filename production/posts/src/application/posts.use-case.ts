@@ -13,6 +13,7 @@ import { RemovePostInputService } from "../domain/dto/posts/remove-post.input";
 import { PostsSecurityCheckService } from "../domain/domain_services/posts.security.check.service";
 import { ClientCacheRepository } from "../domain/repositories/client.cache.repository";
 import { UpdatePostInputService } from "../domain/dto/posts/update-post.input";
+import { Recommendations } from "../interfaces/dto/posts/output/recommendations.output";
 
 export class PostsUseCase {
   constructor(
@@ -33,16 +34,27 @@ export class PostsUseCase {
   findAll(findAllPostsInput: FindAllPostsInput) {
     const { token } = findAllPostsInput;
     if (this.configService.token === token) {
-      return this.postsRepository.findMany();
+      return this.postsRepository.findMany({});
     } else {
       throw new UnauthorizedException();
     }
   }
 
-  findUserPosts(userId: number) {
-    return this.postsRepository.findMany({
-      userId
-    });
+  async findUserPosts(userId: number, skip: number = 0): Promise<Recommendations> {
+    const pageSize = 20;
+    const params = {
+      userId,
+      take: pageSize,
+      skip
+    }
+    const [data, totalCount] = await Promise.all([
+      this.postsRepository.findMany(params),
+      this.postsRepository.count(params)
+    ]);
+    return {
+      totalPages: Math.max(Math.floor(totalCount / pageSize), 1),
+      data
+    }
   }
 
   async findOne(input: FindPostInputService) {

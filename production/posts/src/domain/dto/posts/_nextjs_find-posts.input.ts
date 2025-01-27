@@ -4,6 +4,5 @@ import { Field, InputType } from "@nestjs/graphql";
 export class FindAllPostsInput {
   @Field()
   token: string;
-  @Field({ nullable: true })
-  isArchived?: boolean;
+
 }

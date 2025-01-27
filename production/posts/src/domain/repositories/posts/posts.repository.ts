@@ -19,6 +19,8 @@ export abstract class PostsRepository {
 
   abstract findMany(input?: FindManyInput): Promise<Post[]>;
 
+  abstract count(input?: FindManyInput): Promise<number>;
+
   abstract update(input: UpdatePostInputService): Promise<Post>;
 
   abstract remove(input: RemovePostInputService): Promise<Post>;
