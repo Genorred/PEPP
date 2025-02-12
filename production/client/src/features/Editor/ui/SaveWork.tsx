@@ -41,11 +41,15 @@ const SaveWork = () => {
   });
   const onSubmit = useSavePost();
   useEffect(() => {
-    if (initialData) {
-      form.setValue("title", initialData.title);
-      form.setValue("topics", initialData.topics?.map(topic => topic.title) ?? []);
-      form.setValue("subTopics", initialData.subTopics?.map(topic => topic.title) ?? []);
-    }
+    // if (initialData) {
+      form.setValue("title", initialData?.title ?? '');
+      form.setValue("topics", initialData?.topics?.map(topic => topic.title) ?? []);
+      form.setValue("subTopics", initialData?.subTopics?.map(topic => topic.title) ?? []);
+    // } else {
+    //   form.setValue("title", '');
+    //   form.setValue("topics", []);
+    //   form.setValue("subTopics", []);
+    // }
   }, [initialData]);
   return (
     <Form {...form}>

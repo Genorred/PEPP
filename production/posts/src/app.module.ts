@@ -9,6 +9,9 @@ import { GraphQLModuleInitializer } from "./interfaces/modules/graphql.module";
 import { CommentsModule } from './interfaces/modules/comments.module';
 import { DraftsModule } from './interfaces/modules/drafts.module';
 import { VersionsModule } from './interfaces/modules/versions.module';
+import { LoggerOptions } from "@_shared/modules/logger-module";
+import { LoggerModule } from "nestjs-pino";
+
 
 @Module({
   imports: [
@@ -22,7 +25,8 @@ import { VersionsModule } from './interfaces/modules/versions.module';
     RedisModule,
     CommentsModule,
     DraftsModule,
-    VersionsModule
+    VersionsModule,
+    LoggerModule.forRoot(LoggerOptions),
   ]
 })
 export class AppModule {

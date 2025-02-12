@@ -52,20 +52,33 @@ export class DraftsRepositoryImpl implements DraftsRepository {
   }
 
   remove(input: RemovePostInputService): Promise<Draft> {
-    console.log('input-xd', input);
+    console.log("input-xd", input);
     return this.prismaService.draft.delete({
       where: input
     });
   }
 
-  update(input: UpdatePostInputService): Promise<Draft> {
+  async update(input: UpdatePostInputService): Promise<Draft> {
     const { id, topics, subTopics, userId, ...data } = input;
-    return this.prismaService.draft.update({
-      where: { id, userId },
+    let draft: Draft
+
+    draft = await this.prismaService.draft.update({
+        where: { id, userId },
       data: {
         ...data,
-        ...this.topicsRepository.resetTopics(topics, subTopics)
+        topics: topics?.length === 0 ? this.topicsRepository.resetTopics.topics : undefined,
+        subTopics: topics?.length === 0 ? this.topicsRepository.resetTopics.subTopics : undefined,
       }
     });
+    if (topics?.length || subTopics?.length) {
+      draft = await this.prismaService.draft.update({
+        where: { id },
+        data: {
+          ...data,
+          ...this.topicsRepository.connectOrCreate(topics, subTopics)
+        }
+      });
+    }
+    return draft
   }
 }

@@ -50,11 +50,11 @@ export class PostsResolver {
     return this.postsService.findOne({ ...findPostInput, userId: user?.sub });
   }
 
-  @useAuth()
-  @Mutation(() => Post)
-  async updatePost(@Args("updatePostInput") updatePostInput: UpdatePostInput, @CurrentUser() user: CurrentUserI) {
-    return this.postsService.update({ ...updatePostInput, userId: user?.sub });
-  }
+  // @useAuth()
+  // @Mutation(() => Post)
+  // async updatePost(@Args("updatePostInput") updatePostInput: UpdatePostInput, @CurrentUser() user: CurrentUserI) {
+  //   return this.postsService.update({ ...updatePostInput, userId: user?.sub });
+  // }
 
   @useAuth()
   @Mutation(() => Post, { name: "hide" })

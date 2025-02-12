@@ -7,6 +7,8 @@ export const usePostEditor = (data?: any[]) => {
     console.log(data, editor);
     if (data && data.length > 0) {
       editor.tf.setValue(data);
+    } else {
+      editor.tf.setValue([{children: [{text: "Title"}], type: "p", id: "o95kj"}]);
     }
   }, [data]);
   //

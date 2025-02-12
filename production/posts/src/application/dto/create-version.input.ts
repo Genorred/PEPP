@@ -5,4 +5,6 @@ export class CreateVersionInput {
   body: any;
   postId: number
   userId: number
+  topics?: string[]
+  subTopics?: string[]
 }

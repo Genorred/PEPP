@@ -158,7 +158,9 @@ export type GetByPostInput = {
 export type GqlCreateVersionInput = {
   body: Scalars['JSONObject']['input'];
   postId: Scalars['Int']['input'];
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type LoginInput = {
@@ -172,7 +174,7 @@ export type Mutation = {
   createDraft: Draft;
   createPost: Post;
   createReply: Comment;
-  createVersion: Version;
+  createVersion: Post;
   expose: Post;
   hide: Post;
   login: UserResponse;
@@ -185,7 +187,6 @@ export type Mutation = {
   removeUser: User;
   updateComment: Comment;
   updateDraft: Draft;
-  updatePost: Post;
   updateUser: User;
 };
 
@@ -267,11 +268,6 @@ export type MutationUpdateCommentArgs = {
 
 export type MutationUpdateDraftArgs = {
   updateDraftInput: UpdateDraftInput;
-};
-
-
-export type MutationUpdatePostArgs = {
-  updatePostInput: UpdatePostInput;
 };
 
 
@@ -420,15 +416,6 @@ export type UpdateDraftInput = {
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-export type UpdatePostInput = {
-  body?: InputMaybe<Scalars['JSONObject']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['Int']['input'];
-  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
-  title?: InputMaybe<Scalars['String']['input']>;
-  topics?: InputMaybe<Array<Scalars['String']['input']>>;
-};
-
 export type UpdateUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
   google_id?: InputMaybe<Scalars['String']['input']>;
@@ -548,10 +535,12 @@ export type CreateVersionPostMutationVariables = Exact<{
   postId: Scalars['Int']['input'];
   body: Scalars['JSONObject']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersion: { __typename?: 'Version', id: number } };
+export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersion: { __typename?: 'Post', id: number } };
 
 export type GetCommentsByPostIdQueryVariables = Exact<{
   postId: Scalars['Int']['input'];
@@ -835,8 +824,10 @@ useCreateVersionDraftMutation.getKey = () => ['createVersionDraft'];
 useCreateVersionDraftMutation.fetcher = (variables: CreateVersionDraftMutationVariables, options?: RequestInit['headers']) => fetcher<CreateVersionDraftMutation, CreateVersionDraftMutationVariables>(CreateVersionDraftDocument, variables, options);
 
 export const CreateVersionPostDocument = `
-    mutation createVersionPost($postId: Int!, $body: JSONObject!, $title: String) {
-  createVersion(createVersionInput: {postId: $postId, body: $body, title: $title}) {
+    mutation createVersionPost($postId: Int!, $body: JSONObject!, $title: String, $subTopics: [String!], $topics: [String!]) {
+  createVersion(
+    createVersionInput: {postId: $postId, body: $body, title: $title, topics: $topics, subTopics: $subTopics}
+  ) {
     id
   }
 }

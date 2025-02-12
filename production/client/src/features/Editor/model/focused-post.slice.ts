@@ -38,6 +38,7 @@ export const focusedPostSlice = createSlice({
   },
   reducers: {
     resetAll: (state) => {
+      state.initialDataQueryKey = null;
       state.sourceId = null;
       state.draftId = null;
       state.versionId = null;

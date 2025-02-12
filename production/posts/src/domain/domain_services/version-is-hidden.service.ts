@@ -3,7 +3,7 @@ import { Post } from "../entities/post.entity";
 
 export class VersionIsHiddenService {
   isHidden(post: Post) {
-    if (post.isHidden) {
+    if (post?.isHidden) {
       throw new ForbiddenException("Post has been hidden");
     }
   }

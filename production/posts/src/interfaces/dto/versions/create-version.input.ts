@@ -12,4 +12,8 @@ export class GqlCreateVersionInput {
   body: any;
   @Field(() => Int)
   postId: number
+  @Field(() => [String], { nullable: true })
+  topics?: string[];
+  @Field(() => [String], { nullable: true })
+  subTopics?: string[];
 }

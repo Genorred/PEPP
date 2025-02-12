@@ -15,7 +15,7 @@ export class VersionsResolver {
   }
 
   @useAuth()
-  @Mutation(() => Version)
+  @Mutation(() => Post)
   createVersion(@Args('createVersionInput') createVersionInput: GqlCreateVersionInput, @CurrentUser() user: CurrentUserI): Promise<Post> {
     return this.versionsService.create({...createVersionInput, userId: user?.sub });
   }

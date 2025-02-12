@@ -35,7 +35,6 @@ const useSavePost = () => {
 
     const navigate = (path: string) => {
       router.push(path);
-      dispatch(focusedPostSlice.actions.resetAll());
     }
 
 

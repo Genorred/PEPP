@@ -13,6 +13,8 @@ import { PostsRepository } from "../../domain/repositories/posts/posts.repositor
 import { PostsSecurityCheckService } from "../../domain/domain_services/posts.security.check.service";
 import { PreferencesRepository } from "../../domain/repositories/posts/preferenses.repository";
 import { TopicsModule } from "./topics.module";
+import { PostsUow } from "../../domain/UoW/posts.uow";
+import { PostsUowImpl } from "../../infrastructure/services/posts.uow.impl";
 
 @Module({
   imports: [
@@ -37,10 +39,14 @@ import { TopicsModule } from "./topics.module";
     {
       provide: ClientCacheRepository,
       useClass: ClientCacheRepositoryImpl
+    },
+    {
+      provide: PostsUow,
+      useClass: PostsUowImpl
     }
   ],
   exports: [
-    PostsRepository
+    PostsRepository, PostsUow
   ]
 })
 export class PostsModule {

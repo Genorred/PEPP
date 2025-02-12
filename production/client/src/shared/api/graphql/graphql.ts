@@ -119,7 +119,9 @@ export type GetByPostInput = {
 export type GqlCreateVersionInput = {
   body: Scalars['JSONObject']['input'];
   postId: Scalars['Int']['input'];
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type LoginInput = {
@@ -143,15 +145,6 @@ export type UpdateCommentInput = {
 };
 
 export type UpdateDraftInput = {
-  body?: InputMaybe<Scalars['JSONObject']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['Int']['input'];
-  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
-  title?: InputMaybe<Scalars['String']['input']>;
-  topics?: InputMaybe<Array<Scalars['String']['input']>>;
-};
-
-export type UpdatePostInput = {
   body?: InputMaybe<Scalars['JSONObject']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
@@ -229,10 +222,12 @@ export type CreateVersionPostMutationVariables = Exact<{
   postId: Scalars['Int']['input'];
   body: Scalars['JSONObject']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersion: { __typename?: 'Version', id: number } };
+export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersion: { __typename?: 'Post', id: number } };
 
 export type GetCommentsByPostIdQueryVariables = Exact<{
   postId: Scalars['Int']['input'];
@@ -406,8 +401,10 @@ export const CreateVersionDraftDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<CreateVersionDraftMutation, CreateVersionDraftMutationVariables>;
 export const CreateVersionPostDocument = new TypedDocumentString(`
-    mutation createVersionPost($postId: Int!, $body: JSONObject!, $title: String) {
-  createVersion(createVersionInput: {postId: $postId, body: $body, title: $title}) {
+    mutation createVersionPost($postId: Int!, $body: JSONObject!, $title: String, $subTopics: [String!], $topics: [String!]) {
+  createVersion(
+    createVersionInput: {postId: $postId, body: $body, title: $title, topics: $topics, subTopics: $subTopics}
+  ) {
     id
   }
 }

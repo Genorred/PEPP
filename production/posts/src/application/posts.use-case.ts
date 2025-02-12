@@ -61,15 +61,16 @@ export class PostsUseCase {
     const { userId, id } = input;
     const post = await this.postsRepository.findOne({ id });
     this.postsSecurityCheckService.ifShouldBeForbidden(post, userId);
+    console.log(post);
     return post;
   }
 
-  async update(updatePostInput: UpdatePostInputService) {
-    const { id, ...body } = updatePostInput;
-    const post = await this.postsRepository.update({ ...body, id });
-    await this.searchService.updatePost(post);
-    return post;
-  }
+  // async update(updatePostInput: UpdatePostInputService) {
+  //   const { id, ...body } = updatePostInput;
+  //   const post = await this.postsRepository.update({ ...body, id });
+  //   await this.searchService.updatePost(post);
+  //   return post;
+  // }
 
   async hide(id: number, userId: number) {
     await Promise.all([

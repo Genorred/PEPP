@@ -144,7 +144,9 @@ input GetByPostInput {
 input GqlCreateVersionInput {
   body: JSONObject!
   postId: Int!
+  subTopics: [String!]
   title: String
+  topics: [String!]
 }
 
 """
@@ -167,7 +169,7 @@ type Mutation {
   createDraft(createDraftInput: CreateDraftInput!): Draft!
   createPost(createPostInput: CreatePostInput!): Post!
   createReply(createReplyInput: CreateReplyInput!): Comment!
-  createVersion(createVersionInput: GqlCreateVersionInput!): Version!
+  createVersion(createVersionInput: GqlCreateVersionInput!): Post!
   expose(exposePostInput: Float!): Post!
   hide(hidePostInput: Float!): Post!
   login(loginInput: LoginInput!): UserResponse!
@@ -180,7 +182,6 @@ type Mutation {
   removeUser(id: Int!): User!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updateDraft(updateDraftInput: UpdateDraftInput!): Draft!
-  updatePost(updatePostInput: UpdatePostInput!): Post!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
@@ -248,15 +249,6 @@ input UpdateCommentInput {
 }
 
 input UpdateDraftInput {
-  body: JSONObject
-  description: String
-  id: Int!
-  subTopics: [String!]
-  title: String
-  topics: [String!]
-}
-
-input UpdatePostInput {
   body: JSONObject
   description: String
   id: Int!

@@ -31,7 +31,7 @@ export const UserTooltip = () => {
   const dispatch = useDispatch();
   const user = useSelector(userSlice.selectors.user);
   useEffect(() => {
-    if (user && user.expireDate - Date.now() < 1) {
+    if (user && (user.expireDate - Date.now()) < 1) {
       toast.error("Session expired, please auth again");
       dispatch(userSlice.actions.setUser(null));
     }
@@ -46,6 +46,7 @@ export const UserTooltip = () => {
   };
   const pathname = usePathname();
   console.log(user, "user");
+  console.log(user && (user.expireDate - Date.now()));
   return (
     <div className="ml-auto flex items-center space-x-4">
       {user

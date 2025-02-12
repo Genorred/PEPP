@@ -14,12 +14,13 @@ import { FindManyInput } from "../../domain/dto/posts/find-many.input";
 import { FindPostInput, FindPostInputService } from "../../domain/dto/posts/find-post.input";
 import { RemovePostInputService } from "../../domain/dto/posts/remove-post.input";
 import { TopicsPrismaRepository } from "./topics.prisma.repository";
+import { SearchRepository } from "../../domain/repositories/posts/search.repository";
 
 @Injectable()
 export class PostsRepositoryImpl implements PostsRepository {
   constructor(
     private readonly topicsRepository: TopicsPrismaRepository,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
   ) {
   }
 
@@ -48,7 +49,11 @@ export class PostsRepositoryImpl implements PostsRepository {
 
   findOne(input: FindPostInput): Promise<Post> {
     return this.prismaService.post.findFirst({
-      where: input
+      where: input,
+      include: {
+        topics: true,
+        subTopics: true
+      }
     });
   }
 
@@ -74,7 +79,7 @@ export class PostsRepositoryImpl implements PostsRepository {
           in: ids
         } : id,
         ...rest
-      },
+      }
     });
   }
 
@@ -89,15 +94,36 @@ export class PostsRepositoryImpl implements PostsRepository {
     })).commentsQuantity;
   }
 
-  update(input: CurrentUserExtendT<UpdatePostInput>): Promise<Post> {
+  async update(input: CurrentUserExtendT<UpdatePostInput>): Promise<Post> {
     const { id, topics, subTopics, ...data } = input;
-    return this.prismaService.post.update({
-      where: { id },
-      data: {
+    let post: Post
+    console.log({
+      ...data,
+      topics: topics ? this.topicsRepository.resetTopics.topics : undefined,
+      subTopics: subTopics ? this.topicsRepository.resetTopics.subTopics : undefined,
+    },{
         ...data,
         ...this.topicsRepository.connectOrCreate(topics, subTopics)
       }
+      );
+    post = await this.prismaService.post.update({
+      where: { id },
+      data: {
+        ...data,
+        topics: topics ? this.topicsRepository.resetTopics.topics : undefined,
+        subTopics: subTopics ? this.topicsRepository.resetTopics.subTopics : undefined,
+      }
     });
+    if (topics?.length || subTopics?.length) {
+      post = await this.prismaService.post.update({
+        where: { id },
+        data: {
+          ...data,
+          ...this.topicsRepository.connectOrCreate(topics, subTopics)
+        }
+      });
+    }
+    return post
   }
 
   remove(input: RemovePostInputService): Promise<Post> {

@@ -8,30 +8,39 @@ import { ForbiddenException, Injectable } from "@nestjs/common";
 import { VersionIsHiddenService } from "../domain/domain_services/version-is-hidden.service";
 import { Transaction } from "../domain/repositories/transaction";
 import { CreateVersionInput } from "./dto/create-version.input";
+import { PostsUow } from "../domain/UoW/posts.uow";
+import { Post } from "../domain/entities/post.entity";
+import { SearchRepository } from "../domain/repositories/posts/search.repository";
 
 @Injectable()
 export class VersionsUseCase {
   constructor(
     private readonly versionsRepository: VersionsRepository,
     private readonly postsRepository: PostsRepository,
-    private readonly transaction: Transaction,
-    private readonly versionIdHiddenService: VersionIsHiddenService
+    private readonly postsUow: PostsUow,
+    private readonly versionIdHiddenService: VersionIsHiddenService,
+    private readonly searchService: SearchRepository
   ) {
   }
 
   async create(createVersionInput: CreateVersionInput) {
     const { postId, ...data } = createVersionInput;
-    const {id: dbId, isHidden, ...post} = await this.postsRepository.findOne({
-      id: postId
-    });
-    return (await this.transaction.exec([
-      this.postsRepository.update({
+
+    return await this.postsUow.run(async ({ postsRepository, versionsRepository }) => {
+      const { id: dbId, isHidden, ...post } = await postsRepository.findOne({
+        id: postId
+      });
+      const updatedPost = await postsRepository.update({
         id: postId,
         ...data,
         version: post.version + 1
-      }),
-      this.versionsRepository.create({ postId, ...post })
-    ]))[0];
+      });
+      if (!isHidden) {
+        await this.searchService.updatePost(updatedPost);
+      }
+      await versionsRepository.create({ postId, ...post });
+      return updatedPost
+    });
   }
 
   async findByPost(findByPostInput: FindByPostInput): Promise<Version[]> {

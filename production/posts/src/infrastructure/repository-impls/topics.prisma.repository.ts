@@ -4,28 +4,23 @@ const biggestIndex = 4;
 
 @Injectable()
 export class TopicsPrismaRepository {
-  resetTopics(topics?: string[], subTopics?: string[]) {
-    const connectOrCreateTopicsData = this.connectOrCreate(topics, subTopics);
-    return {
-      topics: (connectOrCreateTopicsData.topics ? {
-        set: [],
-        connectOrCreate: this.mapConnectOrCreate(topics)
-      } : {}),
-      subTopics: (connectOrCreateTopicsData.subTopics ? {
-        set: [],
-        connectOrCreate: this.mapConnectOrCreate(subTopics)
-      } : {})
-    };
-  }
+  resetTopics = {
+    topics: {
+      set: []
+    },
+    subTopics: {
+      set: []
+    }
+  };
 
   connectOrCreate(topics?: string[], subTopics?: string[]) {
     return {
       topics: (topics ? {
         connectOrCreate: this.mapConnectOrCreate(topics)
-      } : {}),
+      } : undefined),
       subTopics: (subTopics ? {
         connectOrCreate: this.mapConnectOrCreate(subTopics)
-      } : {})
+      } : undefined)
     };
   }
 

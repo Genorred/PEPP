@@ -24,4 +24,4 @@ export const useGetUpdatedFields = () => {
   ) as Partial<HandleWorkFormT> & {
     body: Value
   }, [data, initialData, plateState]);
-}
+};
