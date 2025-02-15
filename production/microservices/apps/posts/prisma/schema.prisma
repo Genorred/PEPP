@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Topic {
+  title      String    @id
+  posts      Post[]    @relation(name: "postTopics")
+  postsSub   Post[]    @relation(name: "postSubTopics")
+  drafts     Draft[]   @relation(name: "draftTopics")
+  draftsSub  Draft[]   @relation(name: "draftSubTopics")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Version {
+  id               Int      @id @default(autoincrement())
+  version          Int      @default(1)
+  title            String
+  description      String?
+  img              String?
+  body             Json[]
+  userId           Int
+  rating           Int?
+  commentsQuantity Int?
+  reviewsQuantity  Int?
+  minutes          Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  actualPost Post?     @relation(fields: [postId], references: [id], name: "versionActualPost")
+  postId     Int?
+  comments   Comment[] @relation(name: "versionComments")
+}
+
+model Draft {
+  id          Int      @id @default(autoincrement())
+  version     Int?      @default(1)
+  title       String
+  description String?
+  img         String?
+  body        Json[]
+  minutes     Int?
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  actualPost Post?   @relation(fields: [postId], references: [id], name: "draftActualPost")
+  postId     Int?
+  topics     Topic[] @relation(name: "draftTopics")
+  subTopics  Topic[] @relation(name: "draftSubTopics")
+}
+
+model Post {
+  id               Int      @id @default(autoincrement())
+  version          Int?      @default(1)
+  title            String
+  description      String?
+  rating           Int?
+  img              String?
+  commentsQuantity Int?
+  reviewsQuantity  Int?
+  minutes          Int?
+  body             Json[]
+  userId           Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  isHidden         Boolean? @default(false)
+
+  versions  Draft[]   @relation(name: "draftActualPost")
+  archives  Version[] @relation(name: "versionActualPost")
+  topics    Topic[]   @relation(name: "postTopics")
+  subTopics Topic[]   @relation(name: "postSubTopics")
+  comments  Comment[] @relation(name: "postComments")
+}
+
+model Comment {
+  id                 Int      @id @default(autoincrement())
+  message            String
+  userId             Int
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  likes              Int      @default(0)
+  dislikes           Int      @default(0)
+  repliesQuantity    Int      @default(0)
+  respondedCommentId Int?
+
+  post      Post     @relation(fields: [postId], references: [id], name: "postComments")
+  postId    Int
+  version   Version? @relation(fields: [versionId], references: [id], name: "versionComments")
+  versionId Int?
+
+  replies  Comment[] @relation(name: "replies")
+  parentId Int?
+  parent   Comment?  @relation(fields: [parentId], references: [id], name: "replies")
+}

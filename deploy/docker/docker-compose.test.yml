@@ -10,8 +10,8 @@ networks:
 services:
   gateway:
     build:
-      context: ../../production
-      dockerfile: ../deploy/docker/Dockerfile.development
+      context: ../../production/microservices
+      dockerfile: ../../deploy/docker/Dockerfile.development
       args:
         SERVICE_NAME: gateway
     restart: always
@@ -23,8 +23,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - "../../production/gateway/:/usr/app/gateway/"
-      - "../../production/_shared:/usr/app/gateway/src/_shared"
+      - "../../production/microservices/apps/gateway/:/usr/app/apps/gateway/"
+      - "../../production/microservices/libs:/usr/app/libs"
 #      - "../../production/_shared/scripts:/usr/app/gateway/scripts"
 #      - "../../production/_shared/config:/usr/app/gateway/config"
     depends_on:
@@ -33,18 +33,18 @@ services:
 
   users:
     build:
-      context: ../../production
-      dockerfile: ../deploy/docker/Dockerfile.development
+      context: ../../production/microservices
+      dockerfile: ../../deploy/docker/Dockerfile.development
       args:
         SERVICE_NAME: users
     env_file:
       - ../../config/.env.test
     restart: always
     ports:
-      - "${USERS_SERVICE_PORT}:${USERS_SERVICE_PORT}"
+      - "${USERS_SERVICE_PORT}:8080"
     volumes:
-      - "../../production/users/:/usr/app/users/"
-      - "../../production/_shared:/usr/app/users/src/_shared"
+      - "../../production/microservices/apps/users/:/usr/app/apps/users/"
+      - "../../production/microservices/libs:/usr/app/libs"
 #      - "../../production/_shared/scripts:/usr/app/users/scripts"
 #      - "../../production/_shared/config:/usr/app/users/config"
     depends_on:
@@ -65,8 +65,8 @@ services:
   client:
     restart: always
     build:
-      context: ../../production
-      dockerfile: ../deploy/docker/Dockerfile.client.development
+      context: ../../production/client
+      dockerfile: ../../deploy/docker/Dockerfile.client.development
       args:
         SERVICE_NAME: posts
     env_file:
@@ -82,18 +82,18 @@ services:
       - "../../production/_shared/config:/usr/app/client/src/_config"
   posts:
     build:
-      context: ../../production
-      dockerfile: ../deploy/docker/Dockerfile.development
+      context: ../../production/microservices
+      dockerfile: ../../deploy/docker/Dockerfile.development
       args:
         SERVICE_NAME: posts
     env_file:
       - ../../config/.env.test
     restart: always
     ports:
-      - "${POSTS_SERVICE_PORT}:${POSTS_SERVICE_PORT}"
+      - "${POSTS_SERVICE_PORT}:8080"
     volumes:
-      - "../../production/posts/:/usr/app/posts/"
-      - "../../production/_shared:/usr/app/posts/src/_shared"
+      - "../../production/microservices/apps/posts/:/usr/app/apps/posts/"
+      - "../../production/microservices/libs:/usr/app/libs"
       - certs:/usr/app/posts/certs
 #      - "../../production/_shared/scripts:/usr/app/posts/scripts"
 #      - "../../production/_shared/config:/usr/app/posts/config"

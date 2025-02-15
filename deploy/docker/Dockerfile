@@ -12,12 +12,12 @@ FROM base AS build
 
 WORKDIR /usr/app
 COPY ./${SERVICE_NAME} ./${SERVICE_NAME}
-COPY ./tsconfig.run.json ./tsconfig.json
+COPY ./_shared ./_shared
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prefix ./${SERVICE_NAME} --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prefix ./_shared --frozen-lockfile
 
 WORKDIR /usr/app/${SERVICE_NAME}
-
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-
 RUN if [ "$SERVICE_NAME" != "gateway" ]; then \
     npx prismaDb generate; \
     fi
@@ -27,7 +27,9 @@ RUN npx nest build
 FROM base AS prod
 ENV NODE_ENV=production
 
-COPY ./${SERVICE_NAME} ./
+COPY ./${SERVICE_NAME} ./${SERVICE_NAME}
+COPY ./_shared ./_shared
+
 COPY --from=build /usr/app/${SERVICE_NAME}/dist ./dist
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --prod
 RUN if [ "$SERVICE_NAME" != "gateway" ]; then \

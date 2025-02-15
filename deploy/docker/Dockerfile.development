@@ -4,23 +4,29 @@ ARG SERVICE_NAME
 ENV SERVICE_NAME=$SERVICE_NAME
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+RUN npm i -g pnpm
 
-
-FROM base
+FROM base as build
 
 ENV NODE_ENV=development
 WORKDIR /usr/app
-COPY ./${SERVICE_NAME} ./${SERVICE_NAME}
-COPY ./tsconfig.run.json ./tsconfig.json
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm --prefix ${SERVICE_NAME} install --frozen-lockfile
+COPY ./package.json ./package.json
+COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
+COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml
 
-VOLUME [ "/usr/app/${SERVICE_NAME}/node_modules" ]
+COPY ./libs/shared/package.json ./libs/shared/package.json
+COPY ./apps/${SERVICE_NAME}/package.json ./apps/${SERVICE_NAME}/package.json
 
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+VOLUME [ "/usr/app/apps/${SERVICE_NAME}/node_modules" ]
+VOLUME [ "/usr/app/libs/shared/node_modules" ]
+VOLUME [ "/usr/app/node_modules" ]
+
+COPY ./libs ./libs
+COPY ./apps/${SERVICE_NAME} ./apps/${SERVICE_NAME}
+#COPY ./tsconfig.json ./tsconfig.json
 EXPOSE 8080
 
-WORKDIR /usr/app/${SERVICE_NAME}
-
-
-CMD sh ./src/_shared/scripts/dev.sh
+CMD sh libs/scripts/dev.sh
