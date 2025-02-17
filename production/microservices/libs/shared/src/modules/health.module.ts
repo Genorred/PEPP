@@ -1,13 +1,16 @@
 import { Module } from '@nestjs/common';
-import { HealthController } from './controller/health.controller';
+import { HealthService } from './controller/health.service';
 import { TerminusModule } from "@nestjs/terminus";
+import { HttpModule } from "@nestjs/axios";
 
 @Module({
-  controllers: [HealthController],
   imports: [
     TerminusModule.forRoot({
       errorLogStyle: 'pretty',
     }),
-  ]
+    HttpModule
+  ],
+  providers: [HealthService],
+  exports: [HealthService],
 })
 export class HealthModule {}

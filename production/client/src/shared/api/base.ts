@@ -1,6 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
 import { ClientError, GraphQLClient } from "graphql-request";
-import { hosts } from "@_config/hosts";
 import { toast } from "sonner";
 
 export const clientBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/graphql";
@@ -20,7 +19,7 @@ export function fetcher<TData, TVariables extends {
   };
 }
 
-export const serverBaseUrl = `http://${hosts.gateway}:8080/graphql`;
+export const serverBaseUrl = process.env.NEXT_PUBLIC_CONTAINER_API_BASE_URL || "http://gateway:8080/graphql";
 export const serverApiClient = new GraphQLClient(serverBaseUrl, {
   credentials: "include"
 });

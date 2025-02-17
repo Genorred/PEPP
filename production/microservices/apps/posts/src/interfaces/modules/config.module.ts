@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import FRONTEND_SERVER from "./frontend-server";
-import elasticDb from "./elasticDb";
-import redisConfig from "./redis";
+import FRONTEND_SERVER from "../../infrastructure/config/frontend-server";
+import elasticDb from "../../infrastructure/config/elasticDb";
+import redisConfig from "../../infrastructure/config/redis";
 
 @Module({
   imports: [ConfigModule.forRoot({

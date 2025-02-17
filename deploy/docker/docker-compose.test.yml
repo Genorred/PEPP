@@ -28,9 +28,10 @@ services:
 #      - "../../production/_shared/scripts:/usr/app/gateway/scripts"
 #      - "../../production/_shared/config:/usr/app/gateway/config"
     depends_on:
-      - users
-      - posts
-
+#      users:
+#          condition: service_healthy
+      posts:
+        condition: service_healthy
   users:
     build:
       context: ../../production/microservices
@@ -49,6 +50,15 @@ services:
 #      - "../../production/_shared/config:/usr/app/users/config"
     depends_on:
       - users_db
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://localhost:8080/graphql | grep -q 'HTTP/1.1 302 Found'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
   users_db:
     image: postgres
     restart: always
@@ -100,6 +110,7 @@ services:
     depends_on:
       - posts_db
       - es01
+
   posts_db:
     image: postgres
     restart: always
@@ -263,7 +274,7 @@ services:
     user: root
 #    command: ["--strict.perms=false"]
     volumes:
-      - certs:/usr/share/logstash/certs
+      - certs:/usr/share/logstash/certPOSTS
       - logstashdata01:/usr/share/logstash/data
       - "./logstash_ingest_data/:/usr/share/logstash/ingest_data/"
       - "../logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"

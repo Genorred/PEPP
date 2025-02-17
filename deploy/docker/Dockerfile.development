@@ -29,4 +29,6 @@ COPY ./apps/${SERVICE_NAME} ./apps/${SERVICE_NAME}
 #COPY ./tsconfig.json ./tsconfig.json
 EXPOSE 8080
 
+HEALTHCHECK --interval=10s --timeout=5s --retries=50 CMD ["node", "libs/scripts/healthCheck.js"]
+
 CMD sh libs/scripts/dev.sh

@@ -9,9 +9,7 @@ import { AuthModule } from "./interfaces/modules/auth.module";
 import googleConfig from "./infrastructure/config/google.config";
 import authConfig from "./infrastructure/config/auth.config";
 import clientConfig from "./infrastructure/config/client.config";
-import { LoggerModule } from "nestjs-pino";
-import { LoggerOptions } from "@_shared/modules/logger-module";
-import { RedisModule } from "./interfaces/modules/redis.module";
+import { SharedLoggerModule } from "@_shared/modules/logger-module";
 import redisConfig from "./infrastructure/config/redis.config";
 import { HealthModule } from "@_shared/modules/health.module";
 
@@ -30,7 +28,7 @@ import { HealthModule } from "@_shared/modules/health.module";
       cache: true,
       isGlobal: true
     }),
-    LoggerModule.forRoot(LoggerOptions),
+    SharedLoggerModule,
     PrismaModule,
     UsersModule,
     AuthModule,

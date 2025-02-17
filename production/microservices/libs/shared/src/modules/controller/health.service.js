@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HealthController = void 0;
 const common_1 = require("@nestjs/common");
 const terminus_1 = require("@nestjs/terminus");
-let HealthController = class HealthController {
+let HealthService = class HealthController {
     constructor(health, http) {
         this.health = health;
         this.http = http;
@@ -23,17 +23,17 @@ let HealthController = class HealthController {
         ]);
     }
 };
-exports.HealthController = HealthController;
+exports.HealthController = HealthService;
 __decorate([
     (0, common_1.Get)(),
     (0, terminus_1.HealthCheck)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], HealthController.prototype, "check", null);
-exports.HealthController = HealthController = __decorate([
+], HealthService.prototype, "check", null);
+exports.HealthController = HealthService = __decorate([
     (0, common_1.Controller)('health'),
     __metadata("design:paramtypes", [terminus_1.HealthCheckService,
         terminus_1.HttpHealthIndicator])
-], HealthController);
+], HealthService);
 //# sourceMappingURL=health.controller.js.map
