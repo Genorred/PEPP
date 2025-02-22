@@ -33,10 +33,7 @@ import redisConfig from "./config/redis.config";
       useFactory: (subgraphs: ConfigType<typeof microservicesConfig>, authContext: AuthContext) => {
         return {
           server: {
-
             context: ({ req, res }) => authContext.validate({ req, res }),
-            // WARNING: IT IS USED TO RUN CONTAINERS ON LOW MEMORY PC SO THAT DEV CONTAINERS DON'T CONSUME ALL MEMORY
-            introspection: true
           },
           gateway: {
             supergraphSdl: new IntrospectAndCompose({

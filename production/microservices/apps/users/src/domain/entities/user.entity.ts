@@ -23,7 +23,7 @@ export class User implements SharedUser {
   @Field()
   updatedAt: Date;
 
-  @Field()
+  @Field({ nullable: true })
   img?: string;
   @Field()
   google_id?: string;

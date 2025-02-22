@@ -34,7 +34,6 @@ model User {
   google_id     String?  @unique
   username      String   @unique
   email         String   @unique
-  emailVerified Boolean?
   password      String?
   role          Roles    @default(USER)
   img           String?

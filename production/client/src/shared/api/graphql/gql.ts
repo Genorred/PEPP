@@ -16,7 +16,7 @@ import * as types from './graphql';
  */
 const documents = {
     "\n    query postsId ($token: String!) {\n        allPosts(findAllPostsInput: {\n            token: $token\n        })\n        {\n            id\n        }\n    }\n": types.PostsIdDocument,
-    "\n    mutation confirmUserEmail($token: String!) {\n        confirmUserEmail(confirmUserEmailInput: $token)\n        {\n            username\n            email\n            id\n            createdAt\n        }\n    }\n": types.ConfirmUserEmailDocument,
+    "\n    mutation confirmUserEmail($token: String!) {\n        confirmUserEmail(confirmUserEmailInput: $token)\n        {\n            username\n            email\n            id\n            createdAt\n            img\n        }\n    }\n": types.ConfirmUserEmailDocument,
     "\n\n    mutation createComment($message: String!, $postId: Int!) {\n        createComment(createCommentInput: {\n            message: $message\n            postId: $postId\n        }) {\n            id\n        }\n    }\n": types.CreateCommentDocument,
     "\n    mutation createDraft($body: JSONObject!, $title: String!, $topics: [String!], $subTopics: [String!] ) {\n        createDraft(createDraftInput: {\n            body: $body\n            title: $title\n            topics: $topics\n            subTopics: $subTopics\n        }) {\n            id\n        }\n    }\n": types.CreateDraftDocument,
     "\n    mutation createPost($body: JSONObject!, $title: String!, $topics: [String!], $subTopics: [String!] ) {\n        createPost(createPostInput: {\n            body: $body\n            title: $title\n            topics: $topics\n            subTopics: $subTopics\n        }) {\n            id\n        }\n    }\n": types.CreatePostDocument,
@@ -45,7 +45,7 @@ export function graphql(source: "\n    query postsId ($token: String!) {\n      
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    mutation confirmUserEmail($token: String!) {\n        confirmUserEmail(confirmUserEmailInput: $token)\n        {\n            username\n            email\n            id\n            createdAt\n        }\n    }\n"): typeof import('./graphql').ConfirmUserEmailDocument;
+export function graphql(source: "\n    mutation confirmUserEmail($token: String!) {\n        confirmUserEmail(confirmUserEmailInput: $token)\n        {\n            username\n            email\n            id\n            createdAt\n            img\n        }\n    }\n"): typeof import('./graphql').ConfirmUserEmailDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

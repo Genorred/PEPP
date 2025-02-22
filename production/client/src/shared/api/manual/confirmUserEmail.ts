@@ -8,6 +8,7 @@ const confirmUserEmail = graphql(`
             email
             id
             createdAt
+            img
         }
     }
 `);

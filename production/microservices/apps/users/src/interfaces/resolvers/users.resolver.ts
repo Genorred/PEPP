@@ -3,9 +3,9 @@ import { UsersRepositoryImpl } from "../../infrastructure/repositories/users.rep
 import { User } from "../../domain/entities/user.entity";
 import { UpdateUserInput } from "../../domain/dto/input/users/update-user.input";
 import { FindOneUserInput } from "./dto-inputs/find-one-user.input";
-import { FindManyUserInput } from "../../domain/dto/input/users/find-many-user.input";
 import { UsersRepository } from "../../domain/repositories/users.repository";
 import UseRoles from "@_shared/auth-guard/useRoles";
+import { FindManyUserInput } from "./dto-inputs/find-many-user.input";
 
 @Resolver(() => User)
 export class UsersResolver {

@@ -272,7 +272,7 @@ type User {
   email: String!
   google_id: String!
   id: Int!
-  img: String!
+  img: String
   occupation: String
   password: String!
   posts: [Post!]!
@@ -286,7 +286,7 @@ type UserResponse {
   email: String!
   google_id: String!
   id: Int!
-  img: String!
+  img: String
   occupation: String
   role: String!
   updatedAt: DateTime!
