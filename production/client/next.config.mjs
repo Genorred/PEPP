@@ -8,6 +8,7 @@ const nextConfig = {
       }
     ]
   },
+  reactStrictMode: false,
   webpack: {
     watchOptions: {
       poll: 800,

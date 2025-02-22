@@ -36,8 +36,6 @@ const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnUrl = searchParams.get("returnUrl");
-  const dispatch = useDispatch();
-
 
   const user = useSelector(userSlice.selectors.user);
   if (user) {
@@ -45,14 +43,20 @@ const Page = () => {
   }
 
   const { mutate: registerUser, isError, error } = useRegisterMutation({
-    onSuccess: data => {
-      const { __typename, ...result } = data.register;
-      dispatch(userSlice.actions.setUser(result));
+    onSuccess: (data) => {
+      router.push("/confirmation-email-sent");
     }
+    // onSuccess: data => {
+    //   const { __typename, ...result } = data.register;
+    //   dispatch(userSlice.actions.setUser(result));
+    // }
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    registerUser(values);
+    registerUser({
+      ...values,
+      returnUrl
+    });
   }
 
   return (

@@ -20,7 +20,7 @@ export const userSlice = createSlice({
   },
   reducers: {
     setUser: (state, action: PayloadAction<Partial<User> | null>) => {
-      state.user = {
+      state.user = action.payload && {
         ...action.payload,
         expireDate: Date.now() + 2419200000
       };

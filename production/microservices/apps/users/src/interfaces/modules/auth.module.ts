@@ -11,9 +11,10 @@ import authConfig from "../../infrastructure/config/auth.config";
 import { RedisModule } from "./redis.module";
 import { AuthUseCase } from "../../application/auth.use-case";
 import { TokenServiceImpl } from "../../infrastructure/services/token.service.impl";
+import { NotificationsModule } from "./notifications.module";
 
 @Module({
-  imports: [UsersModule, PassportModule, RedisModule,
+  imports: [UsersModule, PassportModule, RedisModule, NotificationsModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [authConfig.KEY],

@@ -12,7 +12,7 @@ const Ssr = async ({ id, data }: {
   const refreshToken = (await cookies()).get("refreshToken")?.value;
   const sub = refreshToken && Number(jwt.decode(refreshToken)?.sub);
   console.log( refreshToken &&jwt.decode(refreshToken));
-
+  console.log( data );
   if (sub === data.post.user.id) {
     return <Edit post={data} id={id} />;
   } else {

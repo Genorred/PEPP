@@ -13,7 +13,7 @@ services:
     container_name: ${GATEWAY_SERVICE_HOST}
     build:
       context: ../../production
-      dockerfile: ../deploy/docker/Dockerfile
+      dockerfile: microservices/Dockerfile
       args:
         SERVICE_NAME: gateway
     env_file:
@@ -33,7 +33,7 @@ services:
     container_name: ${USERS_SERVICE_HOST}
     build:
       context: ../../production
-      dockerfile: ../deploy/docker/Dockerfile
+      dockerfile: microservices/Dockerfile
       args:
         SERVICE_NAME: users
     env_file:
@@ -68,7 +68,7 @@ services:
       - ../../config/.env.test
     build:
       context: ../../production
-      dockerfile: ../deploy/docker/Dockerfile.client
+      dockerfile: client/Dockerfile
     ports:
       - "${CLIENT_PORT}:3000"
     networks:
@@ -77,7 +77,7 @@ services:
     container_name: ${POSTS_SERVICE_HOST}
     build:
       context: ../../production
-      dockerfile: ../deploy/docker/Dockerfile
+      dockerfile: microservices/Dockerfile
       args:
         SERVICE_NAME: posts
     env_file:

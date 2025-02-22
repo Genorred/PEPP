@@ -1,8 +1,11 @@
 import React, { useRef, useState } from "react";
 import { Separator } from "@/shared/ui/separator";
-import { GetCommentsByParentIdQuery, useInfiniteGetCommentsByParentIdQuery } from "@/shared/api/graphql/generated";
+import {
+  GetRepliesQuery,
+  GetRepliesQueryVariables,
+  useInfiniteGetRepliesQuery
+} from "@/shared/api/graphql/generated";
 import { useIntersectionObserver } from "usehooks-ts";
-import { GetCommentsByParentIdQueryVariables } from "@/shared/api/graphql/graphql";
 import Reply from "@/app/(pages)/(posts)/post/[id]/Reply";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/utils";
@@ -13,13 +16,13 @@ const Replies = ({ parentId, postId }: {
   parentId: number;
   postId: number;
 }) => {
-  const { data, isLoading, isError, fetchNextPage, hasNextPage } = useInfiniteGetCommentsByParentIdQuery({ parentId }, {
+  const { data, isLoading, isError, fetchNextPage, hasNextPage } = useInfiniteGetRepliesQuery({ parentId }, {
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.replies.totalPages - allPages.length > 1 ?
         {
           parentId,
           skipPages: allPages.length
-        } as GetCommentsByParentIdQueryVariables : undefined;
+        } as GetRepliesQueryVariables : undefined;
     }
   });
   const [ref] = useIntersectionObserver({
@@ -32,7 +35,7 @@ const Replies = ({ parentId, postId }: {
 
   const repliesEnum = useRef<Record<number, HTMLElement>>({});
   const commentMap = React.useMemo(() => {
-    const map = new Map<number, GetCommentsByParentIdQuery["replies"]["data"][number]>();
+    const map = new Map<number, GetRepliesQuery["replies"]["data"][number]>();
     data?.pages.forEach((page) =>
       page.replies.data.forEach((comment) => {
         map.set(comment.id, comment);

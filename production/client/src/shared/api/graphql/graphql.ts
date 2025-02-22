@@ -52,14 +52,6 @@ export type CreateReplyInput = {
   respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type CreateUserInput = {
-  email: Scalars['String']['input'];
-  google_id?: InputMaybe<Scalars['String']['input']>;
-  img?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  username: Scalars['String']['input'];
-};
-
 export type FindAlgorithmPostsInput = {
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
@@ -129,6 +121,13 @@ export type LoginInput = {
   password: Scalars['String']['input'];
 };
 
+export type RegisterInput = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  returnUrl?: InputMaybe<Scalars['String']['input']>;
+  username: Scalars['String']['input'];
+};
+
 export type RemovePostInput = {
   id: Scalars['Int']['input'];
 };
@@ -168,6 +167,13 @@ export type PostsIdQueryVariables = Exact<{
 
 
 export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number }> };
+
+export type ConfirmUserEmailMutationVariables = Exact<{
+  token: Scalars['String']['input'];
+}>;
+
+
+export type ConfirmUserEmailMutation = { __typename?: 'Mutation', confirmUserEmail: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any } };
 
 export type CreateCommentMutationVariables = Exact<{
   message: Scalars['String']['input'];
@@ -319,10 +325,11 @@ export type RegisterMutationVariables = Exact<{
   username: Scalars['String']['input'];
   password: Scalars['String']['input'];
   email: Scalars['String']['input'];
+  returnUrl?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any } };
+export type RegisterMutation = { __typename?: 'Mutation', register: boolean };
 
 export type UpdateDraftMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -357,6 +364,16 @@ export const PostsIdDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<PostsIdQuery, PostsIdQueryVariables>;
+export const ConfirmUserEmailDocument = new TypedDocumentString(`
+    mutation confirmUserEmail($token: String!) {
+  confirmUserEmail(confirmUserEmailInput: $token) {
+    username
+    email
+    id
+    createdAt
+  }
+}
+    `) as unknown as TypedDocumentString<ConfirmUserEmailMutation, ConfirmUserEmailMutationVariables>;
 export const CreateCommentDocument = new TypedDocumentString(`
     mutation createComment($message: String!, $postId: Int!) {
   createComment(createCommentInput: {message: $message, postId: $postId}) {
@@ -603,15 +620,10 @@ export const PublishDraftDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<PublishDraftMutation, PublishDraftMutationVariables>;
 export const RegisterDocument = new TypedDocumentString(`
-    mutation register($username: String!, $password: String!, $email: String!) {
+    mutation register($username: String!, $password: String!, $email: String!, $returnUrl: String) {
   register(
-    registerInput: {username: $username, email: $email, password: $password}
-  ) {
-    username
-    email
-    id
-    createdAt
-  }
+    registerInput: {username: $username, email: $email, password: $password, returnUrl: $returnUrl}
+  )
 }
     `) as unknown as TypedDocumentString<RegisterMutation, RegisterMutationVariables>;
 export const UpdateDraftDocument = new TypedDocumentString(`

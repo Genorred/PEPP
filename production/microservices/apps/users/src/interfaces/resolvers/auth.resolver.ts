@@ -5,6 +5,7 @@ import { CustomExecutionContext } from "@_shared/decorators/execution-context";
 import { Credentials, CustomContext } from "@_shared/types/CustomContext";
 import { UserResponse } from "../../domain/dto/response/returned-user.response";
 import { AuthUseCase } from "../../application/auth.use-case";
+import { RegisterInput } from "./dto-inputs/register.input";
 
 @Resolver()
 export class AuthResolver {
@@ -16,9 +17,14 @@ export class AuthResolver {
     return this.authService.login(loginInput, context);
   }
 
+  @Mutation(returns => Boolean)
+  register(@Args("registerInput") registerInput: RegisterInput) {
+    return this.authService.register(registerInput);
+  }
+
   @Mutation(returns => UserResponse)
-  register(@CustomExecutionContext() context: CustomContext, @Args("registerInput") registerInput: CreateUserInput) {
-    return this.authService.register(registerInput, context);
+  confirmUserEmail(@CustomExecutionContext() context: CustomContext, @Args("confirmUserEmailInput") registerInput: string) {
+    return this.authService.confirmUserEmail(registerInput, context);
   }
 
   @Mutation(returns => String)

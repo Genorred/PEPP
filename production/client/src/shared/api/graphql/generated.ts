@@ -73,14 +73,6 @@ export type CreateReplyInput = {
   respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type CreateUserInput = {
-  email: Scalars['String']['input'];
-  google_id?: InputMaybe<Scalars['String']['input']>;
-  img?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  username: Scalars['String']['input'];
-};
-
 export type Draft = {
   __typename?: 'Draft';
   body: Array<Scalars['JSON']['output']>;
@@ -170,6 +162,7 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  confirmUserEmail: UserResponse;
   createComment: Comment;
   createDraft: Draft;
   createPost: Post;
@@ -180,7 +173,7 @@ export type Mutation = {
   login: UserResponse;
   logout: Scalars['String']['output'];
   publishDraft: Post;
-  register: UserResponse;
+  register: Scalars['Boolean']['output'];
   removeComment: Comment;
   removeDraft: Draft;
   removePost: Post;
@@ -188,6 +181,11 @@ export type Mutation = {
   updateComment: Comment;
   updateDraft: Draft;
   updateUser: User;
+};
+
+
+export type MutationConfirmUserEmailArgs = {
+  confirmUserEmailInput: Scalars['String']['input'];
 };
 
 
@@ -237,7 +235,7 @@ export type MutationPublishDraftArgs = {
 
 
 export type MutationRegisterArgs = {
-  registerInput: CreateUserInput;
+  registerInput: RegisterInput;
 };
 
 
@@ -385,6 +383,13 @@ export type Recommendations = {
   totalPages: Scalars['Int']['output'];
 };
 
+export type RegisterInput = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  returnUrl?: InputMaybe<Scalars['String']['input']>;
+  username: Scalars['String']['input'];
+};
+
 export type RemovePostInput = {
   id: Scalars['Int']['input'];
 };
@@ -481,6 +486,13 @@ export type PostsIdQueryVariables = Exact<{
 
 
 export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number }> };
+
+export type ConfirmUserEmailMutationVariables = Exact<{
+  token: Scalars['String']['input'];
+}>;
+
+
+export type ConfirmUserEmailMutation = { __typename?: 'Mutation', confirmUserEmail: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any } };
 
 export type CreateCommentMutationVariables = Exact<{
   message: Scalars['String']['input'];
@@ -632,10 +644,11 @@ export type RegisterMutationVariables = Exact<{
   username: Scalars['String']['input'];
   password: Scalars['String']['input'];
   email: Scalars['String']['input'];
+  returnUrl?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any } };
+export type RegisterMutation = { __typename?: 'Mutation', register: boolean };
 
 export type UpdateDraftMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -694,6 +707,33 @@ useInfinitePostsIdQuery.getKey = (variables: PostsIdQueryVariables) => ['postsId
 
 
 usePostsIdQuery.fetcher = (variables: PostsIdQueryVariables, options?: RequestInit['headers']) => fetcher<PostsIdQuery, PostsIdQueryVariables>(PostsIdDocument, variables, options);
+
+export const ConfirmUserEmailDocument = `
+    mutation confirmUserEmail($token: String!) {
+  confirmUserEmail(confirmUserEmailInput: $token) {
+    username
+    email
+    id
+    createdAt
+  }
+}
+    `;
+
+export const useConfirmUserEmailMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<ConfirmUserEmailMutation, TError, ConfirmUserEmailMutationVariables, TContext>) => {
+    
+    return useMutation<ConfirmUserEmailMutation, TError, ConfirmUserEmailMutationVariables, TContext>(
+      ['confirmUserEmail'],
+      (variables?: ConfirmUserEmailMutationVariables) => fetcher<ConfirmUserEmailMutation, ConfirmUserEmailMutationVariables>(ConfirmUserEmailDocument, variables)(),
+      options
+    )};
+
+useConfirmUserEmailMutation.getKey = () => ['confirmUserEmail'];
+
+
+useConfirmUserEmailMutation.fetcher = (variables: ConfirmUserEmailMutationVariables, options?: RequestInit['headers']) => fetcher<ConfirmUserEmailMutation, ConfirmUserEmailMutationVariables>(ConfirmUserEmailDocument, variables, options);
 
 export const CreateCommentDocument = `
     mutation createComment($message: String!, $postId: Int!) {
@@ -1398,15 +1438,10 @@ usePublishDraftMutation.getKey = () => ['publishDraft'];
 usePublishDraftMutation.fetcher = (variables: PublishDraftMutationVariables, options?: RequestInit['headers']) => fetcher<PublishDraftMutation, PublishDraftMutationVariables>(PublishDraftDocument, variables, options);
 
 export const RegisterDocument = `
-    mutation register($username: String!, $password: String!, $email: String!) {
+    mutation register($username: String!, $password: String!, $email: String!, $returnUrl: String) {
   register(
-    registerInput: {username: $username, email: $email, password: $password}
-  ) {
-    username
-    email
-    id
-    createdAt
-  }
+    registerInput: {username: $username, email: $email, password: $password, returnUrl: $returnUrl}
+  )
 }
     `;
 

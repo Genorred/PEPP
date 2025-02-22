@@ -12,6 +12,9 @@ import clientConfig from "./infrastructure/config/client.config";
 import { SharedLoggerModule } from "@_shared/modules/logger-module";
 import redisConfig from "./infrastructure/config/redis.config";
 import { HealthModule } from "@_shared/modules/health.module";
+import { NotificationsModule } from "./interfaces/modules/notifications.module";
+import { UsersHealthModule } from "./interfaces/modules/users.health.module";
+import { ConfigModuleInitializer } from "./interfaces/modules/config.module";
 
 @Module({
   imports: [
@@ -22,17 +25,14 @@ import { HealthModule } from "@_shared/modules/health.module";
       },
       context: ({ req, res }) => ({ req, res })
     }),
-    ConfigModule.forRoot({
-      load: [googleConfig, authConfig, clientConfig, redisConfig],
-      expandVariables: true,
-      cache: true,
-      isGlobal: true
-    }),
+    ConfigModuleInitializer,
     SharedLoggerModule,
     PrismaModule,
     UsersModule,
     AuthModule,
-    HealthModule
+    HealthModule,
+    NotificationsModule,
+    UsersHealthModule
   ],
   providers: [PrismaService]
 })

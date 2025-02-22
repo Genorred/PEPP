@@ -16,6 +16,7 @@ import * as types from './graphql';
  */
 const documents = {
     "\n    query postsId ($token: String!) {\n        allPosts(findAllPostsInput: {\n            token: $token\n        })\n        {\n            id\n        }\n    }\n": types.PostsIdDocument,
+    "\n    mutation confirmUserEmail($token: String!) {\n        confirmUserEmail(confirmUserEmailInput: $token)\n        {\n            username\n            email\n            id\n            createdAt\n        }\n    }\n": types.ConfirmUserEmailDocument,
     "\n\n    mutation createComment($message: String!, $postId: Int!) {\n        createComment(createCommentInput: {\n            message: $message\n            postId: $postId\n        }) {\n            id\n        }\n    }\n": types.CreateCommentDocument,
     "\n    mutation createDraft($body: JSONObject!, $title: String!, $topics: [String!], $subTopics: [String!] ) {\n        createDraft(createDraftInput: {\n            body: $body\n            title: $title\n            topics: $topics\n            subTopics: $subTopics\n        }) {\n            id\n        }\n    }\n": types.CreateDraftDocument,
     "\n    mutation createPost($body: JSONObject!, $title: String!, $topics: [String!], $subTopics: [String!] ) {\n        createPost(createPostInput: {\n            body: $body\n            title: $title\n            topics: $topics\n            subTopics: $subTopics\n        }) {\n            id\n        }\n    }\n": types.CreatePostDocument,
@@ -33,7 +34,7 @@ const documents = {
     "\n    mutation logout {\n        logout \n    }\n": types.LogoutDocument,
     "\n    query postRecommendations($createdAt: SortOrder, $rating: SortOrder,\n        $skipPages: Int, $topics: [String!], $search: String) {\n\n        postsRecommendations (postRecommendationsInput: {\n            createdAt: $createdAt,\n            rating: $rating,\n            skipPages: $skipPages,\n            topics: $topics,\n            searchValue: $search\n        }) {\n            totalPages,\n            data {\n                id,\n                rating,\n                commentsQuantity,\n                reviewsQuantity,\n                img,\n                minutes,\n                title,\n                createdAt,\n                userId,\n                description,\n                version,\n                updatedAt\n                user {\n                    username\n                    occupation\n                    img\n                }\n                topics {\n                    title\n                }\n                subTopics {\n                    title\n                }\n            }\n\n\n        }\n    }\n": types.PostRecommendationsDocument,
     "\n    mutation publishDraft($id: Int!, $body: JSONObject, $title: String, $topics: [String!], $subTopics: [String!]) {\n        publishDraft(publishDraftInput: {\n            id: $id\n            body: $body\n            title: $title\n            topics: $topics\n            subTopics: $subTopics\n        }) {\n            id\n        }\n    }\n": types.PublishDraftDocument,
-    "\n    mutation register($username: String!, $password: String!, $email: String!) {\n        register(registerInput: {\n            username: $username\n            email: $email\n            password: $password\n        }) {\n            username\n            email\n            id\n            createdAt\n        }\n    }\n": types.RegisterDocument,
+    "\n    mutation register($username: String!, $password: String!, $email: String!, $returnUrl: String) {\n        register(registerInput: {\n            username: $username\n            email: $email\n            password: $password\n            returnUrl: $returnUrl\n        })\n    }\n": types.RegisterDocument,
     "\n    mutation updateDraft($id: Int!, $body: JSONObject, $title: String, $topics: [String!], $subTopics: [String!]) {\n        updateDraft(updateDraftInput: {\n            id: $id\n            topics: $topics\n            subTopics: $subTopics\n            body: $body\n            title: $title\n        }) {\n            id\n        }\n    }\n": types.UpdateDraftDocument,
 };
 
@@ -41,6 +42,10 @@ const documents = {
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    query postsId ($token: String!) {\n        allPosts(findAllPostsInput: {\n            token: $token\n        })\n        {\n            id\n        }\n    }\n"): typeof import('./graphql').PostsIdDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n    mutation confirmUserEmail($token: String!) {\n        confirmUserEmail(confirmUserEmailInput: $token)\n        {\n            username\n            email\n            id\n            createdAt\n        }\n    }\n"): typeof import('./graphql').ConfirmUserEmailDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -112,7 +117,7 @@ export function graphql(source: "\n    mutation publishDraft($id: Int!, $body: J
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n    mutation register($username: String!, $password: String!, $email: String!) {\n        register(registerInput: {\n            username: $username\n            email: $email\n            password: $password\n        }) {\n            username\n            email\n            id\n            createdAt\n        }\n    }\n"): typeof import('./graphql').RegisterDocument;
+export function graphql(source: "\n    mutation register($username: String!, $password: String!, $email: String!, $returnUrl: String) {\n        register(registerInput: {\n            username: $username\n            email: $email\n            password: $password\n            returnUrl: $returnUrl\n        })\n    }\n"): typeof import('./graphql').RegisterDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
