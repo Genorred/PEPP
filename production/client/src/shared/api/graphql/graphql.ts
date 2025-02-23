@@ -207,7 +207,7 @@ export type CreateReplyMutationVariables = Exact<{
   message: Scalars['String']['input'];
   parentId: Scalars['Int']['input'];
   postId: Scalars['Int']['input'];
-  respondedCommentId: Scalars['Int']['input'];
+  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -401,7 +401,7 @@ export const CreatePostDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<CreatePostMutation, CreatePostMutationVariables>;
 export const CreateReplyDocument = new TypedDocumentString(`
-    mutation createReply($message: String!, $parentId: Int!, $postId: Int!, $respondedCommentId: Int!) {
+    mutation createReply($message: String!, $parentId: Int!, $postId: Int!, $respondedCommentId: Int) {
   createReply(
     createReplyInput: {message: $message, postId: $postId, parentId: $parentId, respondedCommentId: $respondedCommentId}
   ) {

@@ -23,7 +23,7 @@ export class TokenServiceImpl implements TokenService {
   }
 
   generateToken(user: GenerateTokenDto, isAccess?: boolean) {
-    const payload: JwtPayload = { username: user?.username, sub: user?.id, role: user?.role };
+    const payload: JwtPayload = { sub: user?.id, role: user?.role };
     return this.jwtService.sign(payload, {
       expiresIn: isAccess ? "15m" : "21d"
     });
@@ -36,7 +36,7 @@ export class TokenServiceImpl implements TokenService {
     });
   }
 
-  setTokens(user: Pick<User, "id" | "username" | "role">, response: Response) {
+  setTokens(user: GenerateTokenDto, response: Response) {
     const accessToken = this.generateToken(user, true);
     const refreshToken = this.generateToken(user, false);
 

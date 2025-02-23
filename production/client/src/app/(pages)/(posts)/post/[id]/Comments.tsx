@@ -1,15 +1,43 @@
-import React from "react";
-import { CommentTemplate } from "./CommentTemplate";
-import { GetCommentsByPostIdQueryVariables, useInfiniteGetCommentsByPostIdQuery } from "@/shared/api/graphql/generated";
+import React, { useState } from "react";
+import { CommentTemplate, CommentTemplateI } from "./CommentTemplate";
+import {
+  GetCommentsByPostIdQueryVariables,
+  useCreateCommentMutation,
+  useInfiniteGetCommentsByPostIdQuery
+} from "@/shared/api/graphql/generated";
 import { useIntersectionObserver } from "usehooks-ts";
 import { Textarea } from "@/shared/ui/textarea";
 import { Button } from "@/shared/ui/button";
 import CommentForm from "./CommentForm";
 import Comment from "./Comment";
+import { useSelector } from "react-redux";
+import { userSlice } from "@/entities/User/model/user.slice";
 
 const Comments = ({ postId }: {
   postId: number
 }) => {
+  const [leavedComments, setLeavedComments] = useState<(CommentTemplateI & {
+    repliesQuantity: number
+  })[]>([]);
+  const user = useSelector(userSlice.selectors.user);
+  const { mutate: createComment } = useCreateCommentMutation({
+    onSuccess: (data, variables) => {
+      setLeavedComments(state => [...state, {
+        id: data.createComment.id,
+        ...variables,
+        user: user!,
+        createdAt: 'a moment ago',
+        repliesQuantity: 0
+      }]);
+    }
+  });
+  const onCreate = (replyMessage: string) => {
+    createComment({
+      message: replyMessage.trim(),
+      postId
+    });
+  };
+
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
     useInfiniteGetCommentsByPostIdQuery({ postId }, {
       getNextPageParam: (lastPage, allPages) => {
@@ -29,10 +57,15 @@ const Comments = ({ postId }: {
   });
   return (
     <div className="space-y-4">
-      <CommentForm postId={postId} />
+      <CommentForm onCreate={onCreate} />
+      {
+        leavedComments.map((comment) => (
+          <Comment comment={comment} key={comment.id} />
+        ))
+      }
       {data?.pages.map((page, index) => (
         page.comments.data.map((comment, index) => (
-          <Comment comment={{...comment, postId}} key={comment.id} />
+          <Comment comment={{ ...comment, postId }} key={comment.id} />
         ))
       ))}
     </div>

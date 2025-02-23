@@ -526,7 +526,7 @@ export type CreateReplyMutationVariables = Exact<{
   message: Scalars['String']['input'];
   parentId: Scalars['Int']['input'];
   postId: Scalars['Int']['input'];
-  respondedCommentId: Scalars['Int']['input'];
+  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -813,7 +813,7 @@ useCreatePostMutation.getKey = () => ['createPost'];
 useCreatePostMutation.fetcher = (variables: CreatePostMutationVariables, options?: RequestInit['headers']) => fetcher<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument, variables, options);
 
 export const CreateReplyDocument = `
-    mutation createReply($message: String!, $parentId: Int!, $postId: Int!, $respondedCommentId: Int!) {
+    mutation createReply($message: String!, $parentId: Int!, $postId: Int!, $respondedCommentId: Int) {
   createReply(
     createReplyInput: {message: $message, postId: $postId, parentId: $parentId, respondedCommentId: $respondedCommentId}
   ) {

@@ -34,7 +34,6 @@ export class AuthContext {
           const newAccessToken = this.jwtService.sign({
             sub: user.sub,
             role: user.role,
-            username: user.username
           } as JwtPayload, {
             expiresIn: accessTokenLife
           });

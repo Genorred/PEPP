@@ -10,7 +10,7 @@ import CommentForm from "@/app/(pages)/(posts)/post/[id]/CommentForm";
 
 export interface UserCommentTemplateI {
   username: string;
-  img?: string;
+  img?: string | null;
 }
 
 export interface CommentTemplateI {
@@ -30,8 +30,6 @@ interface Props {
   cardFooter?: React.ReactNode;
   replyFormProps: Omit<Parameters<typeof CommentForm>["0"], "state">;
 }
-
-const maxDepth = 3;
 
 export function CommentTemplate({
                                   comment,

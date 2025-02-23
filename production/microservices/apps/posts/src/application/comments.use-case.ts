@@ -20,8 +20,8 @@ export class CommentsUseCase {
   ) {
   }
 
-  addReplyToPostComment({ parentId, postId, respondedCommentId, ...data }: CurrentUserExtendT<CreateReplyInput>) {
-    return this.transaction.exec([
+  async addReplyToPostComment({ parentId, postId, respondedCommentId, ...data }: CurrentUserExtendT<CreateReplyInput>) {
+    return (await this.transaction.exec([
       this.commentsRepository.createReply({
         ...data,
         postId,
@@ -30,17 +30,17 @@ export class CommentsUseCase {
       }),
       this.commentsRepository.incrementRepliesQuantity(parentId),
       this.postsRepository.incrementComments(postId)
-    ]);
+    ]))[0];
   }
 
-  addCommentToPost({ postId, ...data }: CurrentUserExtendT<CreateCommentInput>) {
-    return this.transaction.exec([
+  async addCommentToPost({ postId, ...data }: CurrentUserExtendT<CreateCommentInput>) {
+    return (await this.transaction.exec([
       this.commentsRepository.create({
         ...data,
         postId
       }),
       this.postsRepository.incrementComments(postId)
-    ]);
+    ]))[0];
 
   }
 

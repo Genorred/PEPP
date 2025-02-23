@@ -1,9 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "@/shared/api/graphql/generated";
 import { rootReducer } from "@/shared/lib/redux";
 
+interface User {
+  username: string
+  email: string
+  id: number
+  createdAt: any
+  img?: string | null
+}
 type State = {
-  user: Partial<User> & {
+  user: User & {
     expireDate: number
   } | null
 };
@@ -19,7 +25,7 @@ export const userSlice = createSlice({
     user: state => state.user
   },
   reducers: {
-    setUser: (state, action: PayloadAction<Partial<User> | null>) => {
+    setUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload && {
         ...action.payload,
         expireDate: Date.now() + 2419200000
