@@ -1,12 +1,12 @@
 import { Version } from "../../entities/version.entity";
-import { FindOneVersionInput } from "../../dto/versions/find-one-version.input";
-import { FindManyInput } from "../../dto/versions/find-many.input";
-import { CreateVersionInput } from "../../dto/versions/create-version.input";
+import { FindOneVersionDto } from "../../dto/versions/find-one-version.dto";
+import { FindManyDto } from "../../dto/versions/find-many.dto";
+import { CreateVersionDto } from "../../dto/versions/create-version.dto";
 
 export abstract class VersionsRepository {
-  abstract create(createVersionInput: CreateVersionInput): Promise<Version>
+  abstract create(createVersionInput: CreateVersionDto): Promise<Version>
 
-  abstract findMany(findByPostInput: FindManyInput): Promise<Version[]>
+  abstract findMany(findByPostInput: FindManyDto): Promise<Version[]>
 
-  abstract findOne(findOneVersion: FindOneVersionInput): Promise<Version>
+  abstract findOne(findOneVersion: FindOneVersionDto): Promise<Version>
 }

@@ -1,9 +1,9 @@
-import { CreateVersionInput } from "../../../domain/dto/versions/create-version.input";
 import { Field, InputType, Int } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
+import { CreateVersionUseCaseDto } from "../../../application/dto/create-version-use-case.dto";
 
 @InputType()
-export class GqlCreateVersionInput {
+export class CreateVersionInput implements Omit<CreateVersionUseCaseDto, 'userId'>{
   @Field({nullable: true})
   title?: string;
   // @Field()

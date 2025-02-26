@@ -1,2 +1,2 @@
 export { default as Post } from "./ui/PostCard";
-export { GeneralPostI } from "./model";
+export type { GeneralPostI } from "./model";

@@ -50,7 +50,7 @@ const PostsList = () => {
           <Container className="flex gap-4 flex-wrap" variant={"section"}>
             {data.pages.map(posts =>
               posts.postsRecommendations.data.map(post =>
-                <Post key={post.id} {...post} url={`/post/${post.id}`} />
+                <Post key={post.id} {...post} />
               )
             )}
           </Container>

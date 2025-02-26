@@ -1,13 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { rootReducer } from "@/shared/lib/redux";
+import { User } from "@/entities/User/model/User";
 
-interface User {
-  username: string
-  email: string
-  id: number
-  createdAt: any
-  img?: string | null
-}
 type State = {
   user: User & {
     expireDate: number

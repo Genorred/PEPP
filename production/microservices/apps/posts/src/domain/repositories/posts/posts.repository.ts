@@ -4,22 +4,22 @@ import { Comment } from "../../entities/comment.entity";
 import { GetByPostInput } from "../../dto/comments/get-by-post.input";
 import { CommentsByPost } from "../../dto/comments/output/comments-by-post.output";
 import { GetByParentCommentInput } from "../../dto/comments/get-by-parent-comment.input";
-import { CreatePostInput, CreatePostInputService } from "../../dto/posts/create-post.input";
-import { UpdatePostInput } from "../../dto/posts/publish-post.input";
+import { CreatePostDto, CreatePostServiceDto } from "../../dto/posts/create-post.dto";
+import { UpdatePostInput } from "../../dto/posts/publish-post.dto";
 import { Post } from "../../entities/post.entity";
-import { FindManyInput } from "../../dto/posts/find-many.input";
-import { RemovePostInputService } from "../../dto/posts/remove-post.input";
-import { FindPostInput, FindPostInputService } from "../../dto/posts/find-post.input";
-import { UpdatePostInputService } from "../../dto/posts/update-post.input";
+import { FindManyDto } from "../../dto/posts/find-many.dto";
+import { RemovePostInputService } from "../../dto/posts/remove-post.dto";
+import { FindPostDto, FindPostInputService } from "../../dto/posts/find-post.dto";
+import { UpdatePostInputService } from "../../dto/posts/update-post.dto";
 
 export abstract class PostsRepository {
-  abstract create(input: CreatePostInputService): Promise<Post>;
+  abstract create(input: CreatePostServiceDto): Promise<Post>;
 
-  abstract findOne(input: FindPostInput): Promise<Post>;
+  abstract findOne(input: FindPostDto): Promise<Post>;
 
-  abstract findMany(input?: FindManyInput): Promise<Post[]>;
+  abstract findMany(input?: FindManyDto): Promise<Post[]>;
 
-  abstract count(input?: FindManyInput): Promise<number>;
+  abstract count(input?: FindManyDto): Promise<number>;
 
   abstract update(input: UpdatePostInputService): Promise<Post>;
 

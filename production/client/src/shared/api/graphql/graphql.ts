@@ -52,6 +52,14 @@ export type CreateReplyInput = {
   respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type CreateVersionInput = {
+  body: Scalars['JSONObject']['input'];
+  postId: Scalars['Int']['input'];
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 export type FindAlgorithmPostsInput = {
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
@@ -64,6 +72,10 @@ export type FindAllPostsInput = {
   token: Scalars['String']['input'];
 };
 
+export type FindAllUsersInput = {
+  token: Scalars['String']['input'];
+};
+
 export type FindByPostInput = {
   postId: Scalars['Int']['input'];
 };
@@ -72,16 +84,9 @@ export type FindDraftInput = {
   id: Scalars['Int']['input'];
 };
 
-export type FindManyUserInput = {
-  email?: InputMaybe<Scalars['String']['input']>;
-  google_id?: InputMaybe<Scalars['String']['input']>;
-  img?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  username?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type FindOneUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -91,10 +96,16 @@ export type FindOneVersionInput = {
 
 export type FindPostInput = {
   id: Scalars['Int']['input'];
+  isHidden?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type FindUserPostsInput = {
+  createdAt?: InputMaybe<SortOrder>;
+  rating?: InputMaybe<SortOrder>;
   skipPages?: InputMaybe<Scalars['Int']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
+  topicsOrSubTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   userId: Scalars['Int']['input'];
 };
 
@@ -106,14 +117,6 @@ export type GetByParentCommentInput = {
 export type GetByPostInput = {
   postId: Scalars['Int']['input'];
   skipPages?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type GqlCreateVersionInput = {
-  body: Scalars['JSONObject']['input'];
-  postId: Scalars['Int']['input'];
-  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
-  title?: InputMaybe<Scalars['String']['input']>;
-  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type LoginInput = {
@@ -168,12 +171,19 @@ export type PostsIdQueryVariables = Exact<{
 
 export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number }> };
 
+export type UsersIdsQueryVariables = Exact<{
+  token: Scalars['String']['input'];
+}>;
+
+
+export type UsersIdsQuery = { __typename?: 'Query', allUsers: Array<{ __typename?: 'User', id: number }> };
+
 export type ConfirmUserEmailMutationVariables = Exact<{
   token: Scalars['String']['input'];
 }>;
 
 
-export type ConfirmUserEmailMutation = { __typename?: 'Mutation', confirmUserEmail: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any, img?: string | null } };
+export type ConfirmUserEmailMutation = { __typename?: 'Mutation', confirmUserEmail: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any, occupation?: string | null, img?: string | null } };
 
 export type CreateCommentMutationVariables = Exact<{
   message: Scalars['String']['input'];
@@ -279,12 +289,22 @@ export type TopicsQueryVariables = Exact<{
 export type TopicsQuery = { __typename?: 'Query', topics: Array<{ __typename?: 'Topic', title: string }> };
 
 export type GetUserPostsQueryVariables = Exact<{
-  userId: Scalars['Int']['input'];
+  createdAt?: InputMaybe<SortOrder>;
+  rating?: InputMaybe<SortOrder>;
   skipPages?: InputMaybe<Scalars['Int']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  userId: Scalars['Int']['input'];
 }>;
 
 
 export type GetUserPostsQuery = { __typename?: 'Query', userPosts: { __typename?: 'Recommendations', totalPages: number, data: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img?: string | null }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
+
+export type GetUserProfileInfoQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type GetUserProfileInfoQuery = { __typename?: 'Query', user: { __typename?: 'User', id: number, createdAt: any, img?: string | null, updatedAt: any, occupation?: string | null, username: string } };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String']['input'];
@@ -364,6 +384,13 @@ export const PostsIdDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<PostsIdQuery, PostsIdQueryVariables>;
+export const UsersIdsDocument = new TypedDocumentString(`
+    query usersIds($token: String!) {
+  allUsers(findManyInput: {token: $token}) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<UsersIdsQuery, UsersIdsQueryVariables>;
 export const ConfirmUserEmailDocument = new TypedDocumentString(`
     mutation confirmUserEmail($token: String!) {
   confirmUserEmail(confirmUserEmailInput: $token) {
@@ -371,6 +398,7 @@ export const ConfirmUserEmailDocument = new TypedDocumentString(`
     email
     id
     createdAt
+    occupation
     img
   }
 }
@@ -531,8 +559,10 @@ export const TopicsDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<TopicsQuery, TopicsQueryVariables>;
 export const GetUserPostsDocument = new TypedDocumentString(`
-    query getUserPosts($userId: Int!, $skipPages: Int) {
-  userPosts(findUserPostsInput: {userId: $userId, skipPages: $skipPages}) {
+    query getUserPosts($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $topics: [String!], $userId: Int!) {
+  userPosts(
+    findUserPostsInput: {createdAt: $createdAt, rating: $rating, skipPages: $skipPages, topics: $topics, userId: $userId}
+  ) {
     totalPages
     data {
       id
@@ -562,6 +592,18 @@ export const GetUserPostsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetUserPostsQuery, GetUserPostsQueryVariables>;
+export const GetUserProfileInfoDocument = new TypedDocumentString(`
+    query getUserProfileInfo($id: Int!) {
+  user(findOneUserInput: {id: $id}) {
+    id
+    createdAt
+    img
+    updatedAt
+    occupation
+    username
+  }
+}
+    `) as unknown as TypedDocumentString<GetUserProfileInfoQuery, GetUserProfileInfoQueryVariables>;
 export const LoginDocument = new TypedDocumentString(`
     mutation login($password: String!, $email: String!) {
   login(loginInput: {email: $email, password: $password}) {

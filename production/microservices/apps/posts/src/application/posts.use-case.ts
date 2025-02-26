@@ -1,19 +1,20 @@
 import { PostsRepository } from "../domain/repositories/posts/posts.repository";
 import { SearchRepository } from "../domain/repositories/posts/search.repository";
 import { PreferencesRepository } from "../domain/repositories/posts/preferenses.repository";
-import { CreatePostInput, CreatePostInputService } from "../domain/dto/posts/create-post.input";
+import { CreatePostDto, CreatePostServiceDto } from "../domain/dto/posts/create-post.dto";
 import { Inject, UnauthorizedException } from "@nestjs/common";
-import { FindAllPostsInput } from "../domain/dto/posts/_nextjs_find-posts.input";
+import { FindAllPostsDto } from "../domain/dto/posts/_nextjs_find-posts.dto";
 import FRONTEND_SERVER from "../infrastructure/config/frontend-server";
 import { ConfigType } from "@nestjs/config";
-import { FindPostInput, FindPostInputService } from "../domain/dto/posts/find-post.input";
-import { FindAlgorithmPostsInput } from "../domain/dto/posts/find-algorithm-posts.input";
+import { FindPostDto, FindPostInputService } from "../domain/dto/posts/find-post.dto";
+import { FindAlgorithmPostsDto } from "../domain/dto/posts/find-algorithm-posts.dto";
 import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
-import { RemovePostInputService } from "../domain/dto/posts/remove-post.input";
+import { RemovePostInputService } from "../domain/dto/posts/remove-post.dto";
 import { PostsSecurityCheckService } from "../domain/domain_services/posts.security.check.service";
 import { ClientCacheRepository } from "../domain/repositories/client.cache.repository";
-import { UpdatePostInputService } from "../domain/dto/posts/update-post.input";
+import { UpdatePostInputService } from "../domain/dto/posts/update-post.dto";
 import { Recommendations } from "../interfaces/dto/posts/output/recommendations.output";
+import { FindUserPostsDto } from "../domain/dto/posts/find-user-posts.dto";
 
 export class PostsUseCase {
   constructor(
@@ -25,13 +26,13 @@ export class PostsUseCase {
     private readonly preferencesService: PreferencesRepository) {
   }
 
-  async create(createPostInput: CreatePostInputService) {
+  async create(createPostInput: CreatePostServiceDto) {
     const post = await this.postsRepository.create(createPostInput);
     void this.searchService.indexPost(post);
     return post;
   }
 
-  findAll(findAllPostsInput: FindAllPostsInput) {
+  findAll(findAllPostsInput: FindAllPostsDto) {
     const { token } = findAllPostsInput;
     if (this.configService.token === token) {
       return this.postsRepository.findMany({});
@@ -40,21 +41,31 @@ export class PostsUseCase {
     }
   }
 
-  async findUserPosts(userId: number, skip: number = 0): Promise<Recommendations> {
+  async findUserPosts(input: FindUserPostsDto): Promise<Recommendations> {
+    const { userId, skipPages, rating, topics, subTopics, topicsOrSubTopics, createdAt } = input;
     const pageSize = 20;
     const params = {
       userId,
-      take: pageSize,
-      skip
+      rating,
+      topics,
+      subTopics,
+      topicsOrSubTopics,
+      createdAt
     }
     const [data, totalCount] = await Promise.all([
-      this.postsRepository.findMany(params),
+      this.postsRepository.findMany(
+        {
+          ...params,
+          take: pageSize,
+          skip: skipPages,
+        }
+      ),
       this.postsRepository.count(params)
     ]);
     return {
       totalPages: Math.max(Math.floor(totalCount / pageSize), 1),
       data
-    }
+    };
   }
 
   async findOne(input: FindPostInputService) {
@@ -92,7 +103,7 @@ export class PostsUseCase {
     return this.postsRepository.remove(input);
   }
 
-  async recommendations(recommendationsInput: CurrentUserExtendT<FindAlgorithmPostsInput>) {
+  async recommendations(recommendationsInput: CurrentUserExtendT<FindAlgorithmPostsDto>) {
     const { userId, skipPages, ...data } = recommendationsInput;
     const { dislikedPosts, likedPosts, pressedPosts, recentlyShowedPosts } =
       (userId ? await this.preferencesService.get(userId, !skipPages) : {

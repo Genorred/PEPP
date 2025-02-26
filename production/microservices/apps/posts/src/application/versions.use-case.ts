@@ -1,13 +1,13 @@
 import { Args, Query } from "@nestjs/graphql";
 import { Version } from "../domain/entities/version.entity";
 import { FindByPostInput } from "../interfaces/dto/versions/find-by-post.input";
-import { FindOneVersionInput } from "../domain/dto/versions/find-one-version.input";
+import { FindOneVersionDto } from "../domain/dto/versions/find-one-version.dto";
 import { VersionsRepository } from "../domain/repositories/versions/versions.repository";
 import { PostsRepository } from "../domain/repositories/posts/posts.repository";
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { VersionIsHiddenService } from "../domain/domain_services/version-is-hidden.service";
 import { Transaction } from "../domain/repositories/transaction";
-import { CreateVersionInput } from "./dto/create-version.input";
+import { CreateVersionUseCaseDto } from "./dto/create-version-use-case.dto";
 import { PostsUow } from "../domain/UoW/posts.uow";
 import { Post } from "../domain/entities/post.entity";
 import { SearchRepository } from "../domain/repositories/posts/search.repository";
@@ -23,7 +23,7 @@ export class VersionsUseCase {
   ) {
   }
 
-  async create(createVersionInput: CreateVersionInput) {
+  async create(createVersionInput: CreateVersionUseCaseDto) {
     const { postId, ...data } = createVersionInput;
 
     return await this.postsUow.run(async ({ postsRepository, versionsRepository }) => {
@@ -51,7 +51,7 @@ export class VersionsUseCase {
     return versions;
   }
 
-  async findOne(findOneVersion: FindOneVersionInput): Promise<Version> {
+  async findOne(findOneVersion: FindOneVersionDto): Promise<Version> {
     const version = await this.versionsRepository.findOne(findOneVersion);
     const post = await this.postsRepository.findOne({ id: version.postId });
     this.versionIdHiddenService.isHidden(post);

@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { CreatePostInputService } from "../domain/dto/posts/create-post.input";
+import { CreatePostServiceDto } from "../domain/dto/posts/create-post.dto";
 import { PrismaService } from "../infrastructure/repository-impls/prismaDb/prisma.service";
 import { TopicsRepositoryImpl } from "../infrastructure/repository-impls/topics.repository.impl";
-import { FindPostInput } from "../domain/dto/posts/find-post.input";
+import { FindPostDto } from "../domain/dto/posts/find-post.dto";
 import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
-import { UpdatePostInput } from "../domain/dto/posts/update-post.input";
+import { UpdatePostDto } from "../domain/dto/posts/update-post.dto";
 import { PostsRepository } from "../domain/repositories/posts/posts.repository";
 import { PublishDraftInputService } from "../domain/dto/drafts/publish-draft.input";
 import { DraftsRepository } from "../domain/repositories/drafts/drafts.repository";

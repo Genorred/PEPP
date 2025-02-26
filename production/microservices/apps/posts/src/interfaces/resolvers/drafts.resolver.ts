@@ -6,10 +6,11 @@ import { CreateDraftInputService } from "../../domain/dto/drafts/create-draft.in
 import { UpdateDraftInput, UpdateDraftInputService } from "../../domain/dto/drafts/update-draft.input";
 import { Post } from "../../domain/entities/post.entity";
 import { DraftsRepository } from "../../domain/repositories/drafts/drafts.repository";
-import { RemovePostInput } from "../../domain/dto/posts/remove-post.input";
+import { RemovePostDto } from "../../domain/dto/posts/remove-post.dto";
 import { FindDraftInput } from "../dto/drafts/find-draft.input";
 import { CreateDraftInput } from "../dto/drafts/create-draft.input";
 import useAuth from "@_shared/auth-guard/useAuth";
+import { RemovePostInput } from "../dto/posts/remove-post.input";
 
 @Resolver(() => Draft)
 export class DraftsResolver {

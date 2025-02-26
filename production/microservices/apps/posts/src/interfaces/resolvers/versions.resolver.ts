@@ -1,13 +1,14 @@
 import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
 import { FindByPostInput } from "../dto/versions/find-by-post.input";
-import { FindOneVersionInput } from "../../domain/dto/versions/find-one-version.input";
+import { FindOneVersionDto } from "../../domain/dto/versions/find-one-version.dto";
 import { Version } from "../../domain/entities/version.entity";
 import { VersionsUseCase } from "../../application/versions.use-case";
-import { CreateVersionInput } from "../../domain/dto/versions/create-version.input";
+import { CreateVersionDto } from "../../domain/dto/versions/create-version.dto";
 import { Post } from "../../domain/entities/post.entity";
-import { GqlCreateVersionInput } from "../dto/versions/create-version.input";
 import { CurrentUser, CurrentUserI } from "@_shared/auth-guard/CurrentUser";
 import useAuth from "@_shared/auth-guard/useAuth";
+import { FindOneVersionInput } from "../dto/versions/find-one-version.input";
+import { CreateVersionInput } from "../dto/versions/create-version.input";
 
 @Resolver(() => Version)
 export class VersionsResolver {
@@ -16,7 +17,7 @@ export class VersionsResolver {
 
   @useAuth()
   @Mutation(() => Post)
-  createVersion(@Args('createVersionInput') createVersionInput: GqlCreateVersionInput, @CurrentUser() user: CurrentUserI): Promise<Post> {
+  createVersion(@Args('createVersionInput') createVersionInput: CreateVersionInput, @CurrentUser() user: CurrentUserI): Promise<Post> {
     return this.versionsService.create({...createVersionInput, userId: user?.sub });
   }
 

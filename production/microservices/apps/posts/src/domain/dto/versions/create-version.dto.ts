@@ -1,5 +1,4 @@
-
-export class CreateVersionInput {
+export class CreateVersionDto {
   title: string;
   description?: string;
   body: any;

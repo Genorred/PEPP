@@ -13,6 +13,10 @@ export const Mapping: MappingTypeMapping = {
       type: "text"
       // boost: 3,
     },
+    userId: {
+      type: "text"
+      // boost: 3,
+    },
     description: {
       type: "text"
       // boost: 2,

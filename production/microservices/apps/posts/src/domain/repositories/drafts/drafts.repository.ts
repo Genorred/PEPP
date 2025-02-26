@@ -1,5 +1,5 @@
 import { Draft } from "../../entities/draft.entity";
-import { RemovePostInputService } from "../../dto/posts/remove-post.input";
+import { RemovePostInputService } from "../../dto/posts/remove-post.dto";
 import { FindDraftInputService } from "../../dto/drafts/find-draft.input";
 import { FindManyDraftsInput } from "../../dto/drafts/find-many-drafts.input";
 import { CreateDraftInputService } from "../../dto/drafts/create-draft.input";

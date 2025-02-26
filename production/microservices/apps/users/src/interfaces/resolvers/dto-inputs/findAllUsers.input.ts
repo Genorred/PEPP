@@ -1,8 +1,7 @@
 import { Field, InputType } from "@nestjs/graphql";
 
 @InputType()
-export class FindAllPostsInput {
+export class FindAllUsersInput {
   @Field()
   token: string;
-
 }

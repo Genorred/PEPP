@@ -55,6 +55,14 @@ input CreateReplyInput {
   respondedCommentId: Int
 }
 
+input CreateVersionInput {
+  body: JSONObject!
+  postId: Int!
+  subTopics: [String!]
+  title: String
+  topics: [String!]
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -89,6 +97,10 @@ input FindAllPostsInput {
   token: String!
 }
 
+input FindAllUsersInput {
+  token: String!
+}
+
 input FindByPostInput {
   postId: Int!
 }
@@ -97,16 +109,9 @@ input FindDraftInput {
   id: Int!
 }
 
-input FindManyUserInput {
-  email: String
-  google_id: String
-  img: String
-  password: String
-  username: String
-}
-
 input FindOneUserInput {
   email: String
+  id: Int
   username: String
 }
 
@@ -116,10 +121,16 @@ input FindOneVersionInput {
 
 input FindPostInput {
   id: Int!
+  isHidden: Boolean
 }
 
 input FindUserPostsInput {
+  createdAt: SortOrder
+  rating: SortOrder
   skipPages: Int
+  subTopics: [String!]
+  topics: [String!]
+  topicsOrSubTopics: [String!]
   userId: Int!
 }
 
@@ -131,14 +142,6 @@ input GetByParentCommentInput {
 input GetByPostInput {
   postId: Int!
   skipPages: Int
-}
-
-input GqlCreateVersionInput {
-  body: JSONObject!
-  postId: Int!
-  subTopics: [String!]
-  title: String
-  topics: [String!]
 }
 
 """
@@ -162,7 +165,7 @@ type Mutation {
   createDraft(createDraftInput: CreateDraftInput!): Draft!
   createPost(createPostInput: CreatePostInput!): Post!
   createReply(createReplyInput: CreateReplyInput!): Comment!
-  createVersion(createVersionInput: GqlCreateVersionInput!): Post!
+  createVersion(createVersionInput: CreateVersionInput!): Post!
   expose(exposePostInput: Float!): Post!
   hide(hidePostInput: Float!): Post!
   login(loginInput: LoginInput!): UserResponse!
@@ -200,6 +203,7 @@ type Post {
 
 type Query {
   allPosts(findAllPostsInput: FindAllPostsInput!): [Post!]!
+  allUsers(findManyInput: FindAllUsersInput!): [User!]!
   comment(id: Int!): Comment!
   comments(getCommentsByPostInput: GetByPostInput!): CommentsByPost!
   draft(findDraftInput: FindDraftInput!): Draft!
@@ -208,10 +212,9 @@ type Query {
   postsRecommendations(postRecommendationsInput: FindAlgorithmPostsInput!): Recommendations!
   replies(getRepliesByCommentInput: GetByParentCommentInput!): CommentsByPost!
   topics(title: String): [Topic!]!
-  user(loginInput: FindOneUserInput!): User!
+  user(findOneUserInput: FindOneUserInput!): User!
   userDrafts: [Draft!]!
   userPosts(findUserPostsInput: FindUserPostsInput!): Recommendations!
-  users(findManyInput: FindManyUserInput!): [User!]!
   version(findVersionInput: FindOneVersionInput!): [Version!]!
 }
 

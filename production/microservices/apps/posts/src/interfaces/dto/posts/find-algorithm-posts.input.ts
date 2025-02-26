@@ -1,16 +1,13 @@
 import { Field, InputType, Int, registerEnumType } from "@nestjs/graphql";
-
-enum SortOrder {
-  ASC = "ASC",
-  DESC = "DESC",
-}
+import { FindAlgorithmPostsDto } from "../../../domain/dto/posts/find-algorithm-posts.dto";
+import { SortOrder } from "../../../domain/sort-order";
 
 registerEnumType(SortOrder, {
   name: "SortOrder"
 });
 
 @InputType()
-export class FindAlgorithmPostsInput {
+export class FindAlgorithmPostsInput implements FindAlgorithmPostsDto{
   @Field(() => SortOrder, { nullable: true })
   createdAt?: SortOrder;
   @Field(() => SortOrder, { nullable: true })

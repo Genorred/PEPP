@@ -1,26 +1,28 @@
 import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver, ResolveReference } from "@nestjs/graphql";
 import { Post } from "../../domain/entities/post.entity";
-import { CreatePostInput } from "../../domain/dto/posts/create-post.input";
+import { CreatePostDto } from "../../domain/dto/posts/create-post.dto";
 import { User } from "../../domain/entities/user.entity";
 import { CurrentUser, CurrentUserI } from "@_shared/auth-guard/CurrentUser";
 import { JwtPayload } from "@_shared/entities/jwt.entity";
 import UseAuth from "@_shared/auth-guard/useAuth";
-import { CreateVersionPostInput } from "../../domain/dto/posts/create-version-post.input";
 import { Inject, UnauthorizedException } from "@nestjs/common";
 import FRONTEND_SERVER from "../../infrastructure/config/frontend-server";
 import { ConfigType } from "@nestjs/config";
-import { FindAllPostsInput } from "../../domain/dto/posts/_nextjs_find-posts.input";
-import { FindAlgorithmPostsInput } from "../../domain/dto/posts/find-algorithm-posts.input";
+import { FindAlgorithmPostsDto } from "../../domain/dto/posts/find-algorithm-posts.dto";
 import { Recommendations } from "../dto/posts/output/recommendations.output";
 
 import { Comment } from "../../domain/entities/comment.entity";
 import { PostsUseCase } from "../../application/posts.use-case";
-import { RemovePostInput } from "../../domain/dto/posts/remove-post.input";
+import { RemovePostDto } from "../../domain/dto/posts/remove-post.dto";
 import { PostsRepository } from "../../domain/repositories/posts/posts.repository";
 import { FindUserPostsInput } from "../dto/posts/find-user-posts-input";
 import { FindPostInput } from "../dto/posts/find-post.input";
 import { UpdatePostInput } from "../dto/posts/update-post.input";
 import useAuth from "@_shared/auth-guard/useAuth";
+import { CreatePostInput } from "../dto/posts/create-post.input";
+import { FindAllPostsInput } from "../dto/posts/_nextjs_find-posts.input";
+import { RemovePostInput } from "../dto/posts/remove-post.input";
+import { FindAlgorithmPostsInput } from "../dto/posts/find-algorithm-posts.input";
 
 @Resolver(() => Post)
 export class PostsResolver {
@@ -37,7 +39,7 @@ export class PostsResolver {
 
   @Query(() => Recommendations, { name: "userPosts" })
   findUserPosts(@Args("findUserPostsInput") findUserPostsInput: FindUserPostsInput ) {
-    return this.postsService.findUserPosts(findUserPostsInput.userId, findUserPostsInput.skipPages);
+    return this.postsService.findUserPosts(findUserPostsInput);
   }
 
   @Query(() => Recommendations, { name: "postsRecommendations" })
@@ -52,7 +54,7 @@ export class PostsResolver {
 
   // @useAuth()
   // @Mutation(() => Post)
-  // async updatePost(@Args("updatePostInput") updatePostInput: UpdatePostInput, @CurrentUser() user: CurrentUserI) {
+  // async updatePost(@Args("updatePostInput") updatePostInput: UpdatePostDto, @CurrentUser() user: CurrentUserI) {
   //   return this.postsService.update({ ...updatePostInput, userId: user?.sub });
   // }
 

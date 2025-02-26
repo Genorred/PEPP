@@ -73,6 +73,14 @@ export type CreateReplyInput = {
   respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type CreateVersionInput = {
+  body: Scalars['JSONObject']['input'];
+  postId: Scalars['Int']['input'];
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 export type Draft = {
   __typename?: 'Draft';
   body: Array<Scalars['JSON']['output']>;
@@ -103,6 +111,10 @@ export type FindAllPostsInput = {
   token: Scalars['String']['input'];
 };
 
+export type FindAllUsersInput = {
+  token: Scalars['String']['input'];
+};
+
 export type FindByPostInput = {
   postId: Scalars['Int']['input'];
 };
@@ -111,16 +123,9 @@ export type FindDraftInput = {
   id: Scalars['Int']['input'];
 };
 
-export type FindManyUserInput = {
-  email?: InputMaybe<Scalars['String']['input']>;
-  google_id?: InputMaybe<Scalars['String']['input']>;
-  img?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  username?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type FindOneUserInput = {
   email?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -130,10 +135,16 @@ export type FindOneVersionInput = {
 
 export type FindPostInput = {
   id: Scalars['Int']['input'];
+  isHidden?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type FindUserPostsInput = {
+  createdAt?: InputMaybe<SortOrder>;
+  rating?: InputMaybe<SortOrder>;
   skipPages?: InputMaybe<Scalars['Int']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
+  topicsOrSubTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   userId: Scalars['Int']['input'];
 };
 
@@ -145,14 +156,6 @@ export type GetByParentCommentInput = {
 export type GetByPostInput = {
   postId: Scalars['Int']['input'];
   skipPages?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type GqlCreateVersionInput = {
-  body: Scalars['JSONObject']['input'];
-  postId: Scalars['Int']['input'];
-  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
-  title?: InputMaybe<Scalars['String']['input']>;
-  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type LoginInput = {
@@ -210,7 +213,7 @@ export type MutationCreateReplyArgs = {
 
 
 export type MutationCreateVersionArgs = {
-  createVersionInput: GqlCreateVersionInput;
+  createVersionInput: CreateVersionInput;
 };
 
 
@@ -297,6 +300,7 @@ export type Post = {
 export type Query = {
   __typename?: 'Query';
   allPosts: Array<Post>;
+  allUsers: Array<User>;
   comment: Comment;
   comments: CommentsByPost;
   draft: Draft;
@@ -308,13 +312,17 @@ export type Query = {
   user: User;
   userDrafts: Array<Draft>;
   userPosts: Recommendations;
-  users: Array<User>;
   version: Array<Version>;
 };
 
 
 export type QueryAllPostsArgs = {
   findAllPostsInput: FindAllPostsInput;
+};
+
+
+export type QueryAllUsersArgs = {
+  findManyInput: FindAllUsersInput;
 };
 
 
@@ -359,17 +367,12 @@ export type QueryTopicsArgs = {
 
 
 export type QueryUserArgs = {
-  loginInput: FindOneUserInput;
+  findOneUserInput: FindOneUserInput;
 };
 
 
 export type QueryUserPostsArgs = {
   findUserPostsInput: FindUserPostsInput;
-};
-
-
-export type QueryUsersArgs = {
-  findManyInput: FindManyUserInput;
 };
 
 
@@ -487,12 +490,19 @@ export type PostsIdQueryVariables = Exact<{
 
 export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number }> };
 
+export type UsersIdsQueryVariables = Exact<{
+  token: Scalars['String']['input'];
+}>;
+
+
+export type UsersIdsQuery = { __typename?: 'Query', allUsers: Array<{ __typename?: 'User', id: number }> };
+
 export type ConfirmUserEmailMutationVariables = Exact<{
   token: Scalars['String']['input'];
 }>;
 
 
-export type ConfirmUserEmailMutation = { __typename?: 'Mutation', confirmUserEmail: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any, img?: string | null } };
+export type ConfirmUserEmailMutation = { __typename?: 'Mutation', confirmUserEmail: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any, occupation?: string | null, img?: string | null } };
 
 export type CreateCommentMutationVariables = Exact<{
   message: Scalars['String']['input'];
@@ -598,12 +608,22 @@ export type TopicsQueryVariables = Exact<{
 export type TopicsQuery = { __typename?: 'Query', topics: Array<{ __typename?: 'Topic', title: string }> };
 
 export type GetUserPostsQueryVariables = Exact<{
-  userId: Scalars['Int']['input'];
+  createdAt?: InputMaybe<SortOrder>;
+  rating?: InputMaybe<SortOrder>;
   skipPages?: InputMaybe<Scalars['Int']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  userId: Scalars['Int']['input'];
 }>;
 
 
 export type GetUserPostsQuery = { __typename?: 'Query', userPosts: { __typename?: 'Recommendations', totalPages: number, data: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img?: string | null }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
+
+export type GetUserProfileInfoQueryVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type GetUserProfileInfoQuery = { __typename?: 'Query', user: { __typename?: 'User', id: number, createdAt: any, img?: string | null, updatedAt: any, occupation?: string | null, username: string } };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String']['input'];
@@ -708,6 +728,51 @@ useInfinitePostsIdQuery.getKey = (variables: PostsIdQueryVariables) => ['postsId
 
 usePostsIdQuery.fetcher = (variables: PostsIdQueryVariables, options?: RequestInit['headers']) => fetcher<PostsIdQuery, PostsIdQueryVariables>(PostsIdDocument, variables, options);
 
+export const UsersIdsDocument = `
+    query usersIds($token: String!) {
+  allUsers(findManyInput: {token: $token}) {
+    id
+  }
+}
+    `;
+
+export const useUsersIdsQuery = <
+      TData = UsersIdsQuery,
+      TError = unknown
+    >(
+      variables: UsersIdsQueryVariables,
+      options?: UseQueryOptions<UsersIdsQuery, TError, TData>
+    ) => {
+    
+    return useQuery<UsersIdsQuery, TError, TData>(
+      ['usersIds', variables],
+      fetcher<UsersIdsQuery, UsersIdsQueryVariables>(UsersIdsDocument, variables),
+      options
+    )};
+
+useUsersIdsQuery.document = UsersIdsDocument;
+
+useUsersIdsQuery.getKey = (variables: UsersIdsQueryVariables) => ['usersIds', variables];
+
+export const useInfiniteUsersIdsQuery = <
+      TData = UsersIdsQuery,
+      TError = unknown
+    >(
+      variables: UsersIdsQueryVariables,
+      options?: UseInfiniteQueryOptions<UsersIdsQuery, TError, TData>
+    ) => {
+    
+    return useInfiniteQuery<UsersIdsQuery, TError, TData>(
+      ['usersIds.infinite', variables],
+      (metaData) => fetcher<UsersIdsQuery, UsersIdsQueryVariables>(UsersIdsDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    )};
+
+useInfiniteUsersIdsQuery.getKey = (variables: UsersIdsQueryVariables) => ['usersIds.infinite', variables];
+
+
+useUsersIdsQuery.fetcher = (variables: UsersIdsQueryVariables, options?: RequestInit['headers']) => fetcher<UsersIdsQuery, UsersIdsQueryVariables>(UsersIdsDocument, variables, options);
+
 export const ConfirmUserEmailDocument = `
     mutation confirmUserEmail($token: String!) {
   confirmUserEmail(confirmUserEmailInput: $token) {
@@ -715,6 +780,7 @@ export const ConfirmUserEmailDocument = `
     email
     id
     createdAt
+    occupation
     img
   }
 }
@@ -1222,8 +1288,10 @@ useInfiniteTopicsQuery.getKey = (variables?: TopicsQueryVariables) => variables 
 useTopicsQuery.fetcher = (variables?: TopicsQueryVariables, options?: RequestInit['headers']) => fetcher<TopicsQuery, TopicsQueryVariables>(TopicsDocument, variables, options);
 
 export const GetUserPostsDocument = `
-    query getUserPosts($userId: Int!, $skipPages: Int) {
-  userPosts(findUserPostsInput: {userId: $userId, skipPages: $skipPages}) {
+    query getUserPosts($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $topics: [String!], $userId: Int!) {
+  userPosts(
+    findUserPostsInput: {createdAt: $createdAt, rating: $rating, skipPages: $skipPages, topics: $topics, userId: $userId}
+  ) {
     totalPages
     data {
       id
@@ -1290,6 +1358,56 @@ useInfiniteGetUserPostsQuery.getKey = (variables: GetUserPostsQueryVariables) =>
 
 
 useGetUserPostsQuery.fetcher = (variables: GetUserPostsQueryVariables, options?: RequestInit['headers']) => fetcher<GetUserPostsQuery, GetUserPostsQueryVariables>(GetUserPostsDocument, variables, options);
+
+export const GetUserProfileInfoDocument = `
+    query getUserProfileInfo($id: Int!) {
+  user(findOneUserInput: {id: $id}) {
+    id
+    createdAt
+    img
+    updatedAt
+    occupation
+    username
+  }
+}
+    `;
+
+export const useGetUserProfileInfoQuery = <
+      TData = GetUserProfileInfoQuery,
+      TError = unknown
+    >(
+      variables: GetUserProfileInfoQueryVariables,
+      options?: UseQueryOptions<GetUserProfileInfoQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetUserProfileInfoQuery, TError, TData>(
+      ['getUserProfileInfo', variables],
+      fetcher<GetUserProfileInfoQuery, GetUserProfileInfoQueryVariables>(GetUserProfileInfoDocument, variables),
+      options
+    )};
+
+useGetUserProfileInfoQuery.document = GetUserProfileInfoDocument;
+
+useGetUserProfileInfoQuery.getKey = (variables: GetUserProfileInfoQueryVariables) => ['getUserProfileInfo', variables];
+
+export const useInfiniteGetUserProfileInfoQuery = <
+      TData = GetUserProfileInfoQuery,
+      TError = unknown
+    >(
+      variables: GetUserProfileInfoQueryVariables,
+      options?: UseInfiniteQueryOptions<GetUserProfileInfoQuery, TError, TData>
+    ) => {
+    
+    return useInfiniteQuery<GetUserProfileInfoQuery, TError, TData>(
+      ['getUserProfileInfo.infinite', variables],
+      (metaData) => fetcher<GetUserProfileInfoQuery, GetUserProfileInfoQueryVariables>(GetUserProfileInfoDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    )};
+
+useInfiniteGetUserProfileInfoQuery.getKey = (variables: GetUserProfileInfoQueryVariables) => ['getUserProfileInfo.infinite', variables];
+
+
+useGetUserProfileInfoQuery.fetcher = (variables: GetUserProfileInfoQueryVariables, options?: RequestInit['headers']) => fetcher<GetUserProfileInfoQuery, GetUserProfileInfoQueryVariables>(GetUserProfileInfoDocument, variables, options);
 
 export const LoginDocument = `
     mutation login($password: String!, $email: String!) {

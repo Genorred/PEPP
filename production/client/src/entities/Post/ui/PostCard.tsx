@@ -61,7 +61,7 @@ const PostCard = ({
       </Link>
       <CardContent className="pt-4">
         <div className="flex items-center justify-between mb-4">
-          {hideUser ? null : <UserLink userId={userId} userImg={user.img} occupation={user.occupation}
+          {hideUser ? null : <UserLink userId={userId} userImg={user?.img ?? ''} occupation={user.occupation}
                                            username={user.username} />}
           {topics && topics.length > 0 && topics.map(topic =>
             <Badge variant="secondary" key={topic.title}>{topic.title}</Badge>

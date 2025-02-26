@@ -6,25 +6,27 @@ import { Comment } from "../../domain/entities/comment.entity";
 import { PrismaService } from "./prismaDb/prisma.service";
 import { CreateReplyInput } from "../../domain/dto/comments/create-reply.input";
 import { PostsRepository } from "../../domain/repositories/posts/posts.repository";
-import { CreatePostInput, CreatePostInputService } from "../../domain/dto/posts/create-post.input";
-import { UpdatePostInput } from "../../domain/dto/posts/update-post.input";
+import { CreatePostDto, CreatePostServiceDto } from "../../domain/dto/posts/create-post.dto";
+import { UpdatePostDto } from "../../domain/dto/posts/update-post.dto";
 import { TopicsRepositoryImpl } from "./topics.repository.impl";
 import { Post } from "../../domain/entities/post.entity";
-import { FindManyInput } from "../../domain/dto/posts/find-many.input";
-import { FindPostInput, FindPostInputService } from "../../domain/dto/posts/find-post.input";
-import { RemovePostInputService } from "../../domain/dto/posts/remove-post.input";
+import { FindManyDto } from "../../domain/dto/posts/find-many.dto";
+import { FindPostDto, FindPostInputService } from "../../domain/dto/posts/find-post.dto";
+import { RemovePostInputService } from "../../domain/dto/posts/remove-post.dto";
 import { TopicsPrismaRepository } from "./topics.prisma.repository";
 import { SearchRepository } from "../../domain/repositories/posts/search.repository";
+import { DMMF } from "@prisma/client/runtime/library";
+import SortOrder = DMMF.SortOrder;
 
 @Injectable()
 export class PostsRepositoryImpl implements PostsRepository {
   constructor(
     private readonly topicsRepository: TopicsPrismaRepository,
-    private readonly prismaService: PrismaService,
+    private readonly prismaService: PrismaService
   ) {
   }
 
-  create(input: CreatePostInputService): Promise<Post> {
+  create(input: CreatePostServiceDto): Promise<Post> {
     const { topics, subTopics, ...data } = input;
     return this.prismaService.post.create({
       data: {
@@ -47,7 +49,7 @@ export class PostsRepositoryImpl implements PostsRepository {
     });
   }
 
-  findOne(input: FindPostInput): Promise<Post> {
+  findOne(input: FindPostDto): Promise<Post> {
     return this.prismaService.post.findFirst({
       where: input,
       include: {
@@ -57,30 +59,63 @@ export class PostsRepositoryImpl implements PostsRepository {
     });
   }
 
-  findMany(input: FindManyInput): Promise<Post[]> {
-    const { ids, id, take, skip, ...rest } = input;
-    return this.prismaService.post.findMany({
+  findMany(input: FindManyDto): Promise<Post[]> {
+    const { ids, id, take, skip, topics, subTopics, topicsOrSubTopics, rating, createdAt, ...rest } = input;
+    return this.prismaService.post.findMany(
+      {
+        orderBy: {
+          rating: rating?.toLowerCase() as SortOrder,
+          createdAt:createdAt?.toLowerCase() as SortOrder
+        }
+      }
+    )
+  }
+
+  count(input: FindManyDto): Promise<number> {
+    return this.prismaService.post.count(
+      this._findPostsParams(input)
+    );
+  }
+
+  _findPostsParams(input: FindManyDto) {
+    const { ids, id, take, skip, topics, subTopics, topicsOrSubTopics, rating, createdAt, ...rest } = input;
+    return {
       where: {
         id: ids ? {
           in: ids
         } : id,
+        AND: topicsOrSubTopics?.length && topicsOrSubTopics.map(title => ({
+          OR: [
+            {
+              topics: {
+                some: {
+                  title
+                }
+              }
+            }, {
+              subTopics: {
+                some: {
+                  title
+                }
+              }
+            }
+          ]
+        })),
+        topics: topics?.length && {
+          some: {
+            AND: topics?.map(title => ({ title }))
+          }
+        },
+        subTopics: subTopics?.length && {
+          some: {
+            AND: subTopics?.map(title => ({ title }))
+          }
+        },
         ...rest
       },
       take,
       skip
-    });
-  }
-
-  count(input: FindManyInput): Promise<number> {
-    const { ids, id, take, skip, ...rest } = input;
-    return this.prismaService.post.count({
-      where: {
-        id: ids ? {
-          in: ids
-        } : id,
-        ...rest
-      }
-    });
+    } as const;
   }
 
   async getCommentsQuantity(postId: number): Promise<number> {
@@ -94,24 +129,24 @@ export class PostsRepositoryImpl implements PostsRepository {
     })).commentsQuantity;
   }
 
-  async update(input: CurrentUserExtendT<UpdatePostInput>): Promise<Post> {
+  async update(input: CurrentUserExtendT<UpdatePostDto>): Promise<Post> {
     const { id, topics, subTopics, ...data } = input;
-    let post: Post
+    let post: Post;
     console.log({
-      ...data,
-      topics: topics ? this.topicsRepository.resetTopics.topics : undefined,
-      subTopics: subTopics ? this.topicsRepository.resetTopics.subTopics : undefined,
-    },{
+        ...data,
+        topics: topics ? this.topicsRepository.resetTopics.topics : undefined,
+        subTopics: subTopics ? this.topicsRepository.resetTopics.subTopics : undefined
+      }, {
         ...data,
         ...this.topicsRepository.connectOrCreate(topics, subTopics)
       }
-      );
+    );
     post = await this.prismaService.post.update({
       where: { id },
       data: {
         ...data,
         topics: topics ? this.topicsRepository.resetTopics.topics : undefined,
-        subTopics: subTopics ? this.topicsRepository.resetTopics.subTopics : undefined,
+        subTopics: subTopics ? this.topicsRepository.resetTopics.subTopics : undefined
       }
     });
     if (topics?.length || subTopics?.length) {
@@ -123,7 +158,7 @@ export class PostsRepositoryImpl implements PostsRepository {
         }
       });
     }
-    return post
+    return post;
   }
 
   remove(input: RemovePostInputService): Promise<Post> {
