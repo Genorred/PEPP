@@ -22,6 +22,10 @@ export type Scalars = {
   JSONObject: { input: any; output: any; }
 };
 
+export type CountUserFriendshipsInput = {
+  userId: Scalars['Int']['input'];
+};
+
 export type CreateCommentInput = {
   message: Scalars['String']['input'];
   postId: Scalars['Int']['input'];
@@ -34,6 +38,10 @@ export type CreateDraftInput = {
   subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   title: Scalars['String']['input'];
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type CreateFriendshipInput = {
+  receiverId: Scalars['Int']['input'];
 };
 
 export type CreatePostInput = {
@@ -99,6 +107,11 @@ export type FindPostInput = {
   isHidden?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type FindUserFriendshipsInput = {
+  cursorId?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
+};
+
 export type FindUserPostsInput = {
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
@@ -155,7 +168,7 @@ export type UpdateDraftInput = {
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-export type UpdateUserInput = {
+export type UpdateUserDto = {
   email?: InputMaybe<Scalars['String']['input']>;
   google_id?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
@@ -288,6 +301,21 @@ export type TopicsQueryVariables = Exact<{
 
 export type TopicsQuery = { __typename?: 'Query', topics: Array<{ __typename?: 'Topic', title: string }> };
 
+export type GetUserFriendshipsQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+  cursorid?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetUserFriendshipsQuery = { __typename?: 'Query', userFriends: Array<{ __typename?: 'Friendship', senderId: number, receiverId: number, anotherUser: { __typename?: 'User', id: number, username: string, img?: string | null } }> };
+
+export type GetUserFriendshipsCountQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+}>;
+
+
+export type GetUserFriendshipsCountQuery = { __typename?: 'Query', userFriendsQuantity: number };
+
 export type GetUserPostsQueryVariables = Exact<{
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
@@ -304,7 +332,7 @@ export type GetUserProfileInfoQueryVariables = Exact<{
 }>;
 
 
-export type GetUserProfileInfoQuery = { __typename?: 'Query', user: { __typename?: 'User', id: number, createdAt: any, img?: string | null, updatedAt: any, occupation?: string | null, username: string } };
+export type GetUserProfileInfoQuery = { __typename?: 'Query', user: { __typename?: 'User', id: number, createdAt: any, img?: string | null, updatedAt: any, occupation?: string | null, username: string, posts: Array<{ __typename?: 'Post', topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String']['input'];
@@ -558,6 +586,24 @@ export const TopicsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<TopicsQuery, TopicsQueryVariables>;
+export const GetUserFriendshipsDocument = new TypedDocumentString(`
+    query getUserFriendships($userId: Int!, $cursorid: Int) {
+  userFriends(findFriendsByUserInput: {userId: $userId, cursorId: $cursorid}) {
+    senderId
+    receiverId
+    anotherUser {
+      id
+      username
+      img
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetUserFriendshipsQuery, GetUserFriendshipsQueryVariables>;
+export const GetUserFriendshipsCountDocument = new TypedDocumentString(`
+    query getUserFriendshipsCount($userId: Int!) {
+  userFriendsQuantity(countFriendshipInput: {userId: $userId})
+}
+    `) as unknown as TypedDocumentString<GetUserFriendshipsCountQuery, GetUserFriendshipsCountQueryVariables>;
 export const GetUserPostsDocument = new TypedDocumentString(`
     query getUserPosts($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $topics: [String!], $userId: Int!) {
   userPosts(
@@ -601,6 +647,14 @@ export const GetUserProfileInfoDocument = new TypedDocumentString(`
     updatedAt
     occupation
     username
+    posts {
+      topics {
+        title
+      }
+      subTopics {
+        title
+      }
+    }
   }
 }
     `) as unknown as TypedDocumentString<GetUserProfileInfoQuery, GetUserProfileInfoQueryVariables>;

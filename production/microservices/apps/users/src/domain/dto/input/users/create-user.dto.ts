@@ -1,4 +1,4 @@
-export class CreateUserInput {
+export class CreateUserDto {
   email: string;
   password?: string;
   google_id?: string;

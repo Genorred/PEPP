@@ -66,6 +66,11 @@ export class PostsRepositoryImpl implements PostsRepository {
         orderBy: {
           rating: rating?.toLowerCase() as SortOrder,
           createdAt:createdAt?.toLowerCase() as SortOrder
+        },
+        ...this._findPostsParams(input),
+        include: {
+          topics: true,
+          subTopics: true
         }
       }
     )
@@ -101,16 +106,16 @@ export class PostsRepositoryImpl implements PostsRepository {
             }
           ]
         })),
-        topics: topics?.length && {
+        topics: topics?.length ? {
           some: {
             AND: topics?.map(title => ({ title }))
           }
-        },
-        subTopics: subTopics?.length && {
+        } : undefined,
+        subTopics: subTopics?.length ? {
           some: {
             AND: subTopics?.map(title => ({ title }))
           }
-        },
+        } : undefined,
         ...rest
       },
       take,

@@ -1,7 +1,7 @@
 import { GenerateTokenDto } from "./dto/generate-token.dto";
 import { CustomContext } from "@_shared/types/CustomContext";
 import { Response } from "express";
-import { User } from "../entities/user.entity";
+import { User } from "../../interfaces/entities/user.entity";
 import { JwtPayload } from "@_shared/entities/jwt.entity";
 import { GenerateUserCredentialsTokenDto } from "./dto/generate-user-credentials-token.dto";
 

@@ -43,6 +43,10 @@ export type CommentsByPost = {
   totalPages: Scalars['Int']['output'];
 };
 
+export type CountUserFriendshipsInput = {
+  userId: Scalars['Int']['input'];
+};
+
 export type CreateCommentInput = {
   message: Scalars['String']['input'];
   postId: Scalars['Int']['input'];
@@ -55,6 +59,10 @@ export type CreateDraftInput = {
   subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   title: Scalars['String']['input'];
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type CreateFriendshipInput = {
+  receiverId: Scalars['Int']['input'];
 };
 
 export type CreatePostInput = {
@@ -138,6 +146,11 @@ export type FindPostInput = {
   isHidden?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type FindUserFriendshipsInput = {
+  cursorId?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
+};
+
 export type FindUserPostsInput = {
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
@@ -146,6 +159,19 @@ export type FindUserPostsInput = {
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
   topicsOrSubTopics?: InputMaybe<Array<Scalars['String']['input']>>;
   userId: Scalars['Int']['input'];
+};
+
+export type Friendship = {
+  __typename?: 'Friendship';
+  anotherUser: User;
+  createdAt: Scalars['DateTime']['output'];
+  currentUserId: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  isAccepted: Scalars['Boolean']['output'];
+  receiver: User;
+  receiverId: Scalars['Int']['output'];
+  sender: User;
+  senderId: Scalars['Int']['output'];
 };
 
 export type GetByParentCommentInput = {
@@ -179,8 +205,10 @@ export type Mutation = {
   register: Scalars['Boolean']['output'];
   removeComment: Comment;
   removeDraft: Draft;
+  removeFriendship: Friendship;
   removePost: Post;
   removeUser: User;
+  sendFriendshipRequest: Friendship;
   updateComment: Comment;
   updateDraft: Draft;
   updateUser: User;
@@ -252,6 +280,11 @@ export type MutationRemoveDraftArgs = {
 };
 
 
+export type MutationRemoveFriendshipArgs = {
+  removeFriendshipInput: CreateFriendshipInput;
+};
+
+
 export type MutationRemovePostArgs = {
   removePostInput: RemovePostInput;
 };
@@ -259,6 +292,11 @@ export type MutationRemovePostArgs = {
 
 export type MutationRemoveUserArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type MutationSendFriendshipRequestArgs = {
+  createFriendshipInput: CreateFriendshipInput;
 };
 
 
@@ -273,7 +311,7 @@ export type MutationUpdateDraftArgs = {
 
 
 export type MutationUpdateUserArgs = {
-  updateUserInput: UpdateUserInput;
+  updateUserInput: UpdateUserDto;
 };
 
 export type Post = {
@@ -311,6 +349,9 @@ export type Query = {
   topics: Array<Topic>;
   user: User;
   userDrafts: Array<Draft>;
+  userFriendRequests: Array<Friendship>;
+  userFriends: Array<Friendship>;
+  userFriendsQuantity: Scalars['Int']['output'];
   userPosts: Recommendations;
   version: Array<Version>;
 };
@@ -371,6 +412,21 @@ export type QueryUserArgs = {
 };
 
 
+export type QueryUserFriendRequestsArgs = {
+  findFriendsByUserInput: FindUserFriendshipsInput;
+};
+
+
+export type QueryUserFriendsArgs = {
+  findFriendsByUserInput: FindUserFriendshipsInput;
+};
+
+
+export type QueryUserFriendsQuantityArgs = {
+  countFriendshipInput: CountUserFriendshipsInput;
+};
+
+
 export type QueryUserPostsArgs = {
   findUserPostsInput: FindUserPostsInput;
 };
@@ -424,7 +480,7 @@ export type UpdateDraftInput = {
   topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-export type UpdateUserInput = {
+export type UpdateUserDto = {
   email?: InputMaybe<Scalars['String']['input']>;
   google_id?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['Int']['input'];
@@ -607,6 +663,21 @@ export type TopicsQueryVariables = Exact<{
 
 export type TopicsQuery = { __typename?: 'Query', topics: Array<{ __typename?: 'Topic', title: string }> };
 
+export type GetUserFriendshipsQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+  cursorid?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetUserFriendshipsQuery = { __typename?: 'Query', userFriends: Array<{ __typename?: 'Friendship', senderId: number, receiverId: number, anotherUser: { __typename?: 'User', id: number, username: string, img?: string | null } }> };
+
+export type GetUserFriendshipsCountQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+}>;
+
+
+export type GetUserFriendshipsCountQuery = { __typename?: 'Query', userFriendsQuantity: number };
+
 export type GetUserPostsQueryVariables = Exact<{
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
@@ -623,7 +694,7 @@ export type GetUserProfileInfoQueryVariables = Exact<{
 }>;
 
 
-export type GetUserProfileInfoQuery = { __typename?: 'Query', user: { __typename?: 'User', id: number, createdAt: any, img?: string | null, updatedAt: any, occupation?: string | null, username: string } };
+export type GetUserProfileInfoQuery = { __typename?: 'Query', user: { __typename?: 'User', id: number, createdAt: any, img?: string | null, updatedAt: any, occupation?: string | null, username: string, posts: Array<{ __typename?: 'Post', topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String']['input'];
@@ -1287,6 +1358,100 @@ useInfiniteTopicsQuery.getKey = (variables?: TopicsQueryVariables) => variables 
 
 useTopicsQuery.fetcher = (variables?: TopicsQueryVariables, options?: RequestInit['headers']) => fetcher<TopicsQuery, TopicsQueryVariables>(TopicsDocument, variables, options);
 
+export const GetUserFriendshipsDocument = `
+    query getUserFriendships($userId: Int!, $cursorid: Int) {
+  userFriends(findFriendsByUserInput: {userId: $userId, cursorId: $cursorid}) {
+    senderId
+    receiverId
+    anotherUser {
+      id
+      username
+      img
+    }
+  }
+}
+    `;
+
+export const useGetUserFriendshipsQuery = <
+      TData = GetUserFriendshipsQuery,
+      TError = unknown
+    >(
+      variables: GetUserFriendshipsQueryVariables,
+      options?: UseQueryOptions<GetUserFriendshipsQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetUserFriendshipsQuery, TError, TData>(
+      ['getUserFriendships', variables],
+      fetcher<GetUserFriendshipsQuery, GetUserFriendshipsQueryVariables>(GetUserFriendshipsDocument, variables),
+      options
+    )};
+
+useGetUserFriendshipsQuery.document = GetUserFriendshipsDocument;
+
+useGetUserFriendshipsQuery.getKey = (variables: GetUserFriendshipsQueryVariables) => ['getUserFriendships', variables];
+
+export const useInfiniteGetUserFriendshipsQuery = <
+      TData = GetUserFriendshipsQuery,
+      TError = unknown
+    >(
+      variables: GetUserFriendshipsQueryVariables,
+      options?: UseInfiniteQueryOptions<GetUserFriendshipsQuery, TError, TData>
+    ) => {
+    
+    return useInfiniteQuery<GetUserFriendshipsQuery, TError, TData>(
+      ['getUserFriendships.infinite', variables],
+      (metaData) => fetcher<GetUserFriendshipsQuery, GetUserFriendshipsQueryVariables>(GetUserFriendshipsDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    )};
+
+useInfiniteGetUserFriendshipsQuery.getKey = (variables: GetUserFriendshipsQueryVariables) => ['getUserFriendships.infinite', variables];
+
+
+useGetUserFriendshipsQuery.fetcher = (variables: GetUserFriendshipsQueryVariables, options?: RequestInit['headers']) => fetcher<GetUserFriendshipsQuery, GetUserFriendshipsQueryVariables>(GetUserFriendshipsDocument, variables, options);
+
+export const GetUserFriendshipsCountDocument = `
+    query getUserFriendshipsCount($userId: Int!) {
+  userFriendsQuantity(countFriendshipInput: {userId: $userId})
+}
+    `;
+
+export const useGetUserFriendshipsCountQuery = <
+      TData = GetUserFriendshipsCountQuery,
+      TError = unknown
+    >(
+      variables: GetUserFriendshipsCountQueryVariables,
+      options?: UseQueryOptions<GetUserFriendshipsCountQuery, TError, TData>
+    ) => {
+    
+    return useQuery<GetUserFriendshipsCountQuery, TError, TData>(
+      ['getUserFriendshipsCount', variables],
+      fetcher<GetUserFriendshipsCountQuery, GetUserFriendshipsCountQueryVariables>(GetUserFriendshipsCountDocument, variables),
+      options
+    )};
+
+useGetUserFriendshipsCountQuery.document = GetUserFriendshipsCountDocument;
+
+useGetUserFriendshipsCountQuery.getKey = (variables: GetUserFriendshipsCountQueryVariables) => ['getUserFriendshipsCount', variables];
+
+export const useInfiniteGetUserFriendshipsCountQuery = <
+      TData = GetUserFriendshipsCountQuery,
+      TError = unknown
+    >(
+      variables: GetUserFriendshipsCountQueryVariables,
+      options?: UseInfiniteQueryOptions<GetUserFriendshipsCountQuery, TError, TData>
+    ) => {
+    
+    return useInfiniteQuery<GetUserFriendshipsCountQuery, TError, TData>(
+      ['getUserFriendshipsCount.infinite', variables],
+      (metaData) => fetcher<GetUserFriendshipsCountQuery, GetUserFriendshipsCountQueryVariables>(GetUserFriendshipsCountDocument, {...variables, ...(metaData.pageParam ?? {})})(),
+      options
+    )};
+
+useInfiniteGetUserFriendshipsCountQuery.getKey = (variables: GetUserFriendshipsCountQueryVariables) => ['getUserFriendshipsCount.infinite', variables];
+
+
+useGetUserFriendshipsCountQuery.fetcher = (variables: GetUserFriendshipsCountQueryVariables, options?: RequestInit['headers']) => fetcher<GetUserFriendshipsCountQuery, GetUserFriendshipsCountQueryVariables>(GetUserFriendshipsCountDocument, variables, options);
+
 export const GetUserPostsDocument = `
     query getUserPosts($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $topics: [String!], $userId: Int!) {
   userPosts(
@@ -1368,6 +1533,14 @@ export const GetUserProfileInfoDocument = `
     updatedAt
     occupation
     username
+    posts {
+      topics {
+        title
+      }
+      subTopics {
+        title
+      }
+    }
   }
 }
     `;

@@ -25,6 +25,10 @@ type CommentsByPost {
   totalPages: Int!
 }
 
+input CountUserFriendshipsInput {
+  userId: Int!
+}
+
 input CreateCommentInput {
   message: String!
   postId: Int!
@@ -37,6 +41,10 @@ input CreateDraftInput {
   subTopics: [String!]
   title: String!
   topics: [String!]
+}
+
+input CreateFriendshipInput {
+  receiverId: Int!
 }
 
 input CreatePostInput {
@@ -124,6 +132,11 @@ input FindPostInput {
   isHidden: Boolean
 }
 
+input FindUserFriendshipsInput {
+  cursorId: Int
+  userId: Int!
+}
+
 input FindUserPostsInput {
   createdAt: SortOrder
   rating: SortOrder
@@ -132,6 +145,18 @@ input FindUserPostsInput {
   topics: [String!]
   topicsOrSubTopics: [String!]
   userId: Int!
+}
+
+type Friendship {
+  anotherUser: User!
+  createdAt: DateTime!
+  currentUserId: Int!
+  id: Int!
+  isAccepted: Boolean!
+  receiver: User!
+  receiverId: Int!
+  sender: User!
+  senderId: Int!
 }
 
 input GetByParentCommentInput {
@@ -174,11 +199,13 @@ type Mutation {
   register(registerInput: RegisterInput!): Boolean!
   removeComment(id: Int!): Comment!
   removeDraft(removeDraftInput: RemovePostInput!): Draft!
+  removeFriendship(removeFriendshipInput: CreateFriendshipInput!): Friendship!
   removePost(removePostInput: RemovePostInput!): Post!
   removeUser(id: Int!): User!
+  sendFriendshipRequest(createFriendshipInput: CreateFriendshipInput!): Friendship!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updateDraft(updateDraftInput: UpdateDraftInput!): Draft!
-  updateUser(updateUserInput: UpdateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserDto!): User!
 }
 
 type Post {
@@ -214,6 +241,9 @@ type Query {
   topics(title: String): [Topic!]!
   user(findOneUserInput: FindOneUserInput!): User!
   userDrafts: [Draft!]!
+  userFriendRequests(findFriendsByUserInput: FindUserFriendshipsInput!): [Friendship!]!
+  userFriends(findFriendsByUserInput: FindUserFriendshipsInput!): [Friendship!]!
+  userFriendsQuantity(countFriendshipInput: CountUserFriendshipsInput!): Int!
   userPosts(findUserPostsInput: FindUserPostsInput!): Recommendations!
   version(findVersionInput: FindOneVersionInput!): [Version!]!
 }
@@ -260,7 +290,7 @@ input UpdateDraftInput {
   topics: [String!]
 }
 
-input UpdateUserInput {
+input UpdateUserDto {
   email: String
   google_id: String
   id: Int!

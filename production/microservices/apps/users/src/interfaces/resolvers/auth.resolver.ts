@@ -1,6 +1,6 @@
 import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
 import { LoginInput } from "../../domain/dto/input/auth/login.input";
-import { CreateUserInput } from "../../domain/dto/input/users/create-user.input";
+import { CreateUserDto } from "../../domain/dto/input/users/create-user.dto";
 import { CustomExecutionContext } from "@_shared/decorators/execution-context";
 import { Credentials, CustomContext } from "@_shared/types/CustomContext";
 import { UserResponse } from "../../domain/dto/response/returned-user.response";

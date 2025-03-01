@@ -5,7 +5,7 @@ import { TokenService } from "../../domain/domain-service/token.service";
 import e, { CookieOptions, Response } from "express";
 import { accessTokenLife, getCookiesOptions, refreshTokenLife } from "@_shared/consts/auth";
 import { ConfigService } from "@nestjs/config";
-import { User } from "../../domain/entities/user.entity";
+import { User } from "../../interfaces/entities/user.entity";
 import { GenerateTokenDto } from "../../domain/domain-service/dto/generate-token.dto";
 import { GenerateUserCredentialsTokenDto } from "../../domain/domain-service/dto/generate-user-credentials-token.dto";
 

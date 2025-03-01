@@ -2,7 +2,7 @@ import { CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor } fr
 import { ConfigType } from "@nestjs/config";
 import { Observable } from "rxjs";
 import { tap } from "rxjs/operators";
-import { User } from "../../domain/entities/user.entity";
+import { User } from "../../interfaces/entities/user.entity";
 import { TokenService } from "../../domain/domain-service/token.service";
 import clientConfig from "../config/client.config";
 

@@ -1,7 +1,7 @@
-import { Args, Int, Mutation, Query, Resolver, ResolveReference } from "@nestjs/graphql";
+import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver, ResolveReference } from "@nestjs/graphql";
 import { UsersRepositoryImpl } from "../../infrastructure/repositories/users.repository.impl";
-import { User } from "../../domain/entities/user.entity";
-import { UpdateUserInput } from "../../domain/dto/input/users/update-user.input";
+import { User } from "../entities/user.entity";
+import { UpdateUserDto } from "../../domain/dto/input/users/update-user.dto";
 import { FindOneUserInput } from "./dto-inputs/find-one-user.input";
 import { UsersRepository } from "../../domain/repositories/users.repository";
 import UseRoles from "@_shared/auth-guard/useRoles";
@@ -14,7 +14,6 @@ export class UsersResolver {
   constructor(private readonly usersRepository: UsersRepository,
               private readonly userUseCase: UserUseCase) {
   }
-
   @Query(() => [User], { name: "allUsers" })
   findAllUsers(@Args("findManyInput") findManyInput: FindAllUsersInput) {
     return this.userUseCase.findAllUsers(findManyInput);
@@ -26,7 +25,7 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  updateUser(@Args("updateUserInput") updateUserInput: UpdateUserInput) {
+  updateUser(@Args("updateUserInput") updateUserInput: UpdateUserDto) {
     return this.usersRepository.update(updateUserInput.id, updateUserInput);
   }
 

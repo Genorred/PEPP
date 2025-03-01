@@ -15,6 +15,7 @@ import { HealthModule } from "@_shared/modules/health.module";
 import { NotificationsModule } from "./interfaces/modules/notifications.module";
 import { UsersHealthModule } from "./interfaces/modules/users.health.module";
 import { ConfigModuleInitializer } from "./interfaces/modules/config.module";
+import { FriendshipModule } from "./interfaces/modules/friendship.module";
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { ConfigModuleInitializer } from "./interfaces/modules/config.module";
     AuthModule,
     HealthModule,
     NotificationsModule,
-    UsersHealthModule
+    UsersHealthModule,
+    FriendshipModule
   ],
   providers: [PrismaService]
 })

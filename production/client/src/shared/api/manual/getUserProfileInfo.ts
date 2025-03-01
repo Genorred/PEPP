@@ -11,6 +11,14 @@ const getUserProfileInfo = graphql(`
             updatedAt
             occupation
             username
+            posts {
+                topics {
+                    title
+                }
+                subTopics {
+                    title
+                }
+            }
         }
     }
 `);

@@ -14,30 +14,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Article {
-  id          Int      @id @default(autoincrement())
-  title       String   @unique
-  description String?
-  body        String
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
 enum Roles {
   ADMIN
   USER
 }
 
 model User {
-  id            Int      @id @default(autoincrement())
-  google_id     String?  @unique
-  username      String   @unique
-  email         String   @unique
-  password      String?
-  role          Roles    @default(USER)
-  img           String?
-  occupation    String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  google_id  String?  @unique
+  username   String   @unique
+  email      String   @unique
+  password   String?
+  role       Roles    @default(USER)
+  img        String?
+  occupation String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  friendsSent     Friendship[] @relation("UserFriendsSent")
+  friendsReceived Friendship[] @relation("UserFriendsReceived")
+}
+
+model Friendship {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  isAccepted Boolean  @default(false)
+
+  senderId   Int
+  receiverId Int
+
+  sender   User @relation("UserFriendsSent", fields: [senderId], references: [id])
+  receiver User @relation("UserFriendsReceived", fields: [receiverId], references: [id])
+
+  @@unique([senderId, receiverId])
 }

@@ -13,14 +13,25 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import UserPosts from "./UserPosts";
 import {
-  GetUserProfileInfoDocument, GetUserProfileInfoQuery, GetUserProfileInfoQueryVariables,
+  GetUserFriendshipsCountDocument,
+  GetUserFriendshipsCountQuery,
+  GetUserFriendshipsCountQueryVariables, GetUserFriendshipsDocument,
+  GetUserFriendshipsQuery,
+  GetUserFriendshipsQueryVariables,
+  GetUserProfileInfoDocument,
+  GetUserProfileInfoQuery,
+  GetUserProfileInfoQueryVariables,
   PostsIdDocument,
   PostsIdQuery,
-  PostsIdQueryVariables, UsersIdsDocument, UsersIdsQuery, UsersIdsQueryVariables
+  PostsIdQueryVariables,
+  UsersIdsDocument,
+  UsersIdsQuery,
+  UsersIdsQueryVariables
 } from "@/shared/api/graphql/generated";
 import { serverApiClient } from "@/shared/api/base";
 import DynamicCarousel from "@/app/(pages)/(user)/profile/[id]/DynamicCarousel";
 import UserActivity from "./UserActivity";
+import Topics from "@/app/(pages)/(user)/profile/[id]/Topics";
 
 
 
@@ -41,42 +52,29 @@ export async function generateStaticParams() {
   }
 }
 const Page = async ({ params }: {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }) => {
-  const data: GetUserProfileInfoQuery = await serverApiClient.request(GetUserProfileInfoDocument, {
-    id: Number(params.id)
-  } as GetUserProfileInfoQueryVariables);
-  const user = data.user
+  const par = await params
+  const [data, friendsCount, friends] = await Promise.all<[
+    Promise<GetUserProfileInfoQuery>,
+    Promise<GetUserFriendshipsCountQuery>,
+    Promise<GetUserFriendshipsQuery>
+  ]>([
+    serverApiClient.request(GetUserProfileInfoDocument, {
+      id: Number(par.id)
+    } as GetUserProfileInfoQueryVariables),
+    serverApiClient.request(GetUserFriendshipsCountDocument, {
+      userId: Number(par.id),
+    } as GetUserFriendshipsCountQueryVariables),
+    serverApiClient.request(GetUserFriendshipsDocument, {
+      userId: Number(par.id),
+    } as GetUserFriendshipsQueryVariables)
+  ])
+  console.log(friendsCount, friends);
 
-  const topics = [
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf",
-    "fasdfsadf"
-  ];
+  const user = data.user
   return (
     <Container className="max-w-screen-2xl min-h-[50vh] flex flex-col gap-y-4">
       <Card className="flex flex-col xl:flex-row xl:justify-center items-center xl:items-start py-4 gap-8">
@@ -96,7 +94,7 @@ const Page = async ({ params }: {
             </AvatarFallback>
           </Avatar>
           <Separator />
-          <DynamicCarousel />
+          <DynamicCarousel friends={friends} friendsCount={friendsCount.userFriendsQuantity}/>
         </div>
         <div className="flex-1">
           <CardHeader>
@@ -112,16 +110,8 @@ const Page = async ({ params }: {
                 <h3 className="text-lg font-semibold mb-2">About</h3>
                 <p className="text-sm text-muted-foreground">{"sf"}</p>
               </div>
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Topics</h3>
-                <div className="flex flex-wrap gap-2">
-                  {topics.map((topic) => (
-                    <Badge key={topic} variant="secondary">
-                      {topic}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
+              <Topics data={data} />
+
             </div>
           </CardContent>
         </div>
