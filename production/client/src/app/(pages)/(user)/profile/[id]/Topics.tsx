@@ -1,49 +1,58 @@
+'use client'
 import React from "react";
 import { GetUserProfileInfoQuery } from "@/shared/api/graphql/generated";
 import { Badge } from "@/shared/ui/badge";
+import { Card } from "@/shared/ui/card";
+import { getTopicsSummary } from "./getTopicsSummary";
+import { useDispatch } from "react-redux";
+import { initialUserFiltersState, userFiltersSlice } from "@/app/(pages)/(user)/profile/[id]/filters.slice";
 
-const Topics = ({ data }: {
-  data: GetUserProfileInfoQuery
+const Topics = ({ topicsSummary }: {
+  topicsSummary: ReturnType<typeof getTopicsSummary>
 }) => {
-  console.log('dash', data.user.posts[0]);
-  const posts = data.user.posts
-  const topics = new Map<string, number>();
-  const subTopics = new Map<string, number>();
-  posts.forEach((post) => (post.topics?.forEach( topic => {
-    const {title} = topic
-    topics.set(title, (topics.get(title) ?? 0) + 1 )
-  }) ))
-  posts.forEach((post) => (post.subTopics?.forEach( topic => {
-    const {title} = topic
-    subTopics.set(title, (subTopics.get(title) ?? 0) + 1 )
-  }) ))
-  const topicsAndSubTopics = new Set<string>();
-  for (const topic in topics.keys()) {
-      topicsAndSubTopics.add(topic)
-  }
-  for (const topic in subTopics.keys()) {
-    topicsAndSubTopics.add(topic)
-  }
+  const { subTopicsArray, topicsAndSubTopicsArray, topicsArray } = topicsSummary;
+  const dispatch = useDispatch();
+
+  const onClick = (topic: string) => () => {
+    dispatch(userFiltersSlice.actions.setFilters({
+      ...initialUserFiltersState.filters,
+      topics: [topic]
+    }));
+  };
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-2">Topics</h3>
-      <div className="flex flex-wrap gap-2">
-        {Array.from(topics).map((topic) => (
-          <Badge key={topic[0]} variant="secondary">
-            {topic}
+      <h3 className="flex gap-2 font-semibold mb-2 text-lg items-center">
+        User's
+        <Badge className="text-lg">
+          Topics
+        </Badge>
+        &
+        <Badge className="text-lg" variant="secondary">
+          Sub Topics
+        </Badge>
+      </h3>
+      <Card className="flex flex-wrap gap-2 p-4">
+        {topicsArray.map(([topic, count]) => (
+          <Badge key={topic[0]} variant="default" onClick={onClick(topic)} className="cursor-pointer">
+            {topic} {count}
           </Badge>
         ))}
-        {Array.from(subTopics).map((topic) => (
-          <Badge key={topic[0]} variant="secondary">
-            {topic}
+        {topicsAndSubTopicsArray.map(([topic, count]) => (
+          <div key={topic[0]} onClick={onClick(topic)} className="cursor-pointer">
+            <Badge variant="default" className="pr-6">
+              {topic} {count}
+            </Badge>
+            <Badge className="-ml-4" key={topic[0]} variant="secondary">
+              + Sub {count}
+            </Badge>
+          </div>
+        ))}
+        {subTopicsArray.map(([topic, count]) => (
+          <Badge key={topic[0]} variant="secondary" onClick={onClick(topic)} className="cursor-pointer">
+            {topic} {count}
           </Badge>
         ))}
-        {Array.from(topicsAndSubTopics).map((topic) => (
-          <Badge key={topic[0]} variant="secondary">
-            {topic}
-          </Badge>
-        ))}
-      </div>
+      </Card>
     </div>
   );
 };

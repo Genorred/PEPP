@@ -682,8 +682,10 @@ export type GetUserPostsQueryVariables = Exact<{
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
   skipPages?: InputMaybe<Scalars['Int']['input']>;
-  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   userId: Scalars['Int']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  topicsOrSubTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
@@ -740,6 +742,13 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register: boolean };
+
+export type SendFriendshipRequestMutationVariables = Exact<{
+  receiverId: Scalars['Int']['input'];
+}>;
+
+
+export type SendFriendshipRequestMutation = { __typename?: 'Mutation', sendFriendshipRequest: { __typename?: 'Friendship', receiverId: number } };
 
 export type UpdateDraftMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -1453,9 +1462,9 @@ useInfiniteGetUserFriendshipsCountQuery.getKey = (variables: GetUserFriendshipsC
 useGetUserFriendshipsCountQuery.fetcher = (variables: GetUserFriendshipsCountQueryVariables, options?: RequestInit['headers']) => fetcher<GetUserFriendshipsCountQuery, GetUserFriendshipsCountQueryVariables>(GetUserFriendshipsCountDocument, variables, options);
 
 export const GetUserPostsDocument = `
-    query getUserPosts($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $topics: [String!], $userId: Int!) {
+    query getUserPosts($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $userId: Int!, $topics: [String!], $subTopics: [String!], $topicsOrSubTopics: [String!]) {
   userPosts(
-    findUserPostsInput: {createdAt: $createdAt, rating: $rating, skipPages: $skipPages, topics: $topics, userId: $userId}
+    findUserPostsInput: {createdAt: $createdAt, rating: $rating, skipPages: $skipPages, userId: $userId, topics: $topics, subTopics: $subTopics, topicsOrSubTopics: $topicsOrSubTopics}
   ) {
     totalPages
     data {
@@ -1752,6 +1761,30 @@ useRegisterMutation.getKey = () => ['register'];
 
 
 useRegisterMutation.fetcher = (variables: RegisterMutationVariables, options?: RequestInit['headers']) => fetcher<RegisterMutation, RegisterMutationVariables>(RegisterDocument, variables, options);
+
+export const SendFriendshipRequestDocument = `
+    mutation sendFriendshipRequest($receiverId: Int!) {
+  sendFriendshipRequest(createFriendshipInput: {receiverId: $receiverId}) {
+    receiverId
+  }
+}
+    `;
+
+export const useSendFriendshipRequestMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(options?: UseMutationOptions<SendFriendshipRequestMutation, TError, SendFriendshipRequestMutationVariables, TContext>) => {
+    
+    return useMutation<SendFriendshipRequestMutation, TError, SendFriendshipRequestMutationVariables, TContext>(
+      ['sendFriendshipRequest'],
+      (variables?: SendFriendshipRequestMutationVariables) => fetcher<SendFriendshipRequestMutation, SendFriendshipRequestMutationVariables>(SendFriendshipRequestDocument, variables)(),
+      options
+    )};
+
+useSendFriendshipRequestMutation.getKey = () => ['sendFriendshipRequest'];
+
+
+useSendFriendshipRequestMutation.fetcher = (variables: SendFriendshipRequestMutationVariables, options?: RequestInit['headers']) => fetcher<SendFriendshipRequestMutation, SendFriendshipRequestMutationVariables>(SendFriendshipRequestDocument, variables, options);
 
 export const UpdateDraftDocument = `
     mutation updateDraft($id: Int!, $body: JSONObject, $title: String, $topics: [String!], $subTopics: [String!]) {

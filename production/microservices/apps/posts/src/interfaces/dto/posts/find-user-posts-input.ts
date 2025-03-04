@@ -9,6 +9,7 @@ export class FindUserPostsInput implements FindUserPostsDto {
   userId: number;
   @Field(() => Int, { nullable: true })
   skipPages: number;
+
   @Field(() => SortOrder, { nullable: true })
   createdAt?: SortOrder;
   @Field(() => SortOrder, { nullable: true })

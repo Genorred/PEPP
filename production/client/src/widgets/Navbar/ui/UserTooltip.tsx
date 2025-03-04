@@ -22,7 +22,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle
 } from "@/shared/ui/navigation-menu";
-import { navSettings } from "@/widgets/Navbar/consts";
+import { getNavSettings } from "@/widgets/Navbar/consts";
 import { useLogoutMutation } from "@/shared/api/graphql/generated";
 import { toast } from "sonner";
 
@@ -58,13 +58,13 @@ export const UserTooltip = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.img} alt="@shadcn" />
+                      <AvatarImage src={user?.img ?? ''} alt="@shadcn" />
                       <AvatarFallback>SC</AvatarFallback>
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end" forceMount>
-                  {navSettings.map(([name, Icon, href]) => (
+                  {getNavSettings(user).map(([name, Icon, href]) => (
                     <Link key={name} href={`/${href}`}>
                       <DropdownMenuItem>
                         <Icon className="mr-2 h-4 w-4" />

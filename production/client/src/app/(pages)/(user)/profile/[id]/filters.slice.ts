@@ -1,27 +1,28 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { rootReducer } from "@/shared/lib/redux";
-import { FilterState } from "@/widgets/PostsFilter/model/domain";
+import { UserFilterState } from "./domain";
 
 interface State {
-  filters: FilterState;
+  filters: UserFilterState;
 }
 
-export const initialFiltersState: State = {
+export const initialUserFiltersState: State = {
   filters: {
     topics: [],
+    subTopics: [],
+    topicsAndSubTopics: [],
     createdAt: null,
-    search: "",
     rating: null
   }
 };
-export const filtersSlice = createSlice({
-  name: "postsFilters",
-  initialState: initialFiltersState,
+export const userFiltersSlice = createSlice({
+  name: "userPostsFilters",
+  initialState: initialUserFiltersState,
   selectors: {
     filter: (state: State) => state.filters
   },
   reducers: {
-    setFilters: (state, action: PayloadAction<FilterState>) => {
+    setFilters: (state, action: PayloadAction<UserFilterState>) => {
       state.filters = action.payload;
     }
   }

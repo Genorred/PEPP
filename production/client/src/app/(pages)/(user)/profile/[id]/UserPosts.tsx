@@ -1,75 +1,93 @@
-import React from "react";
+import React, { useState } from "react";
 import {
-  GetUserPostsQueryVariables,
+  GetUserPostsQueryVariables, SortOrder,
+  useGetUserPostsQuery,
   useInfiniteGetUserPostsQuery,
   useInfinitePostRecommendationsQuery
 } from "@/shared/api/graphql/generated";
 import { PostRecommendationsQueryVariables } from "@/shared/api/graphql/graphql";
 import { useIntersectionObserver } from "usehooks-ts";
 import { useSelector } from "react-redux";
-import { filtersSlice } from "@/widgets/PostsFilter/model/filters.slice";
 import { userSlice } from "@/entities/User/model/user.slice";
 import { FileX } from "lucide-react";
 import Container from "@/shared/ui/Container";
 import { Post } from "@/entities/Post";
+import PostsFilter from "@/widgets/PostsFilter";
+import { userFiltersSlice } from "@/app/(pages)/(user)/profile/[id]/filters.slice";
+import {
+  Pagination,
+  PaginationContent, PaginationEllipsis,
+  PaginationItem,
+  PaginationLink, PaginationNext,
+  PaginationPrevious
+} from "@/shared/ui/pagination";
 
-const UserPosts = ({userId} : {
+const UserPosts = ({ userId }: {
   userId: number
 }) => {
-  const { rating, createdAt, ...filters } = useSelector(filtersSlice.selectors.filter);
-  const defaultParams = {
-    ...filters,
-    rating: rating ? rating.toUpperCase() || undefined : undefined,
-    createdAt: createdAt ? createdAt.toUpperCase() || undefined : undefined,
-    userId
-  } as GetUserPostsQueryVariables;
+  const [page, setPage] = useState<number>(0);
+  const { rating, createdAt, ...other } = useSelector(userFiltersSlice.selectors.filter);
   const {
     data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage
-  } = useInfiniteGetUserPostsQuery(defaultParams, {
-    getNextPageParam: (lastPage, allPages) => (
-      lastPage.userPosts.totalPages - allPages.length > 1 ?
-        {
-          ...defaultParams,
-          skipPages: allPages.length
-        } as PostRecommendationsQueryVariables
-        : undefined
-    )
+    isLoading
+  } = useGetUserPostsQuery({
+    ...other,
+    rating: rating ? rating.toUpperCase() as SortOrder || undefined : undefined,
+    createdAt: createdAt ? createdAt.toUpperCase() as SortOrder || undefined : undefined,
+    userId,
+    skipPages: page
   });
 
-  const [ref] = useIntersectionObserver({
-    onChange: isIntersecting => {
-      if (isIntersecting && hasNextPage) {
-        void fetchNextPage();
-      }
-    }
-  });
+  const onPaginate = (page: number) => () => {
+    setPage(prevState => {
+      const newValue = prevState + page;
+      if (newValue >= 0
+        && data?.userPosts.totalPages
+        && newValue < data.userPosts.totalPages
+      ) return newValue;
+
+      return prevState;
+    });
+  };
+  const onSetPage = (page: number) => () => {
+    setPage(page);
+  };
   return (
     <>
-      {data?.pages[0].userPosts.totalPages
+      {data?.userPosts.totalPages
         ?
         <>
           <Container className="flex gap-4 flex-wrap" variant={"section"}>
-            {data.pages.map(posts =>
-              posts.userPosts.data.map(post =>
-                <Post key={post.id} {...post} />
-              )
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" onClick={onPaginate(-1)} />
+                </PaginationItem>
+                {
+                  Array.from({ length: data?.userPosts.totalPages }).map((value, index) => (
+                    <PaginationItem key={index}>
+                      <PaginationLink href="#" onClick={onSetPage(index)}>
+                        {index + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))
+                }
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" onClick={onPaginate(1)} />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+            {data?.userPosts.data.map(post =>
+              <Post key={post.id} {...post} />
             )}
           </Container>
-          {hasNextPage ?
-            isLoading
-              ?
-              "loading next page..."
-              :
-              <div className="h-1 w-full" ref={ref} />
-            : null
-          }
         </>
         : isLoading
           ?
-          <h2 className='text-2xl font-semibold text-gray-800 mb-2 '>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2 ">
             "loading..."
           </h2>
           :

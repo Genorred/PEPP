@@ -10,6 +10,7 @@ import { FindUserFriendshipsDto } from "../../domain/dto/input/friendship/find-u
 import { CountUserFriendshipsDto } from "../../domain/dto/input/friendship/count-user-friendships.dto";
 import { CreateFriendshipDto } from "../../domain/dto/input/friendship/create-friendship.dto";
 import { Friendship } from "../../domain/entities/friendship.entity";
+import { Prisma } from ".prisma/client";
 
 @Injectable()
 export class FriendshipRepositoryImpl implements FriendshipRepository {
@@ -36,7 +37,7 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
       skip: cursorId ? 1 : 0,
       cursor: cursorId ? {
         id: cursorId
-      }: undefined
+      } : undefined
     });
     return response.length ? response : [];
   }
@@ -57,10 +58,16 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
     });
   }
 
-  create(createUserInput: CreateFriendshipDto): Promise<Friendship> {
-    return this.prisma.friendship.create({
-      data: createUserInput
-    });
+  async create(createUserInput: CreateFriendshipDto): Promise<Friendship> {
+    try {
+      return await this.prisma.friendship.create({
+        data: createUserInput
+      });
+    } catch (e) {
+      if (e instanceof Error && e.message.includes('receiverId')) {
+        throw new ConflictException('request has been sent')
+      }
+    }
   }
 
   remove(removeInput: CreateFriendshipDto): Promise<Friendship> {

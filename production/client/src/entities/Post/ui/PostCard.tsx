@@ -60,15 +60,22 @@ const PostCard = ({
         <PostHeader img={img} title={title} />
       </Link>
       <CardContent className="pt-4">
-        <div className="flex items-center justify-between mb-4">
-          {hideUser ? null : <UserLink userId={userId} userImg={user?.img ?? ''} occupation={user.occupation}
-                                           username={user.username} />}
-          {topics && topics.length > 0 && topics.map(topic =>
-            <Badge variant="secondary" key={topic.title}>{topic.title}</Badge>
-          )}
-          {subTopics && subTopics.length > 0 && subTopics.map(subTopic =>
-            <Badge variant="outline" key={subTopic.title}>{subTopic.title}</Badge>
-          )}
+        <div className="flex items-center gap-2 mb-4">
+          {hideUser
+            ? null
+            : <UserLink
+              userId={userId} userImg={user?.img ?? ""}
+              occupation={user.occupation} username={user.username}
+            />
+          }
+          <div className={"flex gap-2 ml-auto"}>
+            {topics && topics.length > 0 && topics.map(topic =>
+              <Badge variant="default" key={topic.title}>{topic.title}</Badge>
+            )}
+            {subTopics && subTopics.length > 0 && subTopics.map(subTopic =>
+              <Badge variant="secondary" key={subTopic.title}>{subTopic.title}</Badge>
+            )}
+          </div>
         </div>
         <p className="text-sm text-muted-foreground mb-4">
           {description}
@@ -83,7 +90,7 @@ const PostCard = ({
             <span>{reviewsQuantity} reviews</span>
           </Link>
         </div>
-          <ReviewsDialog url={url} reviewList={reviewList} />
+        <ReviewsDialog url={url} reviewList={reviewList} />
       </CardContent>
       <CardFooter className="bg-muted/50 text-xs text-muted-foreground">
         Published on August 15, 2023 | {minutes} min read

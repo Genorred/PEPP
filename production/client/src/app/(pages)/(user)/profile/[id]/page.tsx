@@ -1,17 +1,9 @@
-import { useSelector } from "react-redux";
-import { userSlice } from "@/entities/User/model/user.slice";
 import Container from "@/shared/ui/Container";
 import Image from "next/image";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/shared/ui/carousel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
-import { Badge } from "@/shared/ui/badge";
 import { Separator } from "@/shared/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
-import Comments from "@/app/(pages)/(posts)/post/[id]/Comments";
 import React from "react";
-import { useRouter } from "next/navigation";
-import UserPosts from "./UserPosts";
 import {
   GetUserFriendshipsCountDocument,
   GetUserFriendshipsCountQuery,
@@ -32,6 +24,7 @@ import { serverApiClient } from "@/shared/api/base";
 import DynamicCarousel from "@/app/(pages)/(user)/profile/[id]/DynamicCarousel";
 import UserActivity from "./UserActivity";
 import Topics from "@/app/(pages)/(user)/profile/[id]/Topics";
+import { getTopicsSummary } from "@/app/(pages)/(user)/profile/[id]/getTopicsSummary";
 
 
 
@@ -75,6 +68,7 @@ const Page = async ({ params }: {
   console.log(friendsCount, friends);
 
   const user = data.user
+  const topicsSummary = getTopicsSummary(data)
   return (
     <Container className="max-w-screen-2xl min-h-[50vh] flex flex-col gap-y-4">
       <Card className="flex flex-col xl:flex-row xl:justify-center items-center xl:items-start py-4 gap-8">
@@ -110,13 +104,13 @@ const Page = async ({ params }: {
                 <h3 className="text-lg font-semibold mb-2">About</h3>
                 <p className="text-sm text-muted-foreground">{"sf"}</p>
               </div>
-              <Topics data={data} />
+              <Topics topicsSummary={topicsSummary} />
 
             </div>
           </CardContent>
         </div>
       </Card>
-      <UserActivity user={user}/>
+      <UserActivity user={user} topicsSummary={topicsSummary} />
     </Container>
   );
 };

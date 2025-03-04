@@ -1,8 +1,9 @@
-import { Bookmark, CirclePlus, LibraryBig, Settings, SquarePen, User, Users } from "lucide-react";
+import { User } from "@/entities/User/model/User";
+import { Bookmark, CirclePlus, LibraryBig, Settings, SquarePen, User as UserIcon, Users } from "lucide-react";
 
 export const navPages = ["Topics", "Posts", "Analytics"];
-export const navSettings: [string, typeof User, string][] = [
-  ["Profile", User, "profile"],
+export const getNavSettings = (user: User): [string, typeof UserIcon, string][] => [
+  ["Profile", UserIcon, `profile/${user.id}`],
   ["Friends", Users, "friends"],
   ["Saved", Bookmark, "saved"],
   ["Create", CirclePlus, "create"],

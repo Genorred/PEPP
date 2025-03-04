@@ -1,10 +1,14 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import UserPosts from "@/app/(pages)/(user)/profile/[id]/UserPosts";
 import { User } from "@/entities/User/model/User";
 import { GetUserProfileInfoQuery } from "@/shared/api/graphql/generated";
+import { useForm } from "react-hook-form";
+import { FilterState } from "@/widgets/PostsFilter/model/domain";
+import UserPostsFilters from "@/app/(pages)/(user)/profile/[id]/UserPostsFilters";
+import { getTopicsSummary } from "@/app/(pages)/(user)/profile/[id]/getTopicsSummary";
 
 const variants = {
   posts: "Posts",
@@ -12,18 +16,19 @@ const variants = {
   reviews: "Reviews"
 } as const;
 export type Variants = typeof variants[keyof typeof variants];
-const UserActivity = ({user}: {
-  user: GetUserProfileInfoQuery['user']
+const UserActivity = ({ user, topicsSummary }: {
+  user: GetUserProfileInfoQuery["user"]
+  topicsSummary: ReturnType<typeof getTopicsSummary>
 }) => {
-  const [value, setValue] = useState<Variants>(variants.comments);
+  const [tabs, setTabs] = useState<Variants>(variants.comments);
   return (
     <Card className={"bg-background shadow-md rounded-lg p-4 mb-6"}>
       <CardHeader>
         Follow user Activity
       </CardHeader>
       <CardContent>
-        <Tabs value={value} onValueChange={(value) =>
-          setValue(value as Variants)
+        <Tabs value={tabs} onValueChange={(value) =>
+          setTabs(value as Variants)
         }>
 
           <TabsList className="grid w-full grid-cols-3">
@@ -32,6 +37,7 @@ const UserActivity = ({user}: {
             <TabsTrigger value={variants.reviews}>{variants.reviews}</TabsTrigger>
           </TabsList>
           <TabsContent value={variants.posts}>
+            <UserPostsFilters topicsSummary={topicsSummary} />
             <UserPosts userId={user.id} />
 
           </TabsContent>

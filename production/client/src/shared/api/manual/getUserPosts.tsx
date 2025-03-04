@@ -2,14 +2,16 @@ import { graphql } from "@/shared/api/graphql";
 
 const getUserPosts = graphql(`
     query getUserPosts($createdAt: SortOrder, $rating: SortOrder,
-        $skipPages: Int, $topics: [String!], $userId: Int!) {
+        $skipPages: Int, $userId: Int!, $topics: [String!], $subTopics: [String!], $topicsOrSubTopics: [String!]) {
 
         userPosts (findUserPostsInput: {
             createdAt: $createdAt,
             rating: $rating,
             skipPages: $skipPages,
-            topics: $topics,
             userId: $userId
+            topics: $topics,
+            subTopics: $subTopics,
+            topicsOrSubTopics: $topicsOrSubTopics
         }) {
             totalPages,
             data {

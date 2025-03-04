@@ -320,8 +320,10 @@ export type GetUserPostsQueryVariables = Exact<{
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
   skipPages?: InputMaybe<Scalars['Int']['input']>;
-  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   userId: Scalars['Int']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  topicsOrSubTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
@@ -378,6 +380,13 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', register: boolean };
+
+export type SendFriendshipRequestMutationVariables = Exact<{
+  receiverId: Scalars['Int']['input'];
+}>;
+
+
+export type SendFriendshipRequestMutation = { __typename?: 'Mutation', sendFriendshipRequest: { __typename?: 'Friendship', receiverId: number } };
 
 export type UpdateDraftMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -605,9 +614,9 @@ export const GetUserFriendshipsCountDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<GetUserFriendshipsCountQuery, GetUserFriendshipsCountQueryVariables>;
 export const GetUserPostsDocument = new TypedDocumentString(`
-    query getUserPosts($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $topics: [String!], $userId: Int!) {
+    query getUserPosts($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $userId: Int!, $topics: [String!], $subTopics: [String!], $topicsOrSubTopics: [String!]) {
   userPosts(
-    findUserPostsInput: {createdAt: $createdAt, rating: $rating, skipPages: $skipPages, topics: $topics, userId: $userId}
+    findUserPostsInput: {createdAt: $createdAt, rating: $rating, skipPages: $skipPages, userId: $userId, topics: $topics, subTopics: $subTopics, topicsOrSubTopics: $topicsOrSubTopics}
   ) {
     totalPages
     data {
@@ -723,6 +732,13 @@ export const RegisterDocument = new TypedDocumentString(`
   )
 }
     `) as unknown as TypedDocumentString<RegisterMutation, RegisterMutationVariables>;
+export const SendFriendshipRequestDocument = new TypedDocumentString(`
+    mutation sendFriendshipRequest($receiverId: Int!) {
+  sendFriendshipRequest(createFriendshipInput: {receiverId: $receiverId}) {
+    receiverId
+  }
+}
+    `) as unknown as TypedDocumentString<SendFriendshipRequestMutation, SendFriendshipRequestMutationVariables>;
 export const UpdateDraftDocument = new TypedDocumentString(`
     mutation updateDraft($id: Int!, $body: JSONObject, $title: String, $topics: [String!], $subTopics: [String!]) {
   updateDraft(

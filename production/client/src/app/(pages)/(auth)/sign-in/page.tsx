@@ -33,12 +33,7 @@ const Page = () => {
   const searchParams = useSearchParams();
   const returnUrl = searchParams.get("returnUrl");
   const dispatch = useDispatch();
-
-
   const user = useSelector(userSlice.selectors.user);
-  if (user) {
-    router.push(returnUrl || "/");
-  }
 
   const { mutate: loginUser, isError, error } = useLoginMutation({
     onSuccess: (data) => {
@@ -51,6 +46,9 @@ const Page = () => {
     loginUser(values);
   }
 
+  if (user) {
+    return router.push(returnUrl || "/");
+  }
   return (
     <AuthWrapper returnUrl={returnUrl}>
       <Form {...form}>
