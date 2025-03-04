@@ -10,8 +10,8 @@ export class TransactionImpl implements Transaction {
   ) {
   }
 
-  exec<T extends readonly Promise<any>[]>(arg: [...T]){
+  exec<T extends readonly Promise<any>[]>(arg: [...T]) {
     console.log(this.prismaService);
-    return this.prismaService.$transaction(arg as Prisma.PrismaPromise<any>[]) as Promise<{ [K in keyof T]: Awaited<T[K]>}>
+    return this.prismaService.$transaction(arg as Prisma.PrismaPromise<any>[]) as Promise<{ [K in keyof T]: Awaited<T[K]> }>;
   }
 }

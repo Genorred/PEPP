@@ -1,14 +1,14 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { Field, InputType, Int } from "@nestjs/graphql";
 
 @InputType()
 export class CreateReplyInput {
   @Field(() => Int)
   postId: number;
   @Field()
-  message: string
+  message: string;
   @Field(() => Int)
-  parentId: number
-  @Field(() => Int, { nullable: true})
-  respondedCommentId?: number
+  parentId: number;
+  @Field(() => Int, { nullable: true })
+  respondedCommentId?: number;
 }
 

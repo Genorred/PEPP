@@ -1,21 +1,15 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
-import { Control, Controller, useForm } from "react-hook-form";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Button } from "@/shared/ui/button";
-import { ChevronDown, Search } from "lucide-react";
-import { Input } from "@/shared/ui/input";
+import { ChevronDown } from "lucide-react";
 import { ScrollArea } from "@/shared/ui/scroll-area";
-import { Checkbox } from "@/shared/ui/checkbox";
-import { Label } from "@/shared/ui/label";
-import { useTopicsQuery } from "@/shared/api/graphql/generated";
-import { useDebounceCallback } from "usehooks-ts";
 import { getTopicsSummary } from "@/app/(pages)/(user)/profile/[id]/getTopicsSummary";
 import { userFiltersSlice } from "@/app/(pages)/(user)/profile/[id]/filters.slice";
 import { UserFilterState } from "@/app/(pages)/(user)/profile/[id]/domain";
-import { FilterState } from "@/widgets/PostsFilter/model/domain";
 import UserTopicToChoose from "@/app/(pages)/(user)/profile/[id]/UserTopicToChoose";
 
 const UserPostsFilters = ({ topicsSummary }: {

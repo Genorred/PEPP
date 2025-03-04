@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import { useDraftsQuery } from "@/shared/api/graphql/generated";
-import { apiClient } from "@/shared/api/base";
 import { useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
 import { useRouter } from "next/navigation";

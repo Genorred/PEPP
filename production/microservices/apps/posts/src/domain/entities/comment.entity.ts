@@ -13,7 +13,7 @@ export class Comment {
   @Field(() => User)
   user?: User;
   @Field(() => Int, { nullable: true })
-  respondedCommentId: number
+  respondedCommentId: number;
 
   @Field()
   createdAt: Date;

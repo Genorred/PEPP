@@ -1,12 +1,10 @@
-import { Resolver, Query, Mutation, Args, Int } from "@nestjs/graphql";
+import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Draft } from "../../domain/entities/draft.entity";
 import { DraftsUseCase } from "../../application/drafts.use-case";
 import { CurrentUser, CurrentUserI } from "@_shared/auth-guard/CurrentUser";
-import { CreateDraftInputService } from "../../domain/dto/drafts/create-draft.input";
-import { UpdateDraftInput, UpdateDraftInputService } from "../../domain/dto/drafts/update-draft.input";
+import { UpdateDraftInput } from "../../domain/dto/drafts/update-draft.input";
 import { Post } from "../../domain/entities/post.entity";
 import { DraftsRepository } from "../../domain/repositories/drafts/drafts.repository";
-import { RemovePostDto } from "../../domain/dto/posts/remove-post.dto";
 import { FindDraftInput } from "../dto/drafts/find-draft.input";
 import { CreateDraftInput } from "../dto/drafts/create-draft.input";
 import useAuth from "@_shared/auth-guard/useAuth";

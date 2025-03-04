@@ -1,21 +1,20 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "@_shared/entities/jwt.entity";
 import { TokenService } from "../../domain/domain-service/token.service";
-import e, { CookieOptions, Response } from "express";
+import { CookieOptions, Response } from "express";
 import { accessTokenLife, getCookiesOptions, refreshTokenLife } from "@_shared/consts/auth";
 import { ConfigService } from "@nestjs/config";
-import { User } from "../../interfaces/entities/user.entity";
 import { GenerateTokenDto } from "../../domain/domain-service/dto/generate-token.dto";
 import { GenerateUserCredentialsTokenDto } from "../../domain/domain-service/dto/generate-user-credentials-token.dto";
 
 @Injectable()
 export class TokenServiceImpl implements TokenService {
-  cookiesOptions: CookieOptions
+  cookiesOptions: CookieOptions;
 
   constructor(private jwtService: JwtService,
-              private configService: ConfigService,) {
-    this.cookiesOptions = getCookiesOptions(this.configService.get("NODE_ENV"))
+              private configService: ConfigService) {
+    this.cookiesOptions = getCookiesOptions(this.configService.get("NODE_ENV"));
   }
 
   verify(token: string): Record<string, any> {
@@ -51,6 +50,7 @@ export class TokenServiceImpl implements TokenService {
       maxAge: refreshTokenLife
     });
   }
+
   removeTokens(res: Response) {
     res.clearCookie("refreshToken", this.cookiesOptions);
     res.clearCookie("accessToken", this.cookiesOptions);

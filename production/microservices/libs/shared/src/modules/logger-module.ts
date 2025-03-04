@@ -1,5 +1,6 @@
 import { LoggerModule } from "nestjs-pino";
 import { Module } from "@nestjs/common";
+
 @Module({
   imports: [
     LoggerModule.forRoot({

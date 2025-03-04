@@ -1,10 +1,9 @@
-import { ConflictException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { LoginInput } from "../domain/dto/input/auth/login.input";
 import * as argon2 from "argon2";
 import { CustomContext } from "@_shared/types/CustomContext";
 import getCookies from "@_shared/utils/getCookies";
 import { UsersRepository } from "../domain/repositories/users.repository";
-import { CreateUserDto } from "../domain/dto/input/users/create-user.dto";
 import { TokenService } from "../domain/domain-service/token.service";
 import { CacheRepository } from "../domain/repositories/cache.repository";
 import { NotificationService } from "./services/notification.service";

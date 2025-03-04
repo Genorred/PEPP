@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardContent, CardFooter } from "@/shared/ui/card";
-import { MessageCircle, SettingsIcon } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { Review } from "@/entities/Post/model";
 import Rating from "@/entities/Post/ui/Rating";
@@ -10,8 +10,6 @@ import UserLink from "@/entities/Post/ui/UserLink";
 import ReviewsDialog from "@/entities/Post/ui/ReviewsDialog";
 import { PostRecommendationsQuery } from "@/shared/api/graphql/graphql";
 import { GetUserPostsQuery } from "@/shared/api/graphql/generated";
-import { cn } from "@/shared/lib/utils";
-import { buttonVariants } from "@/shared/ui/button";
 
 const PostCard = ({
                     id,

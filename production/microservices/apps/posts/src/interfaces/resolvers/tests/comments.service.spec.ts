@@ -1,18 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { CommentsUseCase } from '../../../application/comments.use-case';
+import { Test, TestingModule } from "@nestjs/testing";
+import { CommentsUseCase } from "../../../application/comments.use-case";
 
-describe('CommentsService', () => {
+describe("CommentsService", () => {
   let service: CommentsUseCase;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CommentsUseCase],
+      providers: [CommentsUseCase]
     }).compile();
 
     service = module.get<CommentsUseCase>(CommentsUseCase);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 });

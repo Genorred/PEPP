@@ -1,24 +1,17 @@
 import React, { useState } from "react";
-import {
-  GetUserPostsQueryVariables, SortOrder,
-  useGetUserPostsQuery,
-  useInfiniteGetUserPostsQuery,
-  useInfinitePostRecommendationsQuery
-} from "@/shared/api/graphql/generated";
-import { PostRecommendationsQueryVariables } from "@/shared/api/graphql/graphql";
-import { useIntersectionObserver } from "usehooks-ts";
+import { SortOrder, useGetUserPostsQuery } from "@/shared/api/graphql/generated";
 import { useSelector } from "react-redux";
-import { userSlice } from "@/entities/User/model/user.slice";
 import { FileX } from "lucide-react";
 import Container from "@/shared/ui/Container";
 import { Post } from "@/entities/Post";
-import PostsFilter from "@/widgets/PostsFilter";
 import { userFiltersSlice } from "@/app/(pages)/(user)/profile/[id]/filters.slice";
 import {
   Pagination,
-  PaginationContent, PaginationEllipsis,
+  PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
-  PaginationLink, PaginationNext,
+  PaginationLink,
+  PaginationNext,
   PaginationPrevious
 } from "@/shared/ui/pagination";
 

@@ -9,7 +9,7 @@ export default registerAs("frontend", () =>
       url: {
         value: process.env.CLIENT_URL,
         joi: Joi.string().required()
-      },
+      }
     }
   )
 );

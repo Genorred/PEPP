@@ -7,7 +7,7 @@ export default registerAs("microservicesConfig", () => (
     const name = process.env[`${serviceName}_SERVICE_HOST`];
     // const port = process.env[`${serviceName}_SERVICE_PORT`] || 5000;
     const port = 8080;
-    console.log( {
+    console.log({
       name,
       url: `http://${name}:${port}/graphql`
     });

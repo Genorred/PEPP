@@ -58,7 +58,7 @@ export const UserTooltip = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.img ?? ''} alt="@shadcn" />
+                      <AvatarImage src={user?.img ?? ""} alt="@shadcn" />
                       <AvatarFallback>SC</AvatarFallback>
                     </Avatar>
                   </Button>

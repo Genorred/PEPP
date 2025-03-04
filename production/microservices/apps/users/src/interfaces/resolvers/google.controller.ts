@@ -1,6 +1,8 @@
-import { Controller, Get, Req, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Controller, Get, UseGuards, UseInterceptors } from "@nestjs/common";
 import { GoogleGuard } from "../../infrastructure/guards/google.guard";
-import { RedirectToGoogleSuccessInterceptor } from "../../infrastructure/interceptors/redirect-to-google-success.interceptor";
+import {
+  RedirectToGoogleSuccessInterceptor
+} from "../../infrastructure/interceptors/redirect-to-google-success.interceptor";
 
 @Controller("auth")
 export class GoogleController {

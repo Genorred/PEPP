@@ -13,7 +13,7 @@ interface State {
 const initialState: State = {
   topPosition: 0,
   lastScrollTop: 0,
-  isMobile: false,
+  isMobile: false
 };
 export const scrollSlice = createSlice({
   name: "scroll",
@@ -21,21 +21,21 @@ export const scrollSlice = createSlice({
   selectors: {
     topPosition: state => state.topPosition,
     isScrolling: state => !!state.topPosition,
-    isMobile: state => state.isMobile,
+    isMobile: state => state.isMobile
   },
   reducers: {
     setIsMobile: (state, action: PayloadAction<boolean>) => {
       state.isMobile = action.payload;
     },
     handleScroll: (state, action: PayloadAction<number>) => {
-        if (!state.isMobile) return;
+      if (!state.isMobile) return;
 
-        const scrollTop = action.payload;
-        const difference = state.lastScrollTop - scrollTop;
+      const scrollTop = action.payload;
+      const difference = state.lastScrollTop - scrollTop;
 
-        let newValue = state.topPosition + difference;
-        state.topPosition = Math.min(0, Math.max(newValue, MAX_HEIGHT)); // Clamp
-        state.lastScrollTop = scrollTop;
+      let newValue = state.topPosition + difference;
+      state.topPosition = Math.min(0, Math.max(newValue, MAX_HEIGHT)); // Clamp
+      state.lastScrollTop = scrollTop;
     },
     setTopPosition: (state, action: PayloadAction<number>) => {
       state.topPosition = action.payload;

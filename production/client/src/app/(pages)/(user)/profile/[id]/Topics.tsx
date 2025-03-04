@@ -1,6 +1,5 @@
-'use client'
+"use client";
 import React from "react";
-import { GetUserProfileInfoQuery } from "@/shared/api/graphql/generated";
 import { Badge } from "@/shared/ui/badge";
 import { Card } from "@/shared/ui/card";
 import { getTopicsSummary } from "./getTopicsSummary";

@@ -1,17 +1,17 @@
 import {
   useCreateDraftMutation,
   useCreatePostMutation,
-  useCreateVersionDraftMutation, useCreateVersionPostMutation, usePublishDraftMutation,
-  useUpdateDraftMutation,
+  useCreateVersionDraftMutation,
+  useCreateVersionPostMutation,
+  usePublishDraftMutation,
+  useUpdateDraftMutation
 } from "@/shared/api/graphql/generated";
 import { HandleWorkFormT } from "@/features/Editor/ui/SaveWork";
 import { useEditorRef } from "@udecode/plate-common/react";
-import { getChangedFields } from "@/shared/utils/getChangedFields";
 import { BaseSyntheticEvent } from "react";
 import { buttonNames } from "@/features/Editor/consts/buttonNames";
 import { useDispatch, useSelector } from "react-redux";
-import { focusedPostSlice, mutatedData } from "@/features/Editor/model/focused-post.slice";
-import { useFetchPostQuery } from "@/features/Editor/lib/useFetchPostQuery";
+import { focusedPostSlice } from "@/features/Editor/model/focused-post.slice";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useGetUpdatedFields } from "./useGetUpdatedFields";
@@ -35,7 +35,7 @@ const useSavePost = () => {
 
     const navigate = (path: string) => {
       router.push(path);
-    }
+    };
 
 
     return function onSubmit(values: HandleWorkFormT, event?: BaseSyntheticEvent<object, any, any>) {
@@ -75,7 +75,7 @@ const useSavePost = () => {
         }
       } else {
         if (data.draftId || data.versionId) { // just update
-          const variables = getUpdatedFields(values)
+          const variables = getUpdatedFields(values);
 
           updateDraft({
             id: data.draftId || data.versionId as number,

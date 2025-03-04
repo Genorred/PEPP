@@ -1,18 +1,17 @@
 import { PostsRepository } from "../domain/repositories/posts/posts.repository";
 import { SearchRepository } from "../domain/repositories/posts/search.repository";
 import { PreferencesRepository } from "../domain/repositories/posts/preferenses.repository";
-import { CreatePostDto, CreatePostServiceDto } from "../domain/dto/posts/create-post.dto";
+import { CreatePostServiceDto } from "../domain/dto/posts/create-post.dto";
 import { Inject, UnauthorizedException } from "@nestjs/common";
 import { FindAllPostsDto } from "../domain/dto/posts/_nextjs_find-posts.dto";
 import FRONTEND_SERVER from "../infrastructure/config/frontend-server";
 import { ConfigType } from "@nestjs/config";
-import { FindPostDto, FindPostInputService } from "../domain/dto/posts/find-post.dto";
+import { FindPostInputService } from "../domain/dto/posts/find-post.dto";
 import { FindAlgorithmPostsDto } from "../domain/dto/posts/find-algorithm-posts.dto";
 import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
 import { RemovePostInputService } from "../domain/dto/posts/remove-post.dto";
 import { PostsSecurityCheckService } from "../domain/domain_services/posts.security.check.service";
 import { ClientCacheRepository } from "../domain/repositories/client.cache.repository";
-import { UpdatePostInputService } from "../domain/dto/posts/update-post.dto";
 import { Recommendations } from "../interfaces/dto/posts/output/recommendations.output";
 import { FindUserPostsDto } from "../domain/dto/posts/find-user-posts.dto";
 
@@ -51,13 +50,13 @@ export class PostsUseCase {
       subTopics,
       topicsOrSubTopics,
       createdAt
-    }
+    };
     const [data, totalCount] = await Promise.all([
       this.postsRepository.findMany(
         {
           ...params,
           take: pageSize,
-          skip: skipPages,
+          skip: skipPages
         }
       ),
       this.postsRepository.count(params)

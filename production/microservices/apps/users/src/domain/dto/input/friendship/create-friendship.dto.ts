@@ -1,4 +1,4 @@
 export class CreateFriendshipDto {
-  senderId: number
-  receiverId: number
+  senderId: number;
+  receiverId: number;
 }

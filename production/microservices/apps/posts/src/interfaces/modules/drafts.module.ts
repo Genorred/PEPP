@@ -13,7 +13,7 @@ import { VersionsModule } from "./versions.module";
     provide: DraftsRepository,
     useClass: DraftsRepositoryImpl
   }],
-  imports: [PostsModule, TopicsModule, TopicsModule, VersionsModule, PrismaModule],
+  imports: [PostsModule, TopicsModule, TopicsModule, VersionsModule, PrismaModule]
 })
 export class DraftsModule {
 }

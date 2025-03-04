@@ -22,7 +22,7 @@ const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (replyMessage.length > 0) {
-      onCreate(replyMessage.trim())
+      onCreate(replyMessage.trim());
     }
   }
 

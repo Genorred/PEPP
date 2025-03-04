@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
 import { useDraftQuery } from "@/shared/api/graphql/generated";
-import { apiClient } from "@/shared/api/base";
 import { EditPost } from "@/features/Editor";
 import { focusedPostSlice } from "@/features/Editor/model/focused-post.slice";
 import { useDispatch } from "react-redux";
@@ -14,7 +13,7 @@ const Page = ({ params }: {
   }>
 }) => {
   const id = Number(React.use(params).id);
-  const { data, isLoading } = useDraftQuery( { id }, {
+  const { data, isLoading } = useDraftQuery({ id }, {
     enabled: !!id
   });
 

@@ -48,7 +48,7 @@ const Page = async ({ params }: {
     id
   } as PostQueryVariables, {});
 
-  console.log('zov', post);
+  console.log("zov", post);
   return (
     <Suspense fallback={null}>
       <Ssr id={id} data={post} />

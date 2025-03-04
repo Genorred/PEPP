@@ -11,5 +11,5 @@ export const hosts = {
   client: "client",
   es01: "es01",
   redis_posts: "redis_posts",
-  redis_auth: 'redis_auth',
+  redis_auth: "redis_auth"
 } as const;

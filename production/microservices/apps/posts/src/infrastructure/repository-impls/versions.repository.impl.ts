@@ -1,4 +1,3 @@
-import { Args } from "@nestjs/graphql";
 import { VersionsRepository } from "../../domain/repositories/versions/versions.repository";
 import { PrismaService } from "./prismaDb/prisma.service";
 import { Version } from "../../domain/entities/version.entity";
@@ -9,11 +8,11 @@ import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class VersionsRepositoryImpl implements VersionsRepository {
-  constructor(private  readonly prismaService: PrismaService) {
+  constructor(private readonly prismaService: PrismaService) {
   }
 
   create(createVersionInput: CreateVersionDto): Promise<Version> {
-    const { postId, version, userId, title, description, body } = createVersionInput
+    const { postId, version, userId, title, description, body } = createVersionInput;
     return this.prismaService.version.create({
       data: {
         actualPost: {
@@ -25,28 +24,28 @@ export class VersionsRepositoryImpl implements VersionsRepository {
         description,
         body,
         version,
-        userId,
+        userId
       }
-    })
+    });
   }
 
-  findMany(findByPostInput: FindManyDto ): Promise<Version[]> {
-    const {postId, userId } = findByPostInput
+  findMany(findByPostInput: FindManyDto): Promise<Version[]> {
+    const { postId, userId } = findByPostInput;
     return this.prismaService.version.findMany({
       where: {
         postId,
         userId
       }
-    })
+    });
   }
 
   findOne(findOneVersion: FindOneVersionDto): Promise<Version> {
-    const {id} = findOneVersion
+    const { id } = findOneVersion;
     return this.prismaService.version.findFirst({
       where: {
         id
       }
-    })
+    });
 
   }
 }

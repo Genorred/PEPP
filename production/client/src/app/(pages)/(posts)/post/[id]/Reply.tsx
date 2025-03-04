@@ -1,18 +1,14 @@
 import React, { useState } from "react";
-import {
-  CommentTemplate,
-  CommentTemplateI,
-  UserCommentTemplateI
-} from "@/app/(pages)/(posts)/post/[id]/CommentTemplate";
+import { UserCommentTemplateI } from "@/app/(pages)/(posts)/post/[id]/CommentTemplate";
 import { CalendarIcon, CornerDownRight, MessageCircle } from "lucide-react";
 import { Card, CardContent } from "@/shared/ui/card";
-import { cn } from "@/shared/lib/utils";
 import Image from "next/image";
 import { Button } from "@/shared/ui/button";
 import CommentForm from "@/app/(pages)/(posts)/post/[id]/CommentForm";
 
 const Reply = ({ comment, onFindRespondedComment, onCreate }: {
-  comment: {  id: number;
+  comment: {
+    id: number;
     user: UserCommentTemplateI;
 
     createdAt: string;
@@ -79,7 +75,7 @@ const Reply = ({ comment, onFindRespondedComment, onCreate }: {
           </Button>
         </div>
         {isReplying &&
-          <CommentForm onCreate={onCreate(comment.id)} isReplyingState={state} placeholder={'reply'}/>}
+          <CommentForm onCreate={onCreate(comment.id)} isReplyingState={state} placeholder={"reply"} />}
       </CardContent>
     </Card>
   );

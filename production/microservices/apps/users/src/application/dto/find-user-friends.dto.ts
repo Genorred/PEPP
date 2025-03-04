@@ -1,4 +1,4 @@
 export class FindUserFriendsDto {
-  userId: number
-  cursorId?: number
+  userId: number;
+  cursorId?: number;
 }

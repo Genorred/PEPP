@@ -1,6 +1,5 @@
 "use client";
 import * as React from "react";
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 
@@ -22,13 +21,13 @@ import { UserTooltip } from "./UserTooltip";
 import { useHidingNavbar } from "@/widgets/Navbar/ui/useHidingNavbar";
 
 function Navbar() {
-  const {topPosition} = useHidingNavbar()
+  const { topPosition } = useHidingNavbar();
 
   return (
     <nav className="border-b w-full h-16">
       <div className="flex w-full h-16 items-center px-4 fixed transition-all bg-background z-10"
-        style={{ top: `${topPosition}px` }}
-        >
+           style={{ top: `${topPosition}px` }}
+      >
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon" className="md:hidden">

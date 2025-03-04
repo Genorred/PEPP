@@ -6,7 +6,7 @@ import {
   PostsIdQuery,
   PostsIdQueryVariables
 } from "@/shared/api/graphql/generated";
-import { apiClient, serverApiClient } from "@/shared/api/base";
+import { serverApiClient } from "@/shared/api/base";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import ViewPost from "../ViewPost";
 

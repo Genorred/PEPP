@@ -8,8 +8,9 @@ import { User } from "./user.entity";
 @Directive("@key(fields: \"id\")")
 export class Draft extends OmitType(Post, [
   "rating", "commentsQuantity", "reviewsQuantity", "isHidden"
-]) {  @Field(() => Int)
-id: number;
+]) {
+  @Field(() => Int)
+  id: number;
   @Field()
   version: number;
   @Field(() => Int, { nullable: true })

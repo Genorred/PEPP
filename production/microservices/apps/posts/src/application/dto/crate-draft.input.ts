@@ -1,4 +1,3 @@
-
 import { Field, InputType, Int } from "@nestjs/graphql";
 import { GraphQLJSONObject } from "graphql-type-json";
 import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
@@ -16,7 +15,7 @@ export class CreateDraftInput {
   @Field(() => [String], { nullable: true })
   subTopics?: string[];
   @Field(() => Int, { nullable: true })
-  postId?: number
+  postId?: number;
 }
 
 export type CreateDraftInputService = CurrentUserExtendT<CreateDraftInput>

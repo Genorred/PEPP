@@ -3,10 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import UserPosts from "@/app/(pages)/(user)/profile/[id]/UserPosts";
-import { User } from "@/entities/User/model/User";
 import { GetUserProfileInfoQuery } from "@/shared/api/graphql/generated";
-import { useForm } from "react-hook-form";
-import { FilterState } from "@/widgets/PostsFilter/model/domain";
 import UserPostsFilters from "@/app/(pages)/(user)/profile/[id]/UserPostsFilters";
 import { getTopicsSummary } from "@/app/(pages)/(user)/profile/[id]/getTopicsSummary";
 

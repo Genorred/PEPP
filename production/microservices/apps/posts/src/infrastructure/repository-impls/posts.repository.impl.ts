@@ -1,20 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { CommentsRepository } from "../../domain/repositories/comments/comments.repository";
 import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
-import { CreateCommentInput } from "../../domain/dto/comments/create-comment.input";
-import { Comment } from "../../domain/entities/comment.entity";
 import { PrismaService } from "./prismaDb/prisma.service";
-import { CreateReplyInput } from "../../domain/dto/comments/create-reply.input";
 import { PostsRepository } from "../../domain/repositories/posts/posts.repository";
-import { CreatePostDto, CreatePostServiceDto } from "../../domain/dto/posts/create-post.dto";
+import { CreatePostServiceDto } from "../../domain/dto/posts/create-post.dto";
 import { UpdatePostDto } from "../../domain/dto/posts/update-post.dto";
-import { TopicsRepositoryImpl } from "./topics.repository.impl";
 import { Post } from "../../domain/entities/post.entity";
 import { FindManyDto } from "../../domain/dto/posts/find-many.dto";
-import { FindPostDto, FindPostInputService } from "../../domain/dto/posts/find-post.dto";
+import { FindPostDto } from "../../domain/dto/posts/find-post.dto";
 import { RemovePostInputService } from "../../domain/dto/posts/remove-post.dto";
 import { TopicsPrismaRepository } from "./topics.prisma.repository";
-import { SearchRepository } from "../../domain/repositories/posts/search.repository";
 import { DMMF } from "@prisma/client/runtime/library";
 import SortOrder = DMMF.SortOrder;
 
@@ -65,7 +59,7 @@ export class PostsRepositoryImpl implements PostsRepository {
       {
         orderBy: {
           rating: rating?.toLowerCase() as SortOrder,
-          createdAt:createdAt?.toLowerCase() as SortOrder
+          createdAt: createdAt?.toLowerCase() as SortOrder
         },
         ...this._findPostsParams(input),
         include: {
@@ -73,7 +67,7 @@ export class PostsRepositoryImpl implements PostsRepository {
           subTopics: true
         }
       }
-    )
+    );
   }
 
   count(input: FindManyDto): Promise<number> {

@@ -2,7 +2,6 @@
 import React, { useEffect } from "react";
 import { EditPost } from "@/features/Editor";
 import { usePostQuery } from "@/shared/api/graphql/generated";
-import { apiClient } from "@/shared/api/base";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import { useDispatch } from "react-redux";
 import { focusedPostSlice } from "@/features/Editor/model/focused-post.slice";
@@ -13,7 +12,7 @@ const Page = ({ post, id }: {
   id: number
   post: PostQuery;
 }) => {
-  const { data, isLoading } = usePostQuery( { id }, {
+  const { data, isLoading } = usePostQuery({ id }, {
     initialData: post,
     enabled: !!id
   });

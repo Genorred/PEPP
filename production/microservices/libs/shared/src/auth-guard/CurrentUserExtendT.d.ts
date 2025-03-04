@@ -1,3 +1,3 @@
 export type CurrentUserExtendT<TBase> = {
-    userId: number;
+  userId: number;
 } & TBase;

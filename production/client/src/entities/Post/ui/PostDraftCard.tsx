@@ -8,7 +8,7 @@ const PostDraftCard = ({
                          id,
                          img,
                          title,
-                         description,
+                         description
                        }: Pick<GeneralPostI, "id" | "img" | "title" | "description">) => {
   const url = `/draft/${id}`;
   return (

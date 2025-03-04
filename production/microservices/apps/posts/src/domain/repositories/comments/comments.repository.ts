@@ -1,14 +1,12 @@
 import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
 import { CreateCommentInput } from "../../dto/comments/create-comment.input";
 import { Comment } from "../../entities/comment.entity";
-import { GetByPostInput } from "../../dto/comments/get-by-post.input";
-import { CommentsByPost } from "../../dto/comments/output/comments-by-post.output";
-import { GetByParentCommentInput } from "../../dto/comments/get-by-parent-comment.input";
 import { CreateReplyInput } from "../../dto/comments/create-reply.input";
 import { FindManyInput } from "../../dto/comments/find-many.input";
 import { UpdateCommentInput } from "../../dto/comments/update-comment.input";
 
-export const COMMENTS_REPOSITORY_TOKEN = Symbol('CommentsRepository');
+export const COMMENTS_REPOSITORY_TOKEN = Symbol("CommentsRepository");
+
 export abstract class CommentsRepository {
   abstract create(input: CurrentUserExtendT<CreateCommentInput>): Promise<Comment>;
 

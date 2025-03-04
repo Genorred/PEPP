@@ -5,9 +5,11 @@
   "entryFile": "apps/notifications/src/main",
   "compilerOptions": {
     "deleteOutDir": true,
-    "assets": [{
-      "include": "templates/**/*",
-      "outDir": "dist/apps/notifications/src"
-    }]
+    "assets": [
+      {
+        "include": "templates/**/*",
+        "outDir": "dist/apps/notifications/src"
+      }
+    ]
   }
 }

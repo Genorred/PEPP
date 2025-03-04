@@ -5,8 +5,6 @@ import { CreateCommentInput } from "../../domain/dto/comments/create-comment.inp
 import { Comment } from "../../domain/entities/comment.entity";
 import { PrismaService } from "./prismaDb/prisma.service";
 import { CreateReplyInput } from "../../domain/dto/comments/create-reply.input";
-import { GetByPostInput } from "../../domain/dto/comments/get-by-post.input";
-import { CommentsByPost } from "../../domain/dto/comments/output/comments-by-post.output";
 import { Prisma } from ".prisma/client";
 import { FindManyInput } from "../../domain/dto/comments/find-many.input";
 import { UpdateCommentInput } from "../../domain/dto/comments/update-comment.input";
@@ -17,7 +15,6 @@ export class CommentsRepositoryImpl implements CommentsRepository {
     private readonly prismaService: PrismaService
   ) {
   }
-
 
 
   createReply(input: CurrentUserExtendT<CreateReplyInput>): Promise<Comment> {
@@ -64,7 +61,7 @@ export class CommentsRepositoryImpl implements CommentsRepository {
           increment: 1
         }
       }
-    })
+    });
   }
 
   findOne(id: number): Promise<Comment> {
@@ -74,7 +71,7 @@ export class CommentsRepositoryImpl implements CommentsRepository {
   }
 
   findMany(input: FindManyInput): Promise<Comment[]> {
-  const {postId, parentId, skipPages: skip, likes, repliesQuantity, dislikes, take} = input;
+    const { postId, parentId, skipPages: skip, likes, repliesQuantity, dislikes, take } = input;
     return this.prismaService.comment.findMany({
       where: {
         postId,
@@ -89,7 +86,7 @@ export class CommentsRepositoryImpl implements CommentsRepository {
       }, {
         dislikes
       }] as Prisma.CommentOrderByWithRelationInput[]
-    })
+    });
   }
 
   update(id: number, updateCommentInput: UpdateCommentInput) {

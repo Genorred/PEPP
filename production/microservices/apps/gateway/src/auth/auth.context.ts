@@ -6,8 +6,8 @@ import { Cookie } from "@_shared/types/Cookie";
 import { RedisClientConnectionType } from "@keyv/redis";
 import { REDIS_CLIENT } from "./redis.module";
 import { CurrentUserI } from "@_shared/auth-guard/CurrentUser";
-import {Response, Request} from "express";
-import { accessTokenLife, getCookiesOptions } from "@_shared/consts/auth"
+import { Request, Response } from "express";
+import { accessTokenLife, getCookiesOptions } from "@_shared/consts/auth";
 
 @Injectable()
 export class AuthContext {
@@ -33,7 +33,7 @@ export class AuthContext {
           console.log("user", user);
           const newAccessToken = this.jwtService.sign({
             sub: user.sub,
-            role: user.role,
+            role: user.role
           } as JwtPayload, {
             expiresIn: accessTokenLife
           });

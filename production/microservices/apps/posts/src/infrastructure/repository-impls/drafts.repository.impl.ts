@@ -1,16 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { CommentsRepository } from "../../domain/repositories/comments/comments.repository";
-import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
-import { CreateCommentInput } from "../../domain/dto/comments/create-comment.input";
-import { Comment } from "../../domain/entities/comment.entity";
 import { PrismaService } from "./prismaDb/prisma.service";
-import { CreateReplyInput } from "../../domain/dto/comments/create-reply.input";
-import { PostsRepository } from "../../domain/repositories/posts/posts.repository";
-import { UpdatePostDto, UpdatePostInputService } from "../../domain/dto/posts/update-post.dto";
-import { TopicsRepositoryImpl } from "./topics.repository.impl";
-import { Post } from "../../domain/entities/post.entity";
-import { FindManyDto } from "../../domain/dto/posts/find-many.dto";
-import { FindPostDto, FindPostInputService } from "../../domain/dto/posts/find-post.dto";
+import { UpdatePostInputService } from "../../domain/dto/posts/update-post.dto";
 import { RemovePostInputService } from "../../domain/dto/posts/remove-post.dto";
 import { DraftsRepository } from "../../domain/repositories/drafts/drafts.repository";
 import { CreateDraftInputService } from "../../domain/dto/drafts/create-draft.input";
@@ -59,14 +49,14 @@ export class DraftsRepositoryImpl implements DraftsRepository {
 
   async update(input: UpdatePostInputService): Promise<Draft> {
     const { id, topics, subTopics, userId, ...data } = input;
-    let draft: Draft
+    let draft: Draft;
 
     draft = await this.prismaService.draft.update({
-        where: { id, userId },
+      where: { id, userId },
       data: {
         ...data,
         topics: topics?.length === 0 ? this.topicsRepository.resetTopics.topics : undefined,
-        subTopics: topics?.length === 0 ? this.topicsRepository.resetTopics.subTopics : undefined,
+        subTopics: topics?.length === 0 ? this.topicsRepository.resetTopics.subTopics : undefined
       }
     });
     if (topics?.length || subTopics?.length) {
@@ -78,6 +68,6 @@ export class DraftsRepositoryImpl implements DraftsRepository {
         }
       });
     }
-    return draft
+    return draft;
   }
 }

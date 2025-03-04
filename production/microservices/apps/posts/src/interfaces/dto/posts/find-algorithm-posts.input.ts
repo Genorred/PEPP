@@ -7,7 +7,7 @@ registerEnumType(SortOrder, {
 });
 
 @InputType()
-export class FindAlgorithmPostsInput implements FindAlgorithmPostsDto{
+export class FindAlgorithmPostsInput implements FindAlgorithmPostsDto {
   @Field(() => SortOrder, { nullable: true })
   createdAt?: SortOrder;
   @Field(() => SortOrder, { nullable: true })

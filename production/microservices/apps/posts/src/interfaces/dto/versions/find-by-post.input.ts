@@ -1,5 +1,4 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
-import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
+import { Field, InputType, Int } from "@nestjs/graphql";
 
 @InputType()
 export class FindByPostInput {

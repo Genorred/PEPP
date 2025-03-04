@@ -1,5 +1,5 @@
-import * as Joi from 'joi';
-import { Schema, SchemaMap } from 'joi';
+import * as Joi from "joi";
+import { Schema, SchemaMap } from "joi";
 
 interface ConfigProps {
   value: unknown;
@@ -17,15 +17,15 @@ export default class JoiUtil {
    * or if they don't meet our Joi validation rules.
    */
   static validate<T>(config: JoiConfig<T>): T {
-    const schemaObj = JoiUtil.extractByPropName(config, 'joi') as SchemaMap<T>;
+    const schemaObj = JoiUtil.extractByPropName(config, "joi") as SchemaMap<T>;
     const schema = Joi.object(schemaObj);
-    const values = JoiUtil.extractByPropName(config, 'value') as T;
+    const values = JoiUtil.extractByPropName(config, "value") as T;
 
     const { error } = schema.validate(values, { abortEarly: false });
     if (error) {
       throw new Error(
         `Validation failed - Is there an environment variable missing?
-        ${error.message}`,
+        ${error.message}`
       );
     }
 
@@ -39,7 +39,7 @@ export default class JoiUtil {
    */
   static extractByPropName<T>(
     config: JoiConfig<T>,
-    propName: keyof ConfigProps,
+    propName: keyof ConfigProps
   ): T | SchemaMap<T> {
     /*
       Result example;
@@ -50,7 +50,7 @@ export default class JoiUtil {
      */
     const arr: any[] = Object.keys(config).map((key) => {
       return {
-        [key]: config[key][propName],
+        [key]: config[key][propName]
       };
     });
 

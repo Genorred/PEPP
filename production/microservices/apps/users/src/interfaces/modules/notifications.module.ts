@@ -4,7 +4,6 @@ import { NOTIFICATIONS_SERVICE } from "@_shared/consts/microservices-names";
 import { NotificationService } from "../../application/services/notification.service";
 import { NotificationServiceImpl } from "../../infrastructure/services/notification.service.impl";
 import { ConfigType } from "@nestjs/config";
-import redisConfig from "../../infrastructure/config/redis.config";
 import rabbitMQConfig from "../../infrastructure/config/rabbitMQ.config";
 
 @Module({

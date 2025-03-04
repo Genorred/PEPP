@@ -2,8 +2,6 @@ import { Module } from "@nestjs/common";
 import { VersionsResolver } from "../resolvers/versions.resolver";
 import { VersionsRepositoryImpl } from "../../infrastructure/repository-impls/versions.repository.impl";
 import { VersionsRepository } from "../../domain/repositories/versions/versions.repository";
-import { PostsRepository } from "../../domain/repositories/posts/posts.repository";
-import { PostsRepositoryImpl } from "../../infrastructure/repository-impls/posts.repository.impl";
 import { PostsModule } from "./posts.module";
 import { VersionsUseCase } from "../../application/versions.use-case";
 import { PrismaModule } from "../prisma.module";

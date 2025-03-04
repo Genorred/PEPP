@@ -1,4 +1,4 @@
-import { Field, InputType, Int, PartialType } from "@nestjs/graphql";
+import { Field, InputType, Int } from "@nestjs/graphql";
 import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
 
 @InputType()

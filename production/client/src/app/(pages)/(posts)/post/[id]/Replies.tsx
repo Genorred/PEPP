@@ -1,17 +1,12 @@
 import React, { useRef, useState } from "react";
 import { Separator } from "@/shared/ui/separator";
-import {
-  GetRepliesQuery,
-  GetRepliesQueryVariables,
-  useInfiniteGetRepliesQuery
-} from "@/shared/api/graphql/generated";
+import { GetRepliesQuery, GetRepliesQueryVariables, useInfiniteGetRepliesQuery } from "@/shared/api/graphql/generated";
 import { useIntersectionObserver } from "usehooks-ts";
 import Reply from "@/app/(pages)/(posts)/post/[id]/Reply";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/utils";
 import { useSelector } from "react-redux";
 import { scrollSlice } from "@/widgets/Navbar/model";
-import { CommentTemplateI } from "@/app/(pages)/(posts)/post/[id]/CommentTemplate";
 
 const Replies = ({ parentId, postId, onCreate, createdReplies }: {
   parentId: number;
@@ -48,9 +43,9 @@ const Replies = ({ parentId, postId, onCreate, createdReplies }: {
   const commentMap = React.useMemo(() => {
     const map = new Map<number, GetRepliesQuery["replies"]["data"][number]>();
     allReplies.forEach((comment) => {
-        map.set(comment.id, comment);
-      })
-    console.log('goal', map);
+      map.set(comment.id, comment);
+    });
+    console.log("goal", map);
     return map;
   }, [data?.pages]);
   const [returnTo, setReturnTo] = useState<number | null>(null);
@@ -60,43 +55,43 @@ const Replies = ({ parentId, postId, onCreate, createdReplies }: {
 
   return (
     <>
-    {returnTo ?
-      <Button className={cn("sticky flex m-4 ml-auto transition-all top-16 mr-8",
-        {
-          "opacity-0": isMobile
-        },
-        {
-          "opacity-100": !isReturnScrolling
-        }
-      )} onClick={() => {
-        repliesEnum.current[returnTo].scrollIntoView({ behavior: "smooth", block: "center" });
-        setReturnTo(null);
-      }}>
-        Return
-      </Button> : null
-    }
+      {returnTo ?
+        <Button className={cn("sticky flex m-4 ml-auto transition-all top-16 mr-8",
+          {
+            "opacity-0": isMobile
+          },
+          {
+            "opacity-100": !isReturnScrolling
+          }
+        )} onClick={() => {
+          repliesEnum.current[returnTo].scrollIntoView({ behavior: "smooth", block: "center" });
+          setReturnTo(null);
+        }}>
+          Return
+        </Button> : null
+      }
       {replies?.length && allReplies.map((reply, index) => (
-          <div key={reply.id} className="w-full"
-               ref={(replyComponent) => {
-                 if (replyComponent)
-                   repliesEnum.current[reply.id] = replyComponent;
-               }}>
-            {index > 0 && <Separator className="my-4" />}
-            <Reply
-              onFindRespondedComment={() => {
-                if (reply.respondedCommentId) {
-                  console.log(reply.respondedCommentId);
-                  console.log(repliesEnum.current);
-                  repliesEnum.current[reply.respondedCommentId].scrollIntoView({ behavior: "smooth", block: "center" });
-                  setReturnTo(reply.id);
-                }
-              }}
-              comment={{
-                ...reply,
-                respondedComment: reply.respondedCommentId ? commentMap.get(reply.respondedCommentId) : undefined
-              }} onCreate={onCreate} />
-          </div>
-        ))
+        <div key={reply.id} className="w-full"
+             ref={(replyComponent) => {
+               if (replyComponent)
+                 repliesEnum.current[reply.id] = replyComponent;
+             }}>
+          {index > 0 && <Separator className="my-4" />}
+          <Reply
+            onFindRespondedComment={() => {
+              if (reply.respondedCommentId) {
+                console.log(reply.respondedCommentId);
+                console.log(repliesEnum.current);
+                repliesEnum.current[reply.respondedCommentId].scrollIntoView({ behavior: "smooth", block: "center" });
+                setReturnTo(reply.id);
+              }
+            }}
+            comment={{
+              ...reply,
+              respondedComment: reply.respondedCommentId ? commentMap.get(reply.respondedCommentId) : undefined
+            }} onCreate={onCreate} />
+        </div>
+      ))
       }
     </>
   )

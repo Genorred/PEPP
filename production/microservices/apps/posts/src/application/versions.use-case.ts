@@ -1,15 +1,12 @@
-import { Args, Query } from "@nestjs/graphql";
 import { Version } from "../domain/entities/version.entity";
 import { FindByPostInput } from "../interfaces/dto/versions/find-by-post.input";
 import { FindOneVersionDto } from "../domain/dto/versions/find-one-version.dto";
 import { VersionsRepository } from "../domain/repositories/versions/versions.repository";
 import { PostsRepository } from "../domain/repositories/posts/posts.repository";
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { VersionIsHiddenService } from "../domain/domain_services/version-is-hidden.service";
-import { Transaction } from "../domain/repositories/transaction";
 import { CreateVersionUseCaseDto } from "./dto/create-version-use-case.dto";
 import { PostsUow } from "../domain/UoW/posts.uow";
-import { Post } from "../domain/entities/post.entity";
 import { SearchRepository } from "../domain/repositories/posts/search.repository";
 
 @Injectable()
@@ -39,7 +36,7 @@ export class VersionsUseCase {
         await this.searchService.updatePost(updatedPost);
       }
       await versionsRepository.create({ postId, ...post });
-      return updatedPost
+      return updatedPost;
     });
   }
 

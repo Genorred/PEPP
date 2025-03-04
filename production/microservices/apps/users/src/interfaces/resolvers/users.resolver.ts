@@ -1,11 +1,8 @@
-import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver, ResolveReference } from "@nestjs/graphql";
-import { UsersRepositoryImpl } from "../../infrastructure/repositories/users.repository.impl";
+import { Args, Int, Mutation, Query, Resolver, ResolveReference } from "@nestjs/graphql";
 import { User } from "../entities/user.entity";
 import { UpdateUserDto } from "../../domain/dto/input/users/update-user.dto";
 import { FindOneUserInput } from "./dto-inputs/find-one-user.input";
 import { UsersRepository } from "../../domain/repositories/users.repository";
-import UseRoles from "@_shared/auth-guard/useRoles";
-import { FindManyUserInput } from "./dto-inputs/find-many-user.input";
 import { UserUseCase } from "../../application/user.use-case";
 import { FindAllUsersInput } from "./dto-inputs/findAllUsers.input";
 
@@ -14,6 +11,7 @@ export class UsersResolver {
   constructor(private readonly usersRepository: UsersRepository,
               private readonly userUseCase: UserUseCase) {
   }
+
   @Query(() => [User], { name: "allUsers" })
   findAllUsers(@Args("findManyInput") findManyInput: FindAllUsersInput) {
     return this.userUseCase.findAllUsers(findManyInput);

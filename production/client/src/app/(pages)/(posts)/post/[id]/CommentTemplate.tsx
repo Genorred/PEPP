@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { CalendarIcon, MessageCircle } from "lucide-react";
 import { Button } from "@/shared/ui/button";
@@ -37,7 +37,7 @@ export function CommentTemplate({
                                   cardTop,
                                   cardFooter,
                                   cardBottom,
-                                  replyFormProps,
+                                  replyFormProps
                                 }: Props) {
   const state = useState(false);
   const [isReplying, setIsReplying] = state;

@@ -1,9 +1,8 @@
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
-import { EmailService } from "./email.service";
 import { MailerModule } from "@nestjs-modules/mailer";
 import mailConfig from "./config/mail.config";
-import { ConfigService, ConfigType } from "@nestjs/config";
+import { ConfigType } from "@nestjs/config";
 import { PugAdapter } from "@nestjs-modules/mailer/dist/adapters/pug.adapter";
 import { ConfigModuleInitializer } from "./config/config.module";
 import { SharedLoggerModule } from "@_shared/modules/logger-module";

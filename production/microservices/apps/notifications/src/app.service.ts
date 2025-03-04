@@ -1,9 +1,8 @@
-import { Inject, Injectable, StreamableFile } from "@nestjs/common";
-import { EmailService } from "./email.service";
+import { Inject, Injectable } from "@nestjs/common";
 import { UserConfirmation } from "./dto/user-confirmation";
 import { MailerService } from "@nestjs-modules/mailer";
-import * as path from 'path';
-import * as pug from 'pug';
+import * as path from "path";
+import * as pug from "pug";
 import frontendConfig from "./config/frontend.config";
 import { ConfigType } from "@nestjs/config";
 

@@ -1,6 +1,5 @@
 import { NotificationService } from "../../application/services/notification.service";
 import { Inject } from "@nestjs/common";
-import clientConfig from "../config/client.config";
 import { NOTIFICATIONS_SERVICE } from "@_shared/consts/microservices-names";
 import { ClientProxy } from "@nestjs/microservices";
 

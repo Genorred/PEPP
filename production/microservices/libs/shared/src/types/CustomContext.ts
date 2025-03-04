@@ -1,4 +1,4 @@
-import { Response, Request } from "express";
+import { Request, Response } from "express";
 import { GraphQLExecutionContext } from "@nestjs/graphql";
 
 export interface Credentials {
@@ -15,5 +15,5 @@ export interface CustomContextProperties {
 
 export interface CustomContext extends GraphQLExecutionContext {
   req: Request & CustomContextProperties;
-  res: Response
+  res: Response;
 }

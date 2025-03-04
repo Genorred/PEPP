@@ -1,10 +1,10 @@
-import http from 'http'
+import http from "http";
 
 const options = {
-  host: 'localhost',
+  host: "localhost",
   port: 8080,
-  path: '/health',
-  timeout: 2000,
+  path: "/health",
+  timeout: 2000
 };
 
 const request = http.request(options, (res) => {
@@ -12,7 +12,7 @@ const request = http.request(options, (res) => {
   process.exit();
 });
 
-request.on('error', () => {
+request.on("error", () => {
   process.exit(1);
 });
 

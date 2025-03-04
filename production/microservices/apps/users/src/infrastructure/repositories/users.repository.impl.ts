@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { CreateUserDto } from "../../domain/dto/input/users/create-user.dto";
 import { UpdateUserDto } from "../../domain/dto/input/users/update-user.dto";
 import { PrismaService } from "./prismaDb/prisma.service";
@@ -7,7 +7,7 @@ import { UsersRepository } from "../../domain/repositories/users.repository";
 
 @Injectable()
 export class UsersRepositoryImpl implements UsersRepository {
-  constructor(private prisma: PrismaService,
+  constructor(private prisma: PrismaService
   ) {
   }
 
@@ -42,7 +42,7 @@ export class UsersRepositoryImpl implements UsersRepository {
           in: fields
         }
       }
-    })
+    });
   }
 
   findOne(searchOptions: { id?: number, username?: string, email?: string, google_id?: string }) {

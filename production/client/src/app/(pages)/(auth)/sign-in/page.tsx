@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/ui/form";
 import { AuthWrapper } from "@/widgets/Auth";
-import { useLoginMutation, useRegisterMutation } from "@/shared/api/graphql/generated";
+import { useLoginMutation } from "@/shared/api/graphql/generated";
 import { useDispatch, useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
 import { Button } from "@/shared/ui/button";

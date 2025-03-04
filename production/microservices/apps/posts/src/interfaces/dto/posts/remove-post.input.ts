@@ -1,4 +1,4 @@
-import { Field, InputType, Int, PartialType } from "@nestjs/graphql";
+import { Field, InputType, Int } from "@nestjs/graphql";
 import { RemovePostDto } from "../../../domain/dto/posts/remove-post.dto";
 
 @InputType()

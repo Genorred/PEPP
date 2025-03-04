@@ -16,7 +16,7 @@ export const useFiltersForm = () => {
   const watchedRating = watch("rating");
 
   return {
-    control, handleSubmit, watchedTopics, setValue, watchedRating, watchedCreatedAt,
+    control, handleSubmit, watchedTopics, setValue, watchedRating, watchedCreatedAt
   };
 
 };

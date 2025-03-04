@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { CommentTemplate, CommentTemplateI } from "./CommentTemplate";
+import { CommentTemplateI } from "./CommentTemplate";
 import {
   GetCommentsByPostIdQueryVariables,
   useCreateCommentMutation,
   useInfiniteGetCommentsByPostIdQuery
 } from "@/shared/api/graphql/generated";
 import { useIntersectionObserver } from "usehooks-ts";
-import { Textarea } from "@/shared/ui/textarea";
-import { Button } from "@/shared/ui/button";
 import CommentForm from "./CommentForm";
 import Comment from "./Comment";
 import { useSelector } from "react-redux";
@@ -26,7 +24,7 @@ const Comments = ({ postId }: {
         id: data.createComment.id,
         ...variables,
         user: user!,
-        createdAt: 'a moment ago',
+        createdAt: "a moment ago",
         repliesQuantity: 0
       }]);
     }

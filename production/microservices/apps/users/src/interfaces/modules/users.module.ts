@@ -3,7 +3,6 @@ import { UsersRepositoryImpl } from "../../infrastructure/repositories/users.rep
 import { UsersResolver } from "../resolvers/users.resolver";
 import { PrismaModule } from "./prisma.module";
 import { UsersRepository } from "../../domain/repositories/users.repository";
-import { NotificationsModule } from "./notifications.module";
 import { UserUseCase } from "../../application/user.use-case";
 
 @Module({

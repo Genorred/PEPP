@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Button } from "@/shared/ui/button";
 import { ChevronDown, Search } from "lucide-react";
@@ -8,9 +8,7 @@ import { Checkbox } from "@/shared/ui/checkbox";
 import { Control, Controller } from "react-hook-form";
 import { Input } from "@/shared/ui/input";
 import { useTopicsQuery } from "@/shared/api/graphql/generated";
-import { apiClient } from "@/shared/api/base";
 import { FilterState } from "@/widgets/PostsFilter/model/domain";
-import { useDebounce } from "@/shared/lib/hooks/use-debounce";
 import { useDebounceCallback } from "usehooks-ts";
 
 const TopicsSelector = ({ watchedTopics, control }:
@@ -24,12 +22,12 @@ const TopicsSelector = ({ watchedTopics, control }:
   });
 
   const debounceRefetch = useDebounceCallback(() => {
-    void refetch()
-  }, 300)
+    void refetch();
+  }, 300);
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTopicSearch(e.target.value)
-    debounceRefetch()
-  }
+    setTopicSearch(e.target.value);
+    debounceRefetch();
+  };
   return (
     <Popover>
       <PopoverTrigger asChild>

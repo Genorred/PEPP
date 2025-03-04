@@ -25,7 +25,7 @@ export function PostInfo(props: Omit<PostQuery["post"], "body"> & { id: number }
   });
   return (
     <div className="mt-8 p-6 bg-card rounded-lg shadow-md w-full" ref={ref}>
-        <FloatingModal {...props} isShowing={!isIntersecting} />
+      <FloatingModal {...props} isShowing={!isIntersecting} />
       <h1 className="text-4xl font-semibold text-gray-900 mb-4">
         {title}
       </h1>

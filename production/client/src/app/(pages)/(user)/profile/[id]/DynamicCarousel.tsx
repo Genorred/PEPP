@@ -1,11 +1,8 @@
 "use client";
 import React from "react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/shared/ui/carousel";
-import styles from "./carousel-item.module.css";
 import { useSelector } from "react-redux";
-import { scrollSlice } from "@/widgets/Navbar/model";
 import { Avatar } from "@/entities/Post/ui/plate-ui/avatar";
-import { cn } from "@/shared/lib/utils";
 import { GetUserFriendshipsQuery, useSendFriendshipRequestMutation } from "@/shared/api/graphql/generated";
 import { useParams } from "next/navigation";
 import { userSlice } from "@/entities/User/model/user.slice";

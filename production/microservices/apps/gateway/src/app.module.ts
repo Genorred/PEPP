@@ -33,7 +33,7 @@ import redisConfig from "./config/redis.config";
       useFactory: (subgraphs: ConfigType<typeof microservicesConfig>, authContext: AuthContext) => {
         return {
           server: {
-            context: ({ req, res }) => authContext.validate({ req, res }),
+            context: ({ req, res }) => authContext.validate({ req, res })
           },
           gateway: {
             supergraphSdl: new IntrospectAndCompose({
@@ -45,23 +45,23 @@ import redisConfig from "./config/redis.config";
               return new RemoteGraphQLDataSource({
                 url,
                 willSendRequest({ request, context }) {
-                  request.http.headers.set('cookies',
-                    context?.cookies ? JSON.stringify(context.cookies) : null)
+                  request.http.headers.set("cookies",
+                    context?.cookies ? JSON.stringify(context.cookies) : null);
                   request.http.headers.set(
                     "user",
                     context?.user ? JSON.stringify(context.user) : null
                   );
                 },
-                didReceiveResponse({response, context}){
+                didReceiveResponse({ response, context }) {
                   // @ts-ignore
-                  const cookies = response.http.headers?.raw()['set-cookie'] as string[]
+                  const cookies = response.http.headers?.raw()["set-cookie"] as string[];
                   if (cookies) {
-                    context?.req.res.append('set-cookie', cookies)
+                    context?.req.res.append("set-cookie", cookies);
                   }
-                  return response
+                  return response;
                 }
               });
-            },
+            }
           }
         };
       }

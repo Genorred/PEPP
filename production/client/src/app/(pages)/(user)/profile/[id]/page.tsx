@@ -1,21 +1,19 @@
 import Container from "@/shared/ui/Container";
 import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
+import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { Avatar, AvatarFallback } from "@/shared/ui/avatar";
 import { Separator } from "@/shared/ui/separator";
 import React from "react";
 import {
   GetUserFriendshipsCountDocument,
   GetUserFriendshipsCountQuery,
-  GetUserFriendshipsCountQueryVariables, GetUserFriendshipsDocument,
+  GetUserFriendshipsCountQueryVariables,
+  GetUserFriendshipsDocument,
   GetUserFriendshipsQuery,
   GetUserFriendshipsQueryVariables,
   GetUserProfileInfoDocument,
   GetUserProfileInfoQuery,
   GetUserProfileInfoQueryVariables,
-  PostsIdDocument,
-  PostsIdQuery,
-  PostsIdQueryVariables,
   UsersIdsDocument,
   UsersIdsQuery,
   UsersIdsQueryVariables
@@ -25,7 +23,6 @@ import DynamicCarousel from "@/app/(pages)/(user)/profile/[id]/DynamicCarousel";
 import UserActivity from "./UserActivity";
 import Topics from "@/app/(pages)/(user)/profile/[id]/Topics";
 import { getTopicsSummary } from "@/app/(pages)/(user)/profile/[id]/getTopicsSummary";
-
 
 
 export const dynamicParams = true;
@@ -44,12 +41,13 @@ export async function generateStaticParams() {
     console.error(e);
   }
 }
+
 const Page = async ({ params }: {
   params: Promise<{
     id: string
   }>
 }) => {
-  const par = await params
+  const par = await params;
   const [data, friendsCount, friends] = await Promise.all<[
     Promise<GetUserProfileInfoQuery>,
     Promise<GetUserFriendshipsCountQuery>,
@@ -59,16 +57,16 @@ const Page = async ({ params }: {
       id: Number(par.id)
     } as GetUserProfileInfoQueryVariables),
     serverApiClient.request(GetUserFriendshipsCountDocument, {
-      userId: Number(par.id),
+      userId: Number(par.id)
     } as GetUserFriendshipsCountQueryVariables),
     serverApiClient.request(GetUserFriendshipsDocument, {
-      userId: Number(par.id),
+      userId: Number(par.id)
     } as GetUserFriendshipsQueryVariables)
-  ])
+  ]);
   console.log(friendsCount, friends);
 
-  const user = data.user
-  const topicsSummary = getTopicsSummary(data)
+  const user = data.user;
+  const topicsSummary = getTopicsSummary(data);
   return (
     <Container className="max-w-screen-2xl min-h-[50vh] flex flex-col gap-y-4">
       <Card className="flex flex-col xl:flex-row xl:justify-center items-center xl:items-start py-4 gap-8">
@@ -88,7 +86,7 @@ const Page = async ({ params }: {
             </AvatarFallback>
           </Avatar>
           <Separator />
-          <DynamicCarousel friends={friends} friendsCount={friendsCount.userFriendsQuantity}/>
+          <DynamicCarousel friends={friends} friendsCount={friendsCount.userFriendsQuantity} />
         </div>
         <div className="flex-1">
           <CardHeader>

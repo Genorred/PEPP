@@ -2,19 +2,12 @@
 import React from "react";
 import Container from "@/shared/ui/Container";
 import { Post } from "@/entities/Post";
-import { filtersSlice } from "@/widgets/PostsFilter/model/filters.slice";
-import { useSelector } from "react-redux";
-import {
-  GetUserPostsQueryVariables,
-  useInfiniteGetUserPostsQuery,
-  useInfinitePostRecommendationsQuery
-} from "@/shared/api/graphql/generated";
+import { GetUserPostsQueryVariables, useInfiniteGetUserPostsQuery } from "@/shared/api/graphql/generated";
 import { useIntersectionObserver } from "usehooks-ts";
-import { PostRecommendationsQueryVariables } from "@/shared/api/graphql/graphql";
 import { FileX } from "lucide-react";
 
 
-const UserPostsList = ({userId}: {
+const UserPostsList = ({ userId }: {
   userId: number
 }) => {
   const {
@@ -66,7 +59,7 @@ const UserPostsList = ({userId}: {
         </>
         : isLoading
           ?
-          <h2 className='text-2xl font-semibold text-gray-800 mb-2 '>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2 ">
             "loading..."
           </h2>
           :

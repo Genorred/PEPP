@@ -6,7 +6,7 @@ export class FindOneUserInput implements FindOneUserDto {
   @Field({ nullable: true })
   username?: string;
   @Field(() => Int, { nullable: true })
-  id?: number
+  id?: number;
   @Field({ nullable: true })
   email?: string;
 }

@@ -1,15 +1,14 @@
 import React, { useState } from "react";
-import { CommentTemplate, CommentTemplateI } from "@/app/(pages)/(posts)/post/[id]/CommentTemplate";
+import { CommentTemplateI } from "@/app/(pages)/(posts)/post/[id]/CommentTemplate";
 import { Button } from "@/shared/ui/button";
 import { CalendarIcon, ChevronDown, MessageCircle } from "lucide-react";
 import Replies from "@/app/(pages)/(posts)/post/[id]/Replies";
 import { Card, CardContent, CardFooter } from "@/shared/ui/card";
-import { cn } from "@/shared/lib/utils";
 import Image from "next/image";
 import CommentForm from "@/app/(pages)/(posts)/post/[id]/CommentForm";
 import { useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
-import { GetRepliesQuery, useCreateCommentMutation, useCreateReplyMutation } from "@/shared/api/graphql/generated";
+import { GetRepliesQuery, useCreateReplyMutation } from "@/shared/api/graphql/generated";
 import Reply from "@/app/(pages)/(posts)/post/[id]/Reply";
 import { Separator } from "@/shared/ui/separator";
 
@@ -26,11 +25,11 @@ const Comment = ({ comment }: {
         id: data.createReply.id,
         ...variables,
         user: user!,
-        createdAt: 'a moment ago',
+        createdAt: "a moment ago",
         likes: 0,
         dislikes: 0,
         repliesQuantity: 0,
-        updatedAt: 'a moment ago',
+        updatedAt: "a moment ago"
       }]);
     }
   });
@@ -117,8 +116,8 @@ const Comment = ({ comment }: {
             }
           </div>
         </CardFooter>
-      ): null}
-      { !showReplies && leavedReplies.length ? (
+      ) : null}
+      {!showReplies && leavedReplies.length ? (
         <div
           className={`w-full p-4 transition-all duration-300 ease-in-out ${
             leavedReplies.length ? "max-h-full opacity-100" : "max-h-0 opacity-0 overflow-hidden"

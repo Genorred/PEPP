@@ -1,8 +1,7 @@
-import { Args, Int, Mutation, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { LoginInput } from "../../domain/dto/input/auth/login.input";
-import { CreateUserDto } from "../../domain/dto/input/users/create-user.dto";
 import { CustomExecutionContext } from "@_shared/decorators/execution-context";
-import { Credentials, CustomContext } from "@_shared/types/CustomContext";
+import { CustomContext } from "@_shared/types/CustomContext";
 import { UserResponse } from "../../domain/dto/response/returned-user.response";
 import { AuthUseCase } from "../../application/auth.use-case";
 import { RegisterInput } from "./dto-inputs/register.input";
@@ -29,6 +28,6 @@ export class AuthResolver {
 
   @Mutation(returns => String)
   logout(@CustomExecutionContext() context: CustomContext) {
-      return this.authService.logout(context);
+    return this.authService.logout(context);
   }
 }

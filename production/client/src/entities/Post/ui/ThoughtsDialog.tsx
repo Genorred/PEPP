@@ -2,7 +2,7 @@ import { FileTextIcon, MessageCircleIcon } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import React, { useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/shared/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
+import { Tabs } from "@/shared/ui/tabs";
 import { variants } from "@/entities/Post/ui/consts";
 import Thoughts from "@/app/(pages)/(posts)/post/[id]/Thoughts";
 

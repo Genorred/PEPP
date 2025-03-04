@@ -15,11 +15,11 @@ datasource db {
 }
 
 model Topic {
-  title      String    @id
-  posts      Post[]    @relation(name: "postTopics")
-  postsSub   Post[]    @relation(name: "postSubTopics")
-  drafts     Draft[]   @relation(name: "draftTopics")
-  draftsSub  Draft[]   @relation(name: "draftSubTopics")
+  title     String  @id
+  posts     Post[]  @relation(name: "postTopics")
+  postsSub  Post[]  @relation(name: "postSubTopics")
+  drafts    Draft[] @relation(name: "draftTopics")
+  draftsSub Draft[] @relation(name: "draftSubTopics")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -47,7 +47,7 @@ model Version {
 
 model Draft {
   id          Int      @id @default(autoincrement())
-  version     Int?      @default(1)
+  version     Int?     @default(1)
   title       String
   description String?
   img         String?
@@ -65,7 +65,7 @@ model Draft {
 
 model Post {
   id               Int      @id @default(autoincrement())
-  version          Int?      @default(1)
+  version          Int?     @default(1)
   title            String
   description      String?
   rating           Int?

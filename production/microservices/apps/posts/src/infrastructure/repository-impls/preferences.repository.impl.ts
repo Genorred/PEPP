@@ -63,8 +63,8 @@ export class PreferencesRepositoryImpl implements PreferencesRepository {
       likedPosts,
       dislikedPosts,
       pressedPosts,
-      recentlyShowedPosts: [ ...Object.entries(recentlyShowed),
-        ...recentlyShowedSuspended.map(postId => ([postId, '1']))
+      recentlyShowedPosts: [...Object.entries(recentlyShowed),
+        ...recentlyShowedSuspended.map(postId => ([postId, "1"]))
       ] as [string, string][]
     };
   }

@@ -1,16 +1,10 @@
-import { ConflictException, Inject, Injectable } from "@nestjs/common";
-import { CreateUserDto } from "../../domain/dto/input/users/create-user.dto";
-import { UpdateUserDto } from "../../domain/dto/input/users/update-user.dto";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { PrismaService } from "./prismaDb/prisma.service";
-import { User } from "../../interfaces/entities/user.entity";
-import { UsersRepository } from "../../domain/repositories/users.repository";
 import { FriendshipRepository } from "../../domain/repositories/friendship.repository";
-import { FindOneUserDto } from "../../domain/dto/input/users/find-one-user.dto";
 import { FindUserFriendshipsDto } from "../../domain/dto/input/friendship/find-user-friendships.dto";
 import { CountUserFriendshipsDto } from "../../domain/dto/input/friendship/count-user-friendships.dto";
 import { CreateFriendshipDto } from "../../domain/dto/input/friendship/create-friendship.dto";
 import { Friendship } from "../../domain/entities/friendship.entity";
-import { Prisma } from ".prisma/client";
 
 @Injectable()
 export class FriendshipRepositoryImpl implements FriendshipRepository {
@@ -64,8 +58,8 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
         data: createUserInput
       });
     } catch (e) {
-      if (e instanceof Error && e.message.includes('receiverId')) {
-        throw new ConflictException('request has been sent')
+      if (e instanceof Error && e.message.includes("receiverId")) {
+        throw new ConflictException("request has been sent");
       }
     }
   }

@@ -15,7 +15,7 @@ export class CreateDraftInput {
   @Field(() => [String], { nullable: true })
   subTopics?: string[];
   @Field(() => Int, { nullable: true })
-  postId?: number
+  postId?: number;
 }
 
 export type CreateDraftInputService = CurrentUserExtendT<CreateDraftInput>
