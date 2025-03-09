@@ -20,7 +20,7 @@ const Reply = ({ comment, onFindRespondedComment, onCreate }: {
     };
   };
   onFindRespondedComment?: () => void;
-  onCreate: (respondedCommentId?: number) => (message: string) => void;
+  onCreate: (respondedCommentId?: number) => (message: string, onError?: () => void ) => void;
 }) => {
   const state = useState(false);
   const [isReplying, setIsReplying] = state;

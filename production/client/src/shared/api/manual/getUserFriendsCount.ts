@@ -1,9 +1,10 @@
 import { graphql } from "@/shared/api/graphql";
 
-const getUserFriendshipsCount = graphql(`
-    query getUserFriendshipsCount($userId: Int!) {
+const getUserFriendsCount = graphql(`
+    query getUserFriendsCount($userId: Int!) {
         userFriendsQuantity(countFriendshipInput: {
             userId: $userId
+            isAccepted: true
         })
     }
 `);

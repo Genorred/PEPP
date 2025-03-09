@@ -12,7 +12,7 @@ import { GetRepliesQuery, useCreateReplyMutation } from "@/shared/api/graphql/ge
 import Reply from "@/app/(pages)/(posts)/post/[id]/Reply";
 import { Separator } from "@/shared/ui/separator";
 
-const Comment = ({ comment }: {
+const PostComment = ({ comment }: {
   comment: CommentTemplateI & {
     repliesQuantity: number
   }
@@ -33,13 +33,13 @@ const Comment = ({ comment }: {
       }]);
     }
   });
-  const onCreate = (respondedCommentId?: number) => (replyMessage: string) => {
+  const onCreate = (respondedCommentId?: number) => (replyMessage: string, onError?: () => void) => {
     replyComment({
       message: replyMessage.trim(),
       parentId: comment.id,
       postId: comment.postId,
       respondedCommentId
-    });
+    }, {onError});
   };
 
   const [showReplies, setShowReplies] = useState(false);
@@ -138,4 +138,4 @@ const Comment = ({ comment }: {
     ;
 };
 
-export default Comment;
+export default PostComment;

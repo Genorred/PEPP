@@ -71,15 +71,18 @@ export class CommentsRepositoryImpl implements CommentsRepository {
   }
 
   findMany(input: FindManyInput): Promise<Comment[]> {
-    const { postId, parentId, skipPages: skip, likes, repliesQuantity, dislikes, take } = input;
+    const { postId, userId, parentId, skipPages: skip, likes, repliesQuantity, dislikes, take, createdAt } = input;
     return this.prismaService.comment.findMany({
       where: {
         postId,
+        userId,
         parentId
       },
       skip,
       take,
       orderBy: [{
+        createdAt
+      }, {
         likes
       }, {
         repliesQuantity

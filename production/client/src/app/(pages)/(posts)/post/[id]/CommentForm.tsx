@@ -7,11 +7,12 @@ import Link from "next/link";
 
 const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
   isReplyingState?: [boolean, Dispatch<SetStateAction<boolean>>];
-  onCreate: (message: string) => void;
+  onCreate: (message: string, onError?: () => void) => void;
   placeholder?: string
 }) => {
   const [isWriting, setIsWriting] = isReplyingState ?? useState(false);
   const [replyMessage, setReplyMessage] = useState("");
+  const [sentReplyMessage, setSentReplyMessage] = useState("");
   const user = useSelector(userSlice.selectors.user);
   useEffect(() => {
     if (!user)
@@ -22,7 +23,11 @@ const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (replyMessage.length > 0) {
-      onCreate(replyMessage.trim());
+      setSentReplyMessage(replyMessage);
+      onCreate(replyMessage.trim(), () => {
+        setReplyMessage(sentReplyMessage)
+      });
+      setReplyMessage('')
     }
   }
 

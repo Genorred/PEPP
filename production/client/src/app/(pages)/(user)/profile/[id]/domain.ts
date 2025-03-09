@@ -7,3 +7,8 @@ export interface UserFilterState {
   subTopics: string[];
   topicsAndSubTopics: string[];
 }
+export interface UserCommentsFilterState {
+  createdAt: SortOrder | null;
+  popularity: SortOrder | null;
+  showReplies: boolean | null;
+}

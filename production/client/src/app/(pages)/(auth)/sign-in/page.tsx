@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -46,9 +46,11 @@ const Page = () => {
     loginUser(values);
   }
 
-  if (user) {
-    return router.push(returnUrl || "/");
-  }
+  useEffect(() => {
+    if (user) {
+      router.push(returnUrl || "/");
+    }
+  }, [user, returnUrl, router]);
   return (
     <AuthWrapper returnUrl={returnUrl}>
       <Form {...form}>

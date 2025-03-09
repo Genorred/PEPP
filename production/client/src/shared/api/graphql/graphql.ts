@@ -1,13 +1,12 @@
 /* eslint-disable */
-import { DocumentTypeDecoration } from "@graphql-typed-document-node/core";
-
+import { DocumentTypeDecoration } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -24,550 +23,456 @@ export type Scalars = {
 };
 
 export type CountUserFriendshipsInput = {
-  userId: Scalars["Int"]["input"];
+  isAccepted?: InputMaybe<Scalars['Boolean']['input']>;
+  userId: Scalars['Int']['input'];
 };
 
 export type CreateCommentInput = {
-  message: Scalars["String"]["input"];
-  postId: Scalars["Int"]["input"];
+  message: Scalars['String']['input'];
+  postId: Scalars['Int']['input'];
 };
 
 export type CreateDraftInput = {
-  body: Scalars["JSONObject"]["input"];
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  postId?: InputMaybe<Scalars["Int"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  title: Scalars["String"]["input"];
-  topics?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  body: Scalars['JSONObject']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  postId?: InputMaybe<Scalars['Int']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title: Scalars['String']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type CreateFriendshipInput = {
-  receiverId: Scalars["Int"]["input"];
+  receiverId: Scalars['Int']['input'];
 };
 
 export type CreatePostInput = {
-  body: Scalars["JSONObject"]["input"];
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  isHidden?: InputMaybe<Scalars["Boolean"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  title: Scalars["String"]["input"];
-  topics?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  body: Scalars['JSONObject']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  isHidden?: InputMaybe<Scalars['Boolean']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title: Scalars['String']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type CreateReplyInput = {
-  message: Scalars["String"]["input"];
-  parentId: Scalars["Int"]["input"];
-  postId: Scalars["Int"]["input"];
-  respondedCommentId?: InputMaybe<Scalars["Int"]["input"]>;
+  message: Scalars['String']['input'];
+  parentId: Scalars['Int']['input'];
+  postId: Scalars['Int']['input'];
+  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type CreateVersionInput = {
-  body: Scalars["JSONObject"]["input"];
-  postId: Scalars["Int"]["input"];
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  body: Scalars['JSONObject']['input'];
+  postId: Scalars['Int']['input'];
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type FindAlgorithmPostsInput = {
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
-  searchValue?: InputMaybe<Scalars["String"]["input"]>;
-  skipPages?: InputMaybe<Scalars["Int"]["input"]>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  searchValue?: InputMaybe<Scalars['String']['input']>;
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type FindAllPostsInput = {
-  token: Scalars["String"]["input"];
+  token: Scalars['String']['input'];
 };
 
 export type FindAllUsersInput = {
-  token: Scalars["String"]["input"];
+  token: Scalars['String']['input'];
 };
 
 export type FindByPostInput = {
-  postId: Scalars["Int"]["input"];
+  postId: Scalars['Int']['input'];
 };
 
 export type FindDraftInput = {
-  id: Scalars["Int"]["input"];
+  id: Scalars['Int']['input'];
 };
 
 export type FindOneUserInput = {
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  id?: InputMaybe<Scalars["Int"]["input"]>;
-  username?: InputMaybe<Scalars["String"]["input"]>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['Int']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type FindOneVersionInput = {
-  id: Scalars["Int"]["input"];
+  id: Scalars['Int']['input'];
 };
 
 export type FindPostInput = {
-  id: Scalars["Int"]["input"];
-  isHidden?: InputMaybe<Scalars["Boolean"]["input"]>;
+  id: Scalars['Int']['input'];
+  isHidden?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type FindUserFriendshipRequestsInput = {
+  cursorId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type FindUserFriendshipsInput = {
-  cursorId?: InputMaybe<Scalars["Int"]["input"]>;
-  userId: Scalars["Int"]["input"];
+  cursorId?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
 };
 
 export type FindUserPostsInput = {
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
-  skipPages?: InputMaybe<Scalars["Int"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  topicsOrSubTopics?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  userId: Scalars["Int"]["input"];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
+  topicsOrSubTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  userId: Scalars['Int']['input'];
+};
+
+export type FindUsersFriendshipInput = {
+  userId1: Scalars['Int']['input'];
+  userId2?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type GetByParentCommentInput = {
-  parentId: Scalars["Int"]["input"];
-  skipPages?: InputMaybe<Scalars["Int"]["input"]>;
+  parentId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type GetByPostInput = {
-  postId: Scalars["Int"]["input"];
-  skipPages?: InputMaybe<Scalars["Int"]["input"]>;
+  postId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type GetByUserInput = {
+  isNotReply?: InputMaybe<Scalars['Boolean']['input']>;
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+  sortByDate?: InputMaybe<SortOrder>;
+  sortByPopularity?: InputMaybe<SortOrder>;
+  userId: Scalars['Int']['input'];
 };
 
 export type LoginInput = {
-  email: Scalars["String"]["input"];
-  password: Scalars["String"]["input"];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 export type RegisterInput = {
-  email: Scalars["String"]["input"];
-  password: Scalars["String"]["input"];
-  returnUrl?: InputMaybe<Scalars["String"]["input"]>;
-  username: Scalars["String"]["input"];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  returnUrl?: InputMaybe<Scalars['String']['input']>;
+  username: Scalars['String']['input'];
 };
 
 export type RemovePostInput = {
-  id: Scalars["Int"]["input"];
+  id: Scalars['Int']['input'];
 };
 
 export enum SortOrder {
-  Asc = "ASC",
-  Desc = "DESC"
+  Asc = 'ASC',
+  Desc = 'DESC'
 }
 
 export type UpdateCommentInput = {
-  id: Scalars["Int"]["input"];
-  message?: InputMaybe<Scalars["String"]["input"]>;
-  postId?: InputMaybe<Scalars["Int"]["input"]>;
+  id: Scalars['Int']['input'];
+  message?: InputMaybe<Scalars['String']['input']>;
+  postId?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type UpdateDraftInput = {
-  body?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  id: Scalars["Int"]["input"];
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]>>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]>>;
+  body?: InputMaybe<Scalars['JSONObject']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  subTopics?: InputMaybe<Array<Scalars['String']['input']>>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+export type UpdateFriendshipInput = {
+  requestId: Scalars['Int']['input'];
 };
 
 export type UpdateUserDto = {
-  email?: InputMaybe<Scalars["String"]["input"]>;
-  google_id?: InputMaybe<Scalars["String"]["input"]>;
-  id: Scalars["Int"]["input"];
-  img?: InputMaybe<Scalars["String"]["input"]>;
-  password?: InputMaybe<Scalars["String"]["input"]>;
-  username?: InputMaybe<Scalars["String"]["input"]>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  google_id?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['Int']['input'];
+  img?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['String']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PostsIdQueryVariables = Exact<{
-  token: Scalars["String"]["input"];
+  token: Scalars['String']['input'];
 }>;
 
 
-export type PostsIdQuery = { __typename?: "Query", allPosts: Array<{ __typename?: "Post", id: number }> };
+export type PostsIdQuery = { __typename?: 'Query', allPosts: Array<{ __typename?: 'Post', id: number }> };
 
 export type UsersIdsQueryVariables = Exact<{
-  token: Scalars["String"]["input"];
+  token: Scalars['String']['input'];
 }>;
 
 
-export type UsersIdsQuery = { __typename?: "Query", allUsers: Array<{ __typename?: "User", id: number }> };
+export type UsersIdsQuery = { __typename?: 'Query', allUsers: Array<{ __typename?: 'User', id: number }> };
+
+export type AcceptUserFriendRequestsMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+
+export type AcceptUserFriendRequestsMutation = { __typename?: 'Mutation', acceptFriendshipRequest: { __typename?: 'Friendship', anotherUser: { __typename?: 'User', id: number, username: string, img?: string | null } } };
 
 export type ConfirmUserEmailMutationVariables = Exact<{
-  token: Scalars["String"]["input"];
+  token: Scalars['String']['input'];
 }>;
 
 
-export type ConfirmUserEmailMutation = {
-  __typename?: "Mutation",
-  confirmUserEmail: {
-    __typename?: "UserResponse",
-    username: string,
-    email: string,
-    id: number,
-    createdAt: any,
-    occupation?: string | null,
-    img?: string | null
-  }
-};
+export type ConfirmUserEmailMutation = { __typename?: 'Mutation', confirmUserEmail: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any, occupation?: string | null, img?: string | null } };
 
 export type CreateCommentMutationVariables = Exact<{
-  message: Scalars["String"]["input"];
-  postId: Scalars["Int"]["input"];
+  message: Scalars['String']['input'];
+  postId: Scalars['Int']['input'];
 }>;
 
 
-export type CreateCommentMutation = { __typename?: "Mutation", createComment: { __typename?: "Comment", id: number } };
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: number } };
 
 export type CreateDraftMutationVariables = Exact<{
-  body: Scalars["JSONObject"]["input"];
-  title: Scalars["String"]["input"];
-  topics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  body: Scalars['JSONObject']['input'];
+  title: Scalars['String']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type CreateDraftMutation = { __typename?: "Mutation", createDraft: { __typename?: "Draft", id: number } };
+export type CreateDraftMutation = { __typename?: 'Mutation', createDraft: { __typename?: 'Draft', id: number } };
 
 export type CreatePostMutationVariables = Exact<{
-  body: Scalars["JSONObject"]["input"];
-  title: Scalars["String"]["input"];
-  topics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  body: Scalars['JSONObject']['input'];
+  title: Scalars['String']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type CreatePostMutation = { __typename?: "Mutation", createPost: { __typename?: "Post", id: number } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number } };
 
 export type CreateReplyMutationVariables = Exact<{
-  message: Scalars["String"]["input"];
-  parentId: Scalars["Int"]["input"];
-  postId: Scalars["Int"]["input"];
-  respondedCommentId?: InputMaybe<Scalars["Int"]["input"]>;
+  message: Scalars['String']['input'];
+  parentId: Scalars['Int']['input'];
+  postId: Scalars['Int']['input'];
+  respondedCommentId?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type CreateReplyMutation = { __typename?: "Mutation", createReply: { __typename?: "Comment", id: number } };
+export type CreateReplyMutation = { __typename?: 'Mutation', createReply: { __typename?: 'Comment', id: number } };
 
 export type CreateVersionDraftMutationVariables = Exact<{
-  body: Scalars["JSONObject"]["input"];
-  title: Scalars["String"]["input"];
-  postId: Scalars["Int"]["input"];
-  topics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  body: Scalars['JSONObject']['input'];
+  title: Scalars['String']['input'];
+  postId: Scalars['Int']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type CreateVersionDraftMutation = { __typename?: "Mutation", createDraft: { __typename?: "Draft", id: number } };
+export type CreateVersionDraftMutation = { __typename?: 'Mutation', createDraft: { __typename?: 'Draft', id: number } };
 
 export type CreateVersionPostMutationVariables = Exact<{
-  postId: Scalars["Int"]["input"];
-  body: Scalars["JSONObject"]["input"];
-  title?: InputMaybe<Scalars["String"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  postId: Scalars['Int']['input'];
+  body: Scalars['JSONObject']['input'];
+  title?: InputMaybe<Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type CreateVersionPostMutation = { __typename?: "Mutation", createVersion: { __typename?: "Post", id: number } };
+export type CreateVersionPostMutation = { __typename?: 'Mutation', createVersion: { __typename?: 'Post', id: number } };
 
 export type GetCommentsByPostIdQueryVariables = Exact<{
-  postId: Scalars["Int"]["input"];
-  skipPages?: InputMaybe<Scalars["Int"]["input"]>;
+  postId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetCommentsByPostIdQuery = {
-  __typename?: "Query",
-  comments: {
-    __typename?: "CommentsByPost",
-    totalPages: number,
-    data: Array<{
-      __typename?: "Comment",
-      id: number,
-      message: string,
-      likes: number,
-      dislikes: number,
-      repliesQuantity: number,
-      createdAt: any,
-      updatedAt: any,
-      user: { __typename?: "User", username: string, img?: string | null }
-    }>
-  }
-};
+export type GetCommentsByPostIdQuery = { __typename?: 'Query', comments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img?: string | null } }> } };
+
+export type GetCommentsByUserIdQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+  isNotReply?: InputMaybe<Scalars['Boolean']['input']>;
+  sortByDate?: InputMaybe<SortOrder>;
+  sortByPopularity?: InputMaybe<SortOrder>;
+}>;
+
+
+export type GetCommentsByUserIdQuery = { __typename?: 'Query', userComments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, postId: number, parentId?: number | null, user: { __typename?: 'User', username: string, img?: string | null }, post: { __typename?: 'Post', title: string } }> } };
 
 export type DraftQueryVariables = Exact<{
-  id: Scalars["Int"]["input"];
-  version?: InputMaybe<Scalars["Int"]["input"]>;
+  id: Scalars['Int']['input'];
+  version?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type DraftQuery = {
-  __typename?: "Query",
-  draft: {
-    __typename?: "Draft",
-    id: number,
-    body: Array<any>,
-    createdAt: any,
-    img?: string | null,
-    title: string,
-    updatedAt: any,
-    topics?: Array<{ __typename?: "Topic", title: string }> | null,
-    subTopics?: Array<{ __typename?: "Topic", title: string }> | null
-  }
-};
+export type DraftQuery = { __typename?: 'Query', draft: { __typename?: 'Draft', id: number, body: Array<any>, createdAt: any, img?: string | null, title: string, updatedAt: any, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
 
 export type DraftsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type DraftsQuery = {
-  __typename?: "Query",
-  userDrafts: Array<{
-    __typename?: "Draft",
-    id: number,
-    createdAt: any,
-    img?: string | null,
-    title: string,
-    updatedAt: any
-  }>
-};
+export type DraftsQuery = { __typename?: 'Query', userDrafts: Array<{ __typename?: 'Draft', id: number, createdAt: any, img?: string | null, title: string, updatedAt: any }> };
 
 export type PostQueryVariables = Exact<{
-  id: Scalars["Int"]["input"];
+  id: Scalars['Int']['input'];
 }>;
 
 
-export type PostQuery = {
-  __typename?: "Query",
-  post: {
-    __typename?: "Post",
-    body: Array<any>,
-    createdAt: any,
-    title: string,
-    rating?: number | null,
-    minutes?: number | null,
-    version: number,
-    commentsQuantity?: number | null,
-    reviewsQuantity?: number | null,
-    description?: string | null,
-    user: { __typename?: "User", username: string, img?: string | null, id: number },
-    topics?: Array<{ __typename?: "Topic", title: string }> | null,
-    subTopics?: Array<{ __typename?: "Topic", title: string }> | null
-  }
-};
+export type PostQuery = { __typename?: 'Query', post: { __typename?: 'Post', body: Array<any>, createdAt: any, title: string, rating?: number | null, minutes?: number | null, version: number, commentsQuantity?: number | null, reviewsQuantity?: number | null, description?: string | null, user: { __typename?: 'User', username: string, img?: string | null, id: number }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null } };
 
 export type GetRepliesQueryVariables = Exact<{
-  parentId: Scalars["Int"]["input"];
-  skipPages?: InputMaybe<Scalars["Int"]["input"]>;
+  parentId: Scalars['Int']['input'];
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetRepliesQuery = {
-  __typename?: "Query",
-  replies: {
-    __typename?: "CommentsByPost",
-    totalPages: number,
-    data: Array<{
-      __typename?: "Comment",
-      respondedCommentId?: number | null,
-      id: number,
-      message: string,
-      likes: number,
-      dislikes: number,
-      repliesQuantity: number,
-      createdAt: any,
-      updatedAt: any,
-      user: { __typename?: "User", username: string, img?: string | null }
-    }>
-  }
-};
+export type GetRepliesQuery = { __typename?: 'Query', replies: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', respondedCommentId?: number | null, id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img?: string | null } }> } };
 
 export type TopicsQueryVariables = Exact<{
-  title?: InputMaybe<Scalars["String"]["input"]>;
+  title?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type TopicsQuery = { __typename?: "Query", topics: Array<{ __typename?: "Topic", title: string }> };
+export type TopicsQuery = { __typename?: 'Query', topics: Array<{ __typename?: 'Topic', title: string }> };
 
-export type GetUserFriendshipsQueryVariables = Exact<{
-  userId: Scalars["Int"]["input"];
-  cursorid?: InputMaybe<Scalars["Int"]["input"]>;
+export type GetUserFriendRequestsQueryVariables = Exact<{
+  cursorId?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetUserFriendshipsQuery = {
-  __typename?: "Query",
-  userFriends: Array<{
-    __typename?: "Friendship",
-    senderId: number,
-    receiverId: number,
-    anotherUser: { __typename?: "User", id: number, username: string, img?: string | null }
-  }>
-};
+export type GetUserFriendRequestsQuery = { __typename?: 'Query', userFriendRequests: Array<{ __typename?: 'Friendship', id: number, anotherUser: { __typename?: 'User', id: number, username: string, img?: string | null } }> };
 
-export type GetUserFriendshipsCountQueryVariables = Exact<{
-  userId: Scalars["Int"]["input"];
+export type GetUserFriendRequestsCountQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
 }>;
 
 
-export type GetUserFriendshipsCountQuery = { __typename?: "Query", userFriendsQuantity: number };
+export type GetUserFriendRequestsCountQuery = { __typename?: 'Query', userFriendRequestsQuantity: number };
+
+export type GetUserFriendsQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+  cursorid?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetUserFriendsQuery = { __typename?: 'Query', userFriends: Array<{ __typename?: 'Friendship', anotherUser: { __typename?: 'User', id: number, username: string, img?: string | null } }> };
+
+export type GetUserFriendsCountQueryVariables = Exact<{
+  userId: Scalars['Int']['input'];
+}>;
+
+
+export type GetUserFriendsCountQuery = { __typename?: 'Query', userFriendsQuantity: number };
 
 export type GetUserPostsQueryVariables = Exact<{
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
-  skipPages?: InputMaybe<Scalars["Int"]["input"]>;
-  userId: Scalars["Int"]["input"];
-  topics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  topicsOrSubTopics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+  userId: Scalars['Int']['input'];
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  topicsOrSubTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type GetUserPostsQuery = {
-  __typename?: "Query",
-  userPosts: {
-    __typename?: "Recommendations",
-    totalPages: number,
-    data: Array<{
-      __typename?: "Post",
-      id: number,
-      rating?: number | null,
-      commentsQuantity?: number | null,
-      reviewsQuantity?: number | null,
-      img?: string | null,
-      minutes?: number | null,
-      title: string,
-      createdAt: any,
-      userId: number,
-      description?: string | null,
-      version: number,
-      updatedAt: any,
-      user: { __typename?: "User", username: string, occupation?: string | null, img?: string | null },
-      topics?: Array<{ __typename?: "Topic", title: string }> | null,
-      subTopics?: Array<{ __typename?: "Topic", title: string }> | null
-    }>
-  }
-};
+export type GetUserPostsQuery = { __typename?: 'Query', userPosts: { __typename?: 'Recommendations', totalPages: number, data: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img?: string | null }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
 
 export type GetUserProfileInfoQueryVariables = Exact<{
-  id: Scalars["Int"]["input"];
+  id: Scalars['Int']['input'];
 }>;
 
 
-export type GetUserProfileInfoQuery = {
-  __typename?: "Query",
-  user: {
-    __typename?: "User",
-    id: number,
-    createdAt: any,
-    img?: string | null,
-    updatedAt: any,
-    occupation?: string | null,
-    username: string,
-    posts: Array<{
-      __typename?: "Post",
-      topics?: Array<{ __typename?: "Topic", title: string }> | null,
-      subTopics?: Array<{ __typename?: "Topic", title: string }> | null
-    }>
-  }
-};
+export type GetUserProfileInfoQuery = { __typename?: 'Query', user: { __typename?: 'User', id: number, createdAt: any, img?: string | null, updatedAt: any, occupation?: string | null, username: string, posts: Array<{ __typename?: 'Post', topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
+
+export type GetUsersFriendshipQueryVariables = Exact<{
+  userId1: Scalars['Int']['input'];
+  userId2: Scalars['Int']['input'];
+}>;
+
+
+export type GetUsersFriendshipQuery = { __typename?: 'Query', usersFriendship: { __typename?: 'Friendship', isAccepted: boolean } };
 
 export type LoginMutationVariables = Exact<{
-  password: Scalars["String"]["input"];
-  email: Scalars["String"]["input"];
+  password: Scalars['String']['input'];
+  email: Scalars['String']['input'];
 }>;
 
 
-export type LoginMutation = {
-  __typename?: "Mutation",
-  login: { __typename?: "UserResponse", username: string, email: string, id: number, createdAt: any }
-};
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', username: string, email: string, id: number, createdAt: any } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LogoutMutation = { __typename?: "Mutation", logout: string };
+export type LogoutMutation = { __typename?: 'Mutation', logout: string };
 
 export type PostRecommendationsQueryVariables = Exact<{
   createdAt?: InputMaybe<SortOrder>;
   rating?: InputMaybe<SortOrder>;
-  skipPages?: InputMaybe<Scalars["Int"]["input"]>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  search?: InputMaybe<Scalars["String"]["input"]>;
+  skipPages?: InputMaybe<Scalars['Int']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type PostRecommendationsQuery = {
-  __typename?: "Query",
-  postsRecommendations: {
-    __typename?: "Recommendations",
-    totalPages: number,
-    data: Array<{
-      __typename?: "Post",
-      id: number,
-      rating?: number | null,
-      commentsQuantity?: number | null,
-      reviewsQuantity?: number | null,
-      img?: string | null,
-      minutes?: number | null,
-      title: string,
-      createdAt: any,
-      userId: number,
-      description?: string | null,
-      version: number,
-      updatedAt: any,
-      user: { __typename?: "User", username: string, occupation?: string | null, img?: string | null },
-      topics?: Array<{ __typename?: "Topic", title: string }> | null,
-      subTopics?: Array<{ __typename?: "Topic", title: string }> | null
-    }>
-  }
-};
+export type PostRecommendationsQuery = { __typename?: 'Query', postsRecommendations: { __typename?: 'Recommendations', totalPages: number, data: Array<{ __typename?: 'Post', id: number, rating?: number | null, commentsQuantity?: number | null, reviewsQuantity?: number | null, img?: string | null, minutes?: number | null, title: string, createdAt: any, userId: number, description?: string | null, version: number, updatedAt: any, user: { __typename?: 'User', username: string, occupation?: string | null, img?: string | null }, topics?: Array<{ __typename?: 'Topic', title: string }> | null, subTopics?: Array<{ __typename?: 'Topic', title: string }> | null }> } };
 
 export type PublishDraftMutationVariables = Exact<{
-  id: Scalars["Int"]["input"];
-  body?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  id: Scalars['Int']['input'];
+  body?: InputMaybe<Scalars['JSONObject']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type PublishDraftMutation = { __typename?: "Mutation", publishDraft: { __typename?: "Post", id: number } };
+export type PublishDraftMutation = { __typename?: 'Mutation', publishDraft: { __typename?: 'Post', id: number } };
 
 export type RegisterMutationVariables = Exact<{
-  username: Scalars["String"]["input"];
-  password: Scalars["String"]["input"];
-  email: Scalars["String"]["input"];
-  returnUrl?: InputMaybe<Scalars["String"]["input"]>;
+  username: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  returnUrl?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type RegisterMutation = { __typename?: "Mutation", register: boolean };
+export type RegisterMutation = { __typename?: 'Mutation', register: boolean };
+
+export type RemoveFriendshipMutationVariables = Exact<{
+  receiverId: Scalars['Int']['input'];
+}>;
+
+
+export type RemoveFriendshipMutation = { __typename?: 'Mutation', removeFriendship: { __typename?: 'Friendship', receiverId: number } };
 
 export type SendFriendshipRequestMutationVariables = Exact<{
-  receiverId: Scalars["Int"]["input"];
+  receiverId: Scalars['Int']['input'];
 }>;
 
 
-export type SendFriendshipRequestMutation = {
-  __typename?: "Mutation",
-  sendFriendshipRequest: { __typename?: "Friendship", receiverId: number }
-};
+export type SendFriendshipRequestMutation = { __typename?: 'Mutation', sendFriendshipRequest: { __typename?: 'Friendship', receiverId: number } };
 
 export type UpdateDraftMutationVariables = Exact<{
-  id: Scalars["Int"]["input"];
-  body?: InputMaybe<Scalars["JSONObject"]["input"]>;
-  title?: InputMaybe<Scalars["String"]["input"]>;
-  topics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
-  subTopics?: InputMaybe<Array<Scalars["String"]["input"]> | Scalars["String"]["input"]>;
+  id: Scalars['Int']['input'];
+  body?: InputMaybe<Scalars['JSONObject']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  topics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  subTopics?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
 }>;
 
 
-export type UpdateDraftMutation = { __typename?: "Mutation", updateDraft: { __typename?: "Draft", id: number } };
+export type UpdateDraftMutation = { __typename?: 'Mutation', updateDraft: { __typename?: 'Draft', id: number } };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
-  implements DocumentTypeDecoration<TResult, TVariables> {
-  __apiType?: DocumentTypeDecoration<TResult, TVariables>["__apiType"];
+  implements DocumentTypeDecoration<TResult, TVariables>
+{
+  __apiType?: DocumentTypeDecoration<TResult, TVariables>['__apiType'];
 
   constructor(private value: string, public __meta__?: Record<string, any>) {
     super(value);
@@ -592,6 +497,17 @@ export const UsersIdsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<UsersIdsQuery, UsersIdsQueryVariables>;
+export const AcceptUserFriendRequestsDocument = new TypedDocumentString(`
+    mutation acceptUserFriendRequests($id: Int!) {
+  acceptFriendshipRequest(updateFriendshipInput: {requestId: $id}) {
+    anotherUser {
+      id
+      username
+      img
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AcceptUserFriendRequestsMutation, AcceptUserFriendRequestsMutationVariables>;
 export const ConfirmUserEmailDocument = new TypedDocumentString(`
     mutation confirmUserEmail($token: String!) {
   confirmUserEmail(confirmUserEmailInput: $token) {
@@ -676,6 +592,33 @@ export const GetCommentsByPostIdDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetCommentsByPostIdQuery, GetCommentsByPostIdQueryVariables>;
+export const GetCommentsByUserIdDocument = new TypedDocumentString(`
+    query getCommentsByUserId($userId: Int!, $skipPages: Int, $isNotReply: Boolean, $sortByDate: SortOrder, $sortByPopularity: SortOrder) {
+  userComments(
+    getCommentsByUserInput: {userId: $userId, skipPages: $skipPages, isNotReply: $isNotReply, sortByDate: $sortByDate, sortByPopularity: $sortByPopularity}
+  ) {
+    totalPages
+    data {
+      id
+      message
+      likes
+      dislikes
+      repliesQuantity
+      user {
+        username
+        img
+      }
+      createdAt
+      updatedAt
+      postId
+      parentId
+      post {
+        title
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetCommentsByUserIdQuery, GetCommentsByUserIdQueryVariables>;
 export const DraftDocument = new TypedDocumentString(`
     query draft($id: Int!, $version: Int) {
   draft(findDraftInput: {id: $id}) {
@@ -759,11 +702,28 @@ export const TopicsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<TopicsQuery, TopicsQueryVariables>;
-export const GetUserFriendshipsDocument = new TypedDocumentString(`
-    query getUserFriendships($userId: Int!, $cursorid: Int) {
+export const GetUserFriendRequestsDocument = new TypedDocumentString(`
+    query getUserFriendRequests($cursorId: Int) {
+  userFriendRequests(findFriendsByUserInput: {cursorId: $cursorId}) {
+    anotherUser {
+      id
+      username
+      img
+    }
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<GetUserFriendRequestsQuery, GetUserFriendRequestsQueryVariables>;
+export const GetUserFriendRequestsCountDocument = new TypedDocumentString(`
+    query getUserFriendRequestsCount($userId: Int!) {
+  userFriendRequestsQuantity(
+    countFriendshipInput: {userId: $userId, isAccepted: false}
+  )
+}
+    `) as unknown as TypedDocumentString<GetUserFriendRequestsCountQuery, GetUserFriendRequestsCountQueryVariables>;
+export const GetUserFriendsDocument = new TypedDocumentString(`
+    query getUserFriends($userId: Int!, $cursorid: Int) {
   userFriends(findFriendsByUserInput: {userId: $userId, cursorId: $cursorid}) {
-    senderId
-    receiverId
     anotherUser {
       id
       username
@@ -771,12 +731,12 @@ export const GetUserFriendshipsDocument = new TypedDocumentString(`
     }
   }
 }
-    `) as unknown as TypedDocumentString<GetUserFriendshipsQuery, GetUserFriendshipsQueryVariables>;
-export const GetUserFriendshipsCountDocument = new TypedDocumentString(`
-    query getUserFriendshipsCount($userId: Int!) {
-  userFriendsQuantity(countFriendshipInput: {userId: $userId})
+    `) as unknown as TypedDocumentString<GetUserFriendsQuery, GetUserFriendsQueryVariables>;
+export const GetUserFriendsCountDocument = new TypedDocumentString(`
+    query getUserFriendsCount($userId: Int!) {
+  userFriendsQuantity(countFriendshipInput: {userId: $userId, isAccepted: true})
 }
-    `) as unknown as TypedDocumentString<GetUserFriendshipsCountQuery, GetUserFriendshipsCountQueryVariables>;
+    `) as unknown as TypedDocumentString<GetUserFriendsCountQuery, GetUserFriendsCountQueryVariables>;
 export const GetUserPostsDocument = new TypedDocumentString(`
     query getUserPosts($createdAt: SortOrder, $rating: SortOrder, $skipPages: Int, $userId: Int!, $topics: [String!], $subTopics: [String!], $topicsOrSubTopics: [String!]) {
   userPosts(
@@ -831,6 +791,13 @@ export const GetUserProfileInfoDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetUserProfileInfoQuery, GetUserProfileInfoQueryVariables>;
+export const GetUsersFriendshipDocument = new TypedDocumentString(`
+    query getUsersFriendship($userId1: Int!, $userId2: Int!) {
+  usersFriendship(findUsersFriendship: {userId1: $userId1, userId2: $userId2}) {
+    isAccepted
+  }
+}
+    `) as unknown as TypedDocumentString<GetUsersFriendshipQuery, GetUsersFriendshipQueryVariables>;
 export const LoginDocument = new TypedDocumentString(`
     mutation login($password: String!, $email: String!) {
   login(loginInput: {email: $email, password: $password}) {
@@ -896,6 +863,13 @@ export const RegisterDocument = new TypedDocumentString(`
   )
 }
     `) as unknown as TypedDocumentString<RegisterMutation, RegisterMutationVariables>;
+export const RemoveFriendshipDocument = new TypedDocumentString(`
+    mutation removeFriendship($receiverId: Int!) {
+  removeFriendship(removeFriendshipInput: {receiverId: $receiverId}) {
+    receiverId
+  }
+}
+    `) as unknown as TypedDocumentString<RemoveFriendshipMutation, RemoveFriendshipMutationVariables>;
 export const SendFriendshipRequestDocument = new TypedDocumentString(`
     mutation sendFriendshipRequest($receiverId: Int!) {
   sendFriendshipRequest(createFriendshipInput: {receiverId: $receiverId}) {

@@ -1,74 +1,75 @@
 schema {
-    query: Query
-    mutation: Mutation
+  query: Query
+  mutation: Mutation
 }
 
 type Comment {
-    createdAt: DateTime!
-    dislikes: Int!
-    id: Int!
-    likes: Int!
-    message: String!
-    parent: Comment
-    parentId: Int!
-    post: [Post!]!
-    postId: Int!
-    repliesQuantity: Int!
-    respondedCommentId: Int
-    updatedAt: DateTime!
-    user: User!
-    userId: Int!
+  createdAt: DateTime!
+  dislikes: Int!
+  id: Int!
+  likes: Int!
+  message: String!
+  parent: Comment
+  parentId: Int
+  post: Post!
+  postId: Int!
+  repliesQuantity: Int!
+  respondedCommentId: Int
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
 }
 
 type CommentsByPost {
-    data: [Comment!]!
-    totalPages: Int!
+  data: [Comment!]!
+  totalPages: Int!
 }
 
 input CountUserFriendshipsInput {
-    userId: Int!
+  isAccepted: Boolean
+  userId: Int!
 }
 
 input CreateCommentInput {
-    message: String!
-    postId: Int!
+  message: String!
+  postId: Int!
 }
 
 input CreateDraftInput {
-    body: JSONObject!
-    description: String
-    postId: Int
-    subTopics: [String!]
-    title: String!
-    topics: [String!]
+  body: JSONObject!
+  description: String
+  postId: Int
+  subTopics: [String!]
+  title: String!
+  topics: [String!]
 }
 
 input CreateFriendshipInput {
-    receiverId: Int!
+  receiverId: Int!
 }
 
 input CreatePostInput {
-    body: JSONObject!
-    description: String
-    isHidden: Boolean
-    subTopics: [String!]
-    title: String!
-    topics: [String!]
+  body: JSONObject!
+  description: String
+  isHidden: Boolean
+  subTopics: [String!]
+  title: String!
+  topics: [String!]
 }
 
 input CreateReplyInput {
-    message: String!
-    parentId: Int!
-    postId: Int!
-    respondedCommentId: Int
+  message: String!
+  parentId: Int!
+  postId: Int!
+  respondedCommentId: Int
 }
 
 input CreateVersionInput {
-    body: JSONObject!
-    postId: Int!
-    subTopics: [String!]
-    title: String
-    topics: [String!]
+  body: JSONObject!
+  postId: Int!
+  subTopics: [String!]
+  title: String
+  topics: [String!]
 }
 
 """
@@ -77,96 +78,113 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Draft {
-    body: [JSON!]!
-    createdAt: DateTime!
-    description: String
-    id: Int!
-    img: String
-    minutes: Int
-    postId: Int!
-    subTopics: [Topic!]
-    title: String!
-    topics: [Topic!]
-    updatedAt: DateTime!
-    user: User!
-    userId: Int!
-    version: Float!
+  body: [JSON!]!
+  createdAt: DateTime!
+  description: String
+  id: Int!
+  img: String
+  minutes: Int
+  postId: Int!
+  subTopics: [Topic!]
+  title: String!
+  topics: [Topic!]
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+  version: Float!
 }
 
 input FindAlgorithmPostsInput {
-    createdAt: SortOrder
-    rating: SortOrder
-    searchValue: String
-    skipPages: Int
-    topics: [String!]
+  createdAt: SortOrder
+  rating: SortOrder
+  searchValue: String
+  skipPages: Int
+  topics: [String!]
 }
 
 input FindAllPostsInput {
-    token: String!
+  token: String!
 }
 
 input FindAllUsersInput {
-    token: String!
+  token: String!
 }
 
 input FindByPostInput {
-    postId: Int!
+  postId: Int!
 }
 
 input FindDraftInput {
-    id: Int!
+  id: Int!
 }
 
 input FindOneUserInput {
-    email: String
-    id: Int
-    username: String
+  email: String
+  id: Int
+  username: String
 }
 
 input FindOneVersionInput {
-    id: Int!
+  id: Int!
 }
 
 input FindPostInput {
-    id: Int!
-    isHidden: Boolean
+  id: Int!
+  isHidden: Boolean
+}
+
+input FindUserFriendshipRequestsInput {
+  cursorId: Int
 }
 
 input FindUserFriendshipsInput {
-    cursorId: Int
-    userId: Int!
+  cursorId: Int
+  userId: Int!
 }
 
 input FindUserPostsInput {
-    createdAt: SortOrder
-    rating: SortOrder
-    skipPages: Int
-    subTopics: [String!]
-    topics: [String!]
-    topicsOrSubTopics: [String!]
-    userId: Int!
+  createdAt: SortOrder
+  rating: SortOrder
+  skipPages: Int
+  subTopics: [String!]
+  topics: [String!]
+  topicsOrSubTopics: [String!]
+  userId: Int!
+}
+
+input FindUsersFriendshipInput {
+  userId1: Int!
+  userId2: Int
 }
 
 type Friendship {
-    anotherUser: User!
-    createdAt: DateTime!
-    currentUserId: Int!
-    id: Int!
-    isAccepted: Boolean!
-    receiver: User!
-    receiverId: Int!
-    sender: User!
-    senderId: Int!
+  anotherUser: User!
+  createdAt: DateTime!
+  currentUserId: Int!
+  id: Int!
+  isAccepted: Boolean!
+  receiver: User!
+  receiverId: Int!
+  sender: User!
+  senderId: Int!
 }
 
 input GetByParentCommentInput {
-    parentId: Int!
-    skipPages: Int
+  parentId: Int!
+  skipPages: Int
 }
 
 input GetByPostInput {
-    postId: Int!
-    skipPages: Int
+  postId: Int!
+  skipPages: Int
+}
+
+input GetByUserInput {
+  isNotReply: Boolean
+  skipPages: Int
+  sortByDate: SortOrder
+  sortByPopularity: SortOrder
+  userId: Int!
 }
 
 """
@@ -180,168 +198,176 @@ The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](
 scalar JSONObject
 
 input LoginInput {
-    email: String!
-    password: String!
+  email: String!
+  password: String!
 }
 
 type Mutation {
-    confirmUserEmail(confirmUserEmailInput: String!): UserResponse!
-    createComment(createCommentInput: CreateCommentInput!): Comment!
-    createDraft(createDraftInput: CreateDraftInput!): Draft!
-    createPost(createPostInput: CreatePostInput!): Post!
-    createReply(createReplyInput: CreateReplyInput!): Comment!
-    createVersion(createVersionInput: CreateVersionInput!): Post!
-    expose(exposePostInput: Float!): Post!
-    hide(hidePostInput: Float!): Post!
-    login(loginInput: LoginInput!): UserResponse!
-    logout: String!
-    publishDraft(publishDraftInput: UpdateDraftInput!): Post!
-    register(registerInput: RegisterInput!): Boolean!
-    removeComment(id: Int!): Comment!
-    removeDraft(removeDraftInput: RemovePostInput!): Draft!
-    removeFriendship(removeFriendshipInput: CreateFriendshipInput!): Friendship!
-    removePost(removePostInput: RemovePostInput!): Post!
-    removeUser(id: Int!): User!
-    sendFriendshipRequest(createFriendshipInput: CreateFriendshipInput!): Friendship!
-    updateComment(updateCommentInput: UpdateCommentInput!): Comment!
-    updateDraft(updateDraftInput: UpdateDraftInput!): Draft!
-    updateUser(updateUserInput: UpdateUserDto!): User!
+  acceptFriendshipRequest(updateFriendshipInput: UpdateFriendshipInput!): Friendship!
+  confirmUserEmail(confirmUserEmailInput: String!): UserResponse!
+  createComment(createCommentInput: CreateCommentInput!): Comment!
+  createDraft(createDraftInput: CreateDraftInput!): Draft!
+  createPost(createPostInput: CreatePostInput!): Post!
+  createReply(createReplyInput: CreateReplyInput!): Comment!
+  createVersion(createVersionInput: CreateVersionInput!): Post!
+  expose(exposePostInput: Float!): Post!
+  hide(hidePostInput: Float!): Post!
+  login(loginInput: LoginInput!): UserResponse!
+  logout: String!
+  publishDraft(publishDraftInput: UpdateDraftInput!): Post!
+  register(registerInput: RegisterInput!): Boolean!
+  removeComment(id: Int!): Comment!
+  removeDraft(removeDraftInput: RemovePostInput!): Draft!
+  removeFriendship(removeFriendshipInput: CreateFriendshipInput!): Friendship!
+  removePost(removePostInput: RemovePostInput!): Post!
+  removeUser(id: Int!): User!
+  sendFriendshipRequest(createFriendshipInput: CreateFriendshipInput!): Friendship!
+  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
+  updateDraft(updateDraftInput: UpdateDraftInput!): Draft!
+  updateUser(updateUserInput: UpdateUserDto!): User!
 }
 
 type Post {
-    body: [JSON!]!
-    commentsQuantity: Int
-    createdAt: DateTime!
-    description: String
-    id: Int!
-    img: String
-    isHidden: Boolean!
-    minutes: Int
-    rating: Int
-    reviewsQuantity: Int
-    subTopics: [Topic!]
-    title: String!
-    topics: [Topic!]
-    updatedAt: DateTime!
-    user: User!
-    userId: Int!
-    version: Float!
+  body: [JSON!]!
+  commentsQuantity: Int
+  createdAt: DateTime!
+  description: String
+  id: Int!
+  img: String
+  isHidden: Boolean!
+  minutes: Int
+  rating: Int
+  reviewsQuantity: Int
+  subTopics: [Topic!]
+  title: String!
+  topics: [Topic!]
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+  version: Float!
 }
 
 type Query {
-    allPosts(findAllPostsInput: FindAllPostsInput!): [Post!]!
-    allUsers(findManyInput: FindAllUsersInput!): [User!]!
-    comment(id: Int!): Comment!
-    comments(getCommentsByPostInput: GetByPostInput!): CommentsByPost!
-    draft(findDraftInput: FindDraftInput!): Draft!
-    findByPost(findVersionByPostInput: FindByPostInput!): [Version!]!
-    post(findPostInput: FindPostInput!): Post!
-    postsRecommendations(postRecommendationsInput: FindAlgorithmPostsInput!): Recommendations!
-    replies(getRepliesByCommentInput: GetByParentCommentInput!): CommentsByPost!
-    topics(title: String): [Topic!]!
-    user(findOneUserInput: FindOneUserInput!): User!
-    userDrafts: [Draft!]!
-    userFriendRequests(findFriendsByUserInput: FindUserFriendshipsInput!): [Friendship!]!
-    userFriends(findFriendsByUserInput: FindUserFriendshipsInput!): [Friendship!]!
-    userFriendsQuantity(countFriendshipInput: CountUserFriendshipsInput!): Int!
-    userPosts(findUserPostsInput: FindUserPostsInput!): Recommendations!
-    version(findVersionInput: FindOneVersionInput!): [Version!]!
+  allPosts(findAllPostsInput: FindAllPostsInput!): [Post!]!
+  allUsers(findManyInput: FindAllUsersInput!): [User!]!
+  comment(id: Int!): Comment!
+  comments(getCommentsByPostInput: GetByPostInput!): CommentsByPost!
+  draft(findDraftInput: FindDraftInput!): Draft!
+  findByPost(findVersionByPostInput: FindByPostInput!): [Version!]!
+  post(findPostInput: FindPostInput!): Post!
+  postsRecommendations(postRecommendationsInput: FindAlgorithmPostsInput!): Recommendations!
+  replies(getRepliesByCommentInput: GetByParentCommentInput!): CommentsByPost!
+  topics(title: String): [Topic!]!
+  user(findOneUserInput: FindOneUserInput!): User!
+  userComments(getCommentsByUserInput: GetByUserInput!): CommentsByPost!
+  userDrafts: [Draft!]!
+  userFriendRequests(findFriendsByUserInput: FindUserFriendshipRequestsInput!): [Friendship!]!
+  userFriendRequestsQuantity(countFriendshipInput: CountUserFriendshipsInput!): Int!
+  userFriends(findFriendsByUserInput: FindUserFriendshipsInput!): [Friendship!]!
+  userFriendsQuantity(countFriendshipInput: CountUserFriendshipsInput!): Int!
+  userPosts(findUserPostsInput: FindUserPostsInput!): Recommendations!
+  usersFriendship(findUsersFriendship: FindUsersFriendshipInput!): Friendship!
+  version(findVersionInput: FindOneVersionInput!): [Version!]!
 }
 
 type Recommendations {
-    data: [Post!]!
-    totalPages: Int!
+  data: [Post!]!
+  totalPages: Int!
 }
 
 input RegisterInput {
-    email: String!
-    password: String!
-    returnUrl: String
-    username: String!
+  email: String!
+  password: String!
+  returnUrl: String
+  username: String!
 }
 
 input RemovePostInput {
-    id: Int!
+  id: Int!
 }
 
 enum SortOrder {
-    ASC
-    DESC
+  ASC
+  DESC
 }
 
 type Topic {
-    createdAt: DateTime!
-    title: String!
-    updatedAt: DateTime!
+  createdAt: DateTime!
+  title: String!
+  updatedAt: DateTime!
 }
 
 input UpdateCommentInput {
-    id: Int!
-    message: String
-    postId: Int
+  id: Int!
+  message: String
+  postId: Int
 }
 
 input UpdateDraftInput {
-    body: JSONObject
-    description: String
-    id: Int!
-    subTopics: [String!]
-    title: String
-    topics: [String!]
+  body: JSONObject
+  description: String
+  id: Int!
+  subTopics: [String!]
+  title: String
+  topics: [String!]
+}
+
+input UpdateFriendshipInput {
+  requestId: Int!
 }
 
 input UpdateUserDto {
-    email: String
-    google_id: String
-    id: Int!
-    img: String
-    password: String
-    username: String
+  email: String
+  google_id: String
+  id: Int!
+  img: String
+  password: String
+  username: String
 }
 
 type User {
-    comments: [Comment!]!
-    createdAt: DateTime!
-    email: String!
-    google_id: String!
-    id: Int!
-    img: String
-    occupation: String
-    password: String!
-    posts: [Post!]!
-    role: String!
-    updatedAt: DateTime!
-    username: String!
+  comments: [Comment!]!
+  createdAt: DateTime!
+  email: String!
+  google_id: String!
+  id: Int!
+  img: String
+  occupation: String
+  password: String!
+  posts: [Post!]!
+  role: String!
+  updatedAt: DateTime!
+  username: String!
 }
 
 type UserResponse {
-    createdAt: DateTime!
-    email: String!
-    google_id: String!
-    id: Int!
-    img: String
-    occupation: String
-    role: String!
-    updatedAt: DateTime!
-    username: String!
+  createdAt: DateTime!
+  email: String!
+  google_id: String!
+  id: Int!
+  img: String
+  occupation: String
+  role: String!
+  updatedAt: DateTime!
+  username: String!
 }
 
 type Version {
-    body: [JSON!]!
-    commentsQuantity: Int
-    createdAt: DateTime!
-    description: String
-    id: Int!
-    img: String
-    minutes: Int
-    postId: Int!
-    rating: Int
-    reviewsQuantity: Int
-    subTopics: [Topic!]
-    title: String!
-    topics: [Topic!]
-    updatedAt: DateTime!
-    user: User!
-    userId: Int!
-    version: Float!
+  body: [JSON!]!
+  commentsQuantity: Int
+  createdAt: DateTime!
+  description: String
+  id: Int!
+  img: String
+  minutes: Int
+  postId: Int!
+  rating: Int
+  reviewsQuantity: Int
+  subTopics: [Topic!]
+  title: String!
+  topics: [Topic!]
+  updatedAt: DateTime!
+  user: User!
+  userId: Int!
+  version: Float!
 }

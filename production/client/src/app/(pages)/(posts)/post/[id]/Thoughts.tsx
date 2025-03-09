@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import { Variants, variants } from "@/entities/Post/ui/consts";

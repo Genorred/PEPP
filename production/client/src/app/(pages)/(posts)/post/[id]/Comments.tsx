@@ -7,7 +7,7 @@ import {
 } from "@/shared/api/graphql/generated";
 import { useIntersectionObserver } from "usehooks-ts";
 import CommentForm from "./CommentForm";
-import Comment from "./Comment";
+import PostComment from "./PostComment";
 import { useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
 
@@ -29,11 +29,11 @@ const Comments = ({ postId }: {
       }]);
     }
   });
-  const onCreate = (replyMessage: string) => {
+  const onCreate = (replyMessage: string, onError?: () => void) => {
     createComment({
       message: replyMessage.trim(),
       postId
-    });
+    }, {onError});
   };
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
@@ -58,14 +58,15 @@ const Comments = ({ postId }: {
       <CommentForm onCreate={onCreate} />
       {
         leavedComments.map((comment) => (
-          <Comment comment={comment} key={comment.id} />
+          <PostComment comment={comment} key={comment.id} />
         ))
       }
       {data?.pages.map((page, index) => (
         page.comments.data.map((comment, index) => (
-          <Comment comment={{ ...comment, postId }} key={comment.id} />
+          <PostComment comment={{ ...comment, postId }} key={comment.id} />
         ))
       ))}
+      <div className="h-1 w-full" ref={ref} />
     </div>
   );
 };

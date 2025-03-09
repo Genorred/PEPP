@@ -6,6 +6,8 @@ import UserPosts from "@/app/(pages)/(user)/profile/[id]/UserPosts";
 import { GetUserProfileInfoQuery } from "@/shared/api/graphql/generated";
 import UserPostsFilters from "@/app/(pages)/(user)/profile/[id]/UserPostsFilters";
 import { getTopicsSummary } from "@/app/(pages)/(user)/profile/[id]/getTopicsSummary";
+import UserCommentsFilters from "@/app/(pages)/(user)/profile/[id]/UserCommentsFilters";
+import UserComments from "@/app/(pages)/(user)/profile/[id]/UserComments";
 
 const variants = {
   posts: "Posts",
@@ -39,6 +41,8 @@ const UserActivity = ({ user, topicsSummary }: {
 
           </TabsContent>
           <TabsContent value={variants.comments}>
+            <UserCommentsFilters />
+            <UserComments userId={user.id} />
           </TabsContent>
           <TabsContent value={variants.reviews}>
             <div className="space-y-4">

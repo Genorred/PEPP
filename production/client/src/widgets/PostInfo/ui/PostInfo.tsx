@@ -1,3 +1,4 @@
+'use client'
 import Image from "next/image";
 import { CalendarIcon, ClockIcon, StarIcon } from "lucide-react";
 import { ThoughtsDialog } from "@/entities/Post/ui/ThoughtsDialog";

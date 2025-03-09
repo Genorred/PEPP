@@ -11,6 +11,7 @@ import { RemovePostInputService } from "../../domain/dto/posts/remove-post.dto";
 import { TopicsPrismaRepository } from "./topics.prisma.repository";
 import { DMMF } from "@prisma/client/runtime/library";
 import SortOrder = DMMF.SortOrder;
+import { CountCommentsDto } from "src/domain/dto/comments/count-comments.dto";
 
 @Injectable()
 export class PostsRepositoryImpl implements PostsRepository {
@@ -117,10 +118,12 @@ export class PostsRepositoryImpl implements PostsRepository {
     } as const;
   }
 
-  async getCommentsQuantity(postId: number): Promise<number> {
+  async getCommentsQuantity(countComments: CountCommentsDto): Promise<number> {
+    const {postId, userId} = countComments
     return (await this.prismaService.post.findFirst({
       where: {
-        id: postId
+        id: postId,
+        userId
       },
       select: {
         commentsQuantity: true

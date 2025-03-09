@@ -8,6 +8,8 @@ import { CommentsRepository } from "../domain/repositories/comments/comments.rep
 import { PostsRepository } from "../domain/repositories/posts/posts.repository";
 import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
 import { CreateReplyInput } from "../domain/dto/comments/create-reply.input";
+import { GetByUserDto } from "../domain/dto/comments/get-by-user.dto";
+import { SortOrder } from "../domain/sort-order";
 
 const page = 20;
 
@@ -56,7 +58,35 @@ export class CommentsUseCase {
         repliesQuantity: "asc",
         dislikes: "desc"
       }),
-      this.postsRepository.getCommentsQuantity(postId)
+      this.postsRepository.getCommentsQuantity({ postId })
+    ]);
+    console.log(data);
+    return {
+      data,
+      totalPages: Math.max(Math.floor(totalCount / page), 1)
+    };
+  }
+
+  async getByUser(getByPostInput: GetByUserDto): Promise<CommentsByPost> {
+    const { userId, skipPages, isNotReply, sortByPopularity, sortByDate } = getByPostInput;
+    const [data, totalCount] = await Promise.all([
+      this.commentsRepository.findMany({
+        userId,
+        parentId: isNotReply ? null : undefined,
+        skipPages,
+        take: page,
+        ...(sortByPopularity === SortOrder.ASC ? {
+          likes: "asc",
+          repliesQuantity: "asc",
+          dislikes: "desc"
+        } : {
+          likes: "desc",
+          repliesQuantity: "desc",
+          dislikes: "asc"
+        }),
+        createdAt: sortByDate === SortOrder.ASC ? "asc" : "desc"
+      }),
+      this.postsRepository.getCommentsQuantity({ userId })
     ]);
     console.log(data);
     return {

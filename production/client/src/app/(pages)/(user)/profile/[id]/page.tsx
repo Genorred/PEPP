@@ -5,12 +5,12 @@ import { Avatar, AvatarFallback } from "@/shared/ui/avatar";
 import { Separator } from "@/shared/ui/separator";
 import React from "react";
 import {
-  GetUserFriendshipsCountDocument,
-  GetUserFriendshipsCountQuery,
-  GetUserFriendshipsCountQueryVariables,
-  GetUserFriendshipsDocument,
-  GetUserFriendshipsQuery,
-  GetUserFriendshipsQueryVariables,
+  GetUserFriendsCountDocument,
+  GetUserFriendsCountQuery,
+  GetUserFriendsCountQueryVariables,
+  GetUserFriendsDocument,
+  GetUserFriendsQuery,
+  GetUserFriendsQueryVariables,
   GetUserProfileInfoDocument,
   GetUserProfileInfoQuery,
   GetUserProfileInfoQueryVariables,
@@ -48,20 +48,21 @@ const Page = async ({ params }: {
   }>
 }) => {
   const par = await params;
+  const id = Number(par.id)
   const [data, friendsCount, friends] = await Promise.all<[
     Promise<GetUserProfileInfoQuery>,
-    Promise<GetUserFriendshipsCountQuery>,
-    Promise<GetUserFriendshipsQuery>
+    Promise<GetUserFriendsCountQuery>,
+    Promise<GetUserFriendsQuery>
   ]>([
     serverApiClient.request(GetUserProfileInfoDocument, {
-      id: Number(par.id)
+      id
     } as GetUserProfileInfoQueryVariables),
-    serverApiClient.request(GetUserFriendshipsCountDocument, {
-      userId: Number(par.id)
-    } as GetUserFriendshipsCountQueryVariables),
-    serverApiClient.request(GetUserFriendshipsDocument, {
-      userId: Number(par.id)
-    } as GetUserFriendshipsQueryVariables)
+    serverApiClient.request(GetUserFriendsCountDocument, {
+      userId: id
+    } as GetUserFriendsCountQueryVariables),
+    serverApiClient.request(GetUserFriendsDocument, {
+      userId: id
+    } as GetUserFriendsQueryVariables)
   ]);
   console.log(friendsCount, friends);
 
@@ -72,12 +73,17 @@ const Page = async ({ params }: {
       <Card className="flex flex-col xl:flex-row xl:justify-center items-center xl:items-start py-4 gap-8">
         <div className="md:border-r-2 flex-1 w-full self-stretch xl:max-w-xl flex flex-col gap-4">
           <Avatar className="w-32 h-32 mx-auto">
-            <Image
-              src={user?.img ?? ""}
-              alt={user?.username ?? "user image"}
-              width={128}
-              height={128}
-            />
+            { user?.img ?
+              <Image
+                src={user?.img ?? ''}
+                alt={user?.username ?? "user image"}
+                width={128}
+                height={128}
+              />
+            :
+              <div className={'bg-background'}></div>
+            }
+
             <AvatarFallback>
               {user?.username
                 .split(" ")

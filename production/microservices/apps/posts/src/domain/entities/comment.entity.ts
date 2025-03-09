@@ -26,14 +26,14 @@ export class Comment {
   dislikes: number;
   @Field(() => Int)
   repliesQuantity: number;
-  @Field(() => [Post])
-  post?: Post[];
+  @Field(() => Post)
+  post?: Post;
 
   @Field(() => Int)
   postId: number;
-  // @Field(() => [Comment])
-  // replies?: Comment[];
-  @Field(() => Int)
+  // @Field(() => [PostComment])
+  // replies?: PostComment[];
+  @Field(() => Int, { nullable: true })
   parentId: number;
   @Field(() => Comment, { nullable: true })
   parent?: Comment;

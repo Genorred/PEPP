@@ -12,11 +12,14 @@ import { CommentsByPost } from "../../domain/dto/comments/output/comments-by-pos
 import { GetByParentCommentInput } from "../../domain/dto/comments/get-by-parent-comment.input";
 import { CommentsRepository } from "../../domain/repositories/comments/comments.repository";
 import { CreateReplyInput } from "../../domain/dto/comments/create-reply.input";
+import { GetByUserInput } from "../dto/comments/get-by-user.input";
+import { PostsRepository } from "../../domain/repositories/posts/posts.repository";
 
 @Resolver(() => Comment)
 export class CommentsResolver {
   constructor(private readonly commentsService: CommentsUseCase,
-              private readonly commentsRepository: CommentsRepository
+              private readonly commentsRepository: CommentsRepository,
+              private readonly postsRepository: PostsRepository
   ) {
   }
 
@@ -35,6 +38,11 @@ export class CommentsResolver {
   @Query(() => CommentsByPost, { name: "comments" })
   getByPost(@Args("getCommentsByPostInput") getByPostInput: GetByPostInput) {
     return this.commentsService.getByPost(getByPostInput);
+  }
+
+  @Query(() => CommentsByPost, { name: "userComments" })
+  getByUser(@Args("getCommentsByUserInput") getByPostInput: GetByUserInput) {
+    return this.commentsService.getByUser(getByPostInput);
   }
 
   @Query(() => CommentsByPost, { name: "replies" })
@@ -64,12 +72,12 @@ export class CommentsResolver {
 
   @ResolveField(() => Post)
   post(@Parent() comment: Comment): any {
-    return { __typename: "Post", id: comment.userId };
+    return this.postsRepository.findOne({ id: comment.postId });
   }
 
   @ResolveField(() => Comment)
   parent(@Parent() comment: Comment): any {
-    return { __typename: "Comment", id: comment.parentId };
+    return this.commentsRepository.findOne(comment.id);
   }
 
   @ResolveReference()

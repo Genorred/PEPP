@@ -1,7 +1,11 @@
-export interface Comment {
-  content: string;
-  rating: number;
-  userId: string;
-  userImg: string;
-  userName: string;
+export interface UserCommentTemplateI {
+  username: string;
+  img?: string | null;
+}
+
+export interface CommentPropsI {
+  id: number;
+  user: UserCommentTemplateI;
+  createdAt: string;
+  message: string;
 }

@@ -85,7 +85,8 @@ export function CommentTemplate({
           {cardBottom}
         </div>
         {isReplying &&
-          <CommentForm {...replyFormProps} isReplyingState={state} />}
+          <CommentForm {...replyFormProps} isReplyingState={state} />
+        }
       </CardContent>
       {cardFooter}
     </Card>

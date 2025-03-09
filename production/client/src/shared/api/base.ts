@@ -36,12 +36,12 @@ const onError = (error: unknown) => {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      onError,
+      // onError,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false
     },
     mutations: {
-      onError
+      // onError
     }
   }
 });

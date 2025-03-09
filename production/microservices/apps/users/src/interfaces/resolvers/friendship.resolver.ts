@@ -8,6 +8,9 @@ import UseAuth from "@_shared/auth-guard/useAuth";
 import { CurrentUser, CurrentUserI } from "@_shared/auth-guard/CurrentUser";
 import { User } from "../entities/user.entity";
 import { UserLoader } from "../batchers/users.batcher";
+import { FindUsersFriendshipInput } from "./dto-inputs/find-users-friendship.input";
+import { FindUserFriendshipRequestsInput } from "./dto-inputs/find-user-friendship-requests.input";
+import { UpdateFriendshipInput } from "./dto-inputs/update-friendship.input";
 
 @Resolver(() => Friendship)
 export class FriendshipResolver {
@@ -44,17 +47,47 @@ export class FriendshipResolver {
     return a;
   }
 
-  @Query(() => [Friendship], { name: "userFriendRequests" })
-  async findUserRequests(@Args("findFriendsByUserInput") findFriendsByUserId: FindUserFriendshipsInput) {
+  @UseAuth()
+  @Query(() => Friendship, { name: "usersFriendship" })
+  async findUsersFriendship(@Args("findUsersFriendship") findUsersFriendshipInput: FindUsersFriendshipInput, @CurrentUser() currentUser: CurrentUserI) {
     return {
-      ...await this.friendshipUseCase.findUserRequests(findFriendsByUserId),
-      currentUserId: findFriendsByUserId.userId
+      ...await this.friendshipUseCase.findUsersFriendship(findUsersFriendshipInput),
+      currentUserId: currentUser.sub
     };
+  }
+
+  @UseAuth()
+  @Mutation(() => Friendship, { name: "acceptFriendshipRequest" })
+  async acceptFriendshipRequest(@Args("updateFriendshipInput",) updateFriendshipInput: UpdateFriendshipInput, @CurrentUser() currentUser: CurrentUserI) {
+    return {
+      ...await this.friendshipUseCase.accept({
+        userId: currentUser.sub,
+        id: updateFriendshipInput.requestId
+      }),
+      currentUserId: currentUser.sub
+    };
+  }
+
+
+  @Query(() => [Friendship], { name: "userFriendRequests" })
+  async findUserRequests(@Args("findFriendsByUserInput") findFriendsByUserId: FindUserFriendshipRequestsInput, @CurrentUser() currentUser: CurrentUserI) {
+    return (await this.friendshipUseCase.findUserRequests({
+      userId: currentUser.sub,
+      cursorId: findFriendsByUserId.cursorId
+    })).map(value => ({
+      ...value,
+      currentUserId: currentUser.sub
+    }));
   }
 
   @Query(() => Int, { name: "userFriendsQuantity" })
   async count(@Args("countFriendshipInput") countInput: CountUserFriendshipsInput) {
     return this.friendshipUseCase.count(countInput);
+  }
+
+  @Query(() => Int, { name: "userFriendRequestsQuantity" })
+  async countRequests(@Args("countFriendshipInput") countInput: CountUserFriendshipsInput) {
+    return this.friendshipUseCase.countRequests(countInput);
   }
 
   @ResolveField(() => User)

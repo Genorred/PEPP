@@ -5,4 +5,6 @@ import { CountUserFriendshipsDto } from "../../../domain/dto/input/friendship/co
 export class CountUserFriendshipsInput implements CountUserFriendshipsDto {
   @Field(() => Int)
   userId: number;
+  @Field({nullable: true})
+  isAccepted?: boolean;
 }
