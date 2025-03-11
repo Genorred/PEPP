@@ -1,10 +1,10 @@
 import { Args, Int, Mutation, Query, Resolver, ResolveReference } from "@nestjs/graphql";
-import { User } from "../entities/user.entity";
+import { User } from "../graphql-entities/user.graphql-entity";
 import { UpdateUserDto } from "../../domain/dto/input/users/update-user.dto";
-import { FindOneUserInput } from "./dto-inputs/find-one-user.input";
 import { UsersRepository } from "../../domain/repositories/users.repository";
 import { UserUseCase } from "../../application/user.use-case";
-import { FindAllUsersInput } from "./dto-inputs/findAllUsers.input";
+import { FindAllUsersInput } from "./dto-inputs/users/findAllUsers.input";
+import { FindOneUserInput } from "./dto-inputs/users/find-one-user.input";
 
 @Resolver(() => User)
 export class UsersResolver {

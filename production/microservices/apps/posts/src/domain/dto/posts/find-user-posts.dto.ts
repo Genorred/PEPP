@@ -1,4 +1,4 @@
-import { SortOrder } from "../../sort-order";
+import { SortOrder } from "../../entities/types/sort-order";
 
 export class FindUserPostsDto {
   userId: number;

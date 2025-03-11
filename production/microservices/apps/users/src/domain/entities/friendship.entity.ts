@@ -1,4 +1,4 @@
-export class Friendship {
+export class FriendshipEntity {
   id: number;
   isAccepted: boolean;
 

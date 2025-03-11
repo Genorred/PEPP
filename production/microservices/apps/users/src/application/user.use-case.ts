@@ -1,6 +1,6 @@
 import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { UsersRepository } from "../domain/repositories/users.repository";
-import { FindAllUsersDto } from "./dto/findAllUsers.dto";
+import { FindAllUsersDto } from "./dto/users/findAllUsers.dto";
 import frontendServerConfig from "../infrastructure/config/frontend-server.config";
 import { ConfigType } from "@nestjs/config";
 

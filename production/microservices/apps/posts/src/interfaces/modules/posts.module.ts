@@ -13,7 +13,7 @@ import { PostsRepository } from "../../domain/repositories/posts/posts.repositor
 import { PostsSecurityCheckService } from "../../domain/domain_services/posts.security.check.service";
 import { PreferencesRepository } from "../../domain/repositories/posts/preferenses.repository";
 import { TopicsModule } from "./topics.module";
-import { PostsUow } from "../../domain/UoW/posts.uow";
+import { PostsUow } from "../../domain/repositories/UoW/posts.uow";
 import { PostsUowImpl } from "../../infrastructure/services/posts.uow.impl";
 
 @Module({

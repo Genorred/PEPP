@@ -4,7 +4,7 @@ import { FriendshipRepository } from "../../domain/repositories/friendship.repos
 import { FindUserFriendshipsDto } from "../../domain/dto/input/friendship/find-user-friendships.dto";
 import { CountUserFriendshipsDto } from "../../domain/dto/input/friendship/count-user-friendships.dto";
 import { CreateFriendshipDto } from "../../domain/dto/input/friendship/create-friendship.dto";
-import { Friendship } from "../../domain/entities/friendship.entity";
+import { FriendshipEntity } from "../../domain/entities/friendship.entity";
 import { FindUsersFriendshipDto } from "../../domain/dto/input/friendship/find-users-friendship.dto";
 import { FindOneFriendshipsDto } from "../../domain/dto/input/friendship/find-one-friendships.dto";
 import { CountFriendshipsDto } from "../../domain/dto/input/friendship/count-friendships.dto";
@@ -17,7 +17,7 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
   ) {
   }
 
-  update(updateFriendshipDto: UpdateFriendshipDto): Promise<Friendship> {
+  update(updateFriendshipDto: UpdateFriendshipDto): Promise<FriendshipEntity> {
     const { isAccepted, userId, id } = updateFriendshipDto;
     return this.prisma.friendship.update({
       where: {
@@ -37,7 +37,7 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
     });
   }
 
-  async findOne(fields: FindOneFriendshipsDto): Promise<Friendship[]> {
+  async findOne(fields: FindOneFriendshipsDto): Promise<FriendshipEntity[]> {
     const { senderId, receiverId, cursorId, isAccepted } = fields;
     const pageSize = 20;
     const response = await this.prisma.friendship.findMany({
@@ -55,7 +55,7 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
     return response.length ? response : [];
   }
 
-  async findByUser(fields: FindUserFriendshipsDto): Promise<Friendship[]> {
+  async findByUser(fields: FindUserFriendshipsDto): Promise<FriendshipEntity[]> {
     const { userId, cursorId, isAccepted } = fields;
     const pageSize = 20;
     const response = await this.prisma.friendship.findMany({
@@ -79,7 +79,7 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
     return response.length ? response : [];
   }
 
-  findUsersFriendship(fields: FindUsersFriendshipDto): Promise<Friendship> {
+  findUsersFriendship(fields: FindUsersFriendshipDto): Promise<FriendshipEntity> {
     const { userId1, userId2 } = fields;
     return this.prisma.friendship.findFirstOrThrow({
       where: {
@@ -125,7 +125,7 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
     });
   }
 
-  async create(createUserInput: CreateFriendshipDto): Promise<Friendship> {
+  async create(createUserInput: CreateFriendshipDto): Promise<FriendshipEntity> {
     const { senderId, receiverId } = createUserInput;
     if (senderId === receiverId) {
       throw new ConflictException("Request cannot be sent from user to himself");
@@ -141,7 +141,7 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
     }
   }
 
-  async remove(removeInput: RemoveFriendshipDto): Promise<Friendship> {
+  async remove(removeInput: RemoveFriendshipDto): Promise<FriendshipEntity> {
     const { anotherUserId, authedUserId } = removeInput;
     let response
     try {

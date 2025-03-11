@@ -2,8 +2,8 @@ import { ConflictException, Injectable } from "@nestjs/common";
 import { CreateUserDto } from "../../domain/dto/input/users/create-user.dto";
 import { UpdateUserDto } from "../../domain/dto/input/users/update-user.dto";
 import { PrismaService } from "./prismaDb/prisma.service";
-import { User } from "../../interfaces/entities/user.entity";
 import { UsersRepository } from "../../domain/repositories/users.repository";
+import { UserEntity } from "../../domain/entities/user.entity";
 
 @Injectable()
 export class UsersRepositoryImpl implements UsersRepository {
@@ -31,11 +31,11 @@ export class UsersRepositoryImpl implements UsersRepository {
     }
   }
 
-  findMany(fields: Partial<User>) {
+  findMany(fields: Partial<UserEntity>) {
     return this.prisma.user.findMany({ where: fields });
   }
 
-  findManyByIds(fields: number[]): Promise<User[]> {
+  findManyByIds(fields: number[]): Promise<UserEntity[]> {
     return this.prisma.user.findMany({
       where: {
         id: {
@@ -50,7 +50,7 @@ export class UsersRepositoryImpl implements UsersRepository {
     if (!(id || username || email || google_id)) {
       return null;
     }
-    return this.prisma.user.findUnique({ where: searchOptions as User });
+    return this.prisma.user.findUnique({ where: searchOptions as UserEntity });
   }
 
   update(id: number, updateUserInput: UpdateUserDto) {

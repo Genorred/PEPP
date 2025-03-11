@@ -3,10 +3,10 @@ import { PrismaService } from "./prismaDb/prisma.service";
 import { UpdatePostInputService } from "../../domain/dto/posts/update-post.dto";
 import { RemovePostInputService } from "../../domain/dto/posts/remove-post.dto";
 import { DraftsRepository } from "../../domain/repositories/drafts/drafts.repository";
-import { CreateDraftInputService } from "../../domain/dto/drafts/create-draft.input";
+import { CreateDraftDto } from "../../domain/dto/drafts/create-draft.dto";
 import { Draft } from "../../domain/entities/draft.entity";
-import { FindDraftInputService } from "../../domain/dto/drafts/find-draft.input";
-import { FindManyDraftsInput } from "../../domain/dto/drafts/find-many-drafts.input";
+import { FindDraftDto } from "../../domain/dto/drafts/find-draft.dto";
+import { FindManyDraftsDto } from "../../domain/dto/drafts/find-many-drafts.dto";
 import { TopicsPrismaRepository } from "./topics.prisma.repository";
 
 @Injectable()
@@ -17,7 +17,7 @@ export class DraftsRepositoryImpl implements DraftsRepository {
   ) {
   }
 
-  create(input: CreateDraftInputService): Promise<Draft> {
+  create(input: CreateDraftDto): Promise<Draft> {
     const { topics, subTopics, ...data } = input;
     return this.prismaService.draft.create({
       data: {
@@ -27,13 +27,13 @@ export class DraftsRepositoryImpl implements DraftsRepository {
     });
   }
 
-  findOne(input: FindDraftInputService): Promise<Draft> {
+  findOne(input: FindDraftDto): Promise<Draft> {
     return this.prismaService.draft.findFirst({
       where: input
     });
   }
 
-  findMany(input?: FindManyDraftsInput): Promise<Draft[]> {
+  findMany(input?: FindManyDraftsDto): Promise<Draft[]> {
     const { id, ...rest } = input;
     return this.prismaService.draft.findMany({
       where: input

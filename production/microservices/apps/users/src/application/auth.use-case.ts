@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
-import { LoginInput } from "../domain/dto/input/auth/login.input";
+import { LoginDto } from "../domain/dto/input/auth/login.dto";
 import * as argon2 from "argon2";
 import { CustomContext } from "@_shared/types/CustomContext";
 import getCookies from "@_shared/utils/getCookies";
@@ -56,7 +56,7 @@ export class AuthUseCase {
     return user;
   }
 
-  async login(loginInput: LoginInput, context: CustomContext) {
+  async login(loginInput: LoginDto, context: CustomContext) {
     const { password, ...user } = await this.validateUser(loginInput);
     if (!user) {
       throw new UnauthorizedException();
@@ -78,7 +78,7 @@ export class AuthUseCase {
     }
   }
 
-  private async validateUser(loginInput: LoginInput) {
+  private async validateUser(loginInput: LoginDto) {
     const { password, email } = loginInput;
 
     const user = await this.usersService.findOne({ email });

@@ -1,18 +1,18 @@
 import { Draft } from "../../entities/draft.entity";
-import { RemovePostInputService } from "../../dto/posts/remove-post.dto";
-import { FindDraftInputService } from "../../dto/drafts/find-draft.input";
-import { FindManyDraftsInput } from "../../dto/drafts/find-many-drafts.input";
-import { CreateDraftInputService } from "../../dto/drafts/create-draft.input";
-import { UpdateDraftInputService } from "../../dto/drafts/update-draft.input";
+import { FindDraftDto } from "../../dto/drafts/find-draft.dto";
+import { FindManyDraftsDto } from "../../dto/drafts/find-many-drafts.dto";
+import { CreateDraftDto } from "../../dto/drafts/create-draft.dto";
+import { UpdateDraftDto } from "../../dto/drafts/update-draft.dto";
+import { RemoveDraftDto } from "../../dto/drafts/remove-draft.dto";
 
 export abstract class DraftsRepository {
-  abstract create(createPostInput: CreateDraftInputService): Promise<Draft>
+  abstract create(createPostInput: CreateDraftDto): Promise<Draft>
 
-  abstract findOne(input: FindDraftInputService): Promise<Draft>;
+  abstract findOne(input: FindDraftDto): Promise<Draft>;
 
-  abstract findMany(input?: FindManyDraftsInput): Promise<Draft[]>;
+  abstract findMany(input?: FindManyDraftsDto): Promise<Draft[]>;
 
-  abstract update(input: UpdateDraftInputService): Promise<Draft>;
+  abstract update(input: UpdateDraftDto): Promise<Draft>;
 
-  abstract remove(input: RemovePostInputService): Promise<Draft>;
+  abstract remove(input: RemoveDraftDto): Promise<Draft>;
 }

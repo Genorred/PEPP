@@ -1,5 +1,5 @@
-import { PostsRepository } from "../repositories/posts/posts.repository";
-import { VersionsRepository } from "../repositories/versions/versions.repository";
+import { PostsRepository } from "../posts/posts.repository";
+import { VersionsRepository } from "../versions/versions.repository";
 
 export abstract class PostsUow {
   abstract run<T>(callback: (repos: {

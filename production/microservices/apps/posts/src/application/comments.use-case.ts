@@ -9,7 +9,7 @@ import { PostsRepository } from "../domain/repositories/posts/posts.repository";
 import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
 import { CreateReplyInput } from "../domain/dto/comments/create-reply.input";
 import { GetByUserDto } from "../domain/dto/comments/get-by-user.dto";
-import { SortOrder } from "../domain/sort-order";
+import { SortOrder } from "../domain/entities/types/sort-order";
 
 const page = 20;
 

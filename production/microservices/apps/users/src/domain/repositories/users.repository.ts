@@ -1,18 +1,18 @@
 import { CreateUserDto } from "../dto/input/users/create-user.dto";
 import { UpdateUserDto } from "../dto/input/users/update-user.dto";
-import { User } from "../../interfaces/entities/user.entity";
 import { FindOneUserDto } from "../dto/input/users/find-one-user.dto";
+import { UserEntity } from "../entities/user.entity";
 
 export abstract class UsersRepository {
-  abstract create(createUserInput: CreateUserDto): Promise<User>
+  abstract create(createUserInput: CreateUserDto): Promise<UserEntity>
 
-  abstract findMany(fields: Partial<User>): Promise<User[]>
+  abstract findMany(fields: Partial<UserEntity>): Promise<UserEntity[]>
 
-  abstract findManyByIds(fields: number[]): Promise<User[]>
+  abstract findManyByIds(fields: number[]): Promise<UserEntity[]>
 
-  abstract findOne(searchOptions: FindOneUserDto): Promise<User>
+  abstract findOne(searchOptions: FindOneUserDto): Promise<UserEntity>
 
-  abstract update(id: number, updateUserInput: UpdateUserDto): Promise<User>
+  abstract update(id: number, updateUserInput: UpdateUserDto): Promise<UserEntity>
 
-  abstract remove(id: number): Promise<User>
+  abstract remove(id: number): Promise<UserEntity>
 }

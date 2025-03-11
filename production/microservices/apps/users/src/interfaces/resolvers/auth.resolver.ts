@@ -1,10 +1,10 @@
 import { Args, Mutation, Resolver } from "@nestjs/graphql";
-import { LoginInput } from "../../domain/dto/input/auth/login.input";
 import { CustomExecutionContext } from "@_shared/decorators/execution-context";
 import { CustomContext } from "@_shared/types/CustomContext";
-import { UserResponse } from "../../domain/dto/response/returned-user.response";
+import { UserResponse } from "./dto-responses/returned-user.response";
 import { AuthUseCase } from "../../application/auth.use-case";
-import { RegisterInput } from "./dto-inputs/register.input";
+import { LoginInput } from "./dto-inputs/auth/login.input";
+import { RegisterInput } from "./dto-inputs/auth/register.input";
 
 @Resolver()
 export class AuthResolver {

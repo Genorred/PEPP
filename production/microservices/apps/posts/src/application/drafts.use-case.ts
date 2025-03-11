@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PostsRepository } from "../domain/repositories/posts/posts.repository";
 import { DraftsRepository } from "../domain/repositories/drafts/drafts.repository";
-import { UpdateDraftInputService } from "../domain/dto/drafts/update-draft.input";
+import { UpdateDraftDto } from "../domain/dto/drafts/update-draft.dto";
 import { Draft } from "../domain/entities/draft.entity";
 import { VersionsRepository } from "../domain/repositories/versions/versions.repository";
 import { Transaction } from "../domain/repositories/transaction";
@@ -27,7 +27,7 @@ export class DraftsUseCase {
     return this.draftsRepository.create({ version: version + 1, ...input });
   }
 
-  async publishDraft(publishDraftInput: UpdateDraftInputService) {
+  async publishDraft(publishDraftInput: UpdateDraftDto) {
     const { id, userId, ...data } = publishDraftInput;
     const { topics, subTopics, version, postId, ...rest } = await this.draftsRepository.findOne({ id, userId });
     console.log("id", id);

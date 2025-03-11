@@ -2,10 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { FriendshipRepository } from "../domain/repositories/friendship.repository";
 import { CreateFriendshipDto } from "../domain/dto/input/friendship/create-friendship.dto";
 import { CountUserFriendshipsDto } from "src/domain/dto/input/friendship/count-user-friendships.dto";
-import { FindUserFriendsDto } from "./dto/find-user-friends.dto";
+import { FindUserFriendsDto } from "./dto/friendships/find-user-friends.dto";
 import { FindUsersFriendshipDto } from "../domain/dto/input/friendship/find-users-friendship.dto";
 import { UpdateFriendshipDto } from "../domain/dto/input/friendship/update-friendship.dto";
-import { AcceptFriendshipDto } from "./dto/accept-friendship.dto";
+import { AcceptFriendshipDto } from "./dto/friendships/accept-friendship.dto";
 import { RemoveFriendshipInput } from "../interfaces/resolvers/dto-inputs/remove-friendship.input";
 import { RemoveFriendshipDto } from "../domain/dto/input/friendship/remove-friendship.dto";
 

@@ -1,4 +1,4 @@
-import { PostsUow } from "../../domain/UoW/posts.uow";
+import { PostsUow } from "../../domain/repositories/UoW/posts.uow";
 import { PostsRepository } from "../../domain/repositories/posts/posts.repository";
 import { VersionsRepository } from "../../domain/repositories/versions/versions.repository";
 import { PostsRepositoryImpl } from "../repository-impls/posts.repository.impl";

@@ -1,5 +1,5 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
-import { SortOrder } from "../../../domain/sort-order";
+import { SortOrder } from "../../../domain/entities/types/sort-order";
 import { FindUserPostsDto } from "../../../domain/dto/posts/find-user-posts.dto";
 
 @InputType()

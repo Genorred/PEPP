@@ -1,5 +1,5 @@
 import { Post } from "../../entities/post.entity";
-import { SortOrder } from "../../sort-order";
+import { SortOrder } from "../../entities/types/sort-order";
 
 export interface FindManyDto extends Omit<Partial<Post>, "body" | "topics" | "subTopics" | "rating" | "createdAt"> {
   ids?: number[];

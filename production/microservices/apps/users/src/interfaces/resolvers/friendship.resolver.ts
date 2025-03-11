@@ -1,17 +1,17 @@
 import { Args, Int, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
-import { Friendship } from "../entities/friendship.entity";
+import { Friendship } from "../graphql-entities/friendship.graphql-entity";
 import { FriendshipUseCase } from "../../application/friendship.use-case";
-import { FindUserFriendshipsInput } from "./dto-inputs/find-user-friendships.input";
-import { CreateFriendshipInput } from "./dto-inputs/create-friendship.input";
-import { CountUserFriendshipsInput } from "./dto-inputs/count-user-friendships.input";
 import UseAuth from "@_shared/auth-guard/useAuth";
 import { CurrentUser, CurrentUserI } from "@_shared/auth-guard/CurrentUser";
-import { User } from "../entities/user.entity";
+import { User } from "../graphql-entities/user.graphql-entity";
 import { UserLoader } from "../batchers/users.batcher";
-import { FindUsersFriendshipInput } from "./dto-inputs/find-users-friendship.input";
-import { FindUserFriendshipRequestsInput } from "./dto-inputs/find-user-friendship-requests.input";
-import { UpdateFriendshipInput } from "./dto-inputs/update-friendship.input";
-import { RemoveFriendshipInput } from "./dto-inputs/remove-friendship.input";
+import { CreateFriendshipInput } from "./dto-inputs/friendships/create-friendship.input";
+import { RemoveFriendshipInput } from "./dto-inputs/friendships/remove-friendship.input";
+import { FindUserFriendshipsInput } from "./dto-inputs/friendships/find-user-friendships.input";
+import { FindUsersFriendshipInput } from "./dto-inputs/friendships/find-users-friendship.input";
+import { UpdateFriendshipInput } from "./dto-inputs/friendships/update-friendship.input";
+import { FindUserFriendshipRequestsInput } from "./dto-inputs/friendships/find-user-friendship-requests.input";
+import { CountUserFriendshipsInput } from "./dto-inputs/users/count-user-friendships.input";
 
 @Resolver(() => Friendship)
 export class FriendshipResolver {

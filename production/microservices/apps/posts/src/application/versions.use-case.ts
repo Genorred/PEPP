@@ -6,7 +6,7 @@ import { PostsRepository } from "../domain/repositories/posts/posts.repository";
 import { Injectable } from "@nestjs/common";
 import { VersionIsHiddenService } from "../domain/domain_services/version-is-hidden.service";
 import { CreateVersionUseCaseDto } from "./dto/create-version-use-case.dto";
-import { PostsUow } from "../domain/UoW/posts.uow";
+import { PostsUow } from "../domain/repositories/UoW/posts.uow";
 import { SearchRepository } from "../domain/repositories/posts/search.repository";
 
 @Injectable()
