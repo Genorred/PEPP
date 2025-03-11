@@ -58,7 +58,7 @@ const PostCard = ({
         <PostHeader img={img} title={title} />
       </Link>
       <CardContent className="pt-4">
-        <div className="flex items-center gap-2 mb-4">
+        <div className="grid md:grid-cols-2 items-center gap-4 mb-4">
           {hideUser
             ? null
             : <UserLink
@@ -66,12 +66,12 @@ const PostCard = ({
               occupation={user.occupation} username={user.username}
             />
           }
-          <div className={"flex gap-2 ml-auto"}>
+          <div className={"flex overflow-hidden flex-wrap gap-2 ml-auto"}>
             {topics && topics.length > 0 && topics.map(topic =>
-              <Badge variant="default" key={topic.title}>{topic.title}</Badge>
+              <Badge variant="default" className='break-all' key={topic.title}>{topic.title}</Badge>
             )}
             {subTopics && subTopics.length > 0 && subTopics.map(subTopic =>
-              <Badge variant="secondary" key={subTopic.title}>{subTopic.title}</Badge>
+              <Badge variant="secondary" className='break-all' key={subTopic.title}>{subTopic.title}</Badge>
             )}
           </div>
         </div>

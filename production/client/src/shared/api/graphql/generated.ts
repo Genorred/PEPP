@@ -305,7 +305,7 @@ export type MutationRemoveDraftArgs = {
 
 
 export type MutationRemoveFriendshipArgs = {
-  removeFriendshipInput: CreateFriendshipInput;
+  removeFriendshipInput: RemoveFriendshipInput;
 };
 
 
@@ -489,6 +489,10 @@ export type RegisterInput = {
   password: Scalars['String']['input'];
   returnUrl?: InputMaybe<Scalars['String']['input']>;
   username: Scalars['String']['input'];
+};
+
+export type RemoveFriendshipInput = {
+  anotherUserId: Scalars['Int']['input'];
 };
 
 export type RemovePostInput = {
@@ -690,7 +694,7 @@ export type GetCommentsByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetCommentsByUserIdQuery = { __typename?: 'Query', userComments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, postId: number, parentId?: number | null, user: { __typename?: 'User', username: string, img?: string | null }, post: { __typename?: 'Post', title: string } }> } };
+export type GetCommentsByUserIdQuery = { __typename?: 'Query', userComments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, postId: number, parentId?: number | null, user: { __typename?: 'User', username: string, img?: string | null }, post: { __typename?: 'Post', title: string, user: { __typename?: 'User', username: string } } }> } };
 
 export type DraftQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -830,7 +834,7 @@ export type RegisterMutationVariables = Exact<{
 export type RegisterMutation = { __typename?: 'Mutation', register: boolean };
 
 export type RemoveFriendshipMutationVariables = Exact<{
-  receiverId: Scalars['Int']['input'];
+  anotherUserId: Scalars['Int']['input'];
 }>;
 
 
@@ -1237,6 +1241,9 @@ export const GetCommentsByUserIdDocument = `
       parentId
       post {
         title
+        user {
+          username
+        }
       }
     }
   }
@@ -2087,8 +2094,8 @@ useRegisterMutation.getKey = () => ['register'];
 useRegisterMutation.fetcher = (variables: RegisterMutationVariables, options?: RequestInit['headers']) => fetcher<RegisterMutation, RegisterMutationVariables>(RegisterDocument, variables, options);
 
 export const RemoveFriendshipDocument = `
-    mutation removeFriendship($receiverId: Int!) {
-  removeFriendship(removeFriendshipInput: {receiverId: $receiverId}) {
+    mutation removeFriendship($anotherUserId: Int!) {
+  removeFriendship(removeFriendshipInput: {anotherUserId: $anotherUserId}) {
     receiverId
   }
 }

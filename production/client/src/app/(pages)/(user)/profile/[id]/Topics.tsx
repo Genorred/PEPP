@@ -6,8 +6,9 @@ import { getTopicsSummary } from "./getTopicsSummary";
 import { useDispatch } from "react-redux";
 import { initialUserFiltersState, userFiltersSlice } from "@/app/(pages)/(user)/profile/[id]/filters.slice";
 
-const Topics = ({ topicsSummary }: {
+const Topics = ({ topicsSummary, className }: {
   topicsSummary: ReturnType<typeof getTopicsSummary>
+  className?: string
 }) => {
   const { subTopicsArray, topicsAndSubTopicsArray, topicsArray } = topicsSummary;
   const dispatch = useDispatch();
@@ -19,7 +20,7 @@ const Topics = ({ topicsSummary }: {
     }));
   };
   return (
-    <div>
+    <div className={className}>
       <h3 className="flex gap-2 font-semibold mb-2 text-lg items-center">
         User's
         <Badge className="text-lg">

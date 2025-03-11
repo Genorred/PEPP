@@ -218,7 +218,7 @@ type Mutation {
   register(registerInput: RegisterInput!): Boolean!
   removeComment(id: Int!): Comment!
   removeDraft(removeDraftInput: RemovePostInput!): Draft!
-  removeFriendship(removeFriendshipInput: CreateFriendshipInput!): Friendship!
+  removeFriendship(removeFriendshipInput: RemoveFriendshipInput!): Friendship!
   removePost(removePostInput: RemovePostInput!): Post!
   removeUser(id: Int!): User!
   sendFriendshipRequest(createFriendshipInput: CreateFriendshipInput!): Friendship!
@@ -280,6 +280,10 @@ input RegisterInput {
   password: String!
   returnUrl: String
   username: String!
+}
+
+input RemoveFriendshipInput {
+  anotherUserId: Int!
 }
 
 input RemovePostInput {

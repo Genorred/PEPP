@@ -11,6 +11,7 @@ import { UserLoader } from "../batchers/users.batcher";
 import { FindUsersFriendshipInput } from "./dto-inputs/find-users-friendship.input";
 import { FindUserFriendshipRequestsInput } from "./dto-inputs/find-user-friendship-requests.input";
 import { UpdateFriendshipInput } from "./dto-inputs/update-friendship.input";
+import { RemoveFriendshipInput } from "./dto-inputs/remove-friendship.input";
 
 @Resolver(() => Friendship)
 export class FriendshipResolver {
@@ -30,9 +31,9 @@ export class FriendshipResolver {
 
   @UseAuth()
   @Mutation(() => Friendship, { name: "removeFriendship" })
-  async remove(@Args("removeFriendshipInput") removeInput: CreateFriendshipInput, @CurrentUser() currentUser: CurrentUserI) {
+  async remove(@Args("removeFriendshipInput") removeInput: RemoveFriendshipInput, @CurrentUser() currentUser: CurrentUserI) {
     return {
-      ...await this.friendshipUseCase.remove({ ...removeInput, senderId: currentUser.sub }),
+      ...await this.friendshipUseCase.remove({ ...removeInput, authedUserId: currentUser.sub }),
       currentUserId: currentUser.sub
     };
   }

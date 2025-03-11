@@ -9,6 +9,7 @@ import { FindUsersFriendshipDto } from "../../domain/dto/input/friendship/find-u
 import { FindOneFriendshipsDto } from "../../domain/dto/input/friendship/find-one-friendships.dto";
 import { CountFriendshipsDto } from "../../domain/dto/input/friendship/count-friendships.dto";
 import { UpdateFriendshipDto } from "../../domain/dto/input/friendship/update-friendship.dto";
+import { RemoveFriendshipDto } from "../../domain/dto/input/friendship/remove-friendship.dto";
 
 @Injectable()
 export class FriendshipRepositoryImpl implements FriendshipRepository {
@@ -140,11 +141,30 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
     }
   }
 
-  remove(removeInput: CreateFriendshipDto): Promise<Friendship> {
-    return this.prisma.friendship.delete({
-      where: {
-        senderId_receiverId: removeInput
-      }
-    });
+  async remove(removeInput: RemoveFriendshipDto): Promise<Friendship> {
+    const { anotherUserId, authedUserId } = removeInput;
+    let response
+    try {
+      response = await this.prisma.friendship.delete({
+        where: {
+          senderId_receiverId:
+            {
+              senderId: anotherUserId,
+              receiverId: authedUserId
+            }
+        }
+      });
+    } catch (e) {
+      response = await this.prisma.friendship.delete({
+        where: {
+          senderId_receiverId:
+            {
+              senderId: authedUserId,
+              receiverId: anotherUserId
+            }
+        }
+      });
+    }
+    return response;
   }
 }

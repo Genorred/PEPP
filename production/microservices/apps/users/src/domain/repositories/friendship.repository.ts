@@ -6,6 +6,7 @@ import { FindUsersFriendshipDto } from "../dto/input/friendship/find-users-frien
 import { FindOneFriendshipsDto } from "../dto/input/friendship/find-one-friendships.dto";
 import { CountFriendshipsDto } from "../dto/input/friendship/count-friendships.dto";
 import { UpdateFriendshipDto } from "../dto/input/friendship/update-friendship.dto";
+import { RemoveFriendshipDto } from "../dto/input/friendship/remove-friendship.dto";
 
 export abstract class FriendshipRepository {
   abstract create(createUserInput: CreateFriendshipDto): Promise<Friendship>
@@ -22,5 +23,5 @@ export abstract class FriendshipRepository {
 
   abstract update(updateFriendshipDto: UpdateFriendshipDto): Promise<Friendship>
 
-  abstract remove(removeInput: CreateFriendshipDto): Promise<Friendship>
+  abstract remove(removeInput: RemoveFriendshipDto): Promise<Friendship>
 }

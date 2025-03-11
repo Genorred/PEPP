@@ -19,10 +19,11 @@ import Image from "next/image";
 import Logo from "@/shared/assets/icon.svg";
 import { UserTooltip } from "./UserTooltip";
 import { useHidingNavbar } from "@/widgets/Navbar/ui/useHidingNavbar";
+import { useGetUserNotifications } from "@/widgets/Navbar/model/useGetNotifications";
 
 function Navbar() {
   const { topPosition } = useHidingNavbar();
-
+  useGetUserNotifications();
   return (
     <nav className="border-b w-full h-16">
       <div className="flex w-full h-16 items-center px-4 fixed transition-all bg-background z-10"

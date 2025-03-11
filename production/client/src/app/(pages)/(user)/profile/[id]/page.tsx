@@ -48,7 +48,7 @@ const Page = async ({ params }: {
   }>
 }) => {
   const par = await params;
-  const id = Number(par.id)
+  const id = Number(par.id);
   const [data, friendsCount, friends] = await Promise.all<[
     Promise<GetUserProfileInfoQuery>,
     Promise<GetUserFriendsCountQuery>,
@@ -70,18 +70,18 @@ const Page = async ({ params }: {
   const topicsSummary = getTopicsSummary(data);
   return (
     <Container className="max-w-screen-2xl min-h-[50vh] flex flex-col gap-y-4">
-      <Card className="flex flex-col xl:flex-row xl:justify-center items-center xl:items-start py-4 gap-8">
-        <div className="md:border-r-2 flex-1 w-full self-stretch xl:max-w-xl flex flex-col gap-4">
+      <Card className="grid lg:grid-cols-2 justify-center py-4 gap-8">
+        <div className="md:border-r-2 w-full self-stretch xl:max-w-xl gap-4">
           <Avatar className="w-32 h-32 mx-auto">
-            { user?.img ?
+            {user?.img ?
               <Image
-                src={user?.img ?? ''}
+                src={user?.img ?? ""}
                 alt={user?.username ?? "user image"}
                 width={128}
                 height={128}
               />
-            :
-              <div className={'bg-background'}></div>
+              :
+              <div className={"bg-background"}></div>
             }
 
             <AvatarFallback>
@@ -91,10 +91,10 @@ const Page = async ({ params }: {
                 .join("")}
             </AvatarFallback>
           </Avatar>
-          <Separator />
+          <Separator className='my-2' />
           <DynamicCarousel friends={friends} friendsCount={friendsCount.userFriendsQuantity} />
         </div>
-        <div className="flex-1">
+        <div>
           <CardHeader>
             <h2 className={"text-3xl font-semibold leading-none tracking-tight"}>
               {user?.username}
@@ -102,15 +102,12 @@ const Page = async ({ params }: {
             <p className="text-lg text-muted-foreground">{user?.occupation}</p>
           </CardHeader>
 
-          <CardContent>
-            <div className={"mt-4"}>
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">About</h3>
-                <p className="text-sm text-muted-foreground">{"sf"}</p>
-              </div>
-              <Topics topicsSummary={topicsSummary} />
-
+          <CardContent className="mt-4">
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold mb-2">About</h3>
+              <p className="text-sm text-muted-foreground">{"sf"}</p>
             </div>
+            <Topics topicsSummary={topicsSummary} />
           </CardContent>
         </div>
       </Card>

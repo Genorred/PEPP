@@ -55,7 +55,7 @@ const DynamicCarousel = ({ friends, friendsCount }: {
   };
   const onRemoveRequest = () => {
     removeFriendshipMutation({
-      receiverId: id
+      anotherUserId: id
     });
   };
 

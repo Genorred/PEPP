@@ -1,17 +1,19 @@
-'use client'
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import { PostRecommendationsQueryVariables } from "@/shared/api/graphql/graphql";
 import {
   GetUserFriendsCountQuery,
   GetUserFriendsQuery,
   GetUserFriendsQueryVariables,
-  useGetUserFriendsCountQuery,
-  useInfiniteGetUserFriendsQuery
+  useGetUserFriendsCountQuery, useGetUserFriendsQuery, useGetUsersFriendshipQuery,
+  useInfiniteGetUserFriendsQuery, useRemoveFriendshipMutation
 } from "@/shared/api/graphql/generated";
 import { useIntersectionObserver } from "usehooks-ts";
 import Container from "@/shared/ui/Container";
 import Image from "next/image";
 import { FileX } from "lucide-react";
+import { Button } from "@/shared/ui/button";
+import { queryClient } from "@/shared/api/base";
 
 const Friends = ({ userId, friends, count }: {
   friends: GetUserFriendsQuery
@@ -32,7 +34,7 @@ const Friends = ({ userId, friends, count }: {
     fetchNextPage,
     hasNextPage
   } = useInfiniteGetUserFriendsQuery(defaultParams, {
-    initialData: { pages: [friends], pageParams: [defaultParams]},
+    initialData: { pages: [friends], pageParams: [defaultParams] },
     getNextPageParam: (lastPage, allPages) => (
       countData?.userFriendsQuantity && countData?.userFriendsQuantity - (
         allPages.length * lastPage.userFriends.length) > 1 ?
@@ -51,6 +53,15 @@ const Friends = ({ userId, friends, count }: {
       }
     }
   });
+  const [deletedFriends, setDeletedFriends] = useState<number[]>([]);
+  const {mutate: deleteUser} = useRemoveFriendshipMutation({
+    onSuccess: (data, variables, context) => {
+      setDeletedFriends(prevState => [...prevState, variables.anotherUserId])
+    }
+  })
+  const onDeleteUser = (id: number) => () => {
+    deleteUser({anotherUserId: id})
+  }
 
   console.log(data?.pages[0]);
   return (
@@ -59,9 +70,12 @@ const Friends = ({ userId, friends, count }: {
         ?
         <>
           <Container className="flex flex-col gap-4 flex-wrap" variant={"section"}>
-            <h2>{countData?.userFriendsQuantity} Requests</h2>
+            <h2>
+              {`${countData?.userFriendsQuantity} Request${countData?.userFriendsQuantity === 1 ? "" : "s"}`}
+            </h2>
             {data.pages.map(friends =>
-              friends.userFriends.map(friend =>
+              friends.userFriends.filter(v => !deletedFriends.includes(v.anotherUser.id))
+                .map(friend =>
                 <div className="flex items-center mb-4" key={friend.anotherUser.id}>
                   {friend.anotherUser.img ? (
                     <Image
@@ -75,6 +89,9 @@ const Friends = ({ userId, friends, count }: {
                     <div className="w-10 h-10 bg-gray-200 rounded-full mr-3" />
                   )}
                   <h3 className="font-semibold">{friend.anotherUser.username}</h3>
+                  <Button className="ml-auto gap-4" onClick={onDeleteUser(friend.anotherUser.id)}>
+                    Delete
+                  </Button>
                 </div>
               )
             )}

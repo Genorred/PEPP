@@ -50,7 +50,7 @@ const UserPosts = ({ userId }: {
       {data?.userPosts.totalPages
         ?
         <>
-          <Container className="flex gap-4 flex-wrap" variant={"section"}>
+          <Container className='!px-4' variant={"section"}>
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
@@ -73,9 +73,11 @@ const UserPosts = ({ userId }: {
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
-            {data?.userPosts.data.map(post =>
-              <Post key={post.id} {...post} />
-            )}
+            <div className="grid xl:grid-cols-2 gap-4">
+              {data?.userPosts.data.map(post =>
+                <Post key={post.id} {...post} />
+              )}
+            </div>
           </Container>
         </>
         : isLoading

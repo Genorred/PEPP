@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-import {
-  SortOrder,
-  useGetCommentsByUserIdQuery,
-} from "@/shared/api/graphql/generated";
+import { SortOrder, useGetCommentsByUserIdQuery } from "@/shared/api/graphql/generated";
 import { useSelector } from "react-redux";
-import { FileX } from "lucide-react";
+import { CornerDownRight, FileX, StickyNote } from "lucide-react";
 import Container from "@/shared/ui/Container";
 import {
   Pagination,
@@ -17,6 +14,7 @@ import {
 } from "@/shared/ui/pagination";
 import { userCommentsFiltersSlice } from "@/app/(pages)/(user)/profile/[id]/comments-filters.slice";
 import PostComment from "@/app/(pages)/(posts)/post/[id]/PostComment";
+import Link from "next/link";
 
 const UserComments = ({ userId }: {
   userId: number
@@ -48,13 +46,13 @@ const UserComments = ({ userId }: {
   const onSetPage = (page: number) => () => {
     setPage(page);
   };
-  console.log('ddash', data?.userComments.data[0]);
+  console.log("ddash", data?.userComments.data[0]);
   return (
     <>
       {data?.userComments.data.length
         ?
         <>
-          <Container className="flex gap-4 flex-wrap" variant={"section"}>
+          <Container className="flex flex-col gap-4" variant={"section"}>
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
@@ -78,9 +76,17 @@ const UserComments = ({ userId }: {
               </PaginationContent>
             </Pagination>
             {data?.userComments.data.map(comment =>
-              <div className=''>
-                <div>
-                  {comment.post.title}
+              <div className="" key={comment.id}>
+                <div className="mb-2 p-2 bg-muted rounded-md text-sm">
+                  <Link href={`/post/${comment.postId}`} >
+                    <div className="flex items-center mb-1 gap-2">
+                      <CornerDownRight className="w-4 h-4" />
+                      <StickyNote className="w-4 h-4" />
+                      <span className="font-semibold">{comment.post.title}</span>
+                    </div>
+                    <p className="text-muted-foreground line-clamp-2">{comment.post.user.username}</p>
+
+                  </Link>
                 </div>
                 <PostComment key={comment.id} comment={comment} />
               </div>

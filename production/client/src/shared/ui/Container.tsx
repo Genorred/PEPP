@@ -9,7 +9,7 @@ const Container = forwardRef<HTMLDivElement, {
 } & HTMLAttributes<HTMLDivElement>>(({ className, children, variant, ...props }, ref) => {
   return (
     <section ref={ref}
-             className={cn("mx-auto w-full max-w-screen-xl px-2.5 md:px-20 py-4", variant ? CardVariants(variant) : "", className)} {...props}>
+             className={cn("mx-auto w-full max-w-screen-xl px-2.5 md:px-10 xl:px-20 py-4", variant ? CardVariants(variant) : "", className)} {...props}>
       {children}
     </section>
   );

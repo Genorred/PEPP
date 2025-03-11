@@ -1,11 +1,11 @@
 import { graphql } from "@/shared/api/graphql";
 
 const removeFriendshipRequest = graphql(`
-    mutation removeFriendship($receiverId: Int!) {
+    mutation removeFriendship($anotherUserId: Int!) {
         removeFriendship(removeFriendshipInput: {
-            receiverId: $receiverId
+            anotherUserId: $anotherUserId
         }) {
             receiverId
         }
     }
-`);
+`)

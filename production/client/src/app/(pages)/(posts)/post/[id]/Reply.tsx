@@ -20,7 +20,7 @@ const Reply = ({ comment, onFindRespondedComment, onCreate }: {
     };
   };
   onFindRespondedComment?: () => void;
-  onCreate: (respondedCommentId?: number) => (message: string, onError?: () => void ) => void;
+  onCreate: (respondedCommentId?: number) => (message: string, onError?: () => void) => void;
 }) => {
   const state = useState(false);
   const [isReplying, setIsReplying] = state;
@@ -33,7 +33,7 @@ const Reply = ({ comment, onFindRespondedComment, onCreate }: {
             <CornerDownRight className="w-4 h-4 mr-2" />
             <span className="font-semibold">{comment.respondedComment.user.username}</span>
           </div>
-          <p className="text-muted-foreground line-clamp-2">{comment.respondedComment.message}</p>
+          <p className="text-muted-foreground line-clamp-2 break-words">{comment.respondedComment.message}</p>
         </div>
       )}
       <CardContent className="pt-4">

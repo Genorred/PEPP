@@ -73,7 +73,7 @@ const PostComment = ({ comment }: {
             </p>
           </div>
         </div>
-        <p className="mb-4">{comment.message}</p>
+        <p className="mb-4 break-words">{comment.message}</p>
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm" onClick={() => setIsReplying(!isReplying)}>
             <MessageCircle className="w-4 h-4 mr-2" />

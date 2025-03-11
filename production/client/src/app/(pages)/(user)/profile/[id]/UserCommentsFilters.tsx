@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { Button } from "@/shared/ui/button";
-import { UserCommentsFilterState, UserFilterState } from "@/app/(pages)/(user)/profile/[id]/domain";
+import { UserCommentsFilterState } from "@/app/(pages)/(user)/profile/[id]/domain";
 import { userCommentsFiltersSlice } from "./comments-filters.slice";
 import { Checkbox } from "@/shared/ui/checkbox";
 
@@ -47,10 +47,10 @@ const UserPostsFilters = () => {
           render={({ field }) => (
             <Select
               onValueChange={(value) => {
-                console.log('ddddaaash', value);
-                field.onChange(value)
+                console.log("ddddaaash", value);
+                field.onChange(value);
               }
-                }
+              }
               defaultValue={field.value || undefined}
             >
               <SelectTrigger className="my-1.5 w-fit">
@@ -68,7 +68,9 @@ const UserPostsFilters = () => {
           control={control}
           render={({ field }) => (
             <>
-              <Checkbox id="showReplies" onChange={field.onChange} />
+              <Checkbox id="showReplies" onCheckedChange={field.onChange}
+                        checked={!!field.value}
+              />
               <label
                 htmlFor="showReplies"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

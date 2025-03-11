@@ -162,6 +162,10 @@ export type RegisterInput = {
   username: Scalars['String']['input'];
 };
 
+export type RemoveFriendshipInput = {
+  anotherUserId: Scalars['Int']['input'];
+};
+
 export type RemovePostInput = {
   id: Scalars['Int']['input'];
 };
@@ -304,7 +308,7 @@ export type GetCommentsByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetCommentsByUserIdQuery = { __typename?: 'Query', userComments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, postId: number, parentId?: number | null, user: { __typename?: 'User', username: string, img?: string | null }, post: { __typename?: 'Post', title: string } }> } };
+export type GetCommentsByUserIdQuery = { __typename?: 'Query', userComments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, postId: number, parentId?: number | null, user: { __typename?: 'User', username: string, img?: string | null }, post: { __typename?: 'Post', title: string, user: { __typename?: 'User', username: string } } }> } };
 
 export type DraftQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -444,7 +448,7 @@ export type RegisterMutationVariables = Exact<{
 export type RegisterMutation = { __typename?: 'Mutation', register: boolean };
 
 export type RemoveFriendshipMutationVariables = Exact<{
-  receiverId: Scalars['Int']['input'];
+  anotherUserId: Scalars['Int']['input'];
 }>;
 
 
@@ -614,6 +618,9 @@ export const GetCommentsByUserIdDocument = new TypedDocumentString(`
       parentId
       post {
         title
+        user {
+          username
+        }
       }
     }
   }
@@ -864,8 +871,8 @@ export const RegisterDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<RegisterMutation, RegisterMutationVariables>;
 export const RemoveFriendshipDocument = new TypedDocumentString(`
-    mutation removeFriendship($receiverId: Int!) {
-  removeFriendship(removeFriendshipInput: {receiverId: $receiverId}) {
+    mutation removeFriendship($anotherUserId: Int!) {
+  removeFriendship(removeFriendshipInput: {anotherUserId: $anotherUserId}) {
     receiverId
   }
 }

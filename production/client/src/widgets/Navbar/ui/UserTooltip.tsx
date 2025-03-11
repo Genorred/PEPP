@@ -25,6 +25,7 @@ import {
 import { getNavSettings } from "@/widgets/Navbar/consts";
 import { useLogoutMutation } from "@/shared/api/graphql/generated";
 import { toast } from "sonner";
+import { notificationsSlice } from "@/widgets/Navbar/model/notifications.slice";
 
 export const UserTooltip = () => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -47,6 +48,7 @@ export const UserTooltip = () => {
   const pathname = usePathname();
   console.log(user, "user");
   console.log(user && (user.expireDate - Date.now()));
+  const areAnyNotifications = useSelector(notificationsSlice.selectors.areAnyNotifications)
   return (
     <div className="ml-auto flex items-center space-x-4">
       {user
@@ -57,6 +59,9 @@ export const UserTooltip = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    { areAnyNotifications &&
+                    <div className='bg-red-600 rounded-full absolute right-1/2 top-1/2' />
+                    }
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={user?.img ?? ""} alt="@shadcn" />
                       <AvatarFallback>SC</AvatarFallback>

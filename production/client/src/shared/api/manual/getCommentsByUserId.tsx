@@ -28,6 +28,9 @@ const getCommentsByUserId = graphql(`
                 parentId
                 post {
                     title
+                    user {
+                        username
+                    }
                 }
             }
         }
