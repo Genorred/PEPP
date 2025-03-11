@@ -1,5 +1,4 @@
 import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
-import { LoginDto } from "../domain/dto/input/auth/login.dto";
 import * as argon2 from "argon2";
 import { CustomContext } from "@_shared/types/CustomContext";
 import getCookies from "@_shared/utils/getCookies";
@@ -8,7 +7,8 @@ import { TokenService } from "../domain/domain-service/token.service";
 import { CacheRepository } from "../domain/repositories/cache.repository";
 import { NotificationService } from "./services/notification.service";
 import { GenerateUserCredentialsTokenDto } from "../domain/domain-service/dto/generate-user-credentials-token.dto";
-import { RegisterInput } from "../interfaces/resolvers/dto-inputs/register.input";
+import { RegisterInput } from "src/interfaces/resolvers/dto-inputs/auth/register.input";
+import { LoginDto } from "./dto/auth/login.dto";
 
 @Injectable()
 export class AuthUseCase {

@@ -6,7 +6,6 @@ import { FindUserFriendsDto } from "./dto/friendships/find-user-friends.dto";
 import { FindUsersFriendshipDto } from "../domain/dto/input/friendship/find-users-friendship.dto";
 import { UpdateFriendshipDto } from "../domain/dto/input/friendship/update-friendship.dto";
 import { AcceptFriendshipDto } from "./dto/friendships/accept-friendship.dto";
-import { RemoveFriendshipInput } from "../interfaces/resolvers/dto-inputs/remove-friendship.input";
 import { RemoveFriendshipDto } from "../domain/dto/input/friendship/remove-friendship.dto";
 
 @Injectable()

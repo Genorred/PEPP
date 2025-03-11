@@ -47,7 +47,7 @@ const PostsList = () => {
       {data?.pages[0].postsRecommendations.totalPages
         ?
         <>
-          <Container className="flex gap-4 flex-wrap" variant={"section"}>
+          <Container className="grid xl:grid-cols-2 gap-4" variant={"section"}>
             {data.pages.map(posts =>
               posts.postsRecommendations.data.map(post =>
                 <Post key={post.id} {...post} />

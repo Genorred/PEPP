@@ -1,5 +1,5 @@
 import { Field, InputType, Int } from "@nestjs/graphql";
-import { FindOneUserDto } from "../../../domain/dto/input/users/find-one-user.dto";
+import { FindOneUserDto } from "../../../../domain/dto/input/users/find-one-user.dto";
 
 @InputType()
 export class FindOneUserInput implements FindOneUserDto {

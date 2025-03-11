@@ -26,6 +26,7 @@ import { getNavSettings } from "@/widgets/Navbar/consts";
 import { useLogoutMutation } from "@/shared/api/graphql/generated";
 import { toast } from "sonner";
 import { notificationsSlice } from "@/widgets/Navbar/model/notifications.slice";
+import { isEmpty } from "lodash";
 
 export const UserTooltip = () => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -46,9 +47,10 @@ export const UserTooltip = () => {
     revokeToken({});
   };
   const pathname = usePathname();
-  console.log(user, "user");
-  console.log(user && (user.expireDate - Date.now()));
-  const areAnyNotifications = useSelector(notificationsSlice.selectors.areAnyNotifications)
+  const notifications = useSelector(notificationsSlice.selectors.notifications);
+  const areAnyNotifications = useSelector(notificationsSlice.selectors.areAnyNotifications);
+
+  console.log('notifications', notifications);
   return (
     <div className="ml-auto flex items-center space-x-4">
       {user
@@ -59,8 +61,8 @@ export const UserTooltip = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    { areAnyNotifications &&
-                    <div className='bg-red-600 rounded-full absolute right-1/2 top-1/2' />
+                    {areAnyNotifications &&
+                      <div className="bg-red-600 rounded-full absolute right-0 top-0 w-2 h-2 z-10" />
                     }
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={user?.img ?? ""} alt="@shadcn" />
@@ -69,11 +71,14 @@ export const UserTooltip = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end" forceMount>
-                  {getNavSettings(user).map(([name, Icon, href]) => (
+                  {getNavSettings(user, notifications).map(([name, Icon, href, isNotified]) => (
                     <Link key={name} href={`/${href}`}>
                       <DropdownMenuItem>
                         <Icon className="mr-2 h-4 w-4" />
                         <span>{name}</span>
+                        {isNotified &&
+                          <div className="bg-red-600 rounded-full right-0 top-0 w-2 h-2 z-10 ml-auto my-auto" />
+                        }
                       </DropdownMenuItem>
                     </Link>
                   ))

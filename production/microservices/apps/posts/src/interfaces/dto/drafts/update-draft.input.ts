@@ -3,7 +3,7 @@ import { GraphQLJSONObject } from "graphql-type-json";
 import { UpdateDraftDto } from "../../../domain/dto/drafts/update-draft.dto";
 
 @InputType()
-export class UpdateDraftInput implements UpdateDraftDto {
+export class UpdateDraftInput {
   @Field({ nullable: true })
   title?: string;
   @Field({ nullable: true })

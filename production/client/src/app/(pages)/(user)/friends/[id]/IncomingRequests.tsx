@@ -13,9 +13,10 @@ import { PostRecommendationsQueryVariables } from "@/shared/api/graphql/graphql"
 import { useIntersectionObserver } from "usehooks-ts";
 import Image from "next/image";
 import { userSlice } from "@/entities/User/model/user.slice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 import { queryClient } from "@/shared/api/base";
+import { notificationsSlice } from "@/widgets/Navbar/model/notifications.slice";
 
 const IncomingRequests = ({ userId }: {
   userId: number
@@ -50,6 +51,7 @@ const IncomingRequests = ({ userId }: {
     }
   });
 
+  const dispatch = useDispatch();
   const {mutate: acceptRequest} = useAcceptUserFriendRequestsMutation({
     onSuccess: (data, variables, context)=> {
       toast.success("User accepted!");
@@ -57,6 +59,7 @@ const IncomingRequests = ({ userId }: {
       queryClient.setQueryData(useGetUserFriendRequestsCountQuery.getKey({userId}), {
         userFriendRequestsQuantity: (countData?.userFriendRequestsQuantity ?? 1) -1
       } )
+      dispatch(notificationsSlice.actions.decreaseUserRequests());
     }
   })
   const onAccept = (id: number) => () => {

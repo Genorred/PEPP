@@ -5,19 +5,21 @@ import {
   GetUserFriendsCountQuery,
   GetUserFriendsQuery,
   GetUserFriendsQueryVariables,
-  useGetUserFriendsCountQuery, useGetUserFriendsQuery, useGetUsersFriendshipQuery,
-  useInfiniteGetUserFriendsQuery, useRemoveFriendshipMutation
+  useGetUserFriendsCountQuery,
+  useInfiniteGetUserFriendsQuery,
+  useRemoveFriendshipMutation
 } from "@/shared/api/graphql/generated";
 import { useIntersectionObserver } from "usehooks-ts";
 import Container from "@/shared/ui/Container";
 import Image from "next/image";
 import { FileX } from "lucide-react";
 import { Button } from "@/shared/ui/button";
-import { queryClient } from "@/shared/api/base";
+import { notificationsSlice } from "@/widgets/Navbar/model/notifications.slice";
+import { useDispatch } from "react-redux";
 
-const Friends = ({ userId, friends, count }: {
+const Friends = ({ userId, friends, defaultCount }: {
   friends: GetUserFriendsQuery
-  count: GetUserFriendsCountQuery
+  defaultCount: GetUserFriendsCountQuery
   userId: number
 }) => {
   const defaultParams = {
@@ -26,7 +28,7 @@ const Friends = ({ userId, friends, count }: {
   const { data: countData, isLoading: isCountLoading } = useGetUserFriendsCountQuery({
     userId
   }, {
-    initialData: count
+    initialData: defaultCount
   });
   const {
     data,
@@ -54,46 +56,47 @@ const Friends = ({ userId, friends, count }: {
     }
   });
   const [deletedFriends, setDeletedFriends] = useState<number[]>([]);
-  const {mutate: deleteUser} = useRemoveFriendshipMutation({
+  const { mutate: deleteUser } = useRemoveFriendshipMutation({
     onSuccess: (data, variables, context) => {
-      setDeletedFriends(prevState => [...prevState, variables.anotherUserId])
+      setDeletedFriends(prevState => [...prevState, variables.anotherUserId]);
     }
-  })
+  });
   const onDeleteUser = (id: number) => () => {
-    deleteUser({anotherUserId: id})
-  }
+    deleteUser({ anotherUserId: id });
+  };
 
   console.log(data?.pages[0]);
+  const count = countData?.userFriendsQuantity && Math.max(countData.userFriendsQuantity - deletedFriends.length, 0)
   return (
     <div>
-      {countData?.userFriendsQuantity && data?.pages.length
+      {count && data?.pages.length
         ?
         <>
           <Container className="flex flex-col gap-4 flex-wrap" variant={"section"}>
             <h2>
-              {`${countData?.userFriendsQuantity} Request${countData?.userFriendsQuantity === 1 ? "" : "s"}`}
+              {`${count} Request${count === 1 ? "" : "s"}`}
             </h2>
             {data.pages.map(friends =>
               friends.userFriends.filter(v => !deletedFriends.includes(v.anotherUser.id))
                 .map(friend =>
-                <div className="flex items-center mb-4" key={friend.anotherUser.id}>
-                  {friend.anotherUser.img ? (
-                    <Image
-                      src={friend.anotherUser.img}
-                      alt={friend.anotherUser.username}
-                      width={40}
-                      height={40}
-                      className="rounded-full mr-3"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 bg-gray-200 rounded-full mr-3" />
-                  )}
-                  <h3 className="font-semibold">{friend.anotherUser.username}</h3>
-                  <Button className="ml-auto gap-4" onClick={onDeleteUser(friend.anotherUser.id)}>
-                    Delete
-                  </Button>
-                </div>
-              )
+                  <div className="flex items-center mb-4" key={friend.anotherUser.id}>
+                    {friend.anotherUser.img ? (
+                      <Image
+                        src={friend.anotherUser.img}
+                        alt={friend.anotherUser.username}
+                        width={40}
+                        height={40}
+                        className="rounded-full mr-3"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-gray-200 rounded-full mr-3" />
+                    )}
+                    <h3 className="font-semibold">{friend.anotherUser.username}</h3>
+                    <Button className="ml-auto gap-4" onClick={onDeleteUser(friend.anotherUser.id)}>
+                      Delete
+                    </Button>
+                  </div>
+                )
             )}
           </Container>
           {hasNextPage ?
