@@ -698,7 +698,6 @@ export type GetCommentsByUserIdQuery = { __typename?: 'Query', userComments: { _
 
 export type DraftQueryVariables = Exact<{
   id: Scalars['Int']['input'];
-  version?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -1288,7 +1287,7 @@ useInfiniteGetCommentsByUserIdQuery.getKey = (variables: GetCommentsByUserIdQuer
 useGetCommentsByUserIdQuery.fetcher = (variables: GetCommentsByUserIdQueryVariables, options?: RequestInit['headers']) => fetcher<GetCommentsByUserIdQuery, GetCommentsByUserIdQueryVariables>(GetCommentsByUserIdDocument, variables, options);
 
 export const DraftDocument = `
-    query draft($id: Int!, $version: Int) {
+    query draft($id: Int!) {
   draft(findDraftInput: {id: $id}) {
     id
     body

@@ -7,7 +7,7 @@ import { UpdatePostDto } from "../../domain/dto/posts/update-post.dto";
 import { Post } from "../../domain/entities/post.entity";
 import { FindManyDto } from "../../domain/dto/posts/find-many.dto";
 import { FindPostDto } from "../../domain/dto/posts/find-post.dto";
-import { RemovePostInputService } from "../../domain/dto/posts/remove-post.dto";
+import { RemovePostDto } from "../../domain/dto/posts/remove-post.dto";
 import { TopicsPrismaRepository } from "./topics.prisma.repository";
 import { DMMF } from "@prisma/client/runtime/library";
 import SortOrder = DMMF.SortOrder;
@@ -163,7 +163,7 @@ export class PostsRepositoryImpl implements PostsRepository {
     return post;
   }
 
-  remove(input: RemovePostInputService): Promise<Post> {
+  remove(input: RemovePostDto): Promise<Post> {
     return this.prismaService.post.delete({
       where: input
     });

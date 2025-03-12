@@ -38,10 +38,10 @@ export class DraftsUseCase {
       body: rest.body,
       userId: rest.userId
     };
-    const mappedTopics = [
-      ...topics ? mapTopicsToTopicsDto(topics) : [],
-      ...subTopics ? mapTopicsToTopicsDto(subTopics) : []
-    ];
+    const mappedTopics = {
+      topics: topics && mapTopicsToTopicsDto(topics),
+      subTopics: subTopics && mapTopicsToTopicsDto(subTopics)
+    };
 
     if (version === 1) {
       return (await this.transaction.exec([

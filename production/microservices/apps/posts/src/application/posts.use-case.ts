@@ -9,7 +9,7 @@ import { ConfigType } from "@nestjs/config";
 import { FindPostInputService } from "../domain/dto/posts/find-post.dto";
 import { FindAlgorithmPostsDto } from "../domain/dto/posts/find-algorithm-posts.dto";
 import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
-import { RemovePostInputService } from "../domain/dto/posts/remove-post.dto";
+import { RemovePostDto } from "../domain/dto/posts/remove-post.dto";
 import { PostsSecurityCheckService } from "../domain/domain_services/posts.security.check.service";
 import { ClientCacheRepository } from "../domain/repositories/client.cache.repository";
 import { Recommendations } from "../interfaces/dto/posts/output/recommendations.output";
@@ -27,7 +27,11 @@ export class PostsUseCase {
 
   async create(createPostInput: CreatePostServiceDto) {
     const post = await this.postsRepository.create(createPostInput);
-    void this.searchService.indexPost(post);
+    try {
+      await this.searchService.indexPost(post);
+    } catch (e) {
+      await this.postsRepository.remove({id: post.id})
+    }
     return post;
   }
 
@@ -98,7 +102,7 @@ export class PostsUseCase {
     ]);
   }
 
-  remove(input: RemovePostInputService) {
+  remove(input: RemovePostDto) {
     return this.postsRepository.remove(input);
   }
 

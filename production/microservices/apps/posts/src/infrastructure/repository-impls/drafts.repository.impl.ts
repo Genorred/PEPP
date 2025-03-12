@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "./prismaDb/prisma.service";
 import { UpdatePostInputService } from "../../domain/dto/posts/update-post.dto";
-import { RemovePostInputService } from "../../domain/dto/posts/remove-post.dto";
+import { RemovePostDto } from "../../domain/dto/posts/remove-post.dto";
 import { DraftsRepository } from "../../domain/repositories/drafts/drafts.repository";
 import { CreateDraftDto } from "../../domain/dto/drafts/create-draft.dto";
 import { Draft } from "../../domain/entities/draft.entity";
@@ -29,7 +29,11 @@ export class DraftsRepositoryImpl implements DraftsRepository {
 
   findOne(input: FindDraftDto): Promise<Draft> {
     return this.prismaService.draft.findFirst({
-      where: input
+      where: input,
+      include: {
+        topics: true,
+        subTopics: true
+      }
     });
   }
 
@@ -40,8 +44,7 @@ export class DraftsRepositoryImpl implements DraftsRepository {
     });
   }
 
-  remove(input: RemovePostInputService): Promise<Draft> {
-    console.log("input-xd", input);
+  remove(input: RemovePostDto): Promise<Draft> {
     return this.prismaService.draft.delete({
       where: input
     });

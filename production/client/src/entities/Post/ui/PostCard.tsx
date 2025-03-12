@@ -52,6 +52,11 @@ const PostCard = ({
       review: "The implications for secure communications are enormous!"
     }
   ];
+  const formattedDate = new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  }).format(new Date(createdAt));
   return (
     <Card id={`${id}`} className="w-full shrink grow basis-[min-content] overflow-hidden relative min-w-72">
       <Link href={url} className="before:inset-0 before:absolute">
@@ -68,10 +73,10 @@ const PostCard = ({
           }
           <div className={"flex overflow-hidden flex-wrap gap-2 ml-auto"}>
             {topics && topics.length > 0 && topics.map(topic =>
-              <Badge variant="default" className='break-all' key={topic.title}>{topic.title}</Badge>
+              <Badge variant="default" className="break-all" key={topic.title}>{topic.title}</Badge>
             )}
             {subTopics && subTopics.length > 0 && subTopics.map(subTopic =>
-              <Badge variant="secondary" className='break-all' key={subTopic.title}>{subTopic.title}</Badge>
+              <Badge variant="secondary" className="break-all" key={subTopic.title}>{subTopic.title}</Badge>
             )}
           </div>
         </div>
@@ -91,7 +96,7 @@ const PostCard = ({
         <ReviewsDialog url={url} reviewList={reviewList} />
       </CardContent>
       <CardFooter className="bg-muted/50 text-xs text-muted-foreground">
-        Published on August 15, 2023 | {minutes} min read
+        Published on {formattedDate} | {minutes} min read
       </CardFooter>
     </Card>
   );

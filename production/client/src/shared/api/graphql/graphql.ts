@@ -312,7 +312,6 @@ export type GetCommentsByUserIdQuery = { __typename?: 'Query', userComments: { _
 
 export type DraftQueryVariables = Exact<{
   id: Scalars['Int']['input'];
-  version?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -627,7 +626,7 @@ export const GetCommentsByUserIdDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<GetCommentsByUserIdQuery, GetCommentsByUserIdQueryVariables>;
 export const DraftDocument = new TypedDocumentString(`
-    query draft($id: Int!, $version: Int) {
+    query draft($id: Int!) {
   draft(findDraftInput: {id: $id}) {
     id
     body

@@ -1,7 +1,7 @@
 import { graphql } from "@/shared/api/graphql";
 
 const getDraft = graphql(`
-    query draft($id: Int!, $version: Int) {
+    query draft($id: Int!) {
         draft(findDraftInput: {
             id: $id
         }) {

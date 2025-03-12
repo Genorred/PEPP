@@ -52,13 +52,13 @@ export class AuthContext {
         user = this.jwtService.verify(accessToken);
         console.log("user 1", user);
       } else {
-        void resetAccessToken();
+        await resetAccessToken();
       }
 
     } catch (e) {
       console.log(e);
       if (e instanceof TokenExpiredError) {
-        void resetAccessToken();
+        await resetAccessToken();
       }
     }
     console.log(user);

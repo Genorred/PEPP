@@ -1,7 +1,7 @@
 import { CreatePostServiceDto } from "../../dto/posts/create-post.dto";
 import { Post } from "../../entities/post.entity";
 import { FindManyDto } from "../../dto/posts/find-many.dto";
-import { RemovePostInputService } from "../../dto/posts/remove-post.dto";
+import { RemovePostDto } from "../../dto/posts/remove-post.dto";
 import { FindPostDto } from "../../dto/posts/find-post.dto";
 import { UpdatePostInputService } from "../../dto/posts/update-post.dto";
 import { CountCommentsDto } from "../../dto/comments/count-comments.dto";
@@ -17,7 +17,7 @@ export abstract class PostsRepository {
 
   abstract update(input: UpdatePostInputService): Promise<Post>;
 
-  abstract remove(input: RemovePostInputService): Promise<Post>;
+  abstract remove(input: RemovePostDto): Promise<Post>;
 
   abstract incrementComments(postId: number): Promise<Post>;
 

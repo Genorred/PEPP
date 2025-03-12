@@ -35,6 +35,7 @@
     "@nestjs/terminus": "^11.0.0",
     "@prisma/client": "5.21.1",
     "cache-manager": "^5.7.6",
+    "date-fns": "^4.1.0",
     "graphql-type-json": "^0.3.2",
     "joi": "^17.13.3",
     "keyv": "^5.2.1",

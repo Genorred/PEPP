@@ -72,6 +72,7 @@ import { KbdLeaf } from "@/entities/Post/ui/plate-ui/kbd-leaf";
 import React from "react";
 
 export const editor = createPlateEditor({
+  options:{},
   plugins: [
     ParagraphPlugin,
     BlockquotePlugin,
