@@ -27,6 +27,10 @@ export class PostsRepositoryImpl implements PostsRepository {
       data: {
         ...data,
         ...this.topicsRepository.connectOrCreate(topics, subTopics)
+      },
+      include: {
+        topics: true,
+        subTopics: true,
       }
     });
   }

@@ -52,9 +52,11 @@ export class DraftsUseCase {
         ...mappedTopics,
         ...data
       });
+      console.log('post', post);
       try {
         await retryOperation(() => this.searchService.indexPost(post), 5, 500);
       } catch (e) {
+        console.log(e);
         await this.postsRepository.remove({ id: post.id });
         throw new Error("Error indexing post");
       }

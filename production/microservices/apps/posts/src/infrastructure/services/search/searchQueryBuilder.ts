@@ -39,6 +39,7 @@ export class SearchQueryBuilderService {
         multi_match: {
           fields: ["title^2", "description"] as SearchPostKeys,
           query: searchValue,
+          fuzziness: 'AUTO',
           tie_breaker: 0.3
         }
       });

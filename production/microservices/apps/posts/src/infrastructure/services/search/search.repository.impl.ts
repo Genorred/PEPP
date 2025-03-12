@@ -27,7 +27,26 @@ export class SearchRepositoryImpl implements SearchRepository {
       if (!checkIndex) {
         this.esService.indices.create({
           index,
-          mappings: Mapping
+          mappings: Mapping,
+          settings: {
+            analysis: {
+              tokenizer: {
+                edge_ngram_tokenizer: {
+                  type: "edge_ngram",
+                  min_gram: 3,
+                  max_gram: 10,
+                  token_chars: ["letter", "digit"]
+                }
+              },
+              analyzer: {
+                edge_ngram_analyzer: {
+                  type: "custom",
+                  tokenizer: "edge_ngram_tokenizer",
+                  filter: ["lowercase"]
+                }
+              }
+            }
+          }
         });
       }
     } catch (e) {
@@ -39,6 +58,7 @@ export class SearchRepositoryImpl implements SearchRepository {
   public async indexPost(payload: IndexDto) {
     try {
       const { id, topics, subTopics, userId, title, createdAt, description } = payload;
+      console.log('topics', topics);
       return await this.esService.index({
         index,
         id: id.toString(),
@@ -47,7 +67,7 @@ export class SearchRepositoryImpl implements SearchRepository {
           subTopics: subTopics && mapTopicsToTopicsDto(subTopics),
           title,
           createdAt,
-          description,
+          description: `${description} ${topics.toString()} ${subTopics.toString()}`,
           userId
         } as SearchPost
       });
@@ -65,7 +85,7 @@ export class SearchRepositoryImpl implements SearchRepository {
 
   public async updatePost(payload: IndexDto) {
     try {
-      const { id, topics, subTopics, ...data } = payload;
+      const { id, topics, subTopics, userId, title, createdAt, description } = payload;
       // map draft children
       return await this.esService.update({
           index,
@@ -73,7 +93,10 @@ export class SearchRepositoryImpl implements SearchRepository {
           doc: {
             topics: mapTopicsToTopicsDto(topics),
             subTopics: mapTopicsToTopicsDto(subTopics),
-            ...data
+            title,
+            createdAt,
+            description: `${description} ${topics.toString()} ${subTopics.toString()}`,
+            userId
           } as SearchPost
         }
       );

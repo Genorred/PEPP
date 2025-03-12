@@ -86,7 +86,7 @@ model Post {
   comments  Comment[] @relation(name: "postComments")
 }
 
-model PostComment {
+model Comment {
   id                 Int      @id @default(autoincrement())
   message            String
   userId             Int
