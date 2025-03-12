@@ -14,8 +14,7 @@ import Container from "@/shared/ui/Container";
 import Image from "next/image";
 import { FileX } from "lucide-react";
 import { Button } from "@/shared/ui/button";
-import { notificationsSlice } from "@/widgets/Navbar/model/notifications.slice";
-import { useDispatch } from "react-redux";
+import Link from "next/link";
 
 const Friends = ({ userId, friends, defaultCount }: {
   friends: GetUserFriendsQuery
@@ -66,7 +65,7 @@ const Friends = ({ userId, friends, defaultCount }: {
   };
 
   console.log(data?.pages[0]);
-  const count = countData?.userFriendsQuantity && Math.max(countData.userFriendsQuantity - deletedFriends.length, 0)
+  const count = countData?.userFriendsQuantity && Math.max(countData.userFriendsQuantity - deletedFriends.length, 0);
   return (
     <div>
       {count && data?.pages.length
@@ -80,18 +79,20 @@ const Friends = ({ userId, friends, defaultCount }: {
               friends.userFriends.filter(v => !deletedFriends.includes(v.anotherUser.id))
                 .map(friend =>
                   <div className="flex items-center mb-4" key={friend.anotherUser.id}>
-                    {friend.anotherUser.img ? (
-                      <Image
-                        src={friend.anotherUser.img}
-                        alt={friend.anotherUser.username}
-                        width={40}
-                        height={40}
-                        className="rounded-full mr-3"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 bg-gray-200 rounded-full mr-3" />
-                    )}
-                    <h3 className="font-semibold">{friend.anotherUser.username}</h3>
+                    <Link href={"/profile/" + friend.anotherUser.id} className="flex items-center">
+                      {friend.anotherUser.img ? (
+                        <Image
+                          src={friend.anotherUser.img}
+                          alt={friend.anotherUser.username}
+                          width={40}
+                          height={40}
+                          className="rounded-full mr-3"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 bg-gray-200 rounded-full mr-3" />
+                      )}
+                      <h3 className="font-semibold">{friend.anotherUser.username}</h3>
+                    </Link>
                     <Button className="ml-auto gap-4" onClick={onDeleteUser(friend.anotherUser.id)}>
                       Delete
                     </Button>

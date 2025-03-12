@@ -7,12 +7,15 @@ import { VersionsRepository } from "../domain/repositories/versions/versions.rep
 import { Transaction } from "../domain/repositories/transaction";
 import { CreateDraftInputService } from "./dto/crate-draft.input";
 import { mapTopicsToTopicsDto } from "../domain/dto/topics/map-topics-to-topics.dto";
+import { SearchRepository } from "../domain/repositories/posts/search.repository";
+import { retryOperation } from "@_shared/utils/retryOperation";
 
 @Injectable()
 export class DraftsUseCase {
   constructor(
     private readonly draftsRepository: DraftsRepository,
     private readonly versionRepository: VersionsRepository,
+    private readonly searchService: SearchRepository,
     private readonly transaction: Transaction,
     private readonly postsRepository: PostsRepository
   ) {
@@ -44,14 +47,27 @@ export class DraftsUseCase {
     };
 
     if (version === 1) {
-      return (await this.transaction.exec([
-        this.postsRepository.create({
-          ...draft,
-          ...mappedTopics,
-          ...data
-        }),
-        this.draftsRepository.remove({ id, userId })
-      ]))[0];
+      const post = await this.postsRepository.create({
+        ...draft,
+        ...mappedTopics,
+        ...data
+      });
+      try {
+        await retryOperation(() => this.searchService.indexPost(post), 5, 500);
+      } catch (e) {
+        await this.postsRepository.remove({ id: post.id });
+        throw new Error("Error indexing post");
+      }
+
+      try {
+        await retryOperation(() => this.draftsRepository.remove({ id, userId }), 5, 500);
+      } catch (e) {
+        await this.searchService.deletePost(post.id);
+        await this.postsRepository.remove({ id: post.id });
+        throw new Error("Error removing post");
+      }
+      return post
+
     } else {
       const { id: dbId, isHidden, ...versionData } = await this.postsRepository.findOne({
         id: postId

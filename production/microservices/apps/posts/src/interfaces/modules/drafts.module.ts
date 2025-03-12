@@ -7,13 +7,14 @@ import { PostsModule } from "./posts.module";
 import { TopicsModule } from "./topics.module";
 import { PrismaModule } from "../prisma.module";
 import { VersionsModule } from "./versions.module";
+import { SearchModule } from "./search.module";
 
 @Module({
   providers: [DraftsResolver, DraftsUseCase, {
     provide: DraftsRepository,
     useClass: DraftsRepositoryImpl
   }],
-  imports: [PostsModule, TopicsModule, TopicsModule, VersionsModule, PrismaModule]
+  imports: [PostsModule, TopicsModule, TopicsModule, VersionsModule, PrismaModule, SearchModule]
 })
 export class DraftsModule {
 }

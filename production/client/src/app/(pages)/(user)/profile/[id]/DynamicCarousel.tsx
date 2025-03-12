@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Avatar } from "@/entities/Post/ui/plate-ui/avatar";
 import {
   GetUserFriendsQuery,
-  GetUserFriendsQueryVariables, GetUsersFriendshipQuery,
+  GetUserFriendsQueryVariables,
   useGetUsersFriendshipQuery,
   useInfiniteGetUserFriendsQuery,
   useRemoveFriendshipMutation,
@@ -13,11 +13,13 @@ import {
 } from "@/shared/api/graphql/generated";
 import { useParams } from "next/navigation";
 import { userSlice } from "@/entities/User/model/user.slice";
-import { Button } from "@/shared/ui/button";
+import { Button, buttonVariants } from "@/shared/ui/button";
 import { Handshake } from "lucide-react";
 import { PostRecommendationsQueryVariables } from "@/shared/api/graphql/graphql";
 import { useIntersectionObserver } from "usehooks-ts";
 import { queryClient } from "@/shared/api/base";
+import Link from "next/link";
+import { cn } from "@/shared/lib/utils";
 
 const DynamicCarousel = ({ friends, friendsCount }: {
   friends: GetUserFriendsQuery,
@@ -31,20 +33,20 @@ const DynamicCarousel = ({ friends, friendsCount }: {
   const usersFriendshipVars = {
     userId1: id,
     userId2: user?.id ?? 0
-  }
+  };
   const { data: usersFriendship } = useGetUsersFriendshipQuery(usersFriendshipVars, {
     enabled: !!user
   });
 
   const { mutate: sendFriendshipMutation, isLoading: isSendingFriendship } = useSendFriendshipRequestMutation({
     onSuccess: () => {
-      queryClient.setQueryData(useGetUsersFriendshipQuery.getKey(usersFriendshipVars), {})
+      queryClient.setQueryData(useGetUsersFriendshipQuery.getKey(usersFriendshipVars), {});
     }
   });
   const { mutate: removeFriendshipMutation, isLoading: isRemovingFriendship } = useRemoveFriendshipMutation({
 
     onSuccess: () => {
-      queryClient.setQueryData(useGetUsersFriendshipQuery.getKey(usersFriendshipVars), null)
+      queryClient.setQueryData(useGetUsersFriendshipQuery.getKey(usersFriendshipVars), null);
     }
   });
 
@@ -87,51 +89,57 @@ const DynamicCarousel = ({ friends, friendsCount }: {
       }
     }
   });
-  const isSameUser = user && user?.id === id
+  const isSameUser = user && user?.id === id;
   return (
-    <div className="p-2 mx-12">
+    <div className="p-2 mx-12 flex items-center flex-col">
       {
-        !isSameUser ? usersFriendship ?
+        user ? !isSameUser ? usersFriendship ?
           (
             usersFriendship.usersFriendship?.isAccepted
               ?
-              <Button className="flex gap-2 mx-auto" onClick={onRemoveRequest} disabled={isRemovingFriendship}>
+              <Button className="flex gap-2" onClick={onRemoveRequest} disabled={isRemovingFriendship}>
                 Discard friendship
                 <Handshake />
               </Button>
               :
-              <Button className="flex gap-2 mx-auto" variant="outline" onClick={onRemoveRequest}
+              <Button className="flex gap-2" variant="outline" onClick={onRemoveRequest}
                       disabled={isRemovingFriendship}>
                 Remove a request
                 <Handshake />
               </Button>
           )
           : (
-            <Button className="flex gap-2 mx-auto" onClick={onSendRequest} disabled={isSendingFriendship}>
+            <Button className="flex gap-2" onClick={onSendRequest} disabled={isSendingFriendship}>
               Send a request
               <Handshake />
             </Button>
-          ) : null
+          ) : null : null
       }
       {friends.userFriends.length > 0 ? (
-        <Carousel className="flex w-full">
-          <CarouselPrevious />
-          <CarouselContent className="flex-1">
-            {data?.pages.map(friends =>
-              friends.userFriends.map(({ anotherUser: friend }) =>
-                <CarouselItem key={friend.id}
-                              className="basis-[20%] min-[400px]:basis-1/6 min-[600px]:basis-[10%] min-[900px]:basis-1/12 min-[1040px]:basis-[6%] xl:basis-[10%]">
-                  <Avatar className={""}>
-                    {friend.id}
-                  </Avatar>
-                </CarouselItem>
-              )
-            )}
-            <div className="h-1 w-full" ref={ref} />
-          </CarouselContent>
-          <CarouselNext />
-        </Carousel>
-      ):
+          <>
+            <Link href={"/friends/" + id}
+                  className={cn(buttonVariants({ variant: "secondary" }), "w-[184px] my-2")}>
+              Friends
+            </Link>
+            <Carousel className="flex w-full">
+              <CarouselPrevious />
+              <CarouselContent className="flex-1">
+                {data?.pages.map(friends =>
+                  friends.userFriends.map(({ anotherUser: friend }) =>
+                    <CarouselItem key={friend.id}
+                                  className="basis-[20%] min-[400px]:basis-1/6 min-[600px]:basis-[10%] min-[900px]:basis-1/12 min-[1040px]:basis-[6%] xl:basis-[10%]">
+                      <Avatar className={""}>
+                        {friend.id}
+                      </Avatar>
+                    </CarouselItem>
+                  )
+                )}
+                <div className="h-1 w-full" ref={ref} />
+              </CarouselContent>
+              <CarouselNext />
+            </Carousel>
+          </>
+        ) :
         <div>
           {
             `${isSameUser

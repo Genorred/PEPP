@@ -64,7 +64,7 @@ const TopicsSelector = ({ watchedTopics, control }:
                         checked={field.value.includes(topic.title)}
                         onCheckedChange={(checked) => {
                           if (checked) {
-                            field.onChange([...field.value, topic]);
+                            field.onChange([...field.value, topic.title]);
                           } else {
                             field.onChange(field.value.filter((t: string) => t !== topic.title));
                           }
