@@ -1,101 +1,118 @@
 networks:
-  backend:
+  default:
     driver: bridge
   frontend:
     name: infrastructure
     driver: bridge
-  elastic:
-    name: elastic
-    external: false
 
 services:
-  gateway:
-    container_name: ${GATEWAY_SERVICE_HOST}
+  client:
+    restart: always
     build:
-      context: ../../production
-      dockerfile: microservices/Dockerfile
+      context: ../../production/client
+      dockerfile: ../../deploy/docker/client/Dockerfile
       args:
-        SERVICE_NAME: gateway
+        SERVICE_NAME: posts
     env_file:
       - ../../config/.env
-    restart: always
-    hostname: ${GATEWAY_SERVICE_HOST}
+    ports:
+      - "${CLIENT_PORT}:3000"
     networks:
-      - backend
+      - frontend
+    environment:
+      - WATCHPACK_POLLING=true
+    volumes:
+      - "../../production/_shared/config:/usr/app/client/src/_config"
+  gateway:
+    build:
+      context: ../../production/microservices
+      dockerfile: ../../deploy/docker/microservices/Dockerfile.development
+      args:
+        SERVICE_NAME: gateway
+    restart: always
+    env_file:
+      - ../../config/.env.test
+    networks:
+      - default
       - frontend
     ports:
       - "8080:8080"
-  #    depends_on:
-  #      - users
-  #      - posts
-
-  users:
-    container_name: ${USERS_SERVICE_HOST}
+    volumes:
+      - "../../production/microservices/apps/gateway/:/usr/app/apps/gateway/"
+      - "../../production/microservices/libs:/usr/app/libs"
+    depends_on:
+      users:
+        condition: service_healthy
+      posts:
+        condition: service_healthy
+  notifications:
     build:
-      context: ../../production
-      dockerfile: microservices/Dockerfile
+      context: ../../production/microservices
+      dockerfile: ../../deploy/docker/microservices/Dockerfile.notifications.development
+      args:
+        SERVICE_NAME: notifications
+    restart: always
+    env_file:
+      - ../../config/.env.test
+    networks:
+      - default
+      - frontend
+    ports:
+      - "${NOTIFICATIONS_SERVER_PORT}:8080"
+    volumes:
+      - "../../production/microservices/apps/notifications/:/usr/app/apps/notifications/"
+      - "../../production/microservices/libs:/usr/app/libs"
+  users:
+    build:
+      context: ../../production/microservices
+      dockerfile: ../../deploy/docker/microservices/Dockerfile.development
       args:
         SERVICE_NAME: users
     env_file:
       - ../../config/.env.test
     restart: always
-    hostname: ${USERS_SERVICE_HOST}
-    networks:
-      - backend
     ports:
-      - "${USERS_SERVICE_PORT}:${USERS_SERVICE_PORT}"
+      - "${USERS_SERVICE_PORT}:8080"
+    volumes:
+      - "../../production/microservices/apps/users/:/usr/app/apps/users/"
+      - "../../production/microservices/libs:/usr/app/libs"
     depends_on:
       - users_db
   users_db:
-    container_name: "${USERS_POSTGRES_HOST}"
-    image: postgres:16.2-alpine
+    image: postgres
     restart: always
-    networks:
-      - backend
     environment:
       - POSTGRES_USER=${USERS_POSTGRES_USER}
       - POSTGRES_PASSWORD=${USERS_POSTGRES_PASSWORD}
       - POSTGRES_DB=${USERS_POSTGRES_DB}
       - POSTGRES_HOST=${USERS_POSTGRES_HOST}
+
     ports:
       - "${USERS_POSTGRES_PORT}:5432"
     volumes:
       - db-data-users:/var/lib/postgresql/data
-  pepp:
-    container_name: pepp
-    restart: always
-    env_file:
-      - ../../config/.env.test
-    build:
-      context: ../../production
-      dockerfile: client/Dockerfile
-    ports:
-      - "${CLIENT_PORT}:3000"
-    networks:
-      - frontend
+
   posts:
-    container_name: ${POSTS_SERVICE_HOST}
     build:
-      context: ../../production
-      dockerfile: microservices/Dockerfile
+      context: ../../production/microservices
+      dockerfile: ../../deploy/docker/microservices/Dockerfile.development
       args:
         SERVICE_NAME: posts
     env_file:
-      - ../../config/.env
+      - ../../config/.env.test
     restart: always
-    hostname: ${POSTS_SERVICE_HOST}
-    networks:
-      - backend
     ports:
-      - "${POSTS_SERVICE_PORT}:${POSTS_SERVICE_PORT}"
+      - "${POSTS_SERVICE_PORT}:8080"
+    volumes:
+      - "../../production/microservices/apps/posts/:/usr/app/apps/posts/"
+      - "../../production/microservices/libs:/usr/app/libs"
+      - certs:/usr/app/posts/certs
     depends_on:
       - posts_db
+      - es01
   posts_db:
-    container_name: "${POSTS_POSTGRES_HOST}"
-    image: postgres:16.2-alpine
+    image: postgres
     restart: always
-    networks:
-      - backend
     environment:
       - POSTGRES_USER=${POSTS_POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTS_POSTGRES_PASSWORD}
@@ -109,20 +126,20 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
       - certs:/usr/share/elasticsearch/config/certs
-    networks:
-      - elastic
-    environment:
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ../setup.elastic.sh:/usr/local/bin/setup.sh
     user: "0"
-    command: ["/bin/bash", "../setup.elastic.sh"]
+    command: ["/bin/bash", "/usr/local/bin/setup.sh"]
+    env_file:
+      - ../../config/.env.test
     healthcheck:
       test: [ "CMD-SHELL", "[ -f config/certs/es01/es01.crt ]" ]
       interval: 1s
       timeout: 5s
       retries: 120
+
   es01:
     depends_on:
-      setup:
+      posts_elastic_setup:
         condition: service_healthy
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     labels:
@@ -137,6 +154,7 @@ services:
       - cluster.name=${CLUSTER_NAME}
       - discovery.type=single-node
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=true
@@ -149,11 +167,16 @@ services:
       - xpack.security.transport.ssl.certificate_authorities=certs/ca/ca.crt
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
-#    mem_limit: ${ES_MEM_LIMIT}
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+    #    mem_limit: 280000000
     ulimits:
       memlock:
         soft: -1
         hard: -1
+    deploy:
+      resources:
+        limits:
+          memory: 4096M
     healthcheck:
       test:
         [
@@ -163,6 +186,127 @@ services:
       interval: 10s
       timeout: 10s
       retries: 120
+  kibana:
+    depends_on:
+      es01:
+        condition: service_healthy
+    image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+    labels:
+      co.elastic.logs/module: kibana
+    volumes:
+      - certs:/usr/share/kibana/config/certs
+      - kibanadata:/usr/share/kibana/data
+    ports:
+      - ${KIBANA_PORT}:5601
+    environment:
+      - SERVERNAME=kibana
+      - ELASTICSEARCH_HOSTS=https://es01:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=config/certs/ca/ca.crt
+      - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+      - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+    #    mem_limit: ${KB_MEM_LIMIT}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+  metricbeat01:
+    depends_on:
+      es01:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
+    image: docker.elastic.co/beats/metricbeat:${STACK_VERSION}
+    user: root
+    command: ["--strict.perms=false"]
+    #      - 'chmod 644 metricbeat/metricbeat.yml'
+    volumes:
+      - certs:/usr/share/metricbeat/certs
+      - metricbeatdata01:/usr/share/metricbeat/data
+      - "../metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "/sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro"
+      - "/proc:/hostfs/proc:ro"
+      - "/:/hostfs:ro"
+    environment:
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_HOSTS=https://es01:9200
+      - KIBANA_HOSTS=http://kibana:5601
+      - LOGSTASH_HOSTS=http://logstash01:9600
+  filebeat01:
+    depends_on:
+      es01:
+        condition: service_healthy
+    image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
+    user: root
+    command: ["--strict.perms=false"]
+    volumes:
+      - certs:/usr/share/filebeat/certs
+      - filebeatdata01:/usr/share/filebeat/data
+      - "./filebeat_ingest_data/:/usr/share/filebeat/ingest_data/"
+      - "../filebeat.yml:/usr/share/filebeat/filebeat.yml:ro"
+      - "/var/lib/docker/containers:/var/lib/docker/containers:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    environment:
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_HOSTS=https://es01:9200
+      - KIBANA_HOSTS=http://kibana:5601
+      - LOGSTASH_HOSTS=http://logstash01:9600
+  logstash01:
+    depends_on:
+      es01:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
+    image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+    labels:
+      co.elastic.logs/module: logstash
+    user: root
+    #    command: ["--strict.perms=false"]
+    volumes:
+      - certs:/usr/share/logstash/certPOSTS
+      - logstashdata01:/usr/share/logstash/data
+      - "./logstash_ingest_data/:/usr/share/logstash/ingest_data/"
+      - "../logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"
+    environment:
+      - xpack.monitoring.enabled=false
+      - ELASTIC_USER=elastic
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTIC_HOSTS=https://es01:9200
+  redis_posts:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_POSTS_PASSWORD}
+    volumes:
+      - ./data:/data
+  redis_auth:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6378:6379'
+    command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_AUTH_PASSWORD}
+    volumes:
+      - ./data:/data
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "5672:${RABBITMQ_PORT}"
+      - "15672:${RABBITMQ_MONITORING_PORT}"
 
 volumes:
   db-data-users:
@@ -179,55 +323,3 @@ volumes:
     driver: local
   logstashdata01:
     driver: local
-
-    # links:
-    #  - db
-
-  # Uncomment to enable MongoDB
-  # db:
-  #   image: "mongo"
-  #   restart: always
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
-  #     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
-  #     MONGO_INITDB_DATABASE: ${MONGO_DATABASE}
-  #     MONGO_USER: ${MONGO_USER}
-  #     MONGO_PASSWORD: ${MONGO_PASSWORD}
-  #     TZ: "Europe/Warsaw"
-  #   volumes:
-  #     - "./db/data/db-files:/data/db"
-  #     - "./db/init/:/docker-entrypoint-initdb.d/"
-  #   ports:
-  #     - 27017:27017
-  #   networks:
-  #     - backend
-
-  # Uncomment to enable redis
-  # redis:
-  #   image: redis
-  #   restart: always
-  #   hostname: redis
-  #   networks:
-  #     - backend
-  #   env_file:
-  #     - ../../config/.env
-
-  # Uncomment to enable RabbitMQ
-  # rabbitmq:
-  #   image: rabbitmq:3-management
-  #   restart: always
-  #   hostname: rabbitmq
-  #   networks:
-  #     - frontend
-  #     - backend
-  #   env_file:
-  #     - ../../config/.env
-  #   # Uncomment to initialize RabbitMQ with predefined configuration
-  #   # volumes:
-  #   #  - './configs/rabbitmq-init.json:/tmp/rabbitmq-init.json'
-  #   # environment:
-  #   #  - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbitmq_management load_definitions "/tmp/rabbitmq-init.json"
-
-  #   # Uncomment to expose RabbitMQ Management service port
-  #   # ports:
-  #   #  - "15672:15672"

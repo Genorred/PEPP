@@ -18,21 +18,21 @@ export async function generateStaticParams() {
 
   return data.allPosts.map((post) => ({
     id: String(post.id),
-    version: post.version
+    // version: post.version
   }));
 }
 
 const Page = async ({ params }: {
-  params: {
+  params: Promise<{
     id: string
     version: string
-  }
+  }>
 }) => {
-  const id = Number(params.id);
-  const version = Number(params.version);
+  const id = Number((await params).id);
+  // const version = Number(params.version);
   const post: PostQuery = await serverApiClient.request(PostDocument, {
     id,
-    version
+    // version
   } as PostQueryVariables);
 
   return <ViewPost post={post} id={id} />;

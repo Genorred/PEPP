@@ -36,7 +36,7 @@ const Page = async ({ params }: {
   return (
     <Container>
       <Ssr userId={id} />
-      <Friends friends={friends} count={friendsCount} userId={id} />
+      <Friends friends={friends} defaultCount={friendsCount} userId={id} />
     </Container>
   );
 };

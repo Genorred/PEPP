@@ -35,15 +35,16 @@ export async function generateStaticParams() {
     }));
   } catch (e) {
     console.error(e);
+    return []
   }
 }
 
 const Page = async ({ params }: {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }) => {
-  const id = Number(params.id);
+  const id = Number((await params).id);
   const post: PostQuery = await serverApiClient.request(PostDocument, {
     id
   } as PostQueryVariables, {});

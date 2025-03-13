@@ -6,18 +6,23 @@ ENV PNPM_HOME="/pnpm"
 
 ENV PATH="$PNPM_HOME:$PATH"
 
-RUN corepack enable
+RUN npm i -g corepack@latest
 
-COPY . .
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /usr/app/client
 
-RUN pnpm config set store-dir /pnpm/store
+COPY ./package.json ./package.json
 
+COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+COPY ./ .
+
+RUN ["pnpm", "run", "build"]
 
 VOLUME [ "/usr/app/client/node_modules", "/usr/app/client/.next" ]
 
 EXPOSE 3000
 
-CMD ["pnpm", "run", "dev"]
+CMD ["pnpm", "run", "start"]

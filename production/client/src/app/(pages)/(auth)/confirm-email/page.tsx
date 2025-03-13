@@ -11,10 +11,6 @@ const Page = () => {
   const token = searchParams.get("token");
   const returnUrl = searchParams.get("returnUrl");
   const router = useRouter();
-  if (!token) {
-    router.push("/");
-    return null;
-  }
 
   const dispatch = useDispatch();
   const { mutate: confirmEmailMutation, isSuccess } = useConfirmUserEmailMutation({
@@ -25,13 +21,16 @@ const Page = () => {
     }
   });
   useEffect(() => {
-    console.log("fetch");
-    confirmEmailMutation({
-      token
-    });
+    if (token) {
+      confirmEmailMutation({
+        token
+      });
+    }
   }, []);
-
-
+  if (!token) {
+    router.push("/");
+    return null;
+  }
   return (
     <Container className="justify-center">
       <div className="bg-background h-64 p-16">
