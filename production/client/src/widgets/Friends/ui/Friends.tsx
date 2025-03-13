@@ -15,6 +15,15 @@ import Image from "next/image";
 import { FileX } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import Link from "next/link";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/shared/ui/dialog";
 
 const Friends = ({ userId, friends, defaultCount }: {
   friends: GetUserFriendsQuery
@@ -93,9 +102,25 @@ const Friends = ({ userId, friends, defaultCount }: {
                       )}
                       <h3 className="font-semibold">{friend.anotherUser.username}</h3>
                     </Link>
-                    <Button className="ml-auto gap-4" onClick={onDeleteUser(friend.anotherUser.id)}>
-                      Delete
-                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild className='ml-auto'>
+                        <Button variant="outline">Delete</Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Are you sure want to delete a friend?</DialogTitle>
+                          <DialogDescription className='!mt-4'>
+                            {`You will need to send a friendship request to be a friend for
+                            ${friend.anotherUser.username} again`}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                          <Button className="gap-4" onClick={onDeleteUser(friend.anotherUser.id)}>
+                            Confirm
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 )
             )}

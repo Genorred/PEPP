@@ -5,11 +5,11 @@ import { Button } from "@/shared/ui/button";
 import { FileTextIcon } from "lucide-react";
 import {
   GetUserFriendRequestsQueryVariables,
-  GetUserFriendsQueryVariables, useAcceptUserFriendRequestsMutation,
+  useAcceptUserFriendRequestsMutation,
   useGetUserFriendRequestsCountQuery,
-  useInfiniteGetUserFriendRequestsQuery
+  useInfiniteGetUserFriendRequestsQuery,
+  useRemoveFriendshipMutation
 } from "@/shared/api/graphql/generated";
-import { PostRecommendationsQueryVariables } from "@/shared/api/graphql/graphql";
 import { useIntersectionObserver } from "usehooks-ts";
 import Image from "next/image";
 import { userSlice } from "@/entities/User/model/user.slice";
@@ -21,12 +21,13 @@ import { notificationsSlice } from "@/widgets/Navbar/model/notifications.slice";
 const IncomingRequests = ({ userId }: {
   userId: number
 }) => {
+  const dispatch = useDispatch();
   const user = useSelector(userSlice.selectors.user);
+  const [showThoughts, setShowThoughts] = useState(false);
   const [handledRequests, setHandledRequests] = useState<number[]>([]);
   const { data: countData, isLoading: isCountLoading } = useGetUserFriendRequestsCountQuery({
     userId
   });
-  console.log(countData);
   const {
     data,
     isLoading,
@@ -42,7 +43,6 @@ const IncomingRequests = ({ userId }: {
         : undefined
     )
   });
-
   const [ref] = useIntersectionObserver({
     onChange: isIntersecting => {
       if (isIntersecting && hasNextPage) {
@@ -51,25 +51,38 @@ const IncomingRequests = ({ userId }: {
     }
   });
 
-  const dispatch = useDispatch();
-  const {mutate: acceptRequest} = useAcceptUserFriendRequestsMutation({
-    onSuccess: (data, variables, context)=> {
-      toast.success("User accepted!");
-      setHandledRequests(prev => [...prev, variables.id])
-      queryClient.setQueryData(useGetUserFriendRequestsCountQuery.getKey({userId}), {
-        userFriendRequestsQuantity: (countData?.userFriendRequestsQuantity ?? 1) -1
-      } )
-      dispatch(notificationsSlice.actions.decreaseUserRequests());
+  const decreaseUserRequests = (id: number) => {
+    setHandledRequests(prev => [...prev, id]);
+    queryClient.setQueryData(useGetUserFriendRequestsCountQuery.getKey({ userId }), {
+      userFriendRequestsQuantity: (countData?.userFriendRequestsQuantity ?? 1) - 1
+    });
+    dispatch(notificationsSlice.actions.decreaseUserRequests());
+  };
+  const { mutate: acceptRequest } = useAcceptUserFriendRequestsMutation({
+    onSuccess: (_, variables) => {
+      toast.success("Friendship accepted!");
+      decreaseUserRequests(variables.id);
     }
-  })
+  });
+
+  const { mutate: deleteUser } = useRemoveFriendshipMutation({
+    onSuccess: (data) => {
+      decreaseUserRequests(data.removeFriendship.id);
+      toast.success("Friendship denied!");
+    }
+  });
+
   const onAccept = (id: number) => () => {
     acceptRequest({
       id
-    })
-  }
-  const [showThoughts, setShowThoughts] = useState(false);
+    });
+  };
+  const onDeleteUser = (id: number) => () => {
+    deleteUser({ anotherUserId: id });
+  };
+
   if (!user || user?.id !== userId) return null;
-  if ( countData && !countData.userFriendRequestsQuantity) return null;
+  if (countData && !countData.userFriendRequestsQuantity) return null;
   return (
     <Dialog open={showThoughts} onOpenChange={setShowThoughts}>
       <DialogTrigger asChild>
@@ -87,24 +100,27 @@ const IncomingRequests = ({ userId }: {
             {data.pages.map(requests =>
               requests.userFriendRequests.filter(v => !handledRequests.includes(v.id))
                 .map(request =>
-                <div className="flex items-center mb-4" key={request.id}>
-                  {request.anotherUser.img ? (
-                    <Image
-                      src={request.anotherUser.img}
-                      alt={request.anotherUser.username}
-                      width={40}
-                      height={40}
-                      className="rounded-full mr-3"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 bg-gray-200 rounded-full mr-3" />
-                  )}
-                  <h3 className="font-semibold">{request.anotherUser.username}</h3>
-                  <Button className="ml-auto" onClick={onAccept(request.id)}>
-                    Accept
-                  </Button>
-                </div>
-              )
+                  <div className="flex items-center mb-4" key={request.id}>
+                    {request.anotherUser.img ? (
+                      <Image
+                        src={request.anotherUser.img}
+                        alt={request.anotherUser.username}
+                        width={40}
+                        height={40}
+                        className="rounded-full mr-3"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 bg-gray-200 rounded-full mr-3" />
+                    )}
+                    <h3 className="font-semibold">{request.anotherUser.username}</h3>
+                    <Button className="ml-auto gap-4" onClick={onDeleteUser(request.anotherUser.id)}>
+                      Deny
+                    </Button>
+                    <Button className="ml-auto" onClick={onAccept(request.id)}>
+                      Accept
+                    </Button>
+                  </div>
+                )
             )}
             {hasNextPage ?
               isLoading

@@ -837,7 +837,7 @@ export type RemoveFriendshipMutationVariables = Exact<{
 }>;
 
 
-export type RemoveFriendshipMutation = { __typename?: 'Mutation', removeFriendship: { __typename?: 'Friendship', receiverId: number } };
+export type RemoveFriendshipMutation = { __typename?: 'Mutation', removeFriendship: { __typename?: 'Friendship', receiverId: number, id: number } };
 
 export type SendFriendshipRequestMutationVariables = Exact<{
   receiverId: Scalars['Int']['input'];
@@ -2096,6 +2096,7 @@ export const RemoveFriendshipDocument = `
     mutation removeFriendship($anotherUserId: Int!) {
   removeFriendship(removeFriendshipInput: {anotherUserId: $anotherUserId}) {
     receiverId
+    id
   }
 }
     `;

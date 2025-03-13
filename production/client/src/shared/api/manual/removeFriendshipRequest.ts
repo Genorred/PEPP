@@ -6,6 +6,7 @@ const removeFriendshipRequest = graphql(`
             anotherUserId: $anotherUserId
         }) {
             receiverId
+            id
         }
     }
 `)
