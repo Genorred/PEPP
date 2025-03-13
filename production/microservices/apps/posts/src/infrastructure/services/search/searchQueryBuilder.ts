@@ -37,9 +37,9 @@ export class SearchQueryBuilderService {
     if (searchValue) {
       mustQueries.push({
         multi_match: {
-          fields: ["title^2", "description"] as SearchPostKeys,
+          fields: ["title^2", "description", "topics", "subTopics"] as SearchPostKeys,
           query: searchValue,
-          fuzziness: 'AUTO',
+          fuzziness: "AUTO",
           tie_breaker: 0.3
         }
       });
@@ -52,8 +52,15 @@ export class SearchQueryBuilderService {
           should: topics.map(topic => ({
             bool: {
               should: [
-                { term: { "topics.keyword^2": topic } },
-                { term: { "subTopics.keyword": topic } }
+                {
+                  term: {
+                    "topics": {
+                      value: topic,
+                      boost: 2
+                    }
+                  }
+                },
+                { term: { "subTopics": topic } }
               ]
             }
           }))

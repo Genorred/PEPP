@@ -4,10 +4,23 @@ export const Mapping: MappingTypeMapping = {
   properties: {
     topics: {
       // boost: 3,
-      type: "keyword"
+      // type: "keyword"
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
     },
     subTopics: {
-      type: "keyword"
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
     },
     title: {
       type: "text"

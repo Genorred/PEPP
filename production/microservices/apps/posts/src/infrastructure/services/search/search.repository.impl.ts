@@ -25,7 +25,7 @@ export class SearchRepositoryImpl implements SearchRepository {
     try {
       const checkIndex = await this.esService.indices.exists({ index });
       if (!checkIndex) {
-        this.esService.indices.create({
+        await this.esService.indices.create({
           index,
           mappings: Mapping,
           settings: {
@@ -67,7 +67,7 @@ export class SearchRepositoryImpl implements SearchRepository {
           subTopics: subTopics && mapTopicsToTopicsDto(subTopics),
           title,
           createdAt,
-          description: `${description} ${topics.toString()} ${subTopics.toString()}`,
+          description,
           userId
         } as SearchPost
       });
@@ -95,7 +95,7 @@ export class SearchRepositoryImpl implements SearchRepository {
             subTopics: mapTopicsToTopicsDto(subTopics),
             title,
             createdAt,
-            description: `${description} ${topics.toString()} ${subTopics.toString()}`,
+            description,
             userId
           } as SearchPost
         }
