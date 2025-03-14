@@ -63,6 +63,8 @@ services:
     volumes:
       - "../../production/microservices/apps/notifications/:/usr/app/apps/notifications/"
       - "../../production/microservices/libs:/usr/app/libs"
+    depends_on:
+      - rabbitmq
   users:
     build:
       context: ../../production/microservices

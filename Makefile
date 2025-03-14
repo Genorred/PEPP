@@ -23,6 +23,9 @@ dev-down: setup_env
 prod-up: setup_env
 	docker-compose -f deploy/docker/docker-compose.yml --env-file ./config/.env up --build
 
+prod-up-cache: setup_env
+	docker-compose -f deploy/docker/docker-compose.yml --env-file ./config/.env up
+
 prod-down: setup_env
 	docker-compose -f deploy/docker/docker-compose.yml --env-file ./config/.env down --remove-orphans
 

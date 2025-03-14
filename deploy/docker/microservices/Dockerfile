@@ -4,38 +4,32 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 ARG SERVICE_NAME
 ENV SERVICE_NAME=$SERVICE_NAME
+RUN npm i -g pnpm
 
-RUN corepack enable
-RUN pnpm config set store-dir /pnpm/store
+FROM base as build
 
-FROM base AS build
-
+ENV NODE_ENV=development
 WORKDIR /usr/app
-COPY ./${SERVICE_NAME} ./${SERVICE_NAME}
-COPY ./_shared ./_shared
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prefix ./${SERVICE_NAME} --frozen-lockfile
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prefix ./_shared --frozen-lockfile
+COPY ./package.json ./package.json
+COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
+COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml
 
-WORKDIR /usr/app/${SERVICE_NAME}
-RUN if [ "$SERVICE_NAME" != "gateway" ]; then \
-    npx prismaDb generate; \
-    fi
+COPY ./libs/shared/package.json ./libs/shared/package.json
+COPY ./apps/${SERVICE_NAME}/package.json ./apps/${SERVICE_NAME}/package.json
 
-RUN npx nest build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-FROM base AS prod
-ENV NODE_ENV=production
+VOLUME [ "/usr/app/apps/${SERVICE_NAME}/node_modules" ]
+VOLUME [ "/usr/app/libs/shared/node_modules" ]
+VOLUME [ "/usr/app/node_modules" ]
 
-COPY ./${SERVICE_NAME} ./${SERVICE_NAME}
-COPY ./_shared ./_shared
-
-COPY --from=build /usr/app/${SERVICE_NAME}/dist ./dist
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --prod
-RUN if [ "$SERVICE_NAME" != "gateway" ]; then \
-    npx prismaDb generate; \
-    fi
-VOLUME [ "/usr/app/${SERVICE_NAME}/node_modules" ]
-
+COPY ./libs ./libs
+COPY ./apps/${SERVICE_NAME} ./apps/${SERVICE_NAME}
 EXPOSE 8080
-CMD sh ./src/_shared/scripts/prod.sh
+
+RUN sh libs/scripts/build.sh
+
+HEALTHCHECK --interval=10s --timeout=5s --retries=100 CMD ["node", "libs/scripts/healthCheck.js"]
+
+CMD sh libs/scripts/prod.sh

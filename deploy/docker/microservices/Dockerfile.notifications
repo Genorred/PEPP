@@ -1,0 +1,35 @@
+FROM node:20.16.0-alpine AS base
+
+ARG SERVICE_NAME
+ENV SERVICE_NAME=$SERVICE_NAME
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN npm i -g pnpm
+
+FROM base as build
+
+ENV NODE_ENV=development
+WORKDIR /usr/app
+
+COPY ./package.json ./package.json
+COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
+COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml
+
+COPY ./libs/shared/package.json ./libs/shared/package.json
+COPY ./apps/${SERVICE_NAME}/package.json ./apps/${SERVICE_NAME}/package.json
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+VOLUME [ "/usr/app/apps/${SERVICE_NAME}/node_modules" ]
+VOLUME [ "/usr/app/libs/shared/node_modules" ]
+VOLUME [ "/usr/app/node_modules" ]
+
+COPY ./libs ./libs
+COPY ./apps/${SERVICE_NAME} ./apps/${SERVICE_NAME}
+EXPOSE 8080
+
+RUN pnpm --filter $SERVICE_NAME run build
+
+HEALTHCHECK --interval=10s --timeout=5s --retries=100 CMD ["node", "libs/scripts/healthCheck.js"]
+
+CMD pnpm --filter $SERVICE_NAME run start:dev

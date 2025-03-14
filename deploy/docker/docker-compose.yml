@@ -19,27 +19,22 @@ services:
       - "${CLIENT_PORT}:3000"
     networks:
       - frontend
-    environment:
-      - WATCHPACK_POLLING=true
-    volumes:
-      - "../../production/_shared/config:/usr/app/client/src/_config"
+    depends_on:
+      - gateway
   gateway:
     build:
       context: ../../production/microservices
-      dockerfile: ../../deploy/docker/microservices/Dockerfile.development
+      dockerfile: ../../deploy/docker/microservices/Dockerfile
       args:
         SERVICE_NAME: gateway
     restart: always
     env_file:
-      - ../../config/.env.test
+      - ../../config/.env
     networks:
       - default
       - frontend
     ports:
       - "8080:8080"
-    volumes:
-      - "../../production/microservices/apps/gateway/:/usr/app/apps/gateway/"
-      - "../../production/microservices/libs:/usr/app/libs"
     depends_on:
       users:
         condition: service_healthy
@@ -48,34 +43,30 @@ services:
   notifications:
     build:
       context: ../../production/microservices
-      dockerfile: ../../deploy/docker/microservices/Dockerfile.notifications.development
+      dockerfile: ../../deploy/docker/microservices/Dockerfile.notifications
       args:
         SERVICE_NAME: notifications
     restart: always
     env_file:
-      - ../../config/.env.test
+      - ../../config/.env
     networks:
       - default
       - frontend
     ports:
       - "${NOTIFICATIONS_SERVER_PORT}:8080"
-    volumes:
-      - "../../production/microservices/apps/notifications/:/usr/app/apps/notifications/"
-      - "../../production/microservices/libs:/usr/app/libs"
+    depends_on:
+      - rabbitmq
   users:
     build:
       context: ../../production/microservices
-      dockerfile: ../../deploy/docker/microservices/Dockerfile.development
+      dockerfile: ../../deploy/docker/microservices/Dockerfile
       args:
         SERVICE_NAME: users
     env_file:
-      - ../../config/.env.test
+      - ../../config/.env
     restart: always
     ports:
       - "${USERS_SERVICE_PORT}:8080"
-    volumes:
-      - "../../production/microservices/apps/users/:/usr/app/apps/users/"
-      - "../../production/microservices/libs:/usr/app/libs"
     depends_on:
       - users_db
   users_db:
@@ -95,17 +86,15 @@ services:
   posts:
     build:
       context: ../../production/microservices
-      dockerfile: ../../deploy/docker/microservices/Dockerfile.development
+      dockerfile: ../../deploy/docker/microservices/Dockerfile
       args:
         SERVICE_NAME: posts
     env_file:
-      - ../../config/.env.test
+      - ../../config/.env
     restart: always
     ports:
       - "${POSTS_SERVICE_PORT}:8080"
     volumes:
-      - "../../production/microservices/apps/posts/:/usr/app/apps/posts/"
-      - "../../production/microservices/libs:/usr/app/libs"
       - certs:/usr/app/posts/certs
     depends_on:
       - posts_db

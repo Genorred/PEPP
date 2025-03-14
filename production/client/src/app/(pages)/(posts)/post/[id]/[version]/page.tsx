@@ -10,17 +10,17 @@ import { serverApiClient } from "@/shared/api/base";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import ViewPost from "../ViewPost";
 
-export async function generateStaticParams() {
-  const data: PostsIdQuery = await serverApiClient.request(PostsIdDocument, {
-    token: process.env.NEXTJS_ENDPOINTS,
-    isArchived: true
-  } as PostsIdQueryVariables);
-
-  return data.allPosts.map((post) => ({
-    id: String(post.id),
-    // version: post.version
-  }));
-}
+// export async function generateStaticParams() {
+//   const data: PostsIdQuery = await serverApiClient.request(PostsIdDocument, {
+//     token: process.env.NEXTJS_ENDPOINTS,
+//     isArchived: true
+//   } as PostsIdQueryVariables);
+//
+//   return data.allPosts.map((post) => ({
+//     id: String(post.id),
+//     // version: post.version
+//   }));
+// }
 
 const Page = async ({ params }: {
   params: Promise<{

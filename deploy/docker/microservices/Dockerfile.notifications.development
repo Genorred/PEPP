@@ -30,4 +30,4 @@ EXPOSE 8080
 
 HEALTHCHECK --interval=10s --timeout=5s --retries=50 CMD ["node", "libs/scripts/healthCheck.js"]
 
-CMD pnpm --filter $SERVICE_NAME run start:dev
+CMD pnpm --filter $SERVICE_NAME run start:prod
