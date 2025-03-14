@@ -7,14 +7,22 @@ import { Button } from "@/shared/ui/button";
 
 const googleAuthUrl = process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL as string;
 console.log(googleAuthUrl);
+console.log('envs', process.env);
+console.log('envUrl2', process.env.googleAuthUrl);
 const AuthWrapper = ({ children, returnUrl }: {
   children: React.ReactNode,
   returnUrl?: string | null
+  googleAuthUrl?: string
 }) => {
   const router = useRouter();
-
+  const googleAuthUrl = process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL as string;
+  console.log('authUrl', googleAuthUrl);
+  console.log('envs', process.env);
+  console.log('envUrl', process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL);
+  console.log('envUrl2', process.env.googleAuthUrl);
   function SignWithGoogle() {
-    const url = new URL(googleAuthUrl || "");
+    console.log(googleAuthUrl);
+    const url = new URL(googleAuthUrl || "http://localhost:7878/auth/google");
     if (returnUrl)
       url.searchParams.set("returnUrl", returnUrl);
     router.push(url.href);

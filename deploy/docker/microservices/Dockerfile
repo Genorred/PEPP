@@ -21,6 +21,7 @@ COPY ./apps/${SERVICE_NAME}/package.json ./apps/${SERVICE_NAME}/package.json
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 VOLUME [ "/usr/app/apps/${SERVICE_NAME}/node_modules" ]
+VOLUME [ "/usr/app/apps/${SERVICE_NAME}/dist" ]
 VOLUME [ "/usr/app/libs/shared/node_modules" ]
 VOLUME [ "/usr/app/node_modules" ]
 

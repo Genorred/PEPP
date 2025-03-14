@@ -11,8 +11,6 @@ services:
     build:
       context: ../../production/client
       dockerfile: ../../deploy/docker/client/Dockerfile.development
-      args:
-        SERVICE_NAME: posts
     env_file:
       - ../../config/.env.test
     ports:

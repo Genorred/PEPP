@@ -46,6 +46,7 @@ const Page = () => {
     loginUser(values);
   }
 
+  console.log('envUrl', process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL);
   useEffect(() => {
     if (user) {
       router.push(returnUrl || "/");

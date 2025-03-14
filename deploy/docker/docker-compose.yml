@@ -12,7 +12,9 @@ services:
       context: ../../production/client
       dockerfile: ../../deploy/docker/client/Dockerfile
       args:
-        SERVICE_NAME: posts
+        NEXT_PUBLIC_GOOGLE_AUTH_URL: ${NEXT_PUBLIC_GOOGLE_AUTH_URL}
+        NEXT_PUBLIC_CONTAINER_API_BASE_URL: ${NEXT_PUBLIC_CONTAINER_API_BASE_URL}
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
     env_file:
       - ../../config/.env
     ports:

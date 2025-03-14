@@ -21,6 +21,7 @@ export default function RootLayout({
                                    }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log('envUrl', process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL);
   return (
     <html lang="en">
     <meta name="viewport" content="initial-scale=1, width=device-width" />
