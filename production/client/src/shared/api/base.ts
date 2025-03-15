@@ -19,7 +19,7 @@ export function fetcher<TData, TVariables extends {
   };
 }
 
-export const serverBaseUrl = process.env.NEXT_PUBLIC_CONTAINER_API_BASE_URL || "http://gateway:8080/graphql";
+export const serverBaseUrl = process.env.SERVER_API_BASE_URL || "http://gateway:8080/graphql";
 export const serverApiClient = new GraphQLClient(serverBaseUrl, {
   credentials: "include"
 });
