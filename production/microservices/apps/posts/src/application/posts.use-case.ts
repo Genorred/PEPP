@@ -90,14 +90,14 @@ export class PostsUseCase {
     await Promise.all([
       this.postsRepository.update({ id, userId, isHidden: true }),
       this.searchService.deletePost(id),
-      this.clientCacheRepository.removePost(id)
+      this.clientCacheRepository.revalidatePost(id, userId)
     ]);
   }
 
   async expose(id: number, userId: number) {
     const post = await this.postsRepository.update({ id, userId, isHidden: false });
     await Promise.all([
-      this.clientCacheRepository.addPost(id),
+      this.clientCacheRepository.revalidatePost(id, userId),
       this.searchService.indexPost(post)
     ]);
   }

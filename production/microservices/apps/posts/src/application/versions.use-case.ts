@@ -8,6 +8,8 @@ import { VersionIsHiddenService } from "../domain/domain_services/version-is-hid
 import { CreateVersionUseCaseDto } from "./dto/create-version-use-case.dto";
 import { PostsUow } from "../domain/repositories/UoW/posts.uow";
 import { SearchRepository } from "../domain/repositories/posts/search.repository";
+import { retryOperation } from "@_shared/utils/retryOperation";
+import { ClientCacheRepository } from "../domain/repositories/client.cache.repository";
 
 @Injectable()
 export class VersionsUseCase {
@@ -16,6 +18,7 @@ export class VersionsUseCase {
     private readonly postsRepository: PostsRepository,
     private readonly postsUow: PostsUow,
     private readonly versionIdHiddenService: VersionIsHiddenService,
+    private readonly clientCacheRepository: ClientCacheRepository,
     private readonly searchService: SearchRepository
   ) {
   }
@@ -36,6 +39,8 @@ export class VersionsUseCase {
         await this.searchService.updatePost(updatedPost);
       }
       await versionsRepository.create({ postId, ...post });
+      await retryOperation(() => this.clientCacheRepository.revalidatePost(postId, post.userId), 5, 500);
+
       return updatedPost;
     });
   }

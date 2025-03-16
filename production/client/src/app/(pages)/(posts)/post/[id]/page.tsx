@@ -10,7 +10,6 @@ import {
 } from "@/shared/api/graphql/generated";
 import Ssr from "@/app/(pages)/(posts)/post/[id]/ssr";
 
-export const revalidate = 60;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {

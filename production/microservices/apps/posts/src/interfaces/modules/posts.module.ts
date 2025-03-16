@@ -46,7 +46,7 @@ import { PostsUowImpl } from "../../infrastructure/services/posts.uow.impl";
     }
   ],
   exports: [
-    PostsRepository, PostsUow
+    PostsRepository, PostsUow, ClientCacheRepository
   ]
 })
 export class PostsModule {

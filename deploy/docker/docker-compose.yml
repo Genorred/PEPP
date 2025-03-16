@@ -20,6 +20,7 @@ services:
     ports:
       - "${CLIENT_PORT}:3000"
     networks:
+      - default
       - frontend
     depends_on:
       - gateway

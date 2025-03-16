@@ -1,5 +1,11 @@
 import React from "react";
 import Container from "@/shared/ui/Container";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Email confirmation sent',
+  description: 'Find email confirmation link to get finish this step',
+}
 
 const Page = () => {
   return (

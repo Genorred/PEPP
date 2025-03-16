@@ -1,5 +1,3 @@
 export abstract class ClientCacheRepository {
-  abstract removePost(post: number): Promise<unknown>
-
-  abstract addPost(post: number): Promise<unknown>
+  abstract revalidatePost(postId: number, postUserId: number): Promise<unknown>
 }

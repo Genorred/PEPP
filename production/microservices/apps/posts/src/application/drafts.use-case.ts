@@ -9,6 +9,7 @@ import { CreateDraftInputService } from "./dto/crate-draft.input";
 import { mapTopicsToTopicsDto } from "../domain/dto/topics/map-topics-to-topics.dto";
 import { SearchRepository } from "../domain/repositories/posts/search.repository";
 import { retryOperation } from "@_shared/utils/retryOperation";
+import { ClientCacheRepository } from "../domain/repositories/client.cache.repository";
 
 @Injectable()
 export class DraftsUseCase {
@@ -17,7 +18,8 @@ export class DraftsUseCase {
     private readonly versionRepository: VersionsRepository,
     private readonly searchService: SearchRepository,
     private readonly transaction: Transaction,
-    private readonly postsRepository: PostsRepository
+    private readonly postsRepository: PostsRepository,
+    private readonly clientCacheRepository: ClientCacheRepository,
   ) {
   }
 
@@ -68,13 +70,14 @@ export class DraftsUseCase {
         await this.postsRepository.remove({ id: post.id });
         throw new Error("Error removing post");
       }
+
       return post
 
     } else {
       const { id: dbId, isHidden, ...versionData } = await this.postsRepository.findOne({
         id: postId
       });
-      return (await this.transaction.exec([
+      const post = (await this.transaction.exec([
         this.postsRepository.update({
           id: postId,
           ...draft,
@@ -85,6 +88,8 @@ export class DraftsUseCase {
         this.versionRepository.create({ postId: postId, ...versionData }),
         this.draftsRepository.remove({ id, userId })
       ]))[0];
+      await retryOperation(() => this.clientCacheRepository.revalidatePost(postId, userId), 5, 500);
+      return post
     }
   }
 }
