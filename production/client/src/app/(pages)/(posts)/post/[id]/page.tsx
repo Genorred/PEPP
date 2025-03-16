@@ -12,6 +12,12 @@ import Ssr from "@/app/(pages)/(posts)/post/[id]/ssr";
 
 export const dynamicParams = true;
 
+interface Props {
+  params: Promise<{
+    id: string
+  }>;
+}
+
 export async function generateStaticParams() {
   try {
     const data: PostsIdQuery = await serverApiClient.request(PostsIdDocument, {
@@ -34,15 +40,22 @@ export async function generateStaticParams() {
     }));
   } catch (e) {
     console.error(e);
-    return []
+    return [];
   }
 }
 
-const Page = async ({ params }: {
-  params: Promise<{
-    id: string
-  }>
-}) => {
+export async function generateMetadata({ params }: Props) {
+  const id = Number((await params).id);
+  const data: PostQuery = await serverApiClient.request(PostDocument, {
+    id
+  } as PostQueryVariables, {});
+  return {
+    title: data.post.title,
+    description: data.post.description,
+  };
+}
+
+const Page = async ({ params }: Props) => {
   const id = Number((await params).id);
   const post: PostQuery = await serverApiClient.request(PostDocument, {
     id

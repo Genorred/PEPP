@@ -43,6 +43,21 @@ export async function generateStaticParams() {
   }
 }
 
+interface Props {
+  params: Promise<{
+    id: string
+  }>;
+}
+export async function generateMetadata({ params }: Props) {
+  const id = Number((await params).id);
+  const data: GetUserProfileInfoQuery = await serverApiClient.request(GetUserProfileInfoDocument, {
+    id
+  } as GetUserProfileInfoQueryVariables);
+
+  return {
+    title: `${data.user.username}'s Profile`,
+  };
+}
 const Page = async ({ params }: {
   params: Promise<{
     id: string

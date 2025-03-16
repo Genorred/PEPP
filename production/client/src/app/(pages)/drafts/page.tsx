@@ -1,11 +1,14 @@
-"use client";
 import React from "react";
 import DraftsList from "@/app/(pages)/drafts/ui/DraftsList";
 import Link from "next/link";
 import { Card } from "@/shared/ui/card";
 import { CirclePlus } from "lucide-react";
 import Container from "@/shared/ui/Container";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: 'My Drafts',
+}
 const Page = () => {
   return (
     <Container className="flex gap-4 flex-wrap" variant={"section"}>
