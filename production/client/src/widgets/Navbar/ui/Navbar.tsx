@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Menu } from "lucide-react";
 
 import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/ui/button";
+import { Button, buttonVariants } from "@/shared/ui/button";
 
 import {
   NavigationMenu,
@@ -25,8 +25,9 @@ function Navbar() {
   const { topPosition } = useHidingNavbar();
   useGetUserNotifications();
   return (
-    <nav className="border-b w-full h-16">
-      <div className="flex w-full h-16 items-center px-4 fixed transition-all bg-background z-10"
+    <nav className=" w-full h-16">
+      <div className="flex w-full h-16 items-center px-4 fixed transition-all  z-50
+      border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
            style={{ top: `${topPosition}px` }}
       >
         <Sheet>
@@ -65,7 +66,9 @@ function Navbar() {
               {navPages.map((item) => (
                 <NavigationMenuItem key={item}>
                   <Link href={"/" + item.toLowerCase()} legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <NavigationMenuLink className={cn(buttonVariants({
+                    variant: 'link'
+                  }))}>
                       {item}
                     </NavigationMenuLink>
                   </Link>

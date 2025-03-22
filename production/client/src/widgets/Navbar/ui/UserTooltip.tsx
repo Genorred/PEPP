@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
 import { usePathname } from "next/navigation";
 import { LogIn, LogOut } from "lucide-react";
-import { Button } from "@/shared/ui/button";
+import { Button, buttonVariants } from "@/shared/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -100,22 +100,23 @@ export const UserTooltip = () => {
         <NavigationMenu>
           <NavigationMenuList>
             {
-              !pathname.includes("sign-up") ?
+              !pathname.includes("sign-in") ?
                 <NavigationMenuItem>
-                  <Link href={`/sign-up${pathname ? "?returnUrl=" + pathname : ""}`} legacyBehavior passHref>
+                  <Link href={`/sign-in${pathname ? "?returnUrl=" + pathname : ""}`} legacyBehavior passHref>
                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                      <span>Sign up</span>
+                      <span>Sign in</span>
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem> : null
             }
             {
-              !pathname.includes("sign-in") ?
+              !pathname.includes("sign-up") ?
                 <NavigationMenuItem>
-                  <Link href={`/sign-in${pathname ? "?returnUrl=" + pathname : ""}`} legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                      <LogIn className="mr-2 h-4 w-4" />
-                      <span>Sign in</span>
+                  <Link href={`/sign-up${pathname ? "?returnUrl=" + pathname : ""}`} legacyBehavior passHref >
+                    <NavigationMenuLink className={buttonVariants({
+                      variant: 'default'
+                    })}>
+                      <span>Sign up</span>
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem> : null

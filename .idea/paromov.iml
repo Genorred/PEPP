@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="nestjs-kubernetes-template" />
+    <orderEntry type="library" name="scroll-timeline" level="application" />
   </component>
 </module>

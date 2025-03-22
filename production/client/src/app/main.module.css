@@ -1,0 +1,15 @@
+
+@keyframes grow-progress {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
+}
+
+.progress {
+    position: fixed;
+    animation: grow-progress linear forwards;
+    animation-timeline: scroll();
+}

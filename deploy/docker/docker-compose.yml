@@ -22,8 +22,8 @@ services:
     networks:
       - default
       - frontend
-    depends_on:
-      - gateway
+#    depends_on:
+#      - gateway
   gateway:
     build:
       context: ../../production/microservices

@@ -8,6 +8,9 @@ import { cn } from "@/shared/lib/utils";
 import "@radix-ui/themes/styles.css";
 import { Toaster } from "@/shared/ui/sonner";
 import { Theme } from "@radix-ui/themes";
+import Link from "next/link";
+import { Edit } from "lucide-react";
+import Footer from "@/widgets/Footer";
 
 export const metadata: Metadata = {
   title: "PEPP",
@@ -31,6 +34,7 @@ export default function RootLayout({
       "min-h-screen bg-background font-sans antialiased !overflow-auto",
       fontSans.variable
     )}>
+    <script src="https://flackr.github.io/scroll-timeline/dist/scroll-timeline.js"></script>
     <Theme>
     <Providers>
       <main>
@@ -38,10 +42,12 @@ export default function RootLayout({
         <div className="font-bold relative">
           {children}
         </div>
+        <Footer />
         <Toaster />
       </main>
     </Providers>
     </Theme>
+
     </body>
 
     </html>
