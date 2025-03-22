@@ -15,6 +15,7 @@ import {
 import { userCommentsFiltersSlice } from "@/app/(pages)/(user)/profile/[id]/comments-filters.slice";
 import PostComment from "@/app/(pages)/(posts)/post/[id]/PostComment";
 import Link from "next/link";
+import Loading from "@/shared/ui/Loading";
 
 const UserComments = ({ userId }: {
   userId: number
@@ -78,7 +79,7 @@ const UserComments = ({ userId }: {
             {data?.userComments.data.map(comment =>
               <div className="" key={comment.id}>
                 <div className="mb-2 p-2 bg-muted rounded-md text-sm">
-                  <Link href={`/post/${comment.postId}`} >
+                  <Link href={`/post/${comment.postId}`}>
                     <div className="flex items-center mb-1 gap-2">
                       <CornerDownRight className="w-4 h-4" />
                       <StickyNote className="w-4 h-4" />
@@ -95,9 +96,7 @@ const UserComments = ({ userId }: {
         </>
         : isLoading
           ?
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2 ">
-            "loading..."
-          </h2>
+          <Loading />
           :
           <div
             className="flex flex-col items-center justify-center p-8 text-center bg-gray-50 rounded-lg border border-gray-200">

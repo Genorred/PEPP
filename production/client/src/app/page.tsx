@@ -1,4 +1,6 @@
 import Container from "@/shared/ui/Container";
+import {Spinner} from "@radix-ui/themes/components/spinner";
+import React from "react";
 
 console.log('envUrl', process.env.googleAuthUrl);
 console.log('envUrl', process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL);

@@ -1,3 +1,4 @@
+'use client'
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
 import { useRouter } from "next/navigation";
 import PostDraftCard from "@/entities/Post/ui/PostDraftCard";
+import Loading from "@/shared/ui/Loading";
 
 const DraftsList = () => {
   const router = useRouter();
@@ -12,7 +13,7 @@ const DraftsList = () => {
   if (!user) router.push("/");
   const { data, isLoading } = useDraftsQuery();
   if (isLoading || !data) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
   return (
     <>

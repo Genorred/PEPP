@@ -24,6 +24,7 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/shared/ui/dialog";
+import Loading from "@/shared/ui/Loading";
 
 const Friends = ({ userId, friends, defaultCount }: {
   friends: GetUserFriendsQuery
@@ -103,13 +104,13 @@ const Friends = ({ userId, friends, defaultCount }: {
                       <h3 className="font-semibold">{friend.anotherUser.username}</h3>
                     </Link>
                     <Dialog>
-                      <DialogTrigger asChild className='ml-auto'>
+                      <DialogTrigger asChild className="ml-auto">
                         <Button variant="outline">Delete</Button>
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-[425px]">
                         <DialogHeader>
                           <DialogTitle>Are you sure want to delete a friend?</DialogTitle>
-                          <DialogDescription className='!mt-4'>
+                          <DialogDescription className="!mt-4">
                             {`You will need to send a friendship request to be a friend for
                             ${friend.anotherUser.username} again`}
                           </DialogDescription>
@@ -136,9 +137,7 @@ const Friends = ({ userId, friends, defaultCount }: {
         </>
         : isLoading
           ?
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2 ">
-            "loading..."
-          </h2>
+          <Loading />
           :
           <div
             className="flex flex-col items-center justify-center p-8 text-center bg-gray-50 rounded-lg border border-gray-200">

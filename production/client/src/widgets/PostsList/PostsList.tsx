@@ -8,6 +8,7 @@ import { useInfinitePostRecommendationsQuery } from "@/shared/api/graphql/genera
 import { useIntersectionObserver } from "usehooks-ts";
 import { PostRecommendationsQueryVariables } from "@/shared/api/graphql/graphql";
 import { FileX } from "lucide-react";
+import Loading from "@/shared/ui/Loading";
 
 
 const PostsList = () => {
@@ -65,9 +66,7 @@ const PostsList = () => {
         </>
         : isLoading
           ?
-          <h2 className="text-2xl font-semibold text-gray-800 mb-2 ">
-            "loading..."
-          </h2>
+          <Loading />
           :
           <div
             className="flex flex-col items-center justify-center p-8 text-center bg-gray-50 rounded-lg border border-gray-200">

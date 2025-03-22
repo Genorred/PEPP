@@ -25,6 +25,10 @@ const Page = ({ params }: {
     dispatch(focusedPostSlice.actions.setInitialDataQuery(queryKey as PostKeys));
     dispatch(focusedPostSlice.actions.setDraftId(id));
   }, []);
+  useEffect(() => {
+    if (data?.draft.title)
+      document.title = data.draft.title;
+  }, []);
   return (
     <>
       {isLoading
