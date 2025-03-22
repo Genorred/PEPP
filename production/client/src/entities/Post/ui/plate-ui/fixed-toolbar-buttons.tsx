@@ -51,16 +51,6 @@ export function FixedToolbarButtons() {
       {!readOnly && (
         <>
           <ToolbarGroup>
-            <AIToolbarButton
-              className="gap-1.5 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-500"
-              tooltip="Edit, generate, and more"
-            >
-              <SparklesIcon className="!size-3.5" />
-              Ask AI
-            </AIToolbarButton>
-          </ToolbarGroup>
-
-          <ToolbarGroup>
             <InsertDropdownMenu />
             <TurnIntoDropdownMenu />
           </ToolbarGroup>
@@ -116,10 +106,7 @@ export function FixedToolbarButtons() {
 
             <IndentListToolbarButton nodeType={ListStyleType.Disc} />
             <IndentListToolbarButton nodeType={ListStyleType.Decimal} />
-            <IndentTodoToolbarButton />
-
-            <ListToolbarButton nodeType={BulletedListPlugin.key} />
-            <ListToolbarButton nodeType={NumberedListPlugin.key} />
+            {/*<IndentTodoToolbarButton />*/}
 
             <OutdentToolbarButton />
             <IndentToolbarButton />

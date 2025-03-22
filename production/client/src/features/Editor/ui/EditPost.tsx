@@ -19,13 +19,13 @@ export const EditPost = () => {
   return (
     <section className={"mt-4 ml-4 relative flex justify-center max-w-full"}
     >
-      <div className={"max-w-[90%] overflow-x-auto"}>
+      <div className={"max-w-[90%] overflow-x-auto max-h-screen overflow-y-auto"}>
         <div>
           <FixedToolbar>
             <FixedToolbarButtons />
           </FixedToolbar>
 
-          <Editor />
+          <Editor className={''} />
 
           <FloatingToolbar>
             <FloatingToolbarButtons />

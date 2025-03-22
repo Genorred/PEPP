@@ -91,7 +91,7 @@ export const Editor = React.forwardRef<HTMLDivElement, EditorProps>(
             disabled,
             focused,
             variant
-          }),
+          }), "font-light",
           className
         )}
         disabled={disabled}

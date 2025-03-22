@@ -6,11 +6,11 @@ import { LinkFloatingToolbar } from "@/entities/Post/ui/plate-ui/link-floating-t
 import { ImagePlugin, MediaEmbedPlugin } from "@udecode/plate-media/react";
 import { MentionInputPlugin, MentionPlugin } from "@udecode/plate-mention/react";
 import { TableCellHeaderPlugin, TableCellPlugin, TablePlugin, TableRowPlugin } from "@udecode/plate-table/react";
-import { TodoListPlugin } from "@udecode/plate-list/react";
+import { ListPlugin, TodoListPlugin } from "@udecode/plate-list/react";
 import { ExcalidrawPlugin } from "@udecode/plate-excalidraw/react";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import { ColumnItemPlugin, ColumnPlugin } from "@udecode/plate-layout/react";
-import { HeadingPlugin } from "@udecode/plate-heading/react";
+import { HeadingPlugin, TocPlugin } from "@udecode/plate-heading/react";
 import { DatePlugin } from "@udecode/plate-date/react";
 import {
   BoldPlugin,
@@ -70,26 +70,38 @@ import { CommentLeaf } from "@/entities/Post/ui/plate-ui/comment-leaf";
 import { HighlightLeaf } from "@/entities/Post/ui/plate-ui/highlight-leaf";
 import { KbdLeaf } from "@/entities/Post/ui/plate-ui/kbd-leaf";
 import React from "react";
+import { CodeBlockPlugin, CodeLinePlugin, CodeSyntaxPlugin } from "@udecode/plate-code-block/react";
+import { CodeLineElement } from "@/entities/Post/ui/plate-ui/code-line-element";
+import { CodeSyntaxLeaf } from "@/entities/Post/ui/plate-ui/code-syntax-leaf";
+import { CodeBlockElement } from "@/entities/Post/ui/plate-ui/code-block-element";
+import { TabbablePlugin } from "@udecode/plate-tabbable/react";
+import { TrailingBlockPlugin } from "@udecode/plate-trailing-block";
 
+console.log(TodoListPlugin.key);
+console.log(ListPlugin.key);
 export const editor = createPlateEditor({
-  options:{},
   plugins: [
-    ParagraphPlugin,
     BlockquotePlugin,
+    CodeBlockPlugin,
+    ParagraphPlugin,
+    HeadingPlugin,
     HorizontalRulePlugin,
     LinkPlugin.configure({
-      render: { afterEditable: () => <LinkFloatingToolbar /> }
+      render: { afterEditable: () => <LinkFloatingToolbar /> },
     }),
     ImagePlugin,
+    // ExcalidrawPlugin,
+    TogglePlugin,
+    ColumnPlugin,
     MediaEmbedPlugin,
     MentionPlugin,
     TablePlugin,
     TodoListPlugin,
-    ExcalidrawPlugin,
-    TogglePlugin,
-    ColumnPlugin,
-    HeadingPlugin,
     DatePlugin,
+    TocPlugin,
+    CaptionPlugin.configure({
+      options: { plugins: [ImagePlugin, MediaEmbedPlugin] },
+    }),
     BoldPlugin,
     ItalicPlugin,
     UnderlinePlugin,
@@ -103,108 +115,112 @@ export const editor = createPlateEditor({
     HighlightPlugin,
     KbdPlugin,
     AlignPlugin.configure({
-      inject: { targetPlugins: ["p", "h1", "h2", "h3"] }
+      inject: { targetPlugins: ['p', 'h1', 'h2', 'h3'] },
     }),
     IndentPlugin.configure({
-      inject: { targetPlugins: ["p", "h1", "h2", "h3"] }
+      inject: { targetPlugins: ['p', 'h1', 'h2', 'h3'] },
     }),
     IndentListPlugin.configure({
-      inject: { targetPlugins: ["p", "h1", "h2", "h3"] }
+      inject: { targetPlugins: ['p', 'h1', 'h2', 'h3'] },
     }),
     LineHeightPlugin.configure({
       inject: {
         nodeProps: {
           defaultNodeValue: 1.5,
-          validNodeValues: [1, 1.2, 1.5, 2, 3]
+          validNodeValues: [1, 1.2, 1.5, 2, 3],
         },
-        targetPlugins: ["p", "h1", "h2", "h3"]
-      }
+        targetPlugins: ['p', 'h1', 'h2', 'h3'],
+      },
     }),
-    CommentsPlugin,
     AutoformatPlugin.configure({
       options: {
         enableUndoOnDelete: true,
         rules: [
           // Usage: https://platejs.org/docs/autoformat
-        ]
-      }
+        ],
+      },
     }),
     BlockSelectionPlugin,
-    BlockMenuPlugin,
-    CaptionPlugin.configure({
-      options: { plugins: [ImagePlugin, MediaEmbedPlugin] }
-    }),
-    DndPlugin.configure({
-      options: { enableScroller: true }
-    }),
     EmojiPlugin,
     ExitBreakPlugin.configure({
       options: {
         rules: [
           {
-            hotkey: "mod+enter"
+            hotkey: 'mod+enter',
           },
           {
             before: true,
-            hotkey: "mod+shift+enter"
+            hotkey: 'mod+shift+enter',
           },
           {
-            hotkey: "enter",
+            hotkey: 'enter',
             level: 1,
             query: {
-              allow: ["h1", "h2", "h3"],
+              allow: ['h1', 'h2', 'h3'],
               end: true,
-              start: true
+              start: true,
             },
-            relative: true
-          }
-        ]
-      }
+            relative: true,
+          },
+        ],
+      },
     }),
     NodeIdPlugin,
     ResetNodePlugin.configure({
       options: {
         rules: [
           // Usage: https://platejs.org/docs/reset-node
-        ]
-      }
+        ],
+      },
     }),
     DeletePlugin,
     SoftBreakPlugin.configure({
       options: {
         rules: [
-          { hotkey: "shift+enter" },
+          { hotkey: 'shift+enter' },
           {
-            hotkey: "enter",
+            hotkey: 'enter',
             query: {
-              allow: ["code_block", "blockquote", "td", "th"]
-            }
-          }
-        ]
-      }
+              allow: ['code_block', 'blockquote', 'td', 'th'],
+            },
+          },
+        ],
+      },
+    }),
+    TabbablePlugin,
+    CommentsPlugin,
+    BlockMenuPlugin,
+    DndPlugin.configure({
+      options: { enableScroller: true },
+    }),
+    TrailingBlockPlugin.configure({
+      options: { type: 'p' },
     }),
     SlashPlugin,
     DocxPlugin,
     CsvPlugin,
     MarkdownPlugin,
-    JuicePlugin
+    JuicePlugin,
   ],
   override: {
     components: withDraggables(withPlaceholders(({
       [BlockquotePlugin.key]: BlockquoteElement,
-      [ExcalidrawPlugin.key]: ExcalidrawElement,
+      [CodeBlockPlugin.key]: CodeBlockElement,
+      [CodeLinePlugin.key]: CodeLineElement,
+      [CodeSyntaxPlugin.key]: CodeSyntaxLeaf,
+      // [ExcalidrawPlugin.key]: ExcalidrawElement,
       [HorizontalRulePlugin.key]: HrElement,
       [ImagePlugin.key]: ImageElement,
       [LinkPlugin.key]: LinkElement,
       [TogglePlugin.key]: ToggleElement,
       [ColumnPlugin.key]: ColumnGroupElement,
       [ColumnItemPlugin.key]: ColumnElement,
-      [HEADING_KEYS.h1]: withProps(HeadingElement, { variant: "h1" }),
-      [HEADING_KEYS.h2]: withProps(HeadingElement, { variant: "h2" }),
-      [HEADING_KEYS.h3]: withProps(HeadingElement, { variant: "h3" }),
-      [HEADING_KEYS.h4]: withProps(HeadingElement, { variant: "h4" }),
-      [HEADING_KEYS.h5]: withProps(HeadingElement, { variant: "h5" }),
-      [HEADING_KEYS.h6]: withProps(HeadingElement, { variant: "h6" }),
+      [HEADING_KEYS.h1]: withProps(HeadingElement, { variant: 'h1' }),
+      [HEADING_KEYS.h2]: withProps(HeadingElement, { variant: 'h2' }),
+      [HEADING_KEYS.h3]: withProps(HeadingElement, { variant: 'h3' }),
+      [HEADING_KEYS.h4]: withProps(HeadingElement, { variant: 'h4' }),
+      [HEADING_KEYS.h5]: withProps(HeadingElement, { variant: 'h5' }),
+      [HEADING_KEYS.h6]: withProps(HeadingElement, { variant: 'h6' }),
       [MediaEmbedPlugin.key]: MediaEmbedElement,
       [MentionPlugin.key]: MentionElement,
       [MentionInputPlugin.key]: MentionInputElement,
@@ -215,17 +231,17 @@ export const editor = createPlateEditor({
       [TableCellHeaderPlugin.key]: TableCellHeaderElement,
       [TodoListPlugin.key]: TodoListElement,
       [DatePlugin.key]: DateElement,
-      [BoldPlugin.key]: withProps(PlateLeaf, { as: "strong" }),
+      [BoldPlugin.key]: withProps(PlateLeaf, { as: 'strong' }),
       [CodePlugin.key]: CodeLeaf,
       [CommentsPlugin.key]: CommentLeaf,
       [HighlightPlugin.key]: HighlightLeaf,
-      [ItalicPlugin.key]: withProps(PlateLeaf, { as: "em" }),
+      [ItalicPlugin.key]: withProps(PlateLeaf, { as: 'em' }),
       [KbdPlugin.key]: KbdLeaf,
-      [StrikethroughPlugin.key]: withProps(PlateLeaf, { as: "s" }),
-      [SubscriptPlugin.key]: withProps(PlateLeaf, { as: "sub" }),
-      [SuperscriptPlugin.key]: withProps(PlateLeaf, { as: "sup" }),
-      [UnderlinePlugin.key]: withProps(PlateLeaf, { as: "u" })
-    })))
+      [StrikethroughPlugin.key]: withProps(PlateLeaf, { as: 's' }),
+      [SubscriptPlugin.key]: withProps(PlateLeaf, { as: 'sub' }),
+      [SuperscriptPlugin.key]: withProps(PlateLeaf, { as: 'sup' }),
+      [UnderlinePlugin.key]: withProps(PlateLeaf, { as: 'u' }),
+    }))),
   },
   value: [
     {

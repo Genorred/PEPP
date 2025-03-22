@@ -73,12 +73,12 @@ const turnIntoItems = [
     label: "Numbered list",
     value: ListStyleType.Decimal
   },
-  {
-    icon: <SquareIcon />,
-    keywords: ["checklist", "task", "checkbox", "[]"],
-    label: "To-do list",
-    value: INDENT_LIST_KEYS.todo
-  },
+  // {
+  //   icon: <SquareIcon />,
+  //   keywords: ["checklist", "task", "checkbox", "[]"],
+  //   label: "To-do list",
+  //   value: INDENT_LIST_KEYS.todo
+  // },
   {
     icon: <ChevronRightIcon />,
     keywords: ["collapsible", "expandable"],

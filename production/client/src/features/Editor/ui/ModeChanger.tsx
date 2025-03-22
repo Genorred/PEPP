@@ -16,7 +16,7 @@ const ModeChanger = () => {
       </div>
       <section
         className={`max-w-full-mobile flex-col overflow-hidden text-nowrap transition-all ${isReadonly ? "basis-0 p-0" : "basis-auto flex-1 shrink-0 p-8"}`}>
-        <h4 className={"text-nowrap"}>You should save your work</h4>
+        <h4 className={"text-nowrap mb-4"}>Save your work here!</h4>
         <Suspense fallback={null}>
           <SaveWork />
         </Suspense>
