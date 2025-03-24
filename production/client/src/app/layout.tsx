@@ -37,9 +37,9 @@ export default function RootLayout({
     <script src="https://flackr.github.io/scroll-timeline/dist/scroll-timeline.js"></script>
     <Theme>
     <Providers>
-      <main>
+      <main className='min-h-screen flex-col flex'>
         <Navbar />
-        <div className="font-bold relative">
+        <div className="font-bold relative flex-1">
           {children}
         </div>
         <Footer />
