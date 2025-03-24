@@ -34,8 +34,8 @@ model Version {
   body             Json[]
   userId           Int
   rating           Int?
-  commentsQuantity Int?
-  reviewsQuantity  Int?
+  commentsQuantity Int?     @default(0)
+  reviewsQuantity  Int?     @default(0)
   minutes          Int?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -70,8 +70,8 @@ model Post {
   description      String?
   rating           Int?
   img              String?
-  commentsQuantity Int?
-  reviewsQuantity  Int?
+  commentsQuantity Int?     @default(0)
+  reviewsQuantity  Int?     @default(0)
   minutes          Int?
   body             Json[]
   userId           Int
