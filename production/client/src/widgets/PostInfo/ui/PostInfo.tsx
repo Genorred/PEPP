@@ -5,6 +5,7 @@ import { ThoughtsDialog } from "@/entities/Post/ui/ThoughtsDialog";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import { useIntersectionObserver } from "usehooks-ts";
 import FloatingModal from "@/widgets/PostInfo/ui/FloatingModal";
+import Link from "next/link";
 
 
 export function PostInfo(props: Omit<PostQuery["post"], "body"> & { id: number }) {
@@ -30,7 +31,7 @@ export function PostInfo(props: Omit<PostQuery["post"], "body"> & { id: number }
       <h1 className="text-4xl font-semibold text-gray-900 mb-4">
         {title}
       </h1>
-      <div className="flex items-center mb-4">
+      <Link href={"/profile/" + id} className="flex items-center gap-2 mb-4">
         {user?.img
           ?
           <Image
@@ -49,7 +50,7 @@ export function PostInfo(props: Omit<PostQuery["post"], "body"> & { id: number }
             {createdAt}
           </p>
         </div>
-      </div>
+      </Link>
 
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>

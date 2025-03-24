@@ -10,6 +10,8 @@ import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
 import { CreateReplyInput } from "../domain/dto/comments/create-reply.input";
 import { GetByUserDto } from "../domain/dto/comments/get-by-user.dto";
 import { SortOrder } from "../domain/entities/types/sort-order";
+import { retryOperation } from "@_shared/utils/retryOperation";
+import { ClientCacheRepository } from "../domain/repositories/client.cache.repository";
 
 const page = 20;
 
@@ -18,6 +20,7 @@ export class CommentsUseCase {
   constructor(
     private readonly transaction: Transaction,
     private readonly commentsRepository: CommentsRepository,
+    private readonly clientCacheRepository: ClientCacheRepository,
     private readonly postsRepository: PostsRepository
   ) {
   }
@@ -36,14 +39,15 @@ export class CommentsUseCase {
   }
 
   async addCommentToPost({ postId, ...data }: CurrentUserExtendT<CreateCommentInput>) {
-    return (await this.transaction.exec([
+    const res = (await this.transaction.exec([
       this.commentsRepository.create({
         ...data,
         postId
       }),
       this.postsRepository.incrementComments(postId)
     ]))[0];
-
+    await retryOperation(() => this.clientCacheRepository.revalidatePost(postId, data.userId), 5, 500);
+    return res
   }
 
   async getByPost(getByPostInput: GetByPostInput): Promise<CommentsByPost> {
