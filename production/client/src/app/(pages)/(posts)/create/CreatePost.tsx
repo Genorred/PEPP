@@ -10,7 +10,7 @@ import { CommentsPopover } from "@/entities/Post/ui/plate-ui/comments-popover";
 import { Editor } from "@/entities/Post/ui/plate-ui/editor";
 import { useDispatch } from "react-redux";
 import { focusedPostSlice } from "@/features/Editor/model/focused-post.slice";
-import { useEditorRef, useEditorValue } from "@udecode/plate-common/react";
+import { useEditorRef } from "@udecode/plate-common/react";
 
 export default function CreatePost() {
   const dispatch = useDispatch();
@@ -23,9 +23,9 @@ export default function CreatePost() {
     children: [{ text: "Title!" }]
   }]);
   return (
-    <section className={"mt-4 ml-4 relative flex justify-center max-w-full"}
+    <section className={"mt-4 ml-4 relative flex justify-center max-w-full max-lg:flex-col-reverse"}
     >
-      <div className={"max-w-[90%] overflow-x-auto max-h-screen overflow-y-auto"}>
+      <div className={"max-w-[90%] overflow-x-auto max-h-screen overflow-y-auto flex-1"}>
         <div>
           <FixedToolbar>
             <FixedToolbarButtons />

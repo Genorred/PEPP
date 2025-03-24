@@ -17,15 +17,15 @@ export const EditPost = () => {
   console.log(data, "goalll");
   usePostEditor(data?.body);
   return (
-    <section className={"mt-4 ml-4 relative flex justify-center max-w-full"}
+    <section className={"mt-4 ml-4 relative flex justify-center max-w-full max-lg:flex-col-reverse"}
     >
-      <div className={"max-w-[90%] overflow-x-auto max-h-screen overflow-y-auto"}>
+      <div className={"max-w-[90%] overflow-x-auto max-h-screen overflow-y-auto flex-1"}>
         <div>
           <FixedToolbar>
             <FixedToolbarButtons />
           </FixedToolbar>
 
-          <Editor className={''} />
+          <Editor />
 
           <FloatingToolbar>
             <FloatingToolbarButtons />
@@ -36,5 +36,6 @@ export const EditPost = () => {
       </div>
       <ModeChanger />
     </section>
+
   );
 };

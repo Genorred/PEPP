@@ -47,7 +47,7 @@ export function FixedToolbarButtons() {
   const readOnly = useEditorReadOnly();
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full justify-center">
       {!readOnly && (
         <>
           <ToolbarGroup>
@@ -123,7 +123,7 @@ export function FixedToolbarButtons() {
         </>
       )}
 
-      <div className="grow" />
+      {/*<div className="grow" />*/}
 
 
     </div>
