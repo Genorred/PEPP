@@ -1,4 +1,5 @@
 export class CountCommentsDto {
-  userId?: number;
   postId?: number;
+  userId?: number;
+  parentId?: number;
 }

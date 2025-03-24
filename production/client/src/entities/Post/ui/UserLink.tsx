@@ -9,7 +9,7 @@ const UserLink = ({ userId, userImg, username, occupation }: {
   occupation?: string | null
 }) => {
   return (
-    <Link href={"/user/" + userId}>
+    <Link href={"/profile/" + userId}>
       <div className="flex items-center space-x-2">
         <Avatar>
           <AvatarImage src={userImg} alt="Dr. Jane Smith" />

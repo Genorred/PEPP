@@ -8,7 +8,7 @@ import { UserCommentsFilterState } from "@/app/(pages)/(user)/profile/[id]/domai
 import { userCommentsFiltersSlice } from "./comments-filters.slice";
 import { Checkbox } from "@/shared/ui/checkbox";
 
-const UserPostsFilters = () => {
+const UserCommentsFilter = () => {
   const { control, handleSubmit, watch, setValue } = useForm<UserCommentsFilterState>({
     defaultValues: {
       createdAt: null,
@@ -86,4 +86,4 @@ const UserPostsFilters = () => {
   );
 };
 
-export default UserPostsFilters;
+export default UserCommentsFilter;

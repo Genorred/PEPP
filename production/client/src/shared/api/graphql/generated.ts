@@ -683,7 +683,7 @@ export type GetCommentsByPostIdQueryVariables = Exact<{
 }>;
 
 
-export type GetCommentsByPostIdQuery = { __typename?: 'Query', comments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img?: string | null } }> } };
+export type GetCommentsByPostIdQuery = { __typename?: 'Query', comments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img?: string | null, id: number } }> } };
 
 export type GetCommentsByUserIdQueryVariables = Exact<{
   userId: Scalars['Int']['input'];
@@ -694,7 +694,7 @@ export type GetCommentsByUserIdQueryVariables = Exact<{
 }>;
 
 
-export type GetCommentsByUserIdQuery = { __typename?: 'Query', userComments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, postId: number, parentId?: number | null, user: { __typename?: 'User', username: string, img?: string | null }, post: { __typename?: 'Post', title: string, user: { __typename?: 'User', username: string } } }> } };
+export type GetCommentsByUserIdQuery = { __typename?: 'Query', userComments: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, postId: number, parentId?: number | null, user: { __typename?: 'User', username: string, img?: string | null, id: number }, post: { __typename?: 'Post', title: string, user: { __typename?: 'User', username: string } } }> } };
 
 export type DraftQueryVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -721,7 +721,7 @@ export type GetRepliesQueryVariables = Exact<{
 }>;
 
 
-export type GetRepliesQuery = { __typename?: 'Query', replies: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', respondedCommentId?: number | null, id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', username: string, img?: string | null } }> } };
+export type GetRepliesQuery = { __typename?: 'Query', replies: { __typename?: 'CommentsByPost', totalPages: number, data: Array<{ __typename?: 'Comment', respondedCommentId?: number | null, id: number, message: string, likes: number, dislikes: number, repliesQuantity: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, username: string, img?: string | null } }> } };
 
 export type TopicsQueryVariables = Exact<{
   title?: InputMaybe<Scalars['String']['input']>;
@@ -1173,6 +1173,7 @@ export const GetCommentsByPostIdDocument = `
       user {
         username
         img
+        id
       }
       createdAt
       updatedAt
@@ -1233,6 +1234,7 @@ export const GetCommentsByUserIdDocument = `
       user {
         username
         img
+        id
       }
       createdAt
       updatedAt
@@ -1467,6 +1469,7 @@ export const GetRepliesDocument = `
       dislikes
       repliesQuantity
       user {
+        id
         username
         img
       }

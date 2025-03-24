@@ -10,8 +10,8 @@ import { FindPostDto } from "../../domain/dto/posts/find-post.dto";
 import { RemovePostDto } from "../../domain/dto/posts/remove-post.dto";
 import { TopicsPrismaRepository } from "./topics.prisma.repository";
 import { DMMF } from "@prisma/client/runtime/library";
+import { CountCommentsByPostDto } from "../../domain/dto/comments/count-comments-by-post.dto";
 import SortOrder = DMMF.SortOrder;
-import { CountCommentsDto } from "src/domain/dto/comments/count-comments.dto";
 
 @Injectable()
 export class PostsRepositoryImpl implements PostsRepository {
@@ -30,7 +30,7 @@ export class PostsRepositoryImpl implements PostsRepository {
       },
       include: {
         topics: true,
-        subTopics: true,
+        subTopics: true
       }
     });
   }
@@ -60,12 +60,19 @@ export class PostsRepositoryImpl implements PostsRepository {
 
   findMany(input: FindManyDto): Promise<Post[]> {
     const { ids, id, take, skip, topics, subTopics, topicsOrSubTopics, rating, createdAt, ...rest } = input;
+    const orderByParams = [];
+
+    if (createdAt) {
+      orderByParams.push({ createdAt: createdAt.toLowerCase() as SortOrder });
+    }
+
+    if (rating) {
+      orderByParams.push({ rating: rating.toLowerCase() as SortOrder });
+    }
+
     return this.prismaService.post.findMany(
       {
-        orderBy: {
-          rating: rating?.toLowerCase() as SortOrder,
-          createdAt: createdAt?.toLowerCase() as SortOrder
-        },
+        orderBy: orderByParams,
         ...this._findPostsParams(input),
         include: {
           topics: true,
@@ -122,12 +129,11 @@ export class PostsRepositoryImpl implements PostsRepository {
     } as const;
   }
 
-  async getCommentsQuantity(countComments: CountCommentsDto): Promise<number> {
-    const {postId, userId} = countComments
+  async getCommentsQuantity(countComments: CountCommentsByPostDto): Promise<number> {
+    const { postId } = countComments;
     return (await this.prismaService.post.findFirst({
       where: {
         id: postId,
-        userId
       },
       select: {
         commentsQuantity: true

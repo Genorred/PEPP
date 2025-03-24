@@ -10,6 +10,7 @@ import CommentForm from "@/app/(pages)/(posts)/post/[id]/CommentForm";
 
 export interface UserCommentTemplateI {
   username: string;
+  id: number
   img?: string | null;
 }
 

@@ -4,7 +4,7 @@ import { FindManyDto } from "../../dto/posts/find-many.dto";
 import { RemovePostDto } from "../../dto/posts/remove-post.dto";
 import { FindPostDto } from "../../dto/posts/find-post.dto";
 import { UpdatePostInputService } from "../../dto/posts/update-post.dto";
-import { CountCommentsDto } from "../../dto/comments/count-comments.dto";
+import { CountCommentsByPostDto } from "../../dto/comments/count-comments-by-post.dto";
 
 export abstract class PostsRepository {
   abstract create(input: CreatePostServiceDto): Promise<Post>;
@@ -21,5 +21,5 @@ export abstract class PostsRepository {
 
   abstract incrementComments(postId: number): Promise<Post>;
 
-  abstract getCommentsQuantity(countComments: CountCommentsDto): Promise<number>;
+  abstract getCommentsQuantity(countComments: CountCommentsByPostDto): Promise<number>;
 }

@@ -26,8 +26,8 @@ const UserPosts = ({ userId }: {
     isLoading
   } = useGetUserPostsQuery({
     ...other,
-    rating: rating ? rating.toUpperCase() as SortOrder || undefined : undefined,
-    createdAt: createdAt ? createdAt.toUpperCase() as SortOrder || undefined : undefined,
+    rating: (rating ? rating.toUpperCase() : "DESC") as SortOrder,
+    createdAt: (createdAt ? createdAt.toUpperCase() : "DESC") as SortOrder,
     userId,
     skipPages: page
   });
@@ -51,16 +51,16 @@ const UserPosts = ({ userId }: {
       {data?.userPosts.totalPages
         ?
         <>
-          <Container className='!px-4' variant={"section"}>
+          <Container className="!px-4 flex flex-col gap-4" variant={"section"}>
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious href="#" onClick={onPaginate(-1)} />
+                  <PaginationPrevious  onClick={onPaginate(-1)} />
                 </PaginationItem>
                 {
                   Array.from({ length: data?.userPosts.totalPages }).map((value, index) => (
                     <PaginationItem key={index}>
-                      <PaginationLink href="#" onClick={onSetPage(index)}>
+                      <PaginationLink onClick={onSetPage(index)}>
                         {index + 1}
                       </PaginationLink>
                     </PaginationItem>
@@ -70,7 +70,7 @@ const UserPosts = ({ userId }: {
                   <PaginationEllipsis />
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationNext href="#" onClick={onPaginate(1)} />
+                  <PaginationNext onClick={onPaginate(1)} />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>

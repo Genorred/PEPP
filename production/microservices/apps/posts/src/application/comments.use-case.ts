@@ -86,12 +86,13 @@ export class CommentsUseCase {
         }),
         createdAt: sortByDate === SortOrder.ASC ? "asc" : "desc"
       }),
-      this.postsRepository.getCommentsQuantity({ userId })
+      this.commentsRepository.count({ userId })
     ]);
+    console.log('user comments count', totalCount);
     console.log(data);
     return {
       data,
-      totalPages: Math.max(Math.floor(totalCount / page), 1)
+      totalPages: Math.max(Math.ceil(totalCount / page), 1)
     };
   }
 

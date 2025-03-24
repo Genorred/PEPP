@@ -4,6 +4,7 @@ import { Comment } from "../../entities/comment.entity";
 import { CreateReplyInput } from "../../dto/comments/create-reply.input";
 import { FindManyInput } from "../../dto/comments/find-many.input";
 import { UpdateCommentInput } from "../../dto/comments/update-comment.input";
+import { CountCommentsDto } from "../../dto/comments/count-comments.dto";
 
 export const COMMENTS_REPOSITORY_TOKEN = Symbol("CommentsRepository");
 
@@ -13,6 +14,8 @@ export abstract class CommentsRepository {
   abstract createReply(input: CurrentUserExtendT<CreateReplyInput>): Promise<Comment>;
 
   abstract findMany(input: FindManyInput): Promise<Comment[]>;
+
+  abstract count(input: CountCommentsDto): Promise<number>;
 
   abstract findOne(id: number): Promise<Comment>;
 

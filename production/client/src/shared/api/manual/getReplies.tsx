@@ -15,6 +15,7 @@ const getReplies = graphql(`
                 dislikes
                 repliesQuantity
                 user {
+                    id
                     username
                     img
                 }

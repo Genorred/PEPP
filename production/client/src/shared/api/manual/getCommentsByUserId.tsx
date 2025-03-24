@@ -21,6 +21,7 @@ const getCommentsByUserId = graphql(`
                 user {
                     username
                     img
+                    id
                 }
                 createdAt
                 updatedAt

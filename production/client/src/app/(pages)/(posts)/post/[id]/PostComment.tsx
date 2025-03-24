@@ -11,6 +11,7 @@ import { userSlice } from "@/entities/User/model/user.slice";
 import { GetRepliesQuery, useCreateReplyMutation } from "@/shared/api/graphql/generated";
 import Reply from "@/app/(pages)/(posts)/post/[id]/Reply";
 import { Separator } from "@/shared/ui/separator";
+import Link from "next/link";
 
 const PostComment = ({ comment }: {
   comment: CommentTemplateI & {
@@ -39,7 +40,7 @@ const PostComment = ({ comment }: {
       parentId: comment.id,
       postId: comment.postId,
       respondedCommentId
-    }, {onError});
+    }, { onError });
   };
 
   const [showReplies, setShowReplies] = useState(false);
@@ -54,24 +55,27 @@ const PostComment = ({ comment }: {
     <Card className={"w-full mb-4"}>
       <CardContent className="pt-4">
         <div className="flex items-center mb-4">
-          {comment.user.img ? (
-            <Image
-              src={comment.user.img}
-              alt={comment.user.username}
-              width={40}
-              height={40}
-              className="rounded-full mr-3"
-            />
-          ) : (
-            <div className="w-10 h-10 bg-gray-200 rounded-full mr-3" />
-          )}
-          <div>
-            <h3 className="font-semibold">{comment.user.username}</h3>
-            <p className="text-sm text-muted-foreground flex items-center">
-              <CalendarIcon className="w-4 h-4 mr-1" />
-              {comment.createdAt}
-            </p>
-          </div>
+          <Link href={`/profile/${comment.user.id}`}
+                className="flex items-center">
+            {comment.user.img ? (
+              <Image
+                src={comment.user.img}
+                alt={comment.user.username}
+                width={40}
+                height={40}
+                className="rounded-full mr-3"
+              />
+            ) : (
+              <div className="w-10 h-10 bg-gray-200 rounded-full mr-3" />
+            )}
+            <div>
+              <h3 className="font-semibold">{comment.user.username}</h3>
+              <p className="text-sm text-muted-foreground flex items-center">
+                <CalendarIcon className="w-4 h-4 mr-1" />
+                {comment.createdAt}
+              </p>
+            </div>
+          </Link>
         </div>
         <p className="mb-4 break-words">{comment.message}</p>
         <div className="flex items-center space-x-2">

@@ -26,8 +26,8 @@ const UserComments = ({ userId }: {
     data,
     isLoading
   } = useGetCommentsByUserIdQuery({
-    sortByPopularity: popularity ? popularity.toUpperCase() as SortOrder || undefined : undefined,
-    sortByDate: createdAt ? createdAt.toUpperCase() as SortOrder || undefined : undefined,
+    sortByPopularity: (popularity ? popularity.toUpperCase() : "DESC") as SortOrder,
+    sortByDate: (createdAt ? createdAt.toUpperCase() : "DESC") as SortOrder,
     userId,
     isNotReply: !showReplies,
     skipPages: page
@@ -53,16 +53,16 @@ const UserComments = ({ userId }: {
       {data?.userComments.data.length
         ?
         <>
-          <Container className="flex flex-col gap-4" variant={"section"}>
+          <Container className="!px-4 flex flex-col gap-4" variant={"section"}>
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
-                  <PaginationPrevious href="#" onClick={onPaginate(-1)} />
+                  <PaginationPrevious onClick={onPaginate(-1)} />
                 </PaginationItem>
                 {
                   Array.from({ length: data?.userComments.totalPages }).map((value, index) => (
                     <PaginationItem key={index}>
-                      <PaginationLink href="#" onClick={onSetPage(index)}>
+                      <PaginationLink onClick={onSetPage(index)}>
                         {index + 1}
                       </PaginationLink>
                     </PaginationItem>
@@ -72,7 +72,7 @@ const UserComments = ({ userId }: {
                   <PaginationEllipsis />
                 </PaginationItem>
                 <PaginationItem>
-                  <PaginationNext href="#" onClick={onPaginate(1)} />
+                  <PaginationNext onClick={onPaginate(1)} />
                 </PaginationItem>
               </PaginationContent>
             </Pagination>

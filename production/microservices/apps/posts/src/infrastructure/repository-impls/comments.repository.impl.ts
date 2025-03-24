@@ -8,6 +8,7 @@ import { CreateReplyInput } from "../../domain/dto/comments/create-reply.input";
 import { Prisma } from ".prisma/client";
 import { FindManyInput } from "../../domain/dto/comments/find-many.input";
 import { UpdateCommentInput } from "../../domain/dto/comments/update-comment.input";
+import { CountCommentsDto } from "../../domain/dto/comments/count-comments.dto";
 
 @Injectable()
 export class CommentsRepositoryImpl implements CommentsRepository {
@@ -89,6 +90,17 @@ export class CommentsRepositoryImpl implements CommentsRepository {
       }, {
         dislikes
       }] as Prisma.CommentOrderByWithRelationInput[]
+    });
+  }
+
+  count(input: CountCommentsDto): Promise<number> {
+    const { postId, userId, parentId } = input;
+    return this.prismaService.comment.count({
+      where: {
+        postId,
+        userId,
+        parentId
+      },
     });
   }
 
