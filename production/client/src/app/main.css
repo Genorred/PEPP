@@ -3,7 +3,6 @@
         font-size: clamp(3rem, 10vw, 8rem);
         line-height: clamp(3rem, 10vw, 8rem) /* 40px */;
     }
-    /*text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl*/
     to {
         font-size: clamp(2.5rem, 6vw, 3rem);
         line-height: clamp(2.5rem, 6vw, 3rem) /* 40px */;
@@ -12,9 +11,7 @@
 
 .header {
     animation: text-fading linear both;
-    /*font-size: clamp(2.5rem, 8vw, 4.5rem);*/
     animation-timeline: view();
-    /*animation-range: cover;*/
 }
 .section{
     scroll-snap-align: start;
@@ -38,18 +35,14 @@
 .horizontal-move-from-left {
     animation: horizontal-appearance-from-left ease-in-out both;
     animation-timeline: view();
-    animation-range: entry 0 entry 200px;
-    overflow: clip;
+    animation-range: entry;
 }
 .horizontal-move-from-right {
     animation: horizontal-appearance-from-right ease-in-out both;
     animation-timeline: view();
-    animation-range: entry 0 entry 200px;
-    overflow: clip;
+    animation-range: entry;
 }
 html {
-    /*overflow: scroll;*/
     scroll-behavior: smooth;
     scroll-snap-type: y mandatory;
-    scroll-padding-block: 100px;
 }
