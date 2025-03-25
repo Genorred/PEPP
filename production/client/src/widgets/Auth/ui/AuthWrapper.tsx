@@ -27,7 +27,7 @@ const AuthWrapper = ({ children, returnUrl }: {
       </h1>
       {children}
       <div className="flex mt-5 justify-center">
-        <Button onClick={SignWithGoogle}>
+        <Button onClick={SignWithGoogle} className='h-auto'>
           <div className="flex justify-center items-center gap-2">
             <Image src={GoogleIcon.src} alt={"google icon"} width={32} height={32} />
             <h3>

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { QueryDslQueryContainer, Sort } from "@elastic/elasticsearch/lib/api/typesWithBodyKey";
+import { QueryDslQueryContainer, SortCombinations } from "@elastic/elasticsearch/lib/api/typesWithBodyKey";
 import { SearchPostKey, SearchPostKeys } from "../../../domain/entities/search_post.entity";
 import { SearchDto } from "../../../domain/dto/search_posts/search.dto";
 
@@ -10,8 +10,18 @@ export class SearchQueryBuilderService {
 
   public sortSearchQuery(searchParams: SearchDto) {
     const { rating, createdAt } = searchParams;
-    return [{ rating: rating?.toLowerCase() },
-      { createdAt: createdAt?.toLowerCase() }] as Sort;
+    const sort: SortCombinations[] = [];
+    if (rating) sort.push({
+      _doc: {
+        order: rating?.toLowerCase() as "asc"
+      }
+    });
+    if (createdAt) sort.push({
+      _doc: {
+        order: createdAt?.toLowerCase() as "asc"
+      }
+    });
+    return sort;
   }
 
   public buildSearchQuery(searchParams: Omit<SearchDto, "skipPages" | "createdAt" | "rating">) {

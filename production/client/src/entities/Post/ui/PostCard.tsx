@@ -65,7 +65,7 @@ const PostCard = ({
       <CardContent className="pt-4">
         <div className="grid md:grid-cols-2 items-center gap-4 mb-4">
           {hideUser
-            ? null
+            ? <div/>
             : <UserLink
               userId={userId} userImg={user?.img ?? ""}
               occupation={user.occupation} username={user.username}
@@ -87,10 +87,10 @@ const PostCard = ({
           <Rating rating={rating} />
           <Link href={url + "#messages"} className="flex items-center space-x-2">
             <MessageCircle className="w-4 h-4" />
-            <span>{commentsQuantity} comments</span>
+            <span>{commentsQuantity || 0} comments</span>
           </Link>
           <Link href={url + "#reviews"} className="flex items-center space-x-2">
-            <span>{reviewsQuantity} reviews</span>
+            <span>{reviewsQuantity || 0} reviews</span>
           </Link>
         </div>
         <ReviewsDialog url={url} reviewList={reviewList} />

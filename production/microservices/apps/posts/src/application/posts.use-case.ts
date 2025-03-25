@@ -126,13 +126,14 @@ export class PostsUseCase {
     });
     if (userId)
       void this.preferencesService.setRecentlyShowed(userId, elasticPosts);
-    const posts = await this.postsRepository.findMany({
+    const postsData = await this.postsRepository.findMany({
       ids: elasticPosts.map(post => Number(post.id))
     });
-    console.log("response", totalPages, posts);
+
     return {
       totalPages,
-      data: posts
+      data: elasticPosts.map((post) => postsData
+        .find((postData) => postData.id === Number(post.id)))
     };
   }
 

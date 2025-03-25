@@ -3,7 +3,7 @@ import PostsFilter from "@/widgets/PostsFilter";
 import PostsList from "../../../widgets/PostsList";
 import { Metadata } from "next";
 export const metadata: Metadata = {
-  title: 'Drafts',
+  title: 'PEPP | For you',
 }
 const Page = () => {
   return (
