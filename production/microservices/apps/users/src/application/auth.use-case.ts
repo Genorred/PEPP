@@ -82,6 +82,9 @@ export class AuthUseCase {
     const { password, email } = loginInput;
 
     const user = await this.usersService.findOne({ email });
+    if (!user) {
+      throw new UnauthorizedException();
+    }
     const isCorrect = await argon2.verify(user.password, password);
     if (user && isCorrect) {
       return user;

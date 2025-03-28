@@ -10,7 +10,7 @@ export abstract class UsersRepository {
 
   abstract findManyByIds(fields: number[]): Promise<UserEntity[]>
 
-  abstract findOne(searchOptions: FindOneUserDto): Promise<UserEntity>
+  abstract findOne(searchOptions: FindOneUserDto): Promise<UserEntity | null>
 
   abstract update(id: number, updateUserInput: UpdateUserDto): Promise<UserEntity>
 

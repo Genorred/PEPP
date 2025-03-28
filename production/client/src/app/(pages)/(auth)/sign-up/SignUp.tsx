@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -63,7 +63,13 @@ const SignUp = () => {
   return (
     <AuthWrapper returnUrl={returnUrl}>
       <Form {...form}>
-        {isError && "WOAAAAH"}
+        {isError &&
+          <p
+            className={"text-sm font-medium text-destructive"}
+          >
+            Error occurred
+          </p>
+        }
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 px-4">
           <FormField
             control={form.control}
@@ -72,7 +78,7 @@ const SignUp = () => {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="username" {...field} />
                 </FormControl>
                 <FormDescription>
                   It must be unique
@@ -88,7 +94,7 @@ const SignUp = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your email" {...field} />
+                  <Input placeholder="email@gmail.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

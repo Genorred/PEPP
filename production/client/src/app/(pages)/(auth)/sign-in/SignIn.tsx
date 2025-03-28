@@ -54,7 +54,13 @@ const SignIn = () => {
   return (
     <AuthWrapper returnUrl={returnUrl}>
       <Form {...form}>
-        {isError && "WOAAAAH"}
+        {isError &&
+          <p
+            className={"text-sm font-medium text-destructive"}
+          >
+            Error occurred
+          </p>
+        }
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 px-4">
           <FormField
             control={form.control}
@@ -63,7 +69,7 @@ const SignIn = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your email" {...field} />
+                  <Input placeholder="qwerty@gmail.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
