@@ -15,17 +15,17 @@ export default [{
   //   },
   // }),
   languageOptions: {
-    parser: typescriptParser,
+    parser: typescriptParser
   },
   plugins: {
     "@typescript-eslint": typescriptEslintPlugin,
-    boundaries,
+    boundaries
   },
   settings: {
     "import/resolver": {
       typescript: {
-        alwaysTryTypes: true,
-      },
-    },
-  },
+        alwaysTryTypes: true
+      }
+    }
+  }
 }];

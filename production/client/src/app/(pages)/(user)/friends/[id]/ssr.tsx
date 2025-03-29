@@ -1,7 +1,7 @@
 import React from "react";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import IncomingRequests from "./IncomingRequests";
+import { IncomingRequests } from "@/widgets/Friends";
 
 const Ssr = async ({ userId }: {
   userId: number

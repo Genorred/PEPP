@@ -133,7 +133,7 @@ export class PostsRepositoryImpl implements PostsRepository {
     const { postId } = countComments;
     return (await this.prismaService.post.findFirst({
       where: {
-        id: postId,
+        id: postId
       },
       select: {
         commentsQuantity: true

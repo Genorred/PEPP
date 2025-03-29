@@ -1,5 +1,5 @@
 export class UpdateFriendshipDto {
   userId: number;
   isAccepted: boolean;
-  id: number
+  id: number;
 }

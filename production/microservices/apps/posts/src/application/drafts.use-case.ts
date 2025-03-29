@@ -19,7 +19,7 @@ export class DraftsUseCase {
     private readonly searchService: SearchRepository,
     private readonly transaction: Transaction,
     private readonly postsRepository: PostsRepository,
-    private readonly clientCacheRepository: ClientCacheRepository,
+    private readonly clientCacheRepository: ClientCacheRepository
   ) {
   }
 
@@ -54,7 +54,7 @@ export class DraftsUseCase {
         ...mappedTopics,
         ...data
       });
-      console.log('post', post);
+      console.log("post", post);
       try {
         await retryOperation(() => this.searchService.indexPost(post), 5, 500);
       } catch (e) {
@@ -71,7 +71,7 @@ export class DraftsUseCase {
         throw new Error("Error removing post");
       }
 
-      return post
+      return post;
 
     } else {
       const { id: dbId, isHidden, ...versionData } = await this.postsRepository.findOne({
@@ -89,7 +89,7 @@ export class DraftsUseCase {
         this.draftsRepository.remove({ id, userId })
       ]))[0];
       await retryOperation(() => this.clientCacheRepository.revalidatePost(postId, userId), 5, 500);
-      return post
+      return post;
     }
   }
 }

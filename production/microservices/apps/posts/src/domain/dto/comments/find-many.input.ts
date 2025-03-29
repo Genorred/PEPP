@@ -7,5 +7,5 @@ export class FindManyInput {
   likes?: "asc" | "desc";
   repliesQuantity?: "asc" | "desc";
   dislikes?: "asc" | "desc";
-  createdAt?: 'asc' | 'desc'
+  createdAt?: "asc" | "desc";
 }

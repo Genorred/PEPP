@@ -4,8 +4,6 @@ import React from "react";
 
 import { cn, withRef } from "@udecode/cn";
 import { useCodeBlockElementState } from "@udecode/plate-code-block/react";
-
-import { CodeBlockCombobox } from "./code-block-combobox";
 import { PlateElement } from "./plate-element";
 
 import "./code-block-element.css";

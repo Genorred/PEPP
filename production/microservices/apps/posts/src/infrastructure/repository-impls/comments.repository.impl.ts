@@ -100,7 +100,7 @@ export class CommentsRepositoryImpl implements CommentsRepository {
         postId,
         userId,
         parentId
-      },
+      }
     });
   }
 

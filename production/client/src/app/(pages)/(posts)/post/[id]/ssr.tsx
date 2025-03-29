@@ -6,7 +6,7 @@ import Edit from "./edit";
 import ViewPost from "@/app/(pages)/(posts)/post/[id]/ViewPost";
 import { PostInfo } from "@/widgets/PostInfo/ui/PostInfo";
 import Container from "@/shared/ui/Container";
-import Thoughts from "@/app/(pages)/(posts)/post/[id]/Thoughts";
+import { Thoughts } from "@/widgets/Comments";
 
 const Ssr = async ({ id, data }: {
   id: number

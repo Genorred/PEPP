@@ -143,7 +143,7 @@ export class FriendshipRepositoryImpl implements FriendshipRepository {
 
   async remove(removeInput: RemoveFriendshipDto): Promise<FriendshipEntity> {
     const { anotherUserId, authedUserId } = removeInput;
-    let response
+    let response;
     try {
       response = await this.prisma.friendship.delete({
         where: {

@@ -58,7 +58,7 @@ export class SearchRepositoryImpl implements SearchRepository {
   public async indexPost(payload: IndexDto) {
     try {
       const { id, topics, subTopics, userId, title, createdAt, description } = payload;
-      console.log('topics', topics);
+      console.log("topics", topics);
       return await this.esService.index({
         index,
         id: id.toString(),

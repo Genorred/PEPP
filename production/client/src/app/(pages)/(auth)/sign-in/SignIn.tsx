@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/ui/form";
-import { AuthWrapper } from "@/widgets/Auth";
+import { AuthWrapper } from "@/features/Auth";
 import { useLoginMutation } from "@/shared/api/graphql/generated";
 import { useDispatch, useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
@@ -45,7 +45,7 @@ const SignIn = () => {
     loginUser(values);
   }
 
-  console.log('envUrl', process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL);
+  console.log("envUrl", process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL);
   useEffect(() => {
     if (user) {
       router.push(returnUrl || "/");

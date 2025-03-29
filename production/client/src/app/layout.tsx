@@ -8,8 +8,6 @@ import { cn } from "@/shared/lib/utils";
 import "@radix-ui/themes/styles.css";
 import { Toaster } from "@/shared/ui/sonner";
 import { Theme } from "@radix-ui/themes";
-import Link from "next/link";
-import { Edit } from "lucide-react";
 import Footer from "@/widgets/Footer";
 
 export const metadata: Metadata = {
@@ -26,7 +24,7 @@ export default function RootLayout({
                                    }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log('envUrl', process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL);
+  console.log("envUrl", process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL);
   return (
     <html lang="en">
     <meta name="viewport" content="initial-scale=1, width=device-width" />
@@ -36,16 +34,16 @@ export default function RootLayout({
     )}>
     <script src="https://flackr.github.io/scroll-timeline/dist/scroll-timeline.js"></script>
     <Theme>
-    <Providers>
-      <main className='min-h-screen flex-col flex'>
-        <Navbar />
-        <div className="font-bold relative flex-1">
-          {children}
-        </div>
-        <Footer />
-        <Toaster />
-      </main>
-    </Providers>
+      <Providers>
+        <main className="min-h-screen flex-col flex">
+          <Navbar />
+          <div className="font-bold relative flex-1">
+            {children}
+          </div>
+          <Footer />
+          <Toaster />
+        </main>
+      </Providers>
     </Theme>
 
     </body>

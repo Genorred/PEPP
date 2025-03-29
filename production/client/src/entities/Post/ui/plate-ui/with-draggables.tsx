@@ -4,7 +4,6 @@ import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
 import { createNodesWithHOC, ParagraphPlugin } from "@udecode/plate-common/react";
 import { withDraggable as withDraggablePrimitive, type WithDraggableOptions } from "@udecode/plate-dnd";
-import { ExcalidrawPlugin } from "@udecode/plate-excalidraw/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
 import { ColumnPlugin } from "@udecode/plate-layout/react";
 import { BulletedListPlugin, NumberedListPlugin } from "@udecode/plate-list/react";

@@ -47,7 +47,7 @@ export class CommentsUseCase {
       this.postsRepository.incrementComments(postId)
     ]))[0];
     await retryOperation(() => this.clientCacheRepository.revalidatePost(postId, data.userId), 5, 500);
-    return res
+    return res;
   }
 
   async getByPost(getByPostInput: GetByPostInput): Promise<CommentsByPost> {
@@ -92,7 +92,7 @@ export class CommentsUseCase {
       }),
       this.commentsRepository.count({ userId })
     ]);
-    console.log('user comments count', totalCount);
+    console.log("user comments count", totalCount);
     console.log(data);
     return {
       data,

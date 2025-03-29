@@ -19,10 +19,7 @@ import {
   UsersIdsQueryVariables
 } from "@/shared/api/graphql/generated";
 import { serverApiClient } from "@/shared/api/base";
-import DynamicCarousel from "@/app/(pages)/(user)/profile/[id]/DynamicCarousel";
-import UserActivity from "./UserActivity";
-import Topics from "@/app/(pages)/(user)/profile/[id]/Topics";
-import { getTopicsSummary } from "@/app/(pages)/(user)/profile/[id]/getTopicsSummary";
+import { DynamicCarousel, getTopicsSummary, Topics, UserActivity } from "@/widgets/Profile";
 
 
 export const dynamicParams = true;
@@ -39,7 +36,7 @@ export async function generateStaticParams() {
     }));
   } catch (e) {
     console.error(e);
-    return []
+    return [];
   }
 }
 
@@ -48,6 +45,7 @@ interface Props {
     id: string
   }>;
 }
+
 export async function generateMetadata({ params }: Props) {
   const id = Number((await params).id);
   const data: GetUserProfileInfoQuery = await serverApiClient.request(GetUserProfileInfoDocument, {
@@ -55,9 +53,10 @@ export async function generateMetadata({ params }: Props) {
   } as GetUserProfileInfoQueryVariables);
 
   return {
-    title: `${data.user.username}'s Profile`,
+    title: `${data.user.username}'s Profile`
   };
 }
+
 const Page = async ({ params }: {
   params: Promise<{
     id: string
@@ -107,7 +106,7 @@ const Page = async ({ params }: {
                 .join("")}
             </AvatarFallback>
           </Avatar>
-          <Separator className='my-2' />
+          <Separator className="my-2" />
           <DynamicCarousel friends={friends} friendsCount={friendsCount.userFriendsQuantity} />
         </div>
         <div>

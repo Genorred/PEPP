@@ -1,5 +1,6 @@
 import { User as SharedUser } from "@_shared/entities/user.entity";
 import { RolesT } from "@_shared/entities/roles.entity";
+
 export class UserEntity implements SharedUser {
   id: number;
   email: string;

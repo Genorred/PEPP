@@ -22,7 +22,7 @@ export function fetcher<TData, TVariables extends {
 export const serverBaseUrl = process.env.SERVER_API_BASE_URL || "http://gateway:8080/graphql";
 export const serverApiClient = new GraphQLClient(serverBaseUrl, {
   credentials: "include",
-  cache: 'force-cache',
+  cache: "force-cache"
 });
 const onError = (error: unknown) => {
   console.log("xd");

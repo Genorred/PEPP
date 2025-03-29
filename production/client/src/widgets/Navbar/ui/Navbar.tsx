@@ -10,8 +10,7 @@ import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle
+  NavigationMenuList
 } from "@/shared/ui/navigation-menu";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/shared/ui/sheet";
 import { navPages } from "@/widgets/Navbar/consts";
@@ -67,8 +66,8 @@ function Navbar() {
                 <NavigationMenuItem key={item}>
                   <Link href={"/" + item.toLowerCase()} legacyBehavior passHref>
                     <NavigationMenuLink className={cn(buttonVariants({
-                    variant: 'link'
-                  }))}>
+                      variant: "link"
+                    }))}>
                       {item}
                     </NavigationMenuLink>
                   </Link>

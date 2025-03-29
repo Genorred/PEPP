@@ -92,7 +92,7 @@ const SaveWork = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" name={buttonNames.save} className='mr-4'>Save</Button>
+        <Button type="submit" name={buttonNames.save} className="mr-4">Save</Button>
         <Button type="submit" name={buttonNames.publish}>Publish</Button>
       </form>
     </Form>

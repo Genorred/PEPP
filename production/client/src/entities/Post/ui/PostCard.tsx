@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Review } from "@/entities/Post/model";
 import Rating from "@/entities/Post/ui/Rating";
 import PostHeader from "@/entities/Post/ui/PostHeader";
-import UserLink from "@/entities/Post/ui/UserLink";
+import UserLink from "@/entities/User/ui/UserLink";
 import ReviewsDialog from "@/entities/Post/ui/ReviewsDialog";
 import { PostRecommendationsQuery } from "@/shared/api/graphql/graphql";
 import { GetUserPostsQuery } from "@/shared/api/graphql/generated";
@@ -65,7 +65,7 @@ const PostCard = ({
       <CardContent className="pt-4">
         <div className="grid md:grid-cols-2 items-center gap-4 mb-4">
           {hideUser
-            ? <div/>
+            ? <div />
             : <UserLink
               userId={userId} userImg={user?.img ?? ""}
               occupation={user.occupation} username={user.username}

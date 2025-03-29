@@ -11,7 +11,7 @@ type State = {
 
 const initialUserState: State = {
   notifications: {
-    userRequests: 0,
+    userRequests: 0
   }
 };
 
@@ -24,10 +24,10 @@ export const notificationsSlice = createSlice({
   },
   reducers: {
     setUserRequests: (state, action: PayloadAction<number>) => {
-      state.notifications.userRequests = action.payload
+      state.notifications.userRequests = action.payload;
     },
     decreaseUserRequests: (state) => {
-      state.notifications.userRequests = Math.max(state.notifications.userRequests - 1, 0)
+      state.notifications.userRequests = Math.max(state.notifications.userRequests - 1, 0);
     }
   }
 }).injectInto(rootReducer);

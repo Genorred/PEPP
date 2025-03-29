@@ -30,7 +30,7 @@ export class PostsUseCase {
     try {
       await this.searchService.indexPost(post);
     } catch (e) {
-      await this.postsRepository.remove({id: post.id})
+      await this.postsRepository.remove({ id: post.id });
     }
     return post;
   }

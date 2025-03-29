@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  PostDocument,
-  PostQueryVariables,
-  PostsIdDocument,
-  PostsIdQuery,
-  PostsIdQueryVariables
-} from "@/shared/api/graphql/generated";
+import { PostDocument, PostQueryVariables } from "@/shared/api/graphql/generated";
 import { serverApiClient } from "@/shared/api/base";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import ViewPost from "../ViewPost";
@@ -31,7 +25,7 @@ const Page = async ({ params }: {
   const id = Number((await params).id);
   // const version = Number(params.version);
   const post: PostQuery = await serverApiClient.request(PostDocument, {
-    id,
+    id
     // version
   } as PostQueryVariables);
 

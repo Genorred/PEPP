@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: Props) {
   } as PostQueryVariables, {});
   return {
     title: data.post.title,
-    description: data.post.description,
+    description: data.post.description
   };
 }
 

@@ -4,10 +4,10 @@ import { Metadata } from "next";
 
 
 export const metadata: Metadata = {
-  title: 'Applying Google credentials',
-}
+  title: "Applying Google credentials"
+};
 const Page = () => {
-  return (<GoogleSuccess />)
+  return (<GoogleSuccess />);
 };
 
 export default Page;

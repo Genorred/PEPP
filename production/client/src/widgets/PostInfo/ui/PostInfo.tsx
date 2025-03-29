@@ -1,7 +1,7 @@
-'use client'
+"use client";
 import Image from "next/image";
 import { CalendarIcon, ClockIcon, StarIcon } from "lucide-react";
-import { ThoughtsDialog } from "@/entities/Post/ui/ThoughtsDialog";
+import { ThoughtsDialog } from "@/widgets/Comments";
 import { PostQuery } from "@/shared/api/graphql/graphql";
 import { useIntersectionObserver } from "usehooks-ts";
 import FloatingModal from "@/widgets/PostInfo/ui/FloatingModal";

@@ -59,7 +59,7 @@ export class FriendshipResolver {
 
   @UseAuth()
   @Mutation(() => Friendship, { name: "acceptFriendshipRequest" })
-  async acceptFriendshipRequest(@Args("updateFriendshipInput",) updateFriendshipInput: UpdateFriendshipInput, @CurrentUser() currentUser: CurrentUserI) {
+  async acceptFriendshipRequest(@Args("updateFriendshipInput") updateFriendshipInput: UpdateFriendshipInput, @CurrentUser() currentUser: CurrentUserI) {
     return {
       ...await this.friendshipUseCase.accept({
         userId: currentUser.sub,

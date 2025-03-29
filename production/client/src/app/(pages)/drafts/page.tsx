@@ -7,8 +7,8 @@ import Container from "@/shared/ui/Container";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'My Drafts',
-}
+  title: "My Drafts"
+};
 const Page = () => {
   return (
     <Container className="flex gap-4 flex-wrap" variant={"section"}>

@@ -8,7 +8,7 @@ import { BlockquotePlugin } from "@udecode/plate-block-quote/react";
 import { CodeBlockPlugin } from "@udecode/plate-code-block/react";
 import { focusEditor, ParagraphPlugin, useEditorRef, useSelectionFragmentProp } from "@udecode/plate-common/react";
 import { HEADING_KEYS } from "@udecode/plate-heading";
-import { INDENT_LIST_KEYS, ListStyleType } from "@udecode/plate-indent-list";
+import { ListStyleType } from "@udecode/plate-indent-list";
 import { TogglePlugin } from "@udecode/plate-toggle/react";
 import {
   ChevronRightIcon,
@@ -20,8 +20,7 @@ import {
   ListIcon,
   ListOrderedIcon,
   PilcrowIcon,
-  QuoteIcon,
-  SquareIcon
+  QuoteIcon
 } from "lucide-react";
 
 import { getBlockType, setBlockType } from "@/shared/lib/transforms";

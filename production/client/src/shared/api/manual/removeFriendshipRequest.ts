@@ -9,4 +9,4 @@ const removeFriendshipRequest = graphql(`
             id
         }
     }
-`)
+`);

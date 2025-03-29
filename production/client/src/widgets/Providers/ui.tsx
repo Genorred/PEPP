@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import { ClientProviders } from "@/widgets/Providers/clientProviders";
+import { ClientProviders } from "@/widgets/Providers/ClientProviders";
 
 const Providers = ({ children }: PropsWithChildren) => {
   return (

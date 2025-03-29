@@ -1,11 +1,10 @@
 "use client";
 import React, { useRef } from "react";
-import Image from "next/image";
 import { ArrowRight, Edit, MessageSquare, Users, Zap } from "lucide-react";
 import { Button, buttonVariants } from "@/shared/ui/button";
 import { useIntersectionObserver } from "usehooks-ts";
 import { cn } from "@/shared/lib/utils";
-import './main.css'
+import "./main.css";
 import Link from "next/link";
 
 console.log("envUrl", process.env.googleAuthUrl);
@@ -34,9 +33,9 @@ export default function Home() {
   console.log("envUrl", process.env.googleAuthUrl);
   console.log("envUrl", process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL);
   return (
-    <div className={cn( "page flex min-h-screen flex-col")}>
+    <div className={cn("page flex min-h-screen flex-col")}>
       {/* Hero Section */}
-      <section className={cn( " section relative overflow-clip py-20 md:py-32")}>
+      <section className={cn(" section relative overflow-clip py-20 md:py-32")}>
         <div className={cn("container relative z-10 mx-auto px-4 text-center sm:px-6 lg:px-8 header")}>
           <h1 className="font-extrabold tracking-tight">
             Share your <span className="text-primary">complete</span> perspective
@@ -75,7 +74,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className={cn( "max-w-full overflow-clip section py-20 bg-muted/50")}>
+      <section id="features" className={cn("max-w-full overflow-clip section py-20 bg-muted/50")}>
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
@@ -130,7 +129,7 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className={cn( "max-w-full overflow-clip section py-20")}>
+      <section id="how-it-works" className={cn("max-w-full overflow-clip section py-20")}>
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">How PEPP Works</h2>
@@ -174,7 +173,7 @@ export default function Home() {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className={cn( " section py-20 bg-muted/50")}>
+      <section id="testimonials" className={cn(" section py-20 bg-muted/50")}>
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">What Our Users Say</h2>
@@ -233,7 +232,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className={cn( " section py-20 bg-primary text-primary-foreground")}>
+      <section className={cn(" section py-20 bg-primary text-primary-foreground")}>
         <div className="container text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             Ready to share your perspective?
@@ -242,9 +241,9 @@ export default function Home() {
             Join our community today and start connecting with people who share your interests.
           </p>
           <div className="mt-10">
-            <Link href='/sign-up' className={cn(buttonVariants({
+            <Link href="/sign-up" className={cn(buttonVariants({
               variant: "secondary",
-              size: "lg",
+              size: "lg"
             }), "gap-2")}>
               Get Started Now <ArrowRight className="h-4 w-4" />
             </Link>

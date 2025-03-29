@@ -13,9 +13,11 @@
     animation: text-fading linear both;
     animation-timeline: view();
 }
-.section{
+
+.section {
     scroll-snap-align: start;
 }
+
 @keyframes horizontal-appearance-from-left {
     from {
         transform: translateX(-15%);
@@ -24,6 +26,7 @@
         transform: translateX(0%);
     }
 }
+
 @keyframes horizontal-appearance-from-right {
     from {
         transform: translateX(15%);
@@ -32,16 +35,19 @@
         transform: translateX(0%);
     }
 }
+
 .horizontal-move-from-left {
     animation: horizontal-appearance-from-left ease-in-out both;
     animation-timeline: view();
     animation-range: entry;
 }
+
 .horizontal-move-from-right {
     animation: horizontal-appearance-from-right ease-in-out both;
     animation-timeline: view();
     animation-range: entry;
 }
+
 html {
     scroll-behavior: smooth;
     scroll-snap-type: y mandatory;

@@ -1,4 +1,4 @@
-import Friends from "@/widgets/Friends/ui/Friends";
+import { Friends } from "@/widgets/Friends";
 import React from "react";
 import {
   GetUserFriendsCountDocument,
@@ -7,7 +7,8 @@ import {
   GetUserFriendsDocument,
   GetUserFriendsQuery,
   GetUserFriendsQueryVariables,
-  GetUserProfileInfoDocument, GetUserProfileInfoQuery,
+  GetUserProfileInfoDocument,
+  GetUserProfileInfoQuery,
   GetUserProfileInfoQueryVariables
 } from "@/shared/api/graphql/generated";
 import { serverApiClient } from "@/shared/api/base";
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: Props) {
   } as GetUserProfileInfoQueryVariables);
 
   return {
-    title: `${data.user.username}'s Friends`,
+    title: `${data.user.username}'s Friends`
   };
 }
 

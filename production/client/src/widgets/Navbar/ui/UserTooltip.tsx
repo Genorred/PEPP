@@ -13,7 +13,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/shar
 import { useDispatch, useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
 import { usePathname } from "next/navigation";
-import { LogIn, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { Button, buttonVariants } from "@/shared/ui/button";
 import {
   NavigationMenu,
@@ -26,7 +26,6 @@ import { getNavSettings } from "@/widgets/Navbar/consts";
 import { useLogoutMutation } from "@/shared/api/graphql/generated";
 import { toast } from "sonner";
 import { notificationsSlice } from "@/widgets/Navbar/model/notifications.slice";
-import { isEmpty } from "lodash";
 
 export const UserTooltip = () => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -50,7 +49,7 @@ export const UserTooltip = () => {
   const notifications = useSelector(notificationsSlice.selectors.notifications);
   const areAnyNotifications = useSelector(notificationsSlice.selectors.areAnyNotifications);
 
-  console.log('notifications', notifications);
+  console.log("notifications", notifications);
   return (
     <div className="ml-auto flex items-center space-x-4">
       {user
@@ -112,9 +111,9 @@ export const UserTooltip = () => {
             {
               !pathname.includes("sign-up") ?
                 <NavigationMenuItem>
-                  <Link href={`/sign-up${pathname ? "?returnUrl=" + pathname : ""}`} legacyBehavior passHref >
+                  <Link href={`/sign-up${pathname ? "?returnUrl=" + pathname : ""}`} legacyBehavior passHref>
                     <NavigationMenuLink className={buttonVariants({
-                      variant: 'default'
+                      variant: "default"
                     })}>
                       <span>Sign up</span>
                     </NavigationMenuLink>

@@ -7,7 +7,7 @@ export class ClientCacheRepositoryImpl implements ClientCacheRepository {
   constructor(@Inject(FRONTEND_SERVER.KEY) private readonly configService: ConfigType<typeof FRONTEND_SERVER>) {
   }
 
-  revalidatePost(postId:number, postUserId:number): Promise<unknown> {
+  revalidatePost(postId: number, postUserId: number): Promise<unknown> {
     return fetch(this.configService.clientRevalidateCacheUrl, {
       method: "post",
       headers: {
@@ -20,7 +20,7 @@ export class ClientCacheRepositoryImpl implements ClientCacheRepository {
         token: this.configService.token
       })
     }).catch((e: Error) => {
-      console.error('Error while revalidatePost')
+      console.error("Error while revalidatePost");
       console.error(e);
     });
     // fetch('http://client:3000/api/revalidatePost', {

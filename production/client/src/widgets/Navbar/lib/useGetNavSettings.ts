@@ -1,3 +1,3 @@
-export  const useGetNavSettings = () => {
+export const useGetNavSettings = () => {
 
-}
+};
