@@ -18,7 +18,7 @@ export interface CommentTemplateI {
   id: number;
   user: UserCommentTemplateI;
   postId: number;
-  createdAt: string;
+  createdAt: string | number;
   message: string;
 }
 

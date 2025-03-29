@@ -31,7 +31,7 @@ export function PostInfo(props: Omit<PostQuery["post"], "body"> & { id: number }
       <h1 className="text-4xl font-semibold text-gray-900 mb-4">
         {title}
       </h1>
-      <Link href={"/profile/" + id} className="flex items-center gap-2 mb-4">
+      <Link href={"/profile/" + user.id} className="flex items-center gap-2 mb-4 w-fit">
         {user?.img
           ?
           <Image

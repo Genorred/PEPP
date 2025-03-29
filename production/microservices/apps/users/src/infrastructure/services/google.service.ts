@@ -1,5 +1,5 @@
 import googleConfig from "../config/google.config";
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ConfigType } from "@nestjs/config";
 import { Profile, Strategy, VerifyCallback } from "passport-google-oauth20";
@@ -38,14 +38,20 @@ export class GoogleService extends PassportStrategy(Strategy, "google") {
     const user = {
       google_id: id,
       email: emails[0].value,
-      username: `${name.givenName} ${name.familyName}`,
+      username: `${name.givenName} ${name.familyName || ""}`.trimEnd(),
       img: photos[0].value
     };
 
-    let dbUser = await this.usersService.findOne({ google_id: id });
+    let dbUser = await this.usersService.findOne({ email: user.email });
     console.log("dbUser", dbUser);
     if (!dbUser)
-      dbUser = await this.usersService.create(user).catch(err => null);
+      try {
+        dbUser = await this.usersService.create(user);
+      } catch (err) {
+        dbUser = await this.usersService.create({ ...user, username: user.username + Math.random() });
+      }
+
+    if (!dbUser) throw new UnauthorizedException("User could not be authenticated");
     done(null, dbUser);
   }
 }

@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { UsersModule } from "./users.module";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthResolver } from "../resolvers/auth.resolver";
-import { GoogleController } from "../resolvers/google.controller";
+import { GoogleController } from "../controllers/google.controller";
 import { PassportModule } from "@nestjs/passport";
 import { GoogleService } from "../../infrastructure/services/google.service";
 import { TokenService } from "../../domain/domain-service/token.service";

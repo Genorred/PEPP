@@ -24,7 +24,7 @@ const Comments = ({ postId }: {
         id: data.createComment.id,
         ...variables,
         user: user!,
-        createdAt: "a moment ago",
+        createdAt: (new Date()).getTime(),
         repliesQuantity: 0
       }]);
     }

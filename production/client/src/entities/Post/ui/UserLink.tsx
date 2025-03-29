@@ -8,7 +8,7 @@ const UserLink = ({ userId, userImg, username, occupation, date }: {
   userImg?: string | null
   username: string
   occupation?: string | null
-  date?: string
+  date?: string | number
 }) => {
   const formattedDate = date ? new Intl.DateTimeFormat("en-US", {
     day: "numeric",

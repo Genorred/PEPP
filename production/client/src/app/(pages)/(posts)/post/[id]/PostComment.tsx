@@ -25,11 +25,11 @@ const PostComment = ({ comment }: {
         id: data.createReply.id,
         ...variables,
         user: user!,
-        createdAt: "a moment ago",
+        createdAt: (new Date()).getTime(),
         likes: 0,
         dislikes: 0,
         repliesQuantity: 0,
-        updatedAt: "a moment ago"
+        updatedAt: (new Date()).getTime()
       }]);
     }
   });

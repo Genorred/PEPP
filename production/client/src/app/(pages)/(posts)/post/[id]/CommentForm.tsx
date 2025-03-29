@@ -1,9 +1,12 @@
+'use client'
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Textarea } from "@/shared/ui/textarea";
-import { Button } from "@/shared/ui/button";
+import { Button, buttonVariants } from "@/shared/ui/button";
 import { useSelector } from "react-redux";
 import { userSlice } from "@/entities/User/model/user.slice";
 import Link from "next/link";
+import { cn } from "@/shared/lib/utils";
+import { usePathname } from "next/navigation";
 
 const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
   isReplyingState?: [boolean, Dispatch<SetStateAction<boolean>>];
@@ -34,6 +37,7 @@ const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setReplyMessage(e.target.value);
   };
+  const url = usePathname()
 
   return (
     <>
@@ -57,7 +61,9 @@ const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
           </div>
         )}
         {!user ?
-          <Link href={"/sign-in"}>Authorize</Link>
+          <Link href={`/sign-in?returnUrl=${url}`} className={cn(buttonVariants({
+            variant: 'default'
+          }), 'ml-auto')}>Authorize</Link>
           : null
         }
       </form>
