@@ -54,14 +54,14 @@ const SignIn = () => {
   return (
     <AuthWrapper returnUrl={returnUrl}>
       <Form {...form}>
-        {isError &&
-          <p
-            className={"text-sm font-medium text-destructive"}
-          >
-            Error occurred
-          </p>
-        }
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 px-4">
+          {isError &&
+            <p
+              className={"text-sm font-medium text-destructive"}
+            >
+              Error occurred
+            </p>
+          }
           <FormField
             control={form.control}
             name="email"

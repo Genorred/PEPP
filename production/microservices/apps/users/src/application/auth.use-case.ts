@@ -59,7 +59,7 @@ export class AuthUseCase {
   async login(loginInput: LoginDto, context: CustomContext) {
     const { password, ...user } = await this.validateUser(loginInput);
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Email or password incorrect');
     }
     this.tokenService.setTokens(user, context.res);
     return user;
@@ -83,7 +83,7 @@ export class AuthUseCase {
 
     const user = await this.usersService.findOne({ email });
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Email or password incorrect');
     }
     const isCorrect = await argon2.verify(user.password, password);
     if (user && isCorrect) {
