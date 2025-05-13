@@ -21,14 +21,14 @@ export class AppService {
     url.searchParams.append("token", data.token);
 
     const templateData = {
-      link: url.href,
+      link: url.href
     };
     const templateFile = path.join(__dirname, "templates/email-confirmation.pug");
     const render = pug.renderFile(templateFile, templateData);
 
     await this.mailerMain.sendMail({
       to: data.email,
-      subject: 'Email Confirmation',
+      subject: "Email Confirmation",
       html: render
     })
       .then(() => {

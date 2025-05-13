@@ -65,7 +65,7 @@ export default function Home() {
             {/*  className="rounded-2xl"*/}
             {/*  priority*/}
             {/*/>*/}
-            <video height={1200} width={600} className="rounded-2xl" ref={videoRef} autoPlay onEnded={onTryToPlay}>
+            <video height={1200} width={600} className="rounded-2xl" ref={videoRef} loop autoPlay muted playsInline  onEnded={onTryToPlay}>
               <source src="/assets/Landing_1.mp4" type="video/mp4" />
               App interface preview
             </video>
