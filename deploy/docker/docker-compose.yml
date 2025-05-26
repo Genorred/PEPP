@@ -291,7 +291,7 @@ services:
     volumes:
       - ./data:/data
   rabbitmq:
-    image: rabbitmq:management
+    image: rabbitmq:4.0-management-alpine
     container_name: rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
