@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import { useRouter } from "next/navigation";
 import GoogleIcon from "@/shared/assets/googleIcon.svg";
@@ -17,6 +18,7 @@ const AuthWrapper = ({ children, returnUrl }: {
     const url = new URL(googleAuthUrl || "http://localhost:7878/auth/google");
     if (returnUrl)
       url.searchParams.set("returnUrl", returnUrl);
+    console.log(url.href);
     router.push(url.href);
   }
 
@@ -27,7 +29,7 @@ const AuthWrapper = ({ children, returnUrl }: {
       </h1>
       {children}
       <div className="flex mt-5 justify-center">
-        <Button onClick={SignWithGoogle} className="h-auto">
+        <Button onClick={SignWithGoogle} className="h-auto" data-testid="sign-in-button">
           <div className="flex justify-center items-center gap-2">
             <Image src={GoogleIcon.src} alt={"google icon"} width={32} height={32} />
             <h3>

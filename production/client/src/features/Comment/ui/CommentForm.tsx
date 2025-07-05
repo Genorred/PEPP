@@ -43,6 +43,7 @@ const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
     <>
       <form className="mt-4" onSubmit={onSubmit}>
         <Textarea
+          data-testid="comment-form"
           disabled={!user}
           onFocus={() => setIsWriting(true)}
           onChange={onChange}
@@ -52,10 +53,11 @@ const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
         />
         {isWriting && (
           <div className="mt-4 flex justify-end space-x-2">
-            <Button variant="outline" type={"button"} size="sm" onClick={() => setIsWriting(false)}>
+            <Button variant="outline" type={"button"} size="sm" onClick={() => setIsWriting(false)}
+                    data-testid="comment-form-button-cancel">
               Cancel
             </Button>
-            <Button size="sm" disabled={replyMessage.length < 0}>
+            <Button size="sm" disabled={replyMessage.length < 0} data-testid="comment-form-button-submit">
               Submit Message
             </Button>
           </div>

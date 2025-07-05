@@ -1,75 +1,75 @@
-"use client";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Textarea } from "@/shared/ui/textarea";
-import { Button, buttonVariants } from "@/shared/ui/button";
-import { useSelector } from "react-redux";
+import { fireEvent, screen } from "@testing-library/react";
+import CommentForm from "./CommentForm";
+import { renderWithProviders } from "@/shared/utils/test-utils";
 import { userSlice } from "@/entities/User/model/user.slice";
-import Link from "next/link";
-import { cn } from "@/shared/lib/utils";
-import { usePathname } from "next/navigation";
+import "@testing-library/jest-dom";
+import userEvent from "@testing-library/user-event";
 
-const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
-  isReplyingState?: [boolean, Dispatch<SetStateAction<boolean>>];
-  onCreate: (message: string, onError?: () => void) => void;
-  placeholder?: string
-}) => {
-  const [isWriting, setIsWriting] = isReplyingState ?? useState(false);
-  const [replyMessage, setReplyMessage] = useState("");
-  const [sentReplyMessage, setSentReplyMessage] = useState("");
-  const user = useSelector(userSlice.selectors.user);
-  useEffect(() => {
-    if (!user)
-      setIsWriting(false);
-  }, [user]);
-
-
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (replyMessage.length > 0) {
-      setSentReplyMessage(replyMessage);
-      onCreate(replyMessage.trim(), () => {
-        setReplyMessage(sentReplyMessage);
-      });
-      setReplyMessage("");
-    }
-  }
-
-  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setReplyMessage(e.target.value);
-  };
-  const url = usePathname();
-
-  return (
-    <>
-      <form className="mt-4" onSubmit={onSubmit}>
-        <Textarea
-          disabled={!user}
-          onFocus={() => setIsWriting(true)}
-          onChange={onChange}
-          value={replyMessage}
-          placeholder={`Write your ${placeholder}...`}
-          className="min-h-[100px] mb-2"
-        />
-        {isWriting && (
-          <div className="mt-4 flex justify-end space-x-2">
-            <Button variant="outline" type={"button"} size="sm" onClick={() => setIsWriting(false)}>
-              Cancel
-            </Button>
-            <Button size="sm" disabled={replyMessage.length < 0}>
-              Submit Message
-            </Button>
-          </div>
-        )}
-        {!user ?
-          <Link href={`/sign-in?returnUrl=${url}`} className={cn(buttonVariants({
-            variant: "default"
-          }), "ml-auto")}>Authorize</Link>
-          : null
-        }
-      </form>
-
-    </>
-  );
+const createFunction = jest.fn();
+const userInitialState = {
+  id: 1,
+  username: "j",
+  email: "",
+  createdAt: "",
+  expireDate: 999999
 };
+describe("Comment form", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+  it("should open on focus", () => {
+    const { asFragment } = renderWithProviders(<CommentForm onCreate={createFunction} />, {
+      slices: [userSlice],
+      preloadedState: {
+        user: userInitialState
+      }
+    });
 
-export default CommentForm;
+    const textarea = screen.getByTestId("comment-form");
+    expect(screen.queryByTestId("comment-form-button-submit")).not.toBeInTheDocument();
+    fireEvent.focus(textarea);
+    expect(screen.getByTestId("comment-form-button-submit")).toBeInTheDocument();
+
+    expect(asFragment()).toMatchSnapshot();
+  });
+  it("should close on cancel button", async () => {
+    const { asFragment } = renderWithProviders(<CommentForm onCreate={createFunction} />, {
+      slices: [userSlice],
+      preloadedState: {
+        user: userInitialState
+      }
+    });
+
+    const textarea = screen.getByTestId("comment-form");
+    expect(screen.queryByTestId("comment-form-button-cancel")).not.toBeInTheDocument();
+
+    fireEvent.focus(textarea);
+    const cancelButton = screen.getByTestId("comment-form-button-cancel");
+    expect(cancelButton).toBeInTheDocument();
+
+    await userEvent.click(cancelButton);
+    expect(screen.queryByTestId("comment-form-button-cancel")).toBeNull();
+    expect(asFragment).toMatchSnapshot();
+  });
+  it("should send message on submit", async () => {
+    const { asFragment } = renderWithProviders(<CommentForm onCreate={createFunction} />, {
+      slices: [userSlice],
+      preloadedState: {
+        user: userInitialState
+      }
+    });
+    const textarea = screen.getByTestId("comment-form");
+    fireEvent.focus(textarea);
+    const message = "Satisfying";
+    fireEvent.input(textarea, {
+      target: {
+        value: message
+      }
+    });
+    expect(asFragment()).toMatchSnapshot();
+
+    await userEvent.click(screen.getByTestId("comment-form-button-submit"));
+    expect(createFunction).toHaveBeenCalledTimes(1);
+    expect(createFunction).toHaveBeenCalledWith(message, expect.anything());
+  });
+});
