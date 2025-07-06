@@ -7,7 +7,6 @@ default:
   image: node:20
   before_script:
     - corepack enable
-    - pnpm config set store-dir .pnpm-store
 
 cache:
   paths:

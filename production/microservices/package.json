@@ -3,7 +3,7 @@
   "scripts": {
     "build": "pnpm --filter '!libs/shared' run build",
     "start:dev": "pnpm --filter !shared run start:dev",
-    "test": "pnpm run test",
-    "lint": "pnpm run lint"
+    "test": "pnpm run -r test",
+    "lint": "pnpm run -r lint"
   }
 }
