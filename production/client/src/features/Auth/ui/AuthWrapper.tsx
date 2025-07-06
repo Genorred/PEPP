@@ -14,11 +14,9 @@ const AuthWrapper = ({ children, returnUrl }: {
   const googleAuthUrl = process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL as string;
 
   function SignWithGoogle() {
-    console.log(googleAuthUrl);
     const url = new URL(googleAuthUrl || "http://localhost:7878/auth/google");
     if (returnUrl)
       url.searchParams.set("returnUrl", returnUrl);
-    console.log(url.href);
     router.push(url.href);
   }
 

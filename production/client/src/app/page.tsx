@@ -7,9 +7,6 @@ import { cn } from "@/shared/lib/utils";
 import "./main.css";
 import Link from "next/link";
 
-console.log("envUrl", process.env.googleAuthUrl);
-console.log("envUrl", process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL);
-
 export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const onTryToPlay = () => {
@@ -30,8 +27,6 @@ export default function Home() {
       }
     }
   });
-  console.log("envUrl", process.env.googleAuthUrl);
-  console.log("envUrl", process.env.NEXT_PUBLIC_GOOGLE_AUTH_URL);
   return (
     <div className={cn("page flex min-h-screen flex-col")}>
       {/* Hero Section */}
