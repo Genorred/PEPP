@@ -20,5 +20,5 @@ it("Auth wrapper handles google button", () => {
 
   const url = new URL("http://localhost:7878/auth/google");
   url.searchParams.set("returnUrl", returnUrl);
-  expect(useRouter().push).toBeCalledWith(url.href);
+  expect(useRouter().push).toHaveBeenCalledWith(url.href);
 });

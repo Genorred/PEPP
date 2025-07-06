@@ -14,7 +14,9 @@ const anySlice = createSlice({
 
 interface ExtendedRenderOptions<SlicesT extends [Slice]> extends Omit<RenderOptions, "queries"> {
   slices?: SlicesT
-  preloadedState?: ReturnType<SlicesT[number]['getInitialState']>;
+  preloadedState?: {
+    [SliceItem in SlicesT[number] as SliceItem['name']]: ReturnType<SliceItem['getInitialState']>
+  };
 }
 
 export function setupStore(preloadedState?: Record<string, any>) {

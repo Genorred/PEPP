@@ -17,26 +17,48 @@ describe("Comment form", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-  it("should open on focus", () => {
+  it("should not open on focus with unauthorized user", () => {
     const { asFragment } = renderWithProviders(<CommentForm onCreate={createFunction} />, {
       slices: [userSlice],
       preloadedState: {
-        user: userInitialState
+        user: {
+          user: null
+        }
+      }
+    });
+
+    const textarea = screen.getByTestId("comment-form");
+    expect(textarea).toBeDisabled();
+    expect(screen.queryByTestId("comment-form-button-submit")).not.toBeInTheDocument();
+
+    expect(asFragment()).toMatchSnapshot();
+  });
+  it("should open on focus with authorized user", () => {
+    const { asFragment } = renderWithProviders(<CommentForm onCreate={createFunction} />, {
+      slices: [userSlice],
+      preloadedState: {
+        user: {
+          user: userInitialState
+        }
       }
     });
 
     const textarea = screen.getByTestId("comment-form");
     expect(screen.queryByTestId("comment-form-button-submit")).not.toBeInTheDocument();
+    expect(textarea).toBeEnabled();
     fireEvent.focus(textarea);
     expect(screen.getByTestId("comment-form-button-submit")).toBeInTheDocument();
 
     expect(asFragment()).toMatchSnapshot();
   });
+
   it("should close on cancel button", async () => {
     const { asFragment } = renderWithProviders(<CommentForm onCreate={createFunction} />, {
       slices: [userSlice],
       preloadedState: {
-        user: userInitialState
+        user: {
+          user: userInitialState
+        }
       }
     });
 
@@ -55,7 +77,9 @@ describe("Comment form", () => {
     const { asFragment } = renderWithProviders(<CommentForm onCreate={createFunction} />, {
       slices: [userSlice],
       preloadedState: {
-        user: userInitialState
+        user: {
+          user: userInitialState
+        }
       }
     });
     const textarea = screen.getByTestId("comment-form");

@@ -2,7 +2,7 @@
 
 exports[`Comment form should close on cancel button 1`] = `[Function]`;
 
-exports[`Comment form should open on focus 1`] = `
+exports[`Comment form should not open on focus with unauthorized user 1`] = `
 <DocumentFragment>
   <form
     class="mt-4"
@@ -11,6 +11,26 @@ exports[`Comment form should open on focus 1`] = `
       class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-[100px] mb-2"
       data-testid="comment-form"
       disabled=""
+      placeholder="Write your comment..."
+    />
+    <a
+      class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 ml-auto"
+      href="/sign-in?returnUrl=null"
+    >
+      Authorize
+    </a>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`Comment form should open on focus with authorized user 1`] = `
+<DocumentFragment>
+  <form
+    class="mt-4"
+  >
+    <textarea
+      class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-[100px] mb-2"
+      data-testid="comment-form"
       placeholder="Write your comment..."
     />
     <div
@@ -30,12 +50,6 @@ exports[`Comment form should open on focus 1`] = `
         Submit Message
       </button>
     </div>
-    <a
-      class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 ml-auto"
-      href="/sign-in?returnUrl=null"
-    >
-      Authorize
-    </a>
   </form>
 </DocumentFragment>
 `;
@@ -48,7 +62,6 @@ exports[`Comment form should send message on submit 1`] = `
     <textarea
       class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-[100px] mb-2"
       data-testid="comment-form"
-      disabled=""
       placeholder="Write your comment..."
     >
       Satisfying
@@ -70,12 +83,6 @@ exports[`Comment form should send message on submit 1`] = `
         Submit Message
       </button>
     </div>
-    <a
-      class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 ml-auto"
-      href="/sign-in?returnUrl=null"
-    >
-      Authorize
-    </a>
   </form>
 </DocumentFragment>
 `;
