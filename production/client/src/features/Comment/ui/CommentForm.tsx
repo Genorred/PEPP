@@ -40,9 +40,6 @@ const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
   };
   const url = usePathname();
 
-  console.log(user);
-  console.log(userSlice.selectors.user.unwrapped.toString());
-  console.log('render disabled', !user);
   const onFocus = () => {
     if (user) setIsWriting(true)
   }

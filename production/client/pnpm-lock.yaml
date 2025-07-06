@@ -245,9 +245,6 @@ importers:
       graphql:
         specifier: ^16.9.0
         version: 16.9.0
-      graphql-request:
-        specifier: ^7.1.0
-        version: 7.1.0(graphql@16.9.0)
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
@@ -405,6 +402,9 @@ importers:
       eslint-plugin-import:
         specifier: ^2.31.0
         version: 2.31.0(@typescript-eslint/parser@8.26.1(eslint@9.22.0(jiti@2.3.3))(typescript@5.5.4))(eslint-import-resolver-typescript@3.8.6)(eslint@9.22.0(jiti@2.3.3))
+      graphql-request:
+        specifier: ^7.1.0
+        version: 7.1.0(graphql@16.9.0)
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.16.2)(ts-node@10.9.2(@types/node@20.16.2)(typescript@5.5.4))

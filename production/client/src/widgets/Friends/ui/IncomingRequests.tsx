@@ -15,8 +15,8 @@ import Image from "next/image";
 import { userSlice } from "@/entities/User/model/user.slice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
-import { queryClient } from "@/shared/api/base";
 import { notificationsSlice } from "@/widgets/Navbar/model/notifications.slice";
+import { queryClient } from "@/shared/api/queryClient";
 
 const IncomingRequests = ({ userId }: {
   userId: number

@@ -59,12 +59,13 @@ const PostComment = ({ comment }: {
         </div>
         <p className="mb-4 break-words">{comment.message}</p>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm" onClick={() => setIsReplying(!isReplying)}>
+          <Button variant="outline" size="sm" data-testid='reply-button' onClick={() => setIsReplying(!isReplying)}>
             <MessageCircle className="w-4 h-4 mr-2" />
             {isReplying ? "Cancel" : "Reply"}
           </Button>
           {comment.repliesQuantity || leavedReplies.length ? (
             <Button
+              data-testid="open-replies-button"
               variant="ghost"
               size="sm"
               onClick={toggleReplies}

@@ -1,4 +1,3 @@
-import { QueryClient } from "@tanstack/react-query";
 import { ClientError, GraphQLClient } from "graphql-request";
 import { toast } from "sonner";
 
@@ -24,28 +23,16 @@ export const serverApiClient = new GraphQLClient(serverBaseUrl, {
   credentials: "include",
   cache: "force-cache"
 });
-const onError = (error: unknown) => {
-  console.log("xd");
-  if (error instanceof ClientError) {
-    error.response.errors?.forEach(error => {
-      toast.error(error.message);
-    });
-  } else if (error instanceof Error) {
-    toast.error(error.message);
-  }
-};
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      // onError,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false
-    },
-    mutations: {
-      // onError
-    }
-  }
-});
-export const baseFetch = (url: string, init?: RequestInit) => {
-  return fetch(clientBaseUrl + "/" + url, init).then((response) => response.json());
-};
+// const onError = (error: unknown) => {
+//   console.log("xd");
+//   if (error instanceof ClientError) {
+//     error.response.errors?.forEach(error => {
+//       toast.error(error.message);
+//     });
+//   } else if (error instanceof Error) {
+//     toast.error(error.message);
+//   }
+// };
+// export const baseFetch = (url: string, init?: RequestInit) => {
+//   return fetch(clientBaseUrl + "/" + url, init).then((response) => response.json());
+// };

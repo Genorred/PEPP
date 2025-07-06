@@ -4,15 +4,9 @@ import { renderWithProviders } from "@/shared/utils/test-utils";
 import { userSlice } from "@/entities/User/model/user.slice";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
+import { userInitialState } from "@/entities/User/consts/testing-data";
 
 const createFunction = jest.fn();
-const userInitialState = {
-  id: 1,
-  username: "j",
-  email: "",
-  createdAt: "",
-  expireDate: 999999
-};
 describe("Comment form", () => {
   beforeEach(() => {
     jest.clearAllMocks();
