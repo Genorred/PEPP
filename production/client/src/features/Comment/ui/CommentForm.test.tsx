@@ -79,11 +79,8 @@ describe("Comment form", () => {
     const textarea = screen.getByTestId("comment-form");
     fireEvent.focus(textarea);
     const message = "Satisfying";
-    fireEvent.input(textarea, {
-      target: {
-        value: message
-      }
-    });
+    await userEvent.type(textarea, message);
+
     expect(asFragment()).toMatchSnapshot();
 
     await userEvent.click(screen.getByTestId("comment-form-button-submit"));

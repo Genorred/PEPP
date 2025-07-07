@@ -37,11 +37,8 @@ describe("Post Comment", () => {
     await userEvent.click(screen.getByTestId("reply-button"))
     const textarea = screen.getByTestId("comment-form");
     const message = "Satisfying";
-    fireEvent.input(textarea, {
-      target: {
-        value: message
-      }
-    });
+    await userEvent.type(textarea, message);
+
     await userEvent.click(screen.getByTestId("comment-form-button-submit"));
     expect(screen.queryByTestId('replies')).toBeNull()
     await userEvent.click(screen.getByTestId("open-replies-button"));

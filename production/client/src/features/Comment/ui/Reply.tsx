@@ -27,7 +27,7 @@ const Reply = ({ comment, onFindRespondedComment, onCreate }: {
   return (
     <Card className={"w-full mb-4"}>
       {comment.respondedComment && (
-        <div className="mb-2 p-2 bg-muted rounded-md text-sm"
+        <div className="mb-2 p-2 bg-muted rounded-md text-sm" data-testid='responded-comment'
              onClick={onFindRespondedComment}>
           <div className="flex items-center mb-1">
             <CornerDownRight className="w-4 h-4 mr-2" />
@@ -69,7 +69,7 @@ const Reply = ({ comment, onFindRespondedComment, onCreate }: {
         {/*</div>*/}
         <p className="mb-4">{comment.message}</p>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm" onClick={() => setIsReplying(!isReplying)}>
+          <Button variant="outline" size="sm" onClick={() => setIsReplying(!isReplying)} data-testid='reply-button'>
             <MessageCircle className="w-4 h-4 mr-2" />
             {isReplying ? "Cancel" : "Reply"}
           </Button>
