@@ -6,7 +6,7 @@ import Reply from "@/features/Comment/ui/Reply";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/utils";
 import { useSelector } from "react-redux";
-import { scrollSlice } from "@/widgets/Navbar/model";
+import { scrollSlice } from "@/features/Scroll/model/model";
 
 const CommentReplies = ({ parentId, postId, onCreate, createdReplies }: {
   parentId: number;
