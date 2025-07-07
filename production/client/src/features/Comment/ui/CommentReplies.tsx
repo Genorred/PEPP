@@ -45,7 +45,6 @@ const CommentReplies = ({ parentId, postId, onCreate, createdReplies }: {
     allReplies.forEach((comment) => {
       map.set(comment.id, comment);
     });
-    console.log("goal", map);
     return map;
   }, [data?.pages]);
   const [returnTo, setReturnTo] = useState<number | null>(null);
