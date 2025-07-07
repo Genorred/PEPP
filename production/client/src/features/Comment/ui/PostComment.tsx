@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { ChevronDown, MessageCircle } from "lucide-react";
-import CommentReplies from "@/widgets/Comments/ui/CommentReplies";
+import CommentReplies from "@/features/Comment/ui/CommentReplies";
 import { Card, CardContent, CardFooter } from "@/shared/ui/card";
 import CommentForm from "@/features/Comment/ui/CommentForm";
 import { useSelector } from "react-redux";

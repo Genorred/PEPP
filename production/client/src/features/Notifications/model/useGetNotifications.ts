@@ -1,7 +1,7 @@
 import { useGetUserFriendRequestsCountQuery } from "@/shared/api/graphql/generated";
 import { userSlice } from "@/entities/User/model/user.slice";
 import { useDispatch, useSelector } from "react-redux";
-import { notificationsSlice } from "@/widgets/Navbar/model/notifications.slice";
+import { notificationsSlice } from "@/features/Notifications/model/notifications.slice";
 
 export const useGetUserNotifications = () => {
   const user = useSelector(userSlice.selectors.user);

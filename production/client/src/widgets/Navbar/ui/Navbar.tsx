@@ -18,7 +18,7 @@ import Image from "next/image";
 import Logo from "@/shared/assets/icon.svg";
 import { UserTooltip } from "./UserTooltip";
 import { useHidingNavbar } from "@/widgets/Navbar/ui/useHidingNavbar";
-import { useGetUserNotifications } from "@/widgets/Navbar/model/useGetNotifications";
+import { useGetUserNotifications } from "@/features/Notifications/model/useGetNotifications";
 
 function Navbar() {
   const { topPosition } = useHidingNavbar();

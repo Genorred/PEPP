@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { scrollSlice } from "@/widgets/Navbar/model";
+import { scrollSlice } from "@/features/Scroll/model/model";
 import { debounce } from "lodash";
 
 export const useHidingNavbar = () => {

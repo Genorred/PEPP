@@ -5,7 +5,7 @@ import { InfoIcon } from "lucide-react";
 import { PostInfo } from "@/widgets/PostInfo/ui/PostInfo";
 import { cn } from "@/shared/lib/utils";
 import { useSelector } from "react-redux";
-import { scrollSlice } from "@/widgets/Navbar/model";
+import { scrollSlice } from "@/features/Scroll/model/model";
 
 const FloatingModal = (props: Parameters<typeof PostInfo>[0] & {
   isShowing: boolean;

@@ -1,6 +1,6 @@
 import { User } from "@/entities/User/model/User";
 import { Bookmark, CirclePlus, LibraryBig, Settings, SquarePen, User as UserIcon, Users } from "lucide-react";
-import { NotificationState } from "@/widgets/Navbar/model/notifications.slice";
+import { NotificationState } from "@/features/Notifications/model/notifications.slice";
 
 export const navPages = ["Topics", "Posts", "Analytics"];
 export const getNavSettings = (user: User, notification: NotificationState)
