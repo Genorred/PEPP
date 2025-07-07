@@ -83,7 +83,7 @@ const PostComment = ({ comment }: {
           <CommentForm onCreate={onCreate()} isReplyingState={state} placeholder={"reply"} />}
       </CardContent>
       {showReplies ? (
-        <CardFooter className="flex flex-col items-start pt-0">
+        <CardFooter className="flex flex-col items-start pt-0" data-testid='replies'>
           <div
             id={`replies-${comment.id}`}
             className={`w-full transition-all duration-300 ease-in-out ${
