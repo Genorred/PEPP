@@ -44,23 +44,25 @@ export class AuthUseCase {
     console.log(token);
     const { password, email, username } = userCredentials;
     const hashedPassword = await argon2.hash(password);
-    const { password: dbHashedPassword, ...user } = await this.usersService.create({
+    const createdUser = await this.usersService.create({
       email,
       username,
       password: hashedPassword
     });
-    if (!user) {
+    if (!createdUser) {
       throw new Error("error creating user");
     }
+    const { password: dbHashedPassword, ...user } = createdUser;
     this.tokenService.setTokens(user, context.res);
     return user;
   }
 
   async login(loginInput: LoginDto, context: CustomContext) {
-    const { password, ...user } = await this.validateUser(loginInput);
-    if (!user) {
+    const validatedUser = await this.validateUser(loginInput);
+    if (!validatedUser) {
       throw new UnauthorizedException("Email or password incorrect");
     }
+    const { password, ...user } = validatedUser;
     this.tokenService.setTokens(user, context.res);
     return user;
   }
