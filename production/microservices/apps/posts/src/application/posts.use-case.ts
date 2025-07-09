@@ -29,10 +29,11 @@ export class PostsUseCase {
     const post = await this.postsRepository.create(createPostInput);
     try {
       await this.searchService.indexPost(post);
+      return post;
     } catch (e) {
       await this.postsRepository.remove({ id: post.id });
     }
-    return post;
+    throw new Error('Post creation failed during indexing');
   }
 
   findAll(findAllPostsInput: FindAllPostsDto) {
@@ -106,7 +107,7 @@ export class PostsUseCase {
     return this.postsRepository.remove(input);
   }
 
-  async recommendations(recommendationsInput: CurrentUserExtendT<FindAlgorithmPostsDto>) {
+  async recommendations(recommendationsInput: Partial<CurrentUserExtendT<FindAlgorithmPostsDto>>) {
     const { userId, skipPages, ...data } = recommendationsInput;
     const { dislikedPosts, likedPosts, pressedPosts, recentlyShowedPosts } =
       (userId ? await this.preferencesService.get(userId, !skipPages) : {
