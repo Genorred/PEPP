@@ -1,5 +1,5 @@
-import { Field, InputType, Int } from "@nestjs/graphql";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { GraphQLJSONObject } from 'graphql-type-json';
 
 @InputType()
 export class UpdateDraftInput {

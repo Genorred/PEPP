@@ -1,7 +1,11 @@
-import { Post } from "../../entities/post.entity";
-import { SortOrder } from "../../entities/types/sort-order";
+import { Post } from '../../entities/post.entity';
+import { SortOrder } from '../../entities/types/sort-order';
 
-export interface FindManyDto extends Omit<Partial<Post>, "body" | "topics" | "subTopics" | "rating" | "createdAt"> {
+export interface FindManyDto
+  extends Omit<
+    Partial<Post>,
+    'body' | 'topics' | 'subTopics' | 'rating' | 'createdAt'
+  > {
   ids?: number[];
   skip?: number;
   take?: number;

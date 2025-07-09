@@ -1,1 +1,1 @@
-export type TopicDto = string
+export type TopicDto = string;

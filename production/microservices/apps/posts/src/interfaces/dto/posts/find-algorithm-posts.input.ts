@@ -1,9 +1,9 @@
-import { Field, InputType, Int, registerEnumType } from "@nestjs/graphql";
-import { FindAlgorithmPostsDto } from "../../../domain/dto/posts/find-algorithm-posts.dto";
-import { SortOrder } from "../../../domain/entities/types/sort-order";
+import { Field, InputType, Int, registerEnumType } from '@nestjs/graphql';
+import { FindAlgorithmPostsDto } from '../../../domain/dto/posts/find-algorithm-posts.dto';
+import { SortOrder } from '../../../domain/entities/types/sort-order';
 
 registerEnumType(SortOrder, {
-  name: "SortOrder"
+  name: 'SortOrder',
 });
 
 @InputType()

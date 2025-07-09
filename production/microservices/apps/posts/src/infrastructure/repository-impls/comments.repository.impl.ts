@@ -1,22 +1,18 @@
-import { Injectable } from "@nestjs/common";
-import { CommentsRepository } from "../../domain/repositories/comments/comments.repository";
-import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
-import { CreateCommentInput } from "../../domain/dto/comments/create-comment.input";
-import { Comment } from "../../domain/entities/comment.entity";
-import { PrismaService } from "./prismaDb/prisma.service";
-import { CreateReplyInput } from "../../domain/dto/comments/create-reply.input";
-import { Prisma } from ".prisma/client";
-import { FindManyInput } from "../../domain/dto/comments/find-many.input";
-import { UpdateCommentInput } from "../../domain/dto/comments/update-comment.input";
-import { CountCommentsDto } from "../../domain/dto/comments/count-comments.dto";
+import { Injectable } from '@nestjs/common';
+import { CommentsRepository } from '../../domain/repositories/comments/comments.repository';
+import { CurrentUserExtendT } from '@_shared/auth-guard/CurrentUserExtendT';
+import { CreateCommentInput } from '../../domain/dto/comments/create-comment.input';
+import { Comment } from '../../domain/entities/comment.entity';
+import { PrismaService } from './prismaDb/prisma.service';
+import { CreateReplyInput } from '../../domain/dto/comments/create-reply.input';
+import { Prisma } from '.prisma/client';
+import { FindManyInput } from '../../domain/dto/comments/find-many.input';
+import { UpdateCommentInput } from '../../domain/dto/comments/update-comment.input';
+import { CountCommentsDto } from '../../domain/dto/comments/count-comments.dto';
 
 @Injectable()
 export class CommentsRepositoryImpl implements CommentsRepository {
-  constructor(
-    private readonly prismaService: PrismaService
-  ) {
-  }
-
+  constructor(private readonly prismaService: PrismaService) {}
 
   createReply(input: CurrentUserExtendT<CreateReplyInput>): Promise<Comment> {
     const { respondedCommentId, postId, parentId, ...data } = input;
@@ -25,16 +21,16 @@ export class CommentsRepositoryImpl implements CommentsRepository {
         ...data,
         post: {
           connect: {
-            id: postId
-          }
+            id: postId,
+          },
         },
         parent: {
           connect: {
-            id: parentId
-          }
+            id: parentId,
+          },
         },
-        respondedCommentId
-      }
+        respondedCommentId,
+      },
     });
   }
 
@@ -45,51 +41,66 @@ export class CommentsRepositoryImpl implements CommentsRepository {
         ...data,
         post: {
           connect: {
-            id: postId
-          }
-        }
-      }
+            id: postId,
+          },
+        },
+      },
     });
   }
 
   incrementRepliesQuantity(id: number): Promise<Comment> {
     return this.prismaService.comment.update({
       where: {
-        id
+        id,
       },
       data: {
         repliesQuantity: {
-          increment: 1
-        }
-      }
+          increment: 1,
+        },
+      },
     });
   }
 
   findOne(id: number): Promise<Comment> {
     return this.prismaService.comment.findFirst({
-      where: { id }
+      where: { id },
     });
   }
 
   findMany(input: FindManyInput): Promise<Comment[]> {
-    const { postId, userId, parentId, skipPages: skip, likes, repliesQuantity, dislikes, take, createdAt } = input;
+    const {
+      postId,
+      userId,
+      parentId,
+      skipPages: skip,
+      likes,
+      repliesQuantity,
+      dislikes,
+      take,
+      createdAt,
+    } = input;
     return this.prismaService.comment.findMany({
       where: {
         postId,
         userId,
-        parentId
+        parentId,
       },
       skip,
       take,
-      orderBy: [{
-        createdAt
-      }, {
-        likes
-      }, {
-        repliesQuantity
-      }, {
-        dislikes
-      }] as Prisma.CommentOrderByWithRelationInput[]
+      orderBy: [
+        {
+          createdAt,
+        },
+        {
+          likes,
+        },
+        {
+          repliesQuantity,
+        },
+        {
+          dislikes,
+        },
+      ] as Prisma.CommentOrderByWithRelationInput[],
     });
   }
 
@@ -99,21 +110,21 @@ export class CommentsRepositoryImpl implements CommentsRepository {
       where: {
         postId,
         userId,
-        parentId
-      }
+        parentId,
+      },
     });
   }
 
   update(id: number, updateCommentInput: UpdateCommentInput) {
     return this.prismaService.comment.update({
       where: { id: id },
-      data: updateCommentInput
+      data: updateCommentInput,
     });
   }
 
   remove(id: number) {
     return this.prismaService.comment.delete({
-      where: { id: id }
+      where: { id: id },
     });
   }
 }

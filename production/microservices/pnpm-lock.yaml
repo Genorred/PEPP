@@ -328,6 +328,12 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
     devDependencies:
+      '@eslint/eslintrc':
+        specifier: ^3.2.0
+        version: 3.2.0
+      '@eslint/js':
+        specifier: ^9.18.0
+        version: 9.20.0
       '@nestjs/cli':
         specifier: ^10.4.8
         version: 10.4.9(@swc/core@1.10.16(@swc/helpers@0.5.15))
@@ -364,6 +370,9 @@ importers:
       eslint-plugin-prettier:
         specifier: ^5.2.1
         version: 5.2.3(@types/eslint@9.6.1)(eslint-config-prettier@9.1.0(eslint@9.20.1))(eslint@9.20.1)(prettier@3.5.1)
+      globals:
+        specifier: ^15.14.0
+        version: 15.15.0
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.13.2)(ts-node@10.9.2(@swc/core@1.10.16(@swc/helpers@0.5.15))(@types/node@22.13.2)(typescript@5.7.3))

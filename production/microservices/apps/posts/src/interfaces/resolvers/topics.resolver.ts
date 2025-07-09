@@ -1,19 +1,18 @@
-import { Args, Query, Resolver } from "@nestjs/graphql";
-import { TopicsUseCase } from "../../application/topics.use-case";
-import { Topic } from "../../domain/entities/topic.entity";
+import { Args, Query, Resolver } from '@nestjs/graphql';
+import { TopicsUseCase } from '../../application/topics.use-case';
+import { Topic } from '../../domain/entities/topic.entity';
 
 @Resolver(() => Topic)
 export class TopicsResolver {
-  constructor(private readonly topicsService: TopicsUseCase) {
-  }
+  constructor(private readonly topicsService: TopicsUseCase) {}
 
   // @Mutation(() => Topic)
   // createTopic(@Args('createTopicInput') createTopicInput: CreateTopicInput) {
   //   return this.topicsService.create(createTopicInput);
   // }
 
-  @Query(() => [Topic], { name: "topics" })
-  search(@Args("title", { nullable: true }) title?: string) {
+  @Query(() => [Topic], { name: 'topics' })
+  search(@Args('title', { nullable: true }) title?: string) {
     return this.topicsService.search(title);
   }
 

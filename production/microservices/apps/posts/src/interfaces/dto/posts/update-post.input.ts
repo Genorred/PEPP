@@ -1,6 +1,6 @@
-import { Field, InputType, Int } from "@nestjs/graphql";
-import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
-import { GraphQLJSONObject } from "graphql-type-json";
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { CurrentUserExtendT } from '@_shared/auth-guard/CurrentUserExtendT';
+import { GraphQLJSONObject } from 'graphql-type-json';
 
 @InputType()
 export class UpdatePostInput {

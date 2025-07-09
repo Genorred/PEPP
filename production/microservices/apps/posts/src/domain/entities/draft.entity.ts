@@ -1,13 +1,16 @@
-import { Directive, Field, Int, ObjectType, OmitType } from "@nestjs/graphql";
-import { Post } from "./post.entity";
-import { Topic } from "./topic.entity";
-import JSON from "graphql-type-json";
-import { User } from "./user.entity";
+import { Directive, Field, Int, ObjectType, OmitType } from '@nestjs/graphql';
+import { Post } from './post.entity';
+import { Topic } from './topic.entity';
+import JSON from 'graphql-type-json';
+import { User } from './user.entity';
 
 @ObjectType()
-@Directive("@key(fields: \"id\")")
+@Directive('@key(fields: "id")')
 export class Draft extends OmitType(Post, [
-  "rating", "commentsQuantity", "reviewsQuantity", "isHidden"
+  'rating',
+  'commentsQuantity',
+  'reviewsQuantity',
+  'isHidden',
 ]) {
   @Field(() => Int)
   id: number;
@@ -38,5 +41,4 @@ export class Draft extends OmitType(Post, [
   createdAt: Date;
   @Field()
   updatedAt: Date;
-
 }

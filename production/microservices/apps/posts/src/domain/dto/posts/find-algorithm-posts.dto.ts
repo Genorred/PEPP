@@ -1,4 +1,4 @@
-import { SortOrder } from "../../entities/types/sort-order";
+import { SortOrder } from '../../entities/types/sort-order';
 
 export class FindAlgorithmPostsDto {
   createdAt?: SortOrder;

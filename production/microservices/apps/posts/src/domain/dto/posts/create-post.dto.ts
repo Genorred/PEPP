@@ -1,4 +1,4 @@
-import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
+import { CurrentUserExtendT } from '@_shared/auth-guard/CurrentUserExtendT';
 
 export class CreatePostDto {
   title: string;
@@ -9,4 +9,4 @@ export class CreatePostDto {
   isHidden?: boolean;
 }
 
-export type CreatePostServiceDto = CurrentUserExtendT<CreatePostDto>
+export type CreatePostServiceDto = CurrentUserExtendT<CreatePostDto>;

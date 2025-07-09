@@ -1,6 +1,6 @@
-import { Field, InputType, Int } from "@nestjs/graphql";
-import { GetByUserDto } from "../../../domain/dto/comments/get-by-user.dto";
-import { SortOrder } from "../../../domain/entities/types/sort-order";
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { GetByUserDto } from '../../../domain/dto/comments/get-by-user.dto';
+import { SortOrder } from '../../../domain/entities/types/sort-order';
 
 @InputType()
 export class GetByUserInput implements GetByUserDto {

@@ -1,10 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { TopicsRepository } from "../domain/repositories/topics/topics.repository";
+import { Injectable } from '@nestjs/common';
+import { TopicsRepository } from '../domain/repositories/topics/topics.repository';
 
 @Injectable()
 export class TopicsUseCase {
-  constructor(private readonly topicsRepository: TopicsRepository) {
-  }
+  constructor(private readonly topicsRepository: TopicsRepository) {}
 
   // create(createTopicInput: CreateTopicInput) {
   //   return 'This action adds a new topic';
