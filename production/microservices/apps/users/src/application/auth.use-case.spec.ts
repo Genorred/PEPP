@@ -9,19 +9,19 @@ import * as argon2 from "argon2";
 
 const mockUsersRepository = () => ({
   findOne: jest.fn(),
-  create: jest.fn(),
+  create: jest.fn()
 });
 const mockTokenService = () => ({
   generateUserCredentialsToken: jest.fn(),
   verify: jest.fn(),
   setTokens: jest.fn(),
-  removeTokens: jest.fn(),
+  removeTokens: jest.fn()
 });
 const mockCacheRepository = () => ({
-  set: jest.fn(),
+  set: jest.fn()
 });
 const mockNotificationService = () => ({
-  sendApproveUserEmail: jest.fn(),
+  sendApproveUserEmail: jest.fn()
 });
 
 describe("AuthUseCase", () => {
@@ -38,8 +38,8 @@ describe("AuthUseCase", () => {
         { provide: UsersRepository, useFactory: mockUsersRepository },
         { provide: TokenService, useFactory: mockTokenService },
         { provide: CacheRepository, useFactory: mockCacheRepository },
-        { provide: NotificationService, useFactory: mockNotificationService },
-      ],
+        { provide: NotificationService, useFactory: mockNotificationService }
+      ]
     }).compile();
 
     service = module.get<AuthUseCase>(AuthUseCase);
@@ -80,7 +80,11 @@ describe("AuthUseCase", () => {
       jest.spyOn(argon2, "hash").mockResolvedValue("hashed");
       usersRepository.create.mockResolvedValue({ password: "hashed", id: 1, email: "a@a.com", username: "user" });
       const context = { res: {} } as any;
-      await expect(service.confirmUserEmail("token", context)).resolves.toMatchObject({ id: 1, email: "a@a.com", username: "user" });
+      await expect(service.confirmUserEmail("token", context)).resolves.toMatchObject({
+        id: 1,
+        email: "a@a.com",
+        username: "user"
+      });
       expect(tokenService.setTokens).toBeCalled();
     });
     it("ошибка создания пользователя", async () => {
@@ -99,20 +103,29 @@ describe("AuthUseCase", () => {
       usersRepository.findOne.mockResolvedValue(user);
       jest.spyOn(argon2, "verify").mockResolvedValue(true);
       const context = { res: {} } as any;
-      await expect(service.login({ email: "a@a.com", password: "pass" } as any, context)).resolves.toMatchObject({ id: 1, email: "a@a.com", username: "user" });
+      await expect(service.login({
+        email: "a@a.com",
+        password: "pass"
+      } as any, context)).resolves.toMatchObject({ id: 1, email: "a@a.com", username: "user" });
       expect(tokenService.setTokens).toBeCalled();
     });
     it("неверный email", async () => {
       usersRepository.findOne.mockResolvedValue(null);
       const context = { res: {} } as any;
-      await expect(service.login({ email: "a@a.com", password: "pass" } as any, context)).rejects.toThrow(UnauthorizedException);
+      await expect(service.login({
+        email: "a@a.com",
+        password: "pass"
+      } as any, context)).rejects.toThrow(UnauthorizedException);
     });
     it("неверный пароль", async () => {
       const user = { password: "hashed", id: 1, email: "a@a.com", username: "user" };
       usersRepository.findOne.mockResolvedValue(user);
       jest.spyOn(argon2, "verify").mockResolvedValue(false);
       const context = { res: {} } as any;
-      await expect(service.login({ email: "a@a.com", password: "pass" } as any, context)).rejects.toThrow(UnauthorizedException);
+      await expect(service.login({
+        email: "a@a.com",
+        password: "pass"
+      } as any, context)).rejects.toThrow(UnauthorizedException);
     });
   });
 
