@@ -1,13 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import { CreateEmailServerDto } from "./dto/create-email-server.dto";
-import { MailerService as MailerMain } from "@nestjs-modules/mailer";
-import * as path from "path";
-import * as pug from "pug";
+import { Injectable } from '@nestjs/common';
+import { CreateEmailServerDto } from './dto/create-email-server.dto';
+import { MailerService as MailerMain } from '@nestjs-modules/mailer';
+import * as path from 'path';
+import * as pug from 'pug';
 
 @Injectable()
 export class EmailService {
-  constructor(private readonly mailerMain: MailerMain) {
-  }
+  constructor(private readonly mailerMain: MailerMain) {}
 
   /**
    * Sends an email using the provided email server.
@@ -18,7 +17,7 @@ export class EmailService {
   async sendMailSandBox(email: CreateEmailServerDto): Promise<void> {
     const templateFile = path.join(
       __dirname,
-      "templates/email-confirmation.pug"
+      'templates/email-confirmation.pug',
     );
     // const fileImg = path.join(__dirname, '../../src/email-server/public/img/amico.png');
     // const socialMediaImg = path.join(__dirname, '../../src/email-server/public/img/social-media.png');
@@ -26,10 +25,10 @@ export class EmailService {
     // const imageDataSocialMedia = readFileSync(socialMediaImg).toString('base64');
 
     const data = {
-      title: "My title",
+      title: 'My title',
       // img: imageData,
-      link: "http://localhost:3000/email",
-      myDescription: "description"
+      link: 'http://localhost:3000/email',
+      myDescription: 'description',
       // imgSocial: imageDataSocialMedia,
     };
 
@@ -52,13 +51,13 @@ export class EmailService {
         to: to,
         subject: subject,
         text: text,
-        html: body
+        html: body,
       })
       .then(() => {
-        console.log("Email sent");
+        console.log('Email sent');
       })
       .catch((e) => {
-        console.log("Error sending email", e);
+        console.log('Error sending email', e);
       });
   }
 }

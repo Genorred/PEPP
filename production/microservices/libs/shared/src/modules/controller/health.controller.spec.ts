@@ -1,6 +1,6 @@
-import { HealthService } from "./health.service";
+import { HealthService } from './health.service';
 
-describe("HealthController", () => {
+describe('HealthController', () => {
   let controller: HealthService;
 
   // beforeEach(async () => {
@@ -11,7 +11,7 @@ describe("HealthController", () => {
   //   controller = module.get<HealthService>(HealthService);
   // });
 
-  it("should be defined", () => {
+  it('should be defined', () => {
     // expect(controller).toBeDefined();
   });
 });

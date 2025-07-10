@@ -1,4 +1,4 @@
-import { RolesT } from "./roles.entity";
+import { RolesT } from './roles.entity';
 
 export class User {
   id: number;

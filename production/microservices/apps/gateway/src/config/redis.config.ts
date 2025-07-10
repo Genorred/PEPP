@@ -1,5 +1,5 @@
-import { registerAs } from "@nestjs/config";
+import { registerAs } from '@nestjs/config';
 
-export default registerAs("redis", () => ({
-  password: process.env.REDIS_AUTH_PASSWORD
+export default registerAs('redis', () => ({
+  password: process.env.REDIS_AUTH_PASSWORD,
 }));

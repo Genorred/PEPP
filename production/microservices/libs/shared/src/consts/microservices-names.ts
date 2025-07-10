@@ -1,1 +1,1 @@
-export const NOTIFICATIONS_SERVICE = "notifications";
+export const NOTIFICATIONS_SERVICE = 'notifications';
