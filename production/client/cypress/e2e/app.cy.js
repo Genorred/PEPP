@@ -1,15 +1,20 @@
 describe('Navigation', () => {
   it('should navigate to the about page', () => {
-    // Start from the index page
-    cy.visit('http://localhost:9898/')
+    cy.visit('http://client:3000/')
 
-    // Find a link with an href attribute containing "about" and click it
-    cy.get('a[href*="about"]').click()
+    cy.get('a[href*="/sign-up?returnUrl=/"]').click()
 
-    // The new url should include "/about"
-    cy.url().should('include', '/about')
+    cy.url().should('include', '/sign-up')
 
-    // The new page should contain an h1 with "About"
-    cy.get('h1').contains('About')
+    cy.get('h1').contains('Join PEPP')
+    cy.get('form input[name="username"]').type('Username')
+    cy.get('form input[name="email"]').type('email@example.com')
+    cy.get('form input[name="password"]').type('12345678910XD~~')
+
+
+
+    cy.get('form').submit()
+
+    cy.wait(5000)
   })
 })

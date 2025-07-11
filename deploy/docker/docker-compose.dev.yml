@@ -10,90 +10,73 @@ services:
     restart: always
     build:
       context: ../../production/client
-      dockerfile: ../../deploy/docker/client/Dockerfile
-      args:
-        NEXT_PUBLIC_GOOGLE_AUTH_URL: ${NEXT_PUBLIC_GOOGLE_AUTH_URL}
-        SERVER_API_BASE_URL: ${SERVER_API_BASE_URL}
-        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
-    volumes:
-      - pnpm-store:/root/.local/share/pnpm/store
+      dockerfile: ../../deploy/docker/client/Dockerfile.development
     env_file:
-      - ../../config/.env.test
+      - ../../config/.env.dev
     ports:
       - "${CLIENT_PORT}:3000"
     networks:
-      - default
       - frontend
-#    depends_on:
-#      - gateway
-  cypress:
-    build:
-      context: ../../production/client
-      dockerfile: ../../deploy/docker/client/Dockerfile.cypress
-    volumes:
-      - pnpm-store:/root/.local/share/pnpm/store
-      - ../../production/client/cypress:/usr/cypress
     environment:
-      - CYPRESS_baseUrl=http://client:3000
-    ports:
-      - "3000:3000"
-    networks:
-      - default
-      - frontend
-    depends_on:
-      - client
+      - WATCHPACK_POLLING=true
+    volumes:
+      - "../../production/client/:/usr/app/client/"
+      - "../../production/_shared/config:/usr/app/client/src/_config"
   gateway:
     build:
       context: ../../production/microservices
-      dockerfile: ../../deploy/docker/microservices/Dockerfile
+      dockerfile: ../../deploy/docker/microservices/Dockerfile.development
       args:
         SERVICE_NAME: gateway
-    volumes:
-      - pnpm-store:/root/.local/share/pnpm/store
     restart: always
     env_file:
-      - ../../config/.env.test
+      - ../../config/.env.dev
     networks:
       - default
       - frontend
     ports:
       - "8080:8080"
+    volumes:
+      - "../../production/microservices/apps/gateway/:/usr/app/apps/gateway/"
+      - "../../production/microservices/libs:/usr/app/libs"
     depends_on:
       users:
-        condition: service_healthy
+          condition: service_healthy
       posts:
         condition: service_healthy
   notifications:
     build:
       context: ../../production/microservices
-      dockerfile: ../../deploy/docker/microservices/Dockerfile.notifications
+      dockerfile: ../../deploy/docker/microservices/Dockerfile.notifications.development
       args:
         SERVICE_NAME: notifications
-    volumes:
-      - pnpm-store:/root/.local/share/pnpm/store
     restart: always
     env_file:
-      - ../../config/.env.test
+      - ../../config/.env.dev
     networks:
       - default
       - frontend
     ports:
       - "${NOTIFICATIONS_SERVER_PORT}:8080"
+    volumes:
+      - "../../production/microservices/apps/notifications/:/usr/app/apps/notifications/"
+      - "../../production/microservices/libs:/usr/app/libs"
     depends_on:
       - rabbitmq
   users:
     build:
       context: ../../production/microservices
-      dockerfile: ../../deploy/docker/microservices/Dockerfile
+      dockerfile: ../../deploy/docker/microservices/Dockerfile.development
       args:
         SERVICE_NAME: users
-    volumes:
-      - pnpm-store:/root/.local/share/pnpm/store
     env_file:
-      - ../../config/.env.test
+      - ../../config/.env.dev
     restart: always
     ports:
       - "${USERS_SERVICE_PORT}:8080"
+    volumes:
+      - "../../production/microservices/apps/users/:/usr/app/apps/users/"
+      - "../../production/microservices/libs:/usr/app/libs"
     depends_on:
       - users_db
   users_db:
@@ -113,17 +96,18 @@ services:
   posts:
     build:
       context: ../../production/microservices
-      dockerfile: ../../deploy/docker/microservices/Dockerfile
+      dockerfile: ../../deploy/docker/microservices/Dockerfile.development
       args:
         SERVICE_NAME: posts
-    volumes:
-      - pnpm-store:/root/.local/share/pnpm/store
-      - certs:/usr/app/posts/certs
     env_file:
-      - ../../config/.env.test
+      - ../../config/.env.dev
     restart: always
     ports:
       - "${POSTS_SERVICE_PORT}:8080"
+    volumes:
+      - "../../production/microservices/apps/posts/:/usr/app/apps/posts/"
+      - "../../production/microservices/libs:/usr/app/libs"
+      - certs:/usr/app/posts/certs
     depends_on:
       - posts_db
       - es01
@@ -145,9 +129,9 @@ services:
       - certs:/usr/share/elasticsearch/config/certs
       - ../setup.elastic.sh:/usr/local/bin/setup.sh
     user: "0"
-    command: [ "/bin/bash", "/usr/local/bin/setup.sh" ]
+    command: ["/bin/bash", "/usr/local/bin/setup.sh"]
     env_file:
-      - ../../config/.env.test
+      - ../../config/.env.dev
     healthcheck:
       test: [ "CMD-SHELL", "[ -f config/certs/es01/es01.crt ]" ]
       interval: 1s
@@ -185,7 +169,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
       - ES_JAVA_OPTS=-Xms2g -Xmx2g
-    #    mem_limit: 280000000
+#    mem_limit: 280000000
     ulimits:
       memlock:
         soft: -1
@@ -224,7 +208,7 @@ services:
       - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
       - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
-    #    mem_limit: ${KB_MEM_LIMIT}
+#    mem_limit: ${KB_MEM_LIMIT}
     healthcheck:
       test:
         [
@@ -242,8 +226,8 @@ services:
         condition: service_healthy
     image: docker.elastic.co/beats/metricbeat:${STACK_VERSION}
     user: root
-    command: [ "--strict.perms=false" ]
-    #      - 'chmod 644 metricbeat/metricbeat.yml'
+    command: ["--strict.perms=false"]
+#      - 'chmod 644 metricbeat/metricbeat.yml'
     volumes:
       - certs:/usr/share/metricbeat/certs
       - metricbeatdata01:/usr/share/metricbeat/data
@@ -264,7 +248,7 @@ services:
         condition: service_healthy
     image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
     user: root
-    command: [ "--strict.perms=false" ]
+    command: ["--strict.perms=false"]
     volumes:
       - certs:/usr/share/filebeat/certs
       - filebeatdata01:/usr/share/filebeat/data
@@ -288,7 +272,7 @@ services:
     labels:
       co.elastic.logs/module: logstash
     user: root
-    #    command: ["--strict.perms=false"]
+#    command: ["--strict.perms=false"]
     volumes:
       - certs:/usr/share/logstash/certs
       - logstashdata01:/usr/share/logstash/data
@@ -328,7 +312,6 @@ services:
 volumes:
   db-data-users:
   db-data-posts:
-  pnpm-store:
   certs:
     driver: local
   esdata01:

@@ -6,9 +6,9 @@ ARG SERVER_API_BASE_URL
 ARG NEXT_PUBLIC_GOOGLE_AUTH_URL
 ARG NEXT_PUBLIC_API_BASE_URL
 
-ENV PNPM_HOME="/pnpm"
-
-ENV PATH="$PNPM_HOME:$PATH"
+ENV NEXT_PUBLIC_API_BASE_URL=$NEXT_PUBLIC_API_BASE_URL
+ENV NEXT_PUBLIC_GOOGLE_AUTH_URL=$NEXT_PUBLIC_GOOGLE_AUTH_URL
+ENV SERVER_API_BASE_URL=$SERVER_API_BASE_URL
 
 RUN npm i -g pnpm
 
@@ -17,7 +17,7 @@ WORKDIR /usr/app/client
 COPY ./package.json ./package.json
 
 COPY ./pnpm-lock.yaml ./pnpm-lock.yaml
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
 
 COPY ./ .
 
