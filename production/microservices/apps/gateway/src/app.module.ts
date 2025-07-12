@@ -49,6 +49,8 @@ import redisConfig from './config/redis.config';
               return new RemoteGraphQLDataSource({
                 url,
                 willSendRequest({ request, context }) {
+                  console.log('request query', request.query);
+                  console.log('request variables', request.variables);
                   request.http.headers.set(
                     'cookies',
                     context?.cookies ? JSON.stringify(context.cookies) : null,
@@ -63,6 +65,7 @@ import redisConfig from './config/redis.config';
                   const cookies = response.http.headers?.raw()[
                     'set-cookie'
                   ] as string[];
+                  console.log('response', response.data);
                   if (cookies) {
                     context?.req.res.append('set-cookie', cookies);
                   }

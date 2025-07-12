@@ -24,6 +24,7 @@ export class AuthUseCase {
   ) {}
 
   async register(registerInput: RegisterInput) {
+    console.log(registerInput);
     const token = this.tokenService.generateUserCredentialsToken(registerInput);
     const foundUsers = await Promise.all([
       await this.usersService.findOne({ email: registerInput.email }),
@@ -35,6 +36,7 @@ export class AuthUseCase {
     if (foundUsers[1]) {
       throw new ConflictException('User with such username already exists');
     }
+    console.log('no conflict');
     this.notificationService.sendApproveUserEmail(
       registerInput.email,
       token,
