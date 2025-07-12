@@ -33,6 +33,7 @@ services:
     volumes:
       - pnpm-store:/root/.local/share/pnpm/store
       - ../../production/client/cypress:/usr/cypress
+      - ../../production/client/cypress.config.ts:/usr/cypress.config.ts
     environment:
       - CYPRESS_baseUrl=http://client:3000
     ports:
