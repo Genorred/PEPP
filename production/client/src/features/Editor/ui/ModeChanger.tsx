@@ -18,7 +18,7 @@ const ModeChanger = () => {
       </section>
       <div className="ml-auto lg:absolute top-4 right-4 p-2 bg-background" onClick={() => {
         setIsReadonly(prev => !prev);
-      }}>
+      }} data-testid="save-work">
         <ModeChangerIcon />
       </div>
     </>

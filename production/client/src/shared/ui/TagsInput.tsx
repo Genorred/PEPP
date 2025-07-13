@@ -73,6 +73,7 @@ export default function TagsInput({ name, control, placeholder = "Add a tag..." 
         ))}
         <Input
           ref={inputRef}
+          name={name}
           type="text"
           placeholder={value.length === 0 ? placeholder : ""}
           value={inputValue}

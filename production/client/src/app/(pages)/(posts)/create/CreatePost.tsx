@@ -42,6 +42,5 @@ export default function CreatePost() {
       </div>
       <ModeChanger />
     </section>
-  )
-    ;
+  );
 }

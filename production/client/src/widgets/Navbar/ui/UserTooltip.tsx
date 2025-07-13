@@ -59,7 +59,7 @@ export const UserTooltip = () => {
             <TooltipTrigger asChild>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full" data-testid="avatar-button">
                     {areAnyNotifications &&
                       <div className="bg-red-600 rounded-full absolute right-0 top-0 w-2 h-2 z-10" />
                     }

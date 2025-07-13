@@ -65,7 +65,6 @@ import redisConfig from './config/redis.config';
                   const cookies = response.http.headers?.raw()[
                     'set-cookie'
                   ] as string[];
-                  console.log('response', response.data);
                   if (cookies) {
                     context?.req.res.append('set-cookie', cookies);
                   }

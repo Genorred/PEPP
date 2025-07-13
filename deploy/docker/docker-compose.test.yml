@@ -24,8 +24,8 @@ services:
     networks:
       - default
       - frontend
-    depends_on:
-      - gateway
+#    depends_on:
+#      - gateway
   cypress:
     build:
       context: ../../production/client
