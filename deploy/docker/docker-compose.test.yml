@@ -10,24 +10,46 @@ services:
     restart: always
     build:
       context: ../../production/client
-      dockerfile: ../../deploy/docker/client/Dockerfile.development
+      dockerfile: ../../deploy/docker/client/Dockerfile
+      args:
+        NEXT_PUBLIC_GOOGLE_AUTH_URL: ${NEXT_PUBLIC_GOOGLE_AUTH_URL}
+        SERVER_API_BASE_URL: ${SERVER_API_BASE_URL}
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+    volumes:
+      - pnpm-store:/root/.local/share/pnpm/store
     env_file:
       - ../../config/.env.test
     ports:
       - "${CLIENT_PORT}:3000"
     networks:
+      - default
       - frontend
-    environment:
-      - WATCHPACK_POLLING=true
+#    depends_on:
+#      - gateway
+  cypress:
+    build:
+      context: ../../production/client
+      dockerfile: ../../deploy/docker/client/Dockerfile.cypress
     volumes:
-      - "../../production/client/:/usr/app/client/"
-      - "../../production/_shared/config:/usr/app/client/src/_config"
+      - pnpm-store:/root/.local/share/pnpm/store
+      - ../../production/client/cypress:/usr/cypress
+    environment:
+      - CYPRESS_baseUrl=http://client:3000
+    ports:
+      - "3000:3000"
+    networks:
+      - default
+      - frontend
+    depends_on:
+      - client
   gateway:
     build:
       context: ../../production/microservices
-      dockerfile: ../../deploy/docker/microservices/Dockerfile.development
+      dockerfile: ../../deploy/docker/microservices/Dockerfile
       args:
         SERVICE_NAME: gateway
+    volumes:
+      - pnpm-store:/root/.local/share/pnpm/store
     restart: always
     env_file:
       - ../../config/.env.test
@@ -36,9 +58,6 @@ services:
       - frontend
     ports:
       - "8080:8080"
-    volumes:
-      - "../../production/microservices/apps/gateway/:/usr/app/apps/gateway/"
-      - "../../production/microservices/libs:/usr/app/libs"
     depends_on:
       users:
         condition: service_healthy
@@ -47,9 +66,11 @@ services:
   notifications:
     build:
       context: ../../production/microservices
-      dockerfile: ../../deploy/docker/microservices/Dockerfile.notifications.development
+      dockerfile: ../../deploy/docker/microservices/Dockerfile.notifications
       args:
         SERVICE_NAME: notifications
+    volumes:
+      - pnpm-store:/root/.local/share/pnpm/store
     restart: always
     env_file:
       - ../../config/.env.test
@@ -58,25 +79,21 @@ services:
       - frontend
     ports:
       - "${NOTIFICATIONS_SERVER_PORT}:8080"
-    volumes:
-      - "../../production/microservices/apps/notifications/:/usr/app/apps/notifications/"
-      - "../../production/microservices/libs:/usr/app/libs"
     depends_on:
       - rabbitmq
   users:
     build:
       context: ../../production/microservices
-      dockerfile: ../../deploy/docker/microservices/Dockerfile.development
+      dockerfile: ../../deploy/docker/microservices/Dockerfile
       args:
         SERVICE_NAME: users
+    volumes:
+      - pnpm-store:/root/.local/share/pnpm/store
     env_file:
       - ../../config/.env.test
     restart: always
     ports:
       - "${USERS_SERVICE_PORT}:8080"
-    volumes:
-      - "../../production/microservices/apps/users/:/usr/app/apps/users/"
-      - "../../production/microservices/libs:/usr/app/libs"
     depends_on:
       - users_db
   users_db:
@@ -96,18 +113,17 @@ services:
   posts:
     build:
       context: ../../production/microservices
-      dockerfile: ../../deploy/docker/microservices/Dockerfile.development
+      dockerfile: ../../deploy/docker/microservices/Dockerfile
       args:
         SERVICE_NAME: posts
+    volumes:
+      - pnpm-store:/root/.local/share/pnpm/store
+      - certs:/usr/app/posts/certs
     env_file:
       - ../../config/.env.test
     restart: always
     ports:
       - "${POSTS_SERVICE_PORT}:8080"
-    volumes:
-      - "../../production/microservices/apps/posts/:/usr/app/apps/posts/"
-      - "../../production/microservices/libs:/usr/app/libs"
-      - certs:/usr/app/posts/certs
     depends_on:
       - posts_db
       - es01
@@ -129,11 +145,11 @@ services:
       - certs:/usr/share/elasticsearch/config/certs
       - ../setup.elastic.sh:/usr/local/bin/setup.sh
     user: "0"
-    command: ["/bin/bash", "/usr/local/bin/setup.sh"]
+    command: [ "/bin/bash", "/usr/local/bin/setup.sh" ]
     env_file:
       - ../../config/.env.test
     healthcheck:
-      test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
+      test: [ "CMD-SHELL", "[ -f config/certs/es01/es01.crt ]" ]
       interval: 1s
       timeout: 5s
       retries: 120
@@ -226,7 +242,7 @@ services:
         condition: service_healthy
     image: docker.elastic.co/beats/metricbeat:${STACK_VERSION}
     user: root
-    command: ["--strict.perms=false"]
+    command: [ "--strict.perms=false" ]
     #      - 'chmod 644 metricbeat/metricbeat.yml'
     volumes:
       - certs:/usr/share/metricbeat/certs
@@ -248,7 +264,7 @@ services:
         condition: service_healthy
     image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
     user: root
-    command: ["--strict.perms=false"]
+    command: [ "--strict.perms=false" ]
     volumes:
       - certs:/usr/share/filebeat/certs
       - filebeatdata01:/usr/share/filebeat/data
@@ -274,7 +290,7 @@ services:
     user: root
     #    command: ["--strict.perms=false"]
     volumes:
-      - certs:/usr/share/logstash/certPOSTS
+      - certs:/usr/share/logstash/certs
       - logstashdata01:/usr/share/logstash/data
       - "./logstash_ingest_data/:/usr/share/logstash/ingest_data/"
       - "../logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"
@@ -287,7 +303,7 @@ services:
     image: redis:6.2-alpine
     restart: always
     ports:
-      - "6379:6379"
+      - '6379:6379'
     command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_POSTS_PASSWORD}
     volumes:
       - ./data:/data
@@ -295,7 +311,7 @@ services:
     image: redis:6.2-alpine
     restart: always
     ports:
-      - "6378:6379"
+      - '6378:6379'
     command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_AUTH_PASSWORD}
     volumes:
       - ./data:/data
@@ -312,6 +328,7 @@ services:
 volumes:
   db-data-users:
   db-data-posts:
+  pnpm-store:
   certs:
     driver: local
   esdata01:
@@ -324,4 +341,3 @@ volumes:
     driver: local
   logstashdata01:
     driver: local
-

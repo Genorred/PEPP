@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { ChevronDown, MessageCircle } from "lucide-react";
-import CommentReplies from "@/widgets/Comments/ui/CommentReplies";
+import CommentReplies from "@/features/Comment/ui/CommentReplies";
 import { Card, CardContent, CardFooter } from "@/shared/ui/card";
 import CommentForm from "@/features/Comment/ui/CommentForm";
 import { useSelector } from "react-redux";
@@ -59,12 +59,13 @@ const PostComment = ({ comment }: {
         </div>
         <p className="mb-4 break-words">{comment.message}</p>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm" onClick={() => setIsReplying(!isReplying)}>
+          <Button variant="outline" size="sm" data-testid='reply-button' onClick={() => setIsReplying(!isReplying)}>
             <MessageCircle className="w-4 h-4 mr-2" />
             {isReplying ? "Cancel" : "Reply"}
           </Button>
           {comment.repliesQuantity || leavedReplies.length ? (
             <Button
+              data-testid="open-replies-button"
               variant="ghost"
               size="sm"
               onClick={toggleReplies}
@@ -82,7 +83,7 @@ const PostComment = ({ comment }: {
           <CommentForm onCreate={onCreate()} isReplyingState={state} placeholder={"reply"} />}
       </CardContent>
       {showReplies ? (
-        <CardFooter className="flex flex-col items-start pt-0">
+        <CardFooter className="flex flex-col items-start pt-0" data-testid='replies'>
           <div
             id={`replies-${comment.id}`}
             className={`w-full transition-all duration-300 ease-in-out ${

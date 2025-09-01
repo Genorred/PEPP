@@ -1,31 +1,31 @@
-import { VersionsRepository } from "../../domain/repositories/versions/versions.repository";
-import { PrismaService } from "./prismaDb/prisma.service";
-import { Version } from "../../domain/entities/version.entity";
-import { FindOneVersionDto } from "../../domain/dto/versions/find-one-version.dto";
-import { FindManyDto } from "../../domain/dto/versions/find-many.dto";
-import { CreateVersionDto } from "../../domain/dto/versions/create-version.dto";
-import { Injectable } from "@nestjs/common";
+import { VersionsRepository } from '../../domain/repositories/versions/versions.repository';
+import { PrismaService } from './prismaDb/prisma.service';
+import { Version } from '../../domain/entities/version.entity';
+import { FindOneVersionDto } from '../../domain/dto/versions/find-one-version.dto';
+import { FindManyDto } from '../../domain/dto/versions/find-many.dto';
+import { CreateVersionDto } from '../../domain/dto/versions/create-version.dto';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class VersionsRepositoryImpl implements VersionsRepository {
-  constructor(private readonly prismaService: PrismaService) {
-  }
+  constructor(private readonly prismaService: PrismaService) {}
 
   create(createVersionInput: CreateVersionDto): Promise<Version> {
-    const { postId, version, userId, title, description, body } = createVersionInput;
+    const { postId, version, userId, title, description, body } =
+      createVersionInput;
     return this.prismaService.version.create({
       data: {
         actualPost: {
           connect: {
-            id: postId
-          }
+            id: postId,
+          },
         },
         title,
         description,
         body,
         version,
-        userId
-      }
+        userId,
+      },
     });
   }
 
@@ -34,8 +34,8 @@ export class VersionsRepositoryImpl implements VersionsRepository {
     return this.prismaService.version.findMany({
       where: {
         postId,
-        userId
-      }
+        userId,
+      },
     });
   }
 
@@ -43,9 +43,8 @@ export class VersionsRepositoryImpl implements VersionsRepository {
     const { id } = findOneVersion;
     return this.prismaService.version.findFirst({
       where: {
-        id
-      }
+        id,
+      },
     });
-
   }
 }

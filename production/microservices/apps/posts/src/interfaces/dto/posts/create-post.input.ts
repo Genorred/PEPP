@@ -1,6 +1,6 @@
-import { Field, InputType } from "@nestjs/graphql";
-import { GraphQLJSONObject } from "graphql-type-json";
-import { CreatePostDto } from "../../../domain/dto/posts/create-post.dto";
+import { Field, InputType } from '@nestjs/graphql';
+import { GraphQLJSONObject } from 'graphql-type-json';
+import { CreatePostDto } from '../../../domain/dto/posts/create-post.dto';
 
 @InputType()
 export class CreatePostInput implements CreatePostDto {

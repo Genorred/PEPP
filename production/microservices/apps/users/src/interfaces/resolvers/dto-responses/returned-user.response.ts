@@ -1,7 +1,5 @@
-import { ObjectType, OmitType } from "@nestjs/graphql";
-import { User } from "../../graphql-entities/user.graphql-entity";
+import { ObjectType, OmitType } from '@nestjs/graphql';
+import { User } from '../../graphql-entities/user.graphql-entity';
 
 @ObjectType()
-export class UserResponse extends OmitType(User, ["password"]) {
-
-}
+export class UserResponse extends OmitType(User, ['password']) {}

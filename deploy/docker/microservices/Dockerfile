@@ -18,7 +18,7 @@ COPY ./pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY ./libs/shared/package.json ./libs/shared/package.json
 COPY ./apps/${SERVICE_NAME}/package.json ./apps/${SERVICE_NAME}/package.json
 
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile
 
 VOLUME [ "/usr/app/apps/${SERVICE_NAME}/node_modules" ]
 VOLUME [ "/usr/app/apps/${SERVICE_NAME}/dist" ]

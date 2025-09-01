@@ -1,10 +1,10 @@
-import { Directive, Field, Int, ObjectType } from "@nestjs/graphql";
-import { User } from "./user.entity";
-import JSON from "graphql-type-json";
-import { Topic } from "./topic.entity";
+import { Directive, Field, Int, ObjectType } from '@nestjs/graphql';
+import { User } from './user.entity';
+import JSON from 'graphql-type-json';
+import { Topic } from './topic.entity';
 
 @ObjectType()
-@Directive("@key(fields: \"id\")")
+@Directive('@key(fields: "id")')
 export class Post {
   @Field(() => Int)
   id: number;
@@ -41,5 +41,4 @@ export class Post {
   createdAt: Date;
   @Field()
   updatedAt: Date;
-
 }

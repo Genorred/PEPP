@@ -124,9 +124,9 @@ services:
       - certs:/usr/share/elasticsearch/config/certs
       - ../setup.elastic.sh:/usr/local/bin/setup.sh
     user: "0"
-    command: ["/bin/bash", "/usr/local/bin/setup.sh"]
+    command: [ "/bin/bash", "/usr/local/bin/setup.sh" ]
     env_file:
-      - ../../config/.env.test
+      - ../../config/.env
     healthcheck:
       test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
       interval: 1s
@@ -221,7 +221,7 @@ services:
         condition: service_healthy
     image: docker.elastic.co/beats/metricbeat:${STACK_VERSION}
     user: root
-    command: ["--strict.perms=false"]
+    command: [ "--strict.perms=false" ]
     #      - 'chmod 644 metricbeat/metricbeat.yml'
     volumes:
       - certs:/usr/share/metricbeat/certs
@@ -243,7 +243,7 @@ services:
         condition: service_healthy
     image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
     user: root
-    command: ["--strict.perms=false"]
+    command: [ "--strict.perms=false" ]
     volumes:
       - certs:/usr/share/filebeat/certs
       - filebeatdata01:/usr/share/filebeat/data
@@ -269,7 +269,7 @@ services:
     user: root
     #    command: ["--strict.perms=false"]
     volumes:
-      - certs:/usr/share/logstash/certPOSTS
+      - certs:/usr/share/logstash/certs
       - logstashdata01:/usr/share/logstash/data
       - "./logstash_ingest_data/:/usr/share/logstash/ingest_data/"
       - "../logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro"

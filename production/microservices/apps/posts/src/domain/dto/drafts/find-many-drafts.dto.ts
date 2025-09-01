@@ -1,4 +1,4 @@
-import { Draft } from "../../entities/draft.entity";
+import { Draft } from '../../entities/draft.entity';
 
-export interface FindManyDraftsDto extends Omit<Partial<Draft>, "body" | "topics" | "subTopics"> {
-}
+export interface FindManyDraftsDto
+  extends Omit<Partial<Draft>, 'body' | 'topics' | 'subTopics'> {}

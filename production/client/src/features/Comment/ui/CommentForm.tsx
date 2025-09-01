@@ -7,6 +7,7 @@ import { userSlice } from "@/entities/User/model/user.slice";
 import Link from "next/link";
 import { cn } from "@/shared/lib/utils";
 import { usePathname } from "next/navigation";
+import { useAppStore } from "@/shared/lib/redux";
 
 const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
   isReplyingState?: [boolean, Dispatch<SetStateAction<boolean>>];
@@ -39,12 +40,16 @@ const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
   };
   const url = usePathname();
 
+  const onFocus = () => {
+    if (user) setIsWriting(true)
+  }
   return (
     <>
       <form className="mt-4" onSubmit={onSubmit}>
         <Textarea
+          data-testid="comment-form"
           disabled={!user}
-          onFocus={() => setIsWriting(true)}
+          onFocus={onFocus}
           onChange={onChange}
           value={replyMessage}
           placeholder={`Write your ${placeholder}...`}
@@ -52,10 +57,11 @@ const CommentForm = ({ isReplyingState, onCreate, placeholder = "comment" }: {
         />
         {isWriting && (
           <div className="mt-4 flex justify-end space-x-2">
-            <Button variant="outline" type={"button"} size="sm" onClick={() => setIsWriting(false)}>
+            <Button variant="outline" type={"button"} size="sm" onClick={() => setIsWriting(false)}
+                    data-testid="comment-form-button-cancel">
               Cancel
             </Button>
-            <Button size="sm" disabled={replyMessage.length < 0}>
+            <Button size="sm" disabled={replyMessage.length < 0} data-testid="comment-form-button-submit">
               Submit Message
             </Button>
           </div>

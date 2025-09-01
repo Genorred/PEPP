@@ -25,7 +25,7 @@ import {
 import { getNavSettings } from "@/widgets/Navbar/consts";
 import { useLogoutMutation } from "@/shared/api/graphql/generated";
 import { toast } from "sonner";
-import { notificationsSlice } from "@/widgets/Navbar/model/notifications.slice";
+import { notificationsSlice } from "@/features/Notifications/model/notifications.slice";
 
 export const UserTooltip = () => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);

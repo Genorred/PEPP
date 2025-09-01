@@ -1,14 +1,18 @@
-import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
-import * as argon2 from "argon2";
-import { CustomContext } from "@_shared/types/CustomContext";
-import getCookies from "@_shared/utils/getCookies";
-import { UsersRepository } from "../domain/repositories/users.repository";
-import { TokenService } from "../domain/domain-service/token.service";
-import { CacheRepository } from "../domain/repositories/cache.repository";
-import { NotificationService } from "./services/notification.service";
-import { GenerateUserCredentialsTokenDto } from "../domain/domain-service/dto/generate-user-credentials-token.dto";
-import { RegisterInput } from "src/interfaces/resolvers/dto-inputs/auth/register.input";
-import { LoginDto } from "./dto/auth/login.dto";
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import * as argon2 from 'argon2';
+import { CustomContext } from '@_shared/types/CustomContext';
+import getCookies from '@_shared/utils/getCookies';
+import { UsersRepository } from '../domain/repositories/users.repository';
+import { TokenService } from '../domain/domain-service/token.service';
+import { CacheRepository } from '../domain/repositories/cache.repository';
+import { NotificationService } from './services/notification.service';
+import { GenerateUserCredentialsTokenDto } from '../domain/domain-service/dto/generate-user-credentials-token.dto';
+import { RegisterInput } from 'src/interfaces/resolvers/dto-inputs/auth/register.input';
+import { LoginDto } from './dto/auth/login.dto';
 
 @Injectable()
 export class AuthUseCase {
@@ -16,51 +20,58 @@ export class AuthUseCase {
     private usersService: UsersRepository,
     private readonly tokenService: TokenService,
     private readonly cacheRepository: CacheRepository,
-    private readonly notificationService: NotificationService
-  ) {
-  }
+    private readonly notificationService: NotificationService,
+  ) {}
 
   async register(registerInput: RegisterInput) {
     const token = this.tokenService.generateUserCredentialsToken(registerInput);
     const foundUsers = await Promise.all([
       await this.usersService.findOne({ email: registerInput.email }),
-      await this.usersService.findOne({ username: registerInput.username })
+      await this.usersService.findOne({ username: registerInput.username }),
     ]);
     if (foundUsers[0]) {
-      throw new ConflictException("User with such email already exists");
+      throw new ConflictException('User with such email already exists');
     }
     if (foundUsers[1]) {
-      throw new ConflictException("User with such username already exists");
+      throw new ConflictException('User with such username already exists');
     }
-    this.notificationService.sendApproveUserEmail(registerInput.email, token, registerInput?.returnUrl);
+    this.notificationService.sendApproveUserEmail(
+      registerInput.email,
+      token,
+      registerInput?.returnUrl,
+    );
     return true;
   }
 
   async confirmUserEmail(token: string, context: CustomContext) {
-    const userCredentials = this.tokenService.verify(token) as GenerateUserCredentialsTokenDto;
+    const userCredentials = this.tokenService.verify(
+      token,
+    ) as GenerateUserCredentialsTokenDto;
 
-    console.log("confirmation");
+    console.log('confirmation');
     console.log(userCredentials);
     console.log(token);
     const { password, email, username } = userCredentials;
     const hashedPassword = await argon2.hash(password);
-    const { password: dbHashedPassword, ...user } = await this.usersService.create({
+    const createdUser = await this.usersService.create({
       email,
       username,
-      password: hashedPassword
+      password: hashedPassword,
     });
-    if (!user) {
-      throw new Error("error creating user");
+    if (!createdUser) {
+      throw new Error('error creating user');
     }
+    const { password: dbHashedPassword, ...user } = createdUser;
     this.tokenService.setTokens(user, context.res);
     return user;
   }
 
   async login(loginInput: LoginDto, context: CustomContext) {
-    const { password, ...user } = await this.validateUser(loginInput);
-    if (!user) {
-      throw new UnauthorizedException("Email or password incorrect");
+    const validatedUser = await this.validateUser(loginInput);
+    if (!validatedUser) {
+      throw new UnauthorizedException('Email or password incorrect');
     }
+    const { password, ...user } = validatedUser;
     this.tokenService.setTokens(user, context.res);
     return user;
   }
@@ -69,10 +80,12 @@ export class AuthUseCase {
     const token = getCookies(context).refreshToken;
     if (token) {
       const decoded = this.tokenService.verify(token);
-      const PX = new Date().getTime() - new Date(Number(decoded.exp as string)).getTime();
+      const PX =
+        new Date().getTime() -
+        new Date(Number(decoded.exp as string)).getTime();
       await this.cacheRepository.set(token, 0, PX);
       this.tokenService.removeTokens(context.res);
-      return "success";
+      return 'success';
     } else {
       throw new UnauthorizedException();
     }
@@ -83,7 +96,7 @@ export class AuthUseCase {
 
     const user = await this.usersService.findOne({ email });
     if (!user) {
-      throw new UnauthorizedException("Email or password incorrect");
+      throw new UnauthorizedException('Email or password incorrect');
     }
     const isCorrect = await argon2.verify(user.password, password);
     if (user && isCorrect) {
@@ -91,5 +104,4 @@ export class AuthUseCase {
     }
     return null;
   }
-
 }

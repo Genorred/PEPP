@@ -1,5 +1,5 @@
-import { Request, Response } from "express";
-import { GraphQLExecutionContext } from "@nestjs/graphql";
+import { Request, Response } from 'express';
+import { GraphQLExecutionContext } from '@nestjs/graphql';
 
 export interface Credentials {
   accessToken: string;
@@ -8,8 +8,8 @@ export interface Credentials {
 
 export interface CustomContextProperties {
   headers: {
-    user: string,
-    cookies: string
+    user: string;
+    cookies: string;
   };
 }
 

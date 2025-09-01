@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 
 const biggestIndex = 4;
 
@@ -6,32 +6,36 @@ const biggestIndex = 4;
 export class TopicsPrismaRepository {
   resetTopics = {
     topics: {
-      set: []
+      set: [],
     },
     subTopics: {
-      set: []
-    }
+      set: [],
+    },
   };
 
   connectOrCreate(topics?: string[], subTopics?: string[]) {
     return {
-      topics: (topics ? {
-        connectOrCreate: this.mapConnectOrCreate(topics)
-      } : undefined),
-      subTopics: (subTopics ? {
-        connectOrCreate: this.mapConnectOrCreate(subTopics)
-      } : undefined)
+      topics: topics
+        ? {
+            connectOrCreate: this.mapConnectOrCreate(topics),
+          }
+        : undefined,
+      subTopics: subTopics
+        ? {
+            connectOrCreate: this.mapConnectOrCreate(subTopics),
+          }
+        : undefined,
     };
   }
 
   private mapConnectOrCreate(topics: string[]) {
-    return topics.slice(0, biggestIndex).map(title => ({
+    return topics.slice(0, biggestIndex).map((title) => ({
       where: {
-        title
+        title,
       },
       create: {
-        title
-      }
+        title,
+      },
     }));
   }
 }

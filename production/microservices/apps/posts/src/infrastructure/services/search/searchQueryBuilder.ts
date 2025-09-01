@@ -1,57 +1,76 @@
-import { Injectable } from "@nestjs/common";
-import { QueryDslQueryContainer, SortCombinations } from "@elastic/elasticsearch/lib/api/typesWithBodyKey";
-import { SearchPostKey, SearchPostKeys } from "../../../domain/entities/search_post.entity";
-import { SearchDto } from "../../../domain/dto/search_posts/search.dto";
+import { Injectable } from '@nestjs/common';
+import {
+  QueryDslQueryContainer,
+  SortCombinations,
+} from '@elastic/elasticsearch/lib/api/typesWithBodyKey';
+import {
+  SearchPostKey,
+  SearchPostKeys,
+} from '../../../domain/entities/search_post.entity';
+import { SearchDto } from '../../../domain/dto/search_posts/search.dto';
 
 @Injectable()
 export class SearchQueryBuilderService {
-  constructor() {
-  }
+  constructor() {}
 
   public sortSearchQuery(searchParams: SearchDto) {
     const { rating, createdAt } = searchParams;
     const sort: SortCombinations[] = [];
-    if (rating) sort.push({
-      _doc: {
-        order: rating?.toLowerCase() as "asc"
-      }
-    });
-    if (createdAt) sort.push({
-      _doc: {
-        order: createdAt?.toLowerCase() as "asc"
-      }
-    });
+    if (rating)
+      sort.push({
+        _doc: {
+          order: rating?.toLowerCase() as 'asc',
+        },
+      });
+    if (createdAt)
+      sort.push({
+        _doc: {
+          order: createdAt?.toLowerCase() as 'asc',
+        },
+      });
     return sort;
   }
 
-  public buildSearchQuery(searchParams: Omit<SearchDto, "skipPages" | "createdAt" | "rating">) {
+  public buildSearchQuery(
+    searchParams: Omit<SearchDto, 'skipPages' | 'createdAt' | 'rating'>,
+  ) {
     const {
-      likedPosts, dislikedPosts, searchValue,
-      topics, recentlyShowedPosts, pressedPosts
+      likedPosts,
+      dislikedPosts,
+      searchValue,
+      topics,
+      recentlyShowedPosts,
+      pressedPosts,
     } = searchParams;
-    const mustQueries: QueryDslQueryContainer["bool"]["must"][] = [];
-    const shouldQueries: QueryDslQueryContainer["bool"]["should"][] = [];
-    const filterQueries: QueryDslQueryContainer["bool"]["filter"][] = [];
-    let query: QueryDslQueryContainer["bool"][] = [] as QueryDslQueryContainer["bool"][];
+    const mustQueries: QueryDslQueryContainer['bool']['must'][] = [];
+    const shouldQueries: QueryDslQueryContainer['bool']['should'][] = [];
+    const filterQueries: QueryDslQueryContainer['bool']['filter'][] = [];
+    const query: QueryDslQueryContainer['bool'][] =
+      [] as QueryDslQueryContainer['bool'][];
 
     if (likedPosts.length || pressedPosts.length) {
       shouldQueries.push({
         more_like_this: {
-          fields: ["topics^2", "subTopics"],
-          like: [...likedPosts, ...pressedPosts].map(post => ({ _id: post })),
-          unlike: dislikedPosts.map(post => ({ _id: post }))
-        }
+          fields: ['topics^2', 'subTopics'],
+          like: [...likedPosts, ...pressedPosts].map((post) => ({ _id: post })),
+          unlike: dislikedPosts.map((post) => ({ _id: post })),
+        },
       });
     }
 
     if (searchValue) {
       mustQueries.push({
         multi_match: {
-          fields: ["title^2", "description", "topics", "subTopics"] as SearchPostKeys,
+          fields: [
+            'title^2',
+            'description',
+            'topics',
+            'subTopics',
+          ] as SearchPostKeys,
           query: searchValue,
-          fuzziness: "AUTO",
-          tie_breaker: 0.3
-        }
+          fuzziness: 'AUTO',
+          tie_breaker: 0.3,
+        },
       });
     }
 
@@ -59,58 +78,61 @@ export class SearchQueryBuilderService {
       // one match is must and others are useful
       mustQueries.push({
         bool: {
-          should: topics.map(topic => ({
+          should: topics.map((topic) => ({
             bool: {
               should: [
                 {
                   term: {
-                    "topics": {
+                    topics: {
                       value: topic,
-                      boost: 2
-                    }
-                  }
+                      boost: 2,
+                    },
+                  },
                 },
-                { term: { "subTopics": topic } }
-              ]
-            }
-          }))
-        }
+                { term: { subTopics: topic } },
+              ],
+            },
+          })),
+        },
       });
     }
 
-    console.log("query array ", query);
+    console.log('query array ', query);
     return {
       function_score: {
         query: {
           bool: {
             must: mustQueries,
             should: shouldQueries,
-            filter: filterQueries
-          }
+            filter: filterQueries,
+          },
         },
-        boost_mode: "multiply",
+        boost_mode: 'multiply',
         functions: [
           {
             field_value_factor: {
-              field: "rating" as SearchPostKey,
+              field: 'rating' as SearchPostKey,
               factor: 1,
-              modifier: "none",
-              missing: 2.5
-            }
+              modifier: 'none',
+              missing: 2.5,
+            },
           },
           ...Object.entries(
-            recentlyShowedPosts.reduce<Record<string, string[]>>((acc, [postId, occurrences]) => {
-              (acc[occurrences] ||= []).push(postId);
-              return acc;
-            }, {})
+            recentlyShowedPosts.reduce<Record<string, string[]>>(
+              (acc, [postId, occurrences]) => {
+                (acc[occurrences] ||= []).push(postId);
+                return acc;
+              },
+              {},
+            ),
           ).map(([occurrences, postIds]) => ({
             filter: {
-              ids: { values: postIds }
+              ids: { values: postIds },
             },
-            weight: Number(occurrences) * 0.95
-          }))
-        ]
-      }
+            weight: Number(occurrences) * 0.95,
+          })),
+        ],
+      },
     } as QueryDslQueryContainer;
   }
 }

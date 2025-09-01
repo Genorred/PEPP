@@ -1,4 +1,4 @@
-import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
+import { CurrentUserExtendT } from '@_shared/auth-guard/CurrentUserExtendT';
 
 export type CreateDraftDto = CurrentUserExtendT<{
   title: string;
@@ -8,4 +8,4 @@ export type CreateDraftDto = CurrentUserExtendT<{
   subTopics?: string[];
   postId?: number;
   version?: number;
-}>
+}>;

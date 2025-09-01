@@ -1,15 +1,15 @@
-import { Version } from "../domain/entities/version.entity";
-import { FindByPostInput } from "../interfaces/dto/versions/find-by-post.input";
-import { FindOneVersionDto } from "../domain/dto/versions/find-one-version.dto";
-import { VersionsRepository } from "../domain/repositories/versions/versions.repository";
-import { PostsRepository } from "../domain/repositories/posts/posts.repository";
-import { Injectable } from "@nestjs/common";
-import { VersionIsHiddenService } from "../domain/domain_services/version-is-hidden.service";
-import { CreateVersionUseCaseDto } from "./dto/create-version-use-case.dto";
-import { PostsUow } from "../domain/repositories/UoW/posts.uow";
-import { SearchRepository } from "../domain/repositories/posts/search.repository";
-import { retryOperation } from "@_shared/utils/retryOperation";
-import { ClientCacheRepository } from "../domain/repositories/client.cache.repository";
+import { Version } from '../domain/entities/version.entity';
+import { FindByPostInput } from '../interfaces/dto/versions/find-by-post.input';
+import { FindOneVersionDto } from '../domain/dto/versions/find-one-version.dto';
+import { VersionsRepository } from '../domain/repositories/versions/versions.repository';
+import { PostsRepository } from '../domain/repositories/posts/posts.repository';
+import { Injectable } from '@nestjs/common';
+import { VersionIsHiddenService } from '../domain/domain_services/version-is-hidden.service';
+import { CreateVersionUseCaseDto } from './dto/create-version-use-case.dto';
+import { PostsUow } from '../domain/repositories/UoW/posts.uow';
+import { SearchRepository } from '../domain/repositories/posts/search.repository';
+import { retryOperation } from '@_shared/utils/retryOperation';
+import { ClientCacheRepository } from '../domain/repositories/client.cache.repository';
 
 @Injectable()
 export class VersionsUseCase {
@@ -19,30 +19,39 @@ export class VersionsUseCase {
     private readonly postsUow: PostsUow,
     private readonly versionIdHiddenService: VersionIsHiddenService,
     private readonly clientCacheRepository: ClientCacheRepository,
-    private readonly searchService: SearchRepository
-  ) {
-  }
+    private readonly searchService: SearchRepository,
+  ) {}
 
   async create(createVersionInput: CreateVersionUseCaseDto) {
     const { postId, ...data } = createVersionInput;
 
-    return await this.postsUow.run(async ({ postsRepository, versionsRepository }) => {
-      const { id: dbId, isHidden, ...post } = await postsRepository.findOne({
-        id: postId
-      });
-      const updatedPost = await postsRepository.update({
-        id: postId,
-        ...data,
-        version: post.version + 1
-      });
-      if (!isHidden) {
-        await this.searchService.updatePost(updatedPost);
-      }
-      await versionsRepository.create({ postId, ...post });
-      await retryOperation(() => this.clientCacheRepository.revalidatePost(postId, post.userId), 5, 500);
+    return await this.postsUow.run(
+      async ({ postsRepository, versionsRepository }) => {
+        const {
+          id: dbId,
+          isHidden,
+          ...post
+        } = await postsRepository.findOne({
+          id: postId,
+        });
+        const updatedPost = await postsRepository.update({
+          id: postId,
+          ...data,
+          version: post.version + 1,
+        });
+        if (!isHidden) {
+          await this.searchService.updatePost(updatedPost);
+        }
+        await versionsRepository.create({ postId, ...post });
+        await retryOperation(
+          () => this.clientCacheRepository.revalidatePost(postId, post.userId),
+          5,
+          500,
+        );
 
-      return updatedPost;
-    });
+        return updatedPost;
+      },
+    );
   }
 
   async findByPost(findByPostInput: FindByPostInput): Promise<Version[]> {

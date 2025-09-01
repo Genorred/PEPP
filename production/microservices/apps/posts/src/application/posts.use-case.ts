@@ -1,38 +1,40 @@
-import { PostsRepository } from "../domain/repositories/posts/posts.repository";
-import { SearchRepository } from "../domain/repositories/posts/search.repository";
-import { PreferencesRepository } from "../domain/repositories/posts/preferenses.repository";
-import { CreatePostServiceDto } from "../domain/dto/posts/create-post.dto";
-import { Inject, UnauthorizedException } from "@nestjs/common";
-import { FindAllPostsDto } from "../domain/dto/posts/_nextjs_find-posts.dto";
-import FRONTEND_SERVER from "../infrastructure/config/frontend-server";
-import { ConfigType } from "@nestjs/config";
-import { FindPostInputService } from "../domain/dto/posts/find-post.dto";
-import { FindAlgorithmPostsDto } from "../domain/dto/posts/find-algorithm-posts.dto";
-import { CurrentUserExtendT } from "@_shared/auth-guard/CurrentUserExtendT";
-import { RemovePostDto } from "../domain/dto/posts/remove-post.dto";
-import { PostsSecurityCheckService } from "../domain/domain_services/posts.security.check.service";
-import { ClientCacheRepository } from "../domain/repositories/client.cache.repository";
-import { Recommendations } from "../interfaces/dto/posts/output/recommendations.output";
-import { FindUserPostsDto } from "../domain/dto/posts/find-user-posts.dto";
+import { PostsRepository } from '../domain/repositories/posts/posts.repository';
+import { SearchRepository } from '../domain/repositories/posts/search.repository';
+import { PreferencesRepository } from '../domain/repositories/posts/preferenses.repository';
+import { CreatePostServiceDto } from '../domain/dto/posts/create-post.dto';
+import { Inject, UnauthorizedException } from '@nestjs/common';
+import { FindAllPostsDto } from '../domain/dto/posts/_nextjs_find-posts.dto';
+import FRONTEND_SERVER from '../infrastructure/config/frontend-server';
+import { ConfigType } from '@nestjs/config';
+import { FindPostInputService } from '../domain/dto/posts/find-post.dto';
+import { FindAlgorithmPostsDto } from '../domain/dto/posts/find-algorithm-posts.dto';
+import { CurrentUserExtendT } from '@_shared/auth-guard/CurrentUserExtendT';
+import { RemovePostDto } from '../domain/dto/posts/remove-post.dto';
+import { PostsSecurityCheckService } from '../domain/domain_services/posts.security.check.service';
+import { ClientCacheRepository } from '../domain/repositories/client.cache.repository';
+import { Recommendations } from '../interfaces/dto/posts/output/recommendations.output';
+import { FindUserPostsDto } from '../domain/dto/posts/find-user-posts.dto';
 
 export class PostsUseCase {
   constructor(
     private readonly postsRepository: PostsRepository,
     private readonly clientCacheRepository: ClientCacheRepository,
     private readonly searchService: SearchRepository,
-    @Inject(FRONTEND_SERVER.KEY) private readonly configService: ConfigType<typeof FRONTEND_SERVER>,
+    @Inject(FRONTEND_SERVER.KEY)
+    private readonly configService: ConfigType<typeof FRONTEND_SERVER>,
     private readonly postsSecurityCheckService: PostsSecurityCheckService,
-    private readonly preferencesService: PreferencesRepository) {
-  }
+    private readonly preferencesService: PreferencesRepository,
+  ) {}
 
   async create(createPostInput: CreatePostServiceDto) {
     const post = await this.postsRepository.create(createPostInput);
     try {
       await this.searchService.indexPost(post);
+      return post;
     } catch (e) {
       await this.postsRepository.remove({ id: post.id });
     }
-    return post;
+    throw new Error('Post creation failed during indexing');
   }
 
   findAll(findAllPostsInput: FindAllPostsDto) {
@@ -45,7 +47,15 @@ export class PostsUseCase {
   }
 
   async findUserPosts(input: FindUserPostsDto): Promise<Recommendations> {
-    const { userId, skipPages, rating, topics, subTopics, topicsOrSubTopics, createdAt } = input;
+    const {
+      userId,
+      skipPages,
+      rating,
+      topics,
+      subTopics,
+      topicsOrSubTopics,
+      createdAt,
+    } = input;
     const pageSize = 20;
     const params = {
       userId,
@@ -53,21 +63,19 @@ export class PostsUseCase {
       topics,
       subTopics,
       topicsOrSubTopics,
-      createdAt
+      createdAt,
     };
     const [data, totalCount] = await Promise.all([
-      this.postsRepository.findMany(
-        {
-          ...params,
-          take: pageSize,
-          skip: skipPages
-        }
-      ),
-      this.postsRepository.count(params)
+      this.postsRepository.findMany({
+        ...params,
+        take: pageSize,
+        skip: skipPages,
+      }),
+      this.postsRepository.count(params),
     ]);
     return {
       totalPages: Math.max(Math.floor(totalCount / pageSize), 1),
-      data
+      data,
     };
   }
 
@@ -90,15 +98,19 @@ export class PostsUseCase {
     await Promise.all([
       this.postsRepository.update({ id, userId, isHidden: true }),
       this.searchService.deletePost(id),
-      this.clientCacheRepository.revalidatePost(id, userId)
+      this.clientCacheRepository.revalidatePost(id, userId),
     ]);
   }
 
   async expose(id: number, userId: number) {
-    const post = await this.postsRepository.update({ id, userId, isHidden: false });
+    const post = await this.postsRepository.update({
+      id,
+      userId,
+      isHidden: false,
+    });
     await Promise.all([
       this.clientCacheRepository.revalidatePost(id, userId),
-      this.searchService.indexPost(post)
+      this.searchService.indexPost(post),
     ]);
   }
 
@@ -106,40 +118,43 @@ export class PostsUseCase {
     return this.postsRepository.remove(input);
   }
 
-  async recommendations(recommendationsInput: CurrentUserExtendT<FindAlgorithmPostsDto>) {
+  async recommendations(
+    recommendationsInput: Partial<CurrentUserExtendT<FindAlgorithmPostsDto>>,
+  ) {
     const { userId, skipPages, ...data } = recommendationsInput;
     const { dislikedPosts, likedPosts, pressedPosts, recentlyShowedPosts } =
-      (userId ? await this.preferencesService.get(userId, !skipPages) : {
-        likedPosts: [],
-        recentlyShowedPosts: [],
-        dislikedPosts: [],
-        pressedPosts: []
-      });
-    console.log("input", recommendationsInput);
+      userId
+        ? await this.preferencesService.get(userId, !skipPages)
+        : {
+            likedPosts: [],
+            recentlyShowedPosts: [],
+            dislikedPosts: [],
+            pressedPosts: [],
+          };
+    console.log('input', recommendationsInput);
     const { totalPages, data: elasticPosts } = await this.searchService.search({
       ...data,
       skipPages,
       likedPosts,
       dislikedPosts,
       pressedPosts,
-      recentlyShowedPosts
+      recentlyShowedPosts,
     });
     if (userId)
       void this.preferencesService.setRecentlyShowed(userId, elasticPosts);
     const postsData = await this.postsRepository.findMany({
-      ids: elasticPosts.map(post => Number(post.id))
+      ids: elasticPosts.map((post) => Number(post.id)),
     });
 
     return {
       totalPages,
-      data: elasticPosts.map((post) => postsData
-        .find((postData) => postData.id === Number(post.id)))
+      data: elasticPosts.map((post) =>
+        postsData.find((postData) => postData.id === Number(post.id)),
+      ),
     };
   }
 
-
-// removeMany(removeManyPostInput: PartialPostInput) {
-//   return this.prismaService.post.deleteMany({ where: removeManyPostInput });
-// }
-
+  // removeMany(removeManyPostInput: PartialPostInput) {
+  //   return this.prismaService.post.deleteMany({ where: removeManyPostInput });
+  // }
 }

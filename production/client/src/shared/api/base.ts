@@ -1,6 +1,4 @@
-import { QueryClient } from "@tanstack/react-query";
-import { ClientError, GraphQLClient } from "graphql-request";
-import { toast } from "sonner";
+import { GraphQLClient } from "graphql-request";
 
 export const clientBaseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/graphql` || "http://localhost:8080/graphql";
 export const apiClient = new GraphQLClient(clientBaseUrl, {
@@ -24,28 +22,17 @@ export const serverApiClient = new GraphQLClient(serverBaseUrl, {
   credentials: "include",
   cache: "force-cache"
 });
-const onError = (error: unknown) => {
-  console.log("xd");
-  if (error instanceof ClientError) {
-    error.response.errors?.forEach(error => {
-      toast.error(error.message);
-    });
-  } else if (error instanceof Error) {
-    toast.error(error.message);
-  }
-};
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      // onError,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false
-    },
-    mutations: {
-      // onError
-    }
-  }
-});
-export const baseFetch = (url: string, init?: RequestInit) => {
-  return fetch(clientBaseUrl + "/" + url, init).then((response) => response.json());
-};
+
+// const onError = (error: unknown) => {
+//   console.log("xd");
+//   if (error instanceof ClientError) {
+//     error.response.errors?.forEach(error => {
+//       toast.error(error.message);
+//     });
+//   } else if (error instanceof Error) {
+//     toast.error(error.message);
+//   }
+// };
+// export const baseFetch = (url: string, init?: RequestInit) => {
+//   return fetch(clientBaseUrl + "/" + url, init).then((response) => response.json());
+// };

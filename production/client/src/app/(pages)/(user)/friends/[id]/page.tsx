@@ -1,4 +1,4 @@
-import { Friends } from "@/widgets/Friends";
+import { Friends } from "@/features/Friends";
 import React from "react";
 import {
   GetUserFriendsCountDocument,

@@ -17,9 +17,9 @@ import { Button, buttonVariants } from "@/shared/ui/button";
 import { Handshake } from "lucide-react";
 import { PostRecommendationsQueryVariables } from "@/shared/api/graphql/graphql";
 import { useIntersectionObserver } from "usehooks-ts";
-import { queryClient } from "@/shared/api/base";
 import Link from "next/link";
 import { cn } from "@/shared/lib/utils";
+import { queryClient } from "@/shared/api/queryClient";
 
 const DynamicCarousel = ({ friends, friendsCount }: {
   friends: GetUserFriendsQuery,
