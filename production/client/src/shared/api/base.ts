@@ -2,7 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { ClientError, GraphQLClient } from "graphql-request";
 import { toast } from "sonner";
 
-export const clientBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/graphql";
+export const clientBaseUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/graphql` || "http://localhost:8080/graphql";
 export const apiClient = new GraphQLClient(clientBaseUrl, {
   credentials: "include"
 });
@@ -19,7 +19,7 @@ export function fetcher<TData, TVariables extends {
   };
 }
 
-export const serverBaseUrl = process.env.SERVER_API_BASE_URL || "http://gateway:8080/graphql";
+export const serverBaseUrl = `${process.env.SERVER_API_BASE_URL}/graphql` || "http://gateway:8080/graphql";
 export const serverApiClient = new GraphQLClient(serverBaseUrl, {
   credentials: "include",
   cache: "force-cache"

@@ -29,8 +29,8 @@ COPY ./libs ./libs
 COPY ./apps/${SERVICE_NAME} ./apps/${SERVICE_NAME}
 EXPOSE 8080
 
-RUN sh libs/scripts/build.sh
+RUN sh libs/scripts/build.sh $SERVICE_NAME
 
 HEALTHCHECK --interval=10s --timeout=5s --retries=100 CMD ["node", "libs/scripts/healthCheck.js"]
 
-CMD sh libs/scripts/prod.sh
+CMD ["sh", "libs/scripts/prod.sh"]

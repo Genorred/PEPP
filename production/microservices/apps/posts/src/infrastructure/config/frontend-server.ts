@@ -8,7 +8,7 @@ export default registerAs("frontendServer", () =>
     clientRevalidateCacheUrl: string
   }>({
       token: {
-        value: process.env.NEXTJS_ENDPOINTS,
+        value: process.env.NEXTJS_ENDPOINTS_TOKEN,
         joi: Joi.string().required()
       },
       clientRevalidateCacheUrl: {

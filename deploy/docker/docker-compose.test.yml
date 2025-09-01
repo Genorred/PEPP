@@ -41,7 +41,7 @@ services:
       - "../../production/microservices/libs:/usr/app/libs"
     depends_on:
       users:
-          condition: service_healthy
+        condition: service_healthy
       posts:
         condition: service_healthy
   notifications:
@@ -133,7 +133,7 @@ services:
     env_file:
       - ../../config/.env.test
     healthcheck:
-      test: [ "CMD-SHELL", "[ -f config/certs/es01/es01.crt ]" ]
+      test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
       interval: 1s
       timeout: 5s
       retries: 120
@@ -169,7 +169,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.license.self_generated.type=${LICENSE}
       - ES_JAVA_OPTS=-Xms2g -Xmx2g
-#    mem_limit: 280000000
+    #    mem_limit: 280000000
     ulimits:
       memlock:
         soft: -1
@@ -208,7 +208,7 @@ services:
       - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
       - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
-#    mem_limit: ${KB_MEM_LIMIT}
+    #    mem_limit: ${KB_MEM_LIMIT}
     healthcheck:
       test:
         [
@@ -227,7 +227,7 @@ services:
     image: docker.elastic.co/beats/metricbeat:${STACK_VERSION}
     user: root
     command: ["--strict.perms=false"]
-#      - 'chmod 644 metricbeat/metricbeat.yml'
+    #      - 'chmod 644 metricbeat/metricbeat.yml'
     volumes:
       - certs:/usr/share/metricbeat/certs
       - metricbeatdata01:/usr/share/metricbeat/data
@@ -272,7 +272,7 @@ services:
     labels:
       co.elastic.logs/module: logstash
     user: root
-#    command: ["--strict.perms=false"]
+    #    command: ["--strict.perms=false"]
     volumes:
       - certs:/usr/share/logstash/certPOSTS
       - logstashdata01:/usr/share/logstash/data
@@ -283,19 +283,19 @@ services:
       - ELASTIC_USER=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - ELASTIC_HOSTS=https://es01:9200
-  redis_posts:
+  redis-posts:
     image: redis:6.2-alpine
     restart: always
     ports:
-      - '6379:6379'
+      - "6379:6379"
     command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_POSTS_PASSWORD}
     volumes:
       - ./data:/data
-  redis_auth:
+  redis-auth:
     image: redis:6.2-alpine
     restart: always
     ports:
-      - '6378:6379'
+      - "6378:6379"
     command: redis-server --save 60 1 --loglevel warning --requirepass ${REDIS_AUTH_PASSWORD}
     volumes:
       - ./data:/data
@@ -324,3 +324,4 @@ volumes:
     driver: local
   logstashdata01:
     driver: local
+

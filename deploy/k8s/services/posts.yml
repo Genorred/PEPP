@@ -1,36 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gateway
+  name: posts
 spec:
   selector:
     matchLabels:
-      app: gateway
+      app: posts
   template:
     metadata:
       labels:
-        app: gateway
+        app: posts
     spec:
       containers:
-        - name: gateway
-          image: "genorred/gateway-pepp:latest"
+        - name: posts
+          image: "genorred/posts-pepp:latest"
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
           envFrom:
             - configMapRef:
                 name: global-configmap
-          env:
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: users-secret
-                  key: JWT_SECRET
-            - name: REDIS_AUTH_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: users-secret
-                  key: REDIS_AUTH_PASSWORD
+            - secretRef:
+                name: server-secret
+            - secretRef:
+                name: posts-secret
       #     readinessProbe:
       #       tcpSocket:
       #         port: 8080
@@ -38,7 +31,7 @@ spec:
       #       periodSeconds: 5
       #     livenessProbe:
       #       httpGet:
-      #         path: /status
+      #         path: /health
       #         port: 8080
       # imagePullSecrets:
       #   - name: dpr-secret
@@ -46,10 +39,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gateway
+  name: posts
 spec:
   selector:
-    app: gateway
+    app: posts
   ports:
     - port: 8080
       targetPort: 8080

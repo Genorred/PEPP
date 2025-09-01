@@ -13,7 +13,7 @@ import rabbitMQConfig from "../../infrastructure/config/rabbitMQ.config";
       useFactory: (configService: ConfigType<typeof rabbitMQConfig>) => ({
         transport: Transport.RMQ,
         options: {
-          urls: [`amqp://${configService.user}:${configService.password}@rabbitmq:5672`],
+          urls: [`amqp://${configService.user}:${configService.password}@rabbitmq:${configService.port}`],
           queue: "notifications_queue",
           queueOptions: {
             durable: false

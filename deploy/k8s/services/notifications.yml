@@ -1,36 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gateway
+  name: notifications
 spec:
   selector:
     matchLabels:
-      app: gateway
+      app: notifications
   template:
     metadata:
       labels:
-        app: gateway
+        app: notifications
     spec:
       containers:
-        - name: gateway
-          image: "genorred/gateway-pepp:latest"
+        - name: notifications
+          image: "genorred/notifications-pepp:latest"
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
           envFrom:
             - configMapRef:
                 name: global-configmap
-          env:
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: users-secret
-                  key: JWT_SECRET
-            - name: REDIS_AUTH_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: users-secret
-                  key: REDIS_AUTH_PASSWORD
+            - secretRef:
+                name: server-secret
+            - secretRef:
+                name: notifications-secret
       #     readinessProbe:
       #       tcpSocket:
       #         port: 8080
@@ -46,10 +39,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gateway
+  name: notifications
 spec:
   selector:
-    app: gateway
+    app: notifications
   ports:
     - port: 8080
       targetPort: 8080

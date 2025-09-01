@@ -6,6 +6,6 @@ export declare const hosts: {
   readonly gateway: "gateway";
   readonly client: "client";
   readonly es01: "es01";
-  readonly redis_posts: "redis_posts";
+  readonly redis-posts: "redis-posts";
   readonly redis_auth: "redis_auth";
 };

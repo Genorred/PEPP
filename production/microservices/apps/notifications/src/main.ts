@@ -9,7 +9,7 @@ async function bootstrap() {
   const microservice = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     transport: Transport.RMQ,
     options: {
-      urls: [`amqp://${configService.get<string>("rabbitmq.user")}:${configService.get<string>("rabbitmq.password")}@rabbitmq:5672`],
+      urls: [`amqp://${configService.get<string>("rabbitmq.user")}:${configService.get<string>("rabbitmq.password")}@rabbitmq:${configService.get<number>('rabbitmq.port')}`],
       queue: "notifications_queue",
       queueOptions: {
         durable: false
